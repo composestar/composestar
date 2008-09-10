@@ -238,7 +238,7 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 	}
 
 	/**
-	 * A filtering iterator. Does not support remove()
+	 * A filtering iterator.
 	 * 
 	 * @author Michiel Hendriks
 	 */
@@ -260,6 +260,11 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		private T next;
 
 		/**
+		 * True if the next object has been set
+		 */
+		private boolean nextSet = false;
+
+		/**
 		 * Create a new repository iterator using a given filter
 		 * 
 		 * @param filter
@@ -268,7 +273,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		{
 			it = RepositoryImpl.this.iterator();
 			filterClass = filter;
-			getNext();
 		}
 
 		/*
@@ -277,7 +281,14 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		 */
 		public boolean hasNext()
 		{
-			return next != null;
+			if (nextSet)
+			{
+				return true;
+			}
+			else
+			{
+				return getNext();
+			}
 		}
 
 		/*
@@ -286,13 +297,15 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		 */
 		public T next()
 		{
-			if (next == null)
+			if (!nextSet)
 			{
-				throw new NoSuchElementException();
+				if (!getNext())
+				{
+					throw new NoSuchElementException();
+				}
 			}
-			T cur = next;
-			getNext();
-			return cur;
+			nextSet = false;
+			return next;
 		}
 
 		/*
@@ -301,7 +314,13 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		 */
 		public void remove()
 		{
-			throw new UnsupportedOperationException();
+			if (nextSet)
+			{
+				// nextSet is false after next() was called
+				// only allow remove after next() was called
+				throw new IllegalStateException("next() has not been called yet");
+			}
+			it.remove();
 		}
 
 		/*
@@ -315,8 +334,10 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 		/**
 		 * Get the next element
+		 * 
+		 * @return True when there is a next element.
 		 */
-		private void getNext()
+		private boolean getNext()
 		{
 			while (it.hasNext())
 			{
@@ -324,10 +345,11 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 				if (filterClass.isInstance(o))
 				{
 					next = filterClass.cast(o);
-					return;
+					nextSet = true;
+					return true;
 				}
 			}
-			next = null;
+			return false;
 		}
 
 	}
