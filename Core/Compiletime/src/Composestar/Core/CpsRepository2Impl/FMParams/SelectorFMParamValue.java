@@ -33,7 +33,10 @@ import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsProgramElementImpl;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsTypeProgramElementImpl;
 import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Core.LAMA.Type;
 
 /**
  * A filter module parameter value that gets data from a selector
@@ -73,13 +76,28 @@ public class SelectorFMParamValue extends AbstractRepositoryEntity implements FM
 		return Collections.unmodifiableCollection(values);
 	}
 
+	/**
+	 * Fill the values list with the selector's selection.
+	 */
 	protected void loadValues()
 	{
 		values = new ArrayList<CpsVariable>();
 		for (ProgramElement elm : selector.getSelection())
 		{
-			// FIXME: implement
+			CpsVariable value = null;
+			if (elm instanceof Type)
+			{
+				value = new CpsTypeProgramElementImpl((Type) elm);
+			}
+			else
+			{
+				value = new CpsProgramElementImpl(elm);
+			}
+			if (value != null)
+			{
+				value.setOwner(this);
+				values.add(value);
+			}
 		}
 	}
-
 }
