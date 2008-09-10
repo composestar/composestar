@@ -75,11 +75,11 @@ public class FilterElementImpl extends AbstractRepositoryEntity implements Filte
 		{
 			throw new NullPointerException();
 		}
-		if (assignment.getVariable() == null)
+		if (assignment.getProperty() == null)
 		{
 			throw new NullPointerException("Assignment has no variable");
 		}
-		CanonAssignment old = assignments.put(assignment.getVariable().getName(), assignment);
+		CanonAssignment old = assignments.put(assignment.getProperty().getName(), assignment);
 		assignment.setOwner(this);
 		return old;
 	}

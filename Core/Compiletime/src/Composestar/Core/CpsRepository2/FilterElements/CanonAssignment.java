@@ -26,9 +26,10 @@ package Composestar.Core.CpsRepository2.FilterElements;
 
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 
 /**
- * This interface defines a assignment of a given variable. It is used both by
+ * This interface defines a assignment of a given property. It is used both by
  * the {@link Composestar.Core.CpsRepository2.FilterModules.Filter} for the
  * filter argument assignments and the {@link FilterElement} for the assignment
  * part.
@@ -40,21 +41,21 @@ public interface CanonAssignment extends RepositoryEntity, Instantiatable<CanonA
 	/**
 	 * @return The variable that is set.
 	 */
-	CanonVariable getVariable();
+	CanonProperty getProperty();
 
 	/**
-	 * Sets the variable that is set in this assignment. setOwner(this) is
+	 * Sets the property that is set in this assignment. setOwner(this) is
 	 * called on the expression after assigning.
 	 * 
-	 * @param var The variable
+	 * @param prop The property
 	 * @throws NullPointerException Thrown when the variable is null
 	 */
-	void setVariable(CanonVariable var) throws NullPointerException;
+	void setProperty(CanonProperty prop) throws NullPointerException;
 
 	/**
 	 * @return The value the variable should get.
 	 */
-	CanonValue getValue();
+	CpsVariable getValue();
 
 	/**
 	 * Set the value that the variable should get when the assignment is
@@ -65,5 +66,5 @@ public interface CanonAssignment extends RepositoryEntity, Instantiatable<CanonA
 	 * @param value The new value
 	 * @throws NullPointerException Thrown when the value is null
 	 */
-	void setValue(CanonValue value) throws NullPointerException;
+	void setValue(CpsVariable value) throws NullPointerException;
 }

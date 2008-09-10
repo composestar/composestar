@@ -24,12 +24,12 @@
 
 package Composestar.Core.CpsRepository2.FilterModules;
 
-import Composestar.Core.CpsRepository2.InstanceContextProvider;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 
@@ -248,7 +248,7 @@ public abstract class ExternalTestBase extends QualifiedRepositoryEntityTestBase
 		 * Composestar.Core.CpsRepository2.References.InstanceMethodReference
 		 * #getContext()
 		 */
-		public InstanceContextProvider getContext()
+		public CpsObject getCpsObject()
 		{
 			return null;
 		}

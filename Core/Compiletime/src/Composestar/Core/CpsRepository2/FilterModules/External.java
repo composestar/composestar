@@ -24,10 +24,10 @@
 
 package Composestar.Core.CpsRepository2.FilterModules;
 
-import Composestar.Core.CpsRepository2.InstanceContextProvider;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
 /**
  * An external filter module variable. Externals are initialized using a
@@ -35,7 +35,7 @@ import Composestar.Core.CpsRepository2.References.TypeReference;
  * 
  * @author Michiel Hendriks
  */
-public interface External extends FilterModuleVariable, InstanceContextProvider, Instantiatable<External>
+public interface External extends FilterModuleVariable, CpsObject, Instantiatable<External>
 {
 	/**
 	 * Sets the reference to the type of the external. The references type

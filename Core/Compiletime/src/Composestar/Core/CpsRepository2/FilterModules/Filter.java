@@ -81,7 +81,7 @@ public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Ins
 	 * 
 	 * @param argName The name of the argument to retrieve, the name should not
 	 *            contain the filter prefix
-	 *            {@link Composestar.Core.CpsRepository2.FilterElements.CanonVariable#FILTER_PREFIX}
+	 *            {@link Composestar.Core.CpsRepository2.FilterElements.CanonProperty#FILTER_PREFIX}
 	 *            .
 	 * @return The argument with the given name, or null if no argument with
 	 *         that name could be found.

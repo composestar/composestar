@@ -28,6 +28,7 @@ import Composestar.Core.CpsRepository2.FilterModules.Condition;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
+import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * Implementation of the condition interface
@@ -78,6 +79,20 @@ public class ConditionImpl extends AbstractQualifiedRepositoryEntity implements 
 			throw new NullPointerException();
 		}
 		methodReference = ref;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2.TypeSystem.CpsProgramElement#
+	 * getProgramElement()
+	 */
+	public ProgramElement getProgramElement()
+	{
+		if (methodReference != null)
+		{
+			return methodReference.getReference();
+		}
+		return null;
 	}
 
 	/*

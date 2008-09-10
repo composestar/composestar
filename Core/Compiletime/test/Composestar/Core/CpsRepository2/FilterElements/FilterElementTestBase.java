@@ -26,6 +26,7 @@ package Composestar.Core.CpsRepository2.FilterElements;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -126,12 +127,12 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		assertNull(fe.addAssignment(arg1));
 		assertNull(fe.addAssignment(arg2));
 
-		assertSame(arg1, fe.getAssignment(arg1.getVariable().getName()));
-		assertSame(arg2, fe.getAssignment(arg2.getVariable().getName()));
+		assertSame(arg1, fe.getAssignment(arg1.getProperty().getName()));
+		assertSame(arg2, fe.getAssignment(arg2.getProperty().getName()));
 
 		assertNull(fe.getAssignment(null));
 		assertNull(fe.getAssignment(""));
-		assertNull(fe.getAssignment(arg1.getVariable().getBaseName()));
+		assertNull(fe.getAssignment(arg1.getProperty().getBaseName()));
 	}
 
 	/**
@@ -176,12 +177,12 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		/**
 		 * 
 		 */
-		protected CanonVariable var;
+		protected CanonProperty var;
 
 		/**
 		 * @param cvar
 		 */
-		public DummyCA(CanonVariable cvar)
+		public DummyCA(CanonProperty cvar)
 		{
 			super();
 			var = cvar;
@@ -193,7 +194,7 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		 * Composestar.Core.CpsRepository2.FilterElements.CanonAssignment#getValue
 		 * ()
 		 */
-		public CanonValue getValue()
+		public CpsVariable getValue()
 		{
 			return null;
 		}
@@ -203,7 +204,7 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		 * @seeComposestar.Core.CpsRepository2.FilterElements.CanonAssignment#
 		 * getVariable()
 		 */
-		public CanonVariable getVariable()
+		public CanonProperty getProperty()
 		{
 			return var;
 		}
@@ -214,7 +215,7 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		 * setCanonValue
 		 * (Composestar.Core.CpsRepository2.FilterElements.CanonValue)
 		 */
-		public void setValue(CanonValue value) throws NullPointerException
+		public void setValue(CpsVariable value) throws NullPointerException
 		{}
 
 		/*
@@ -223,7 +224,7 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		 * setVariable
 		 * (Composestar.Core.CpsRepository2.FilterElements.CanonVariable)
 		 */
-		public void setVariable(CanonVariable var) throws NullPointerException
+		public void setProperty(CanonProperty var) throws NullPointerException
 		{}
 
 		/*
@@ -241,7 +242,7 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 	/**
 	 * @author Michiel Hendriks
 	 */
-	protected class DummyCV extends AbstractRepositoryEntity implements CanonVariable
+	protected class DummyCV extends AbstractRepositoryEntity implements CanonProperty
 	{
 		private static final long serialVersionUID = -3488986961403986231L;
 
@@ -268,17 +269,6 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		public DummyCV(String vname)
 		{
 			this(vname, MESSAGE_PREFIX);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @seeComposestar.Core.CpsRepository2.FilterElements.CanonVariable#
-		 * acceptsValueType
-		 * (Composestar.Core.CpsRepository2.FilterElements.CanonValueType)
-		 */
-		public boolean acceptsValueType(CanonValueType valueType)
-		{
-			return false;
 		}
 
 		/*
@@ -317,43 +307,22 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonVariable#setValue
-		 * (Composestar.Core.CpsRepository2.FilterElements.CanonValue)
+		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getValue
+		 * ()
 		 */
-		public void setValue(CanonValue newValue) throws NullPointerException, IllegalArgumentException,
-				UnsupportedOperationException
+		public CpsVariable getValue()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#setValue
+		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
+		 */
+		public void setValue(CpsVariable newvalue) throws NullPointerException, IllegalArgumentException
 		{}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonValue#getType()
-		 */
-		public CanonValueType getType()
-		{
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonValue#getValue()
-		 */
-		public Object getValue()
-		{
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.Instantiatable.Instantiatable#newInstance
-		 * (Composestar.Core.CpsRepository2.Instantiatable.Instantiator)
-		 */
-		public CanonValue newInstance(Instantiator instantiator) throws UnsupportedOperationException
-		{
-			return null;
-		}
 	}
 
 }

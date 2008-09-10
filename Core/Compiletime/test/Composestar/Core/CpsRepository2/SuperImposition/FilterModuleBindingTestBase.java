@@ -32,7 +32,9 @@ import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
+import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
 
 /**
@@ -86,7 +88,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding#setParameterValues(java.util.List)}
+	 * {@link Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding#setParameterValues(List)}
 	 * .
 	 */
 	public void testSetParameterValues()
@@ -94,7 +96,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 		assertNotNull(fmb.getParameterValues());
 		assertEquals(0, fmb.getParameterValues().size());
 
-		List<FMParameterValue<?>> params = new ArrayList<FMParameterValue<?>>();
+		List<FMParameterValue> params = new ArrayList<FMParameterValue>();
 		params.add(new DummyFMPV());
 		fmb.setParameterValues(params);
 		assertEquals(1, fmb.getParameterValues().size());
@@ -106,7 +108,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 		assertEquals(2, fmb.getParameterValues().size());
 
 		// clear the params
-		fmb.setParameterValues(new ArrayList<FMParameterValue<?>>());
+		fmb.setParameterValues(new ArrayList<FMParameterValue>());
 		assertEquals(0, fmb.getParameterValues().size());
 		assertEquals(2, params.size());
 
@@ -217,7 +219,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 	/**
 	 * @author Michiel Hendriks
 	 */
-	protected class DummyFMPV implements FMParameterValue<Object>
+	protected class DummyFMPV extends AbstractRepositoryEntity implements FMParameterValue
 	{
 		private static final long serialVersionUID = -5807844951769781151L;
 
@@ -226,7 +228,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 		 * @see
 		 * Composestar.Core.CpsRepository2.FMParams.FMParameterValue#getValues()
 		 */
-		public Collection<Object> getValues()
+		public Collection<CpsVariable> getValues()
 		{
 			return null;
 		}

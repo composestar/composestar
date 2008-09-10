@@ -24,13 +24,13 @@
 
 package Composestar.Core.CpsRepository2.References;
 
-import Composestar.Core.CpsRepository2.InstanceContextProvider;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
 /**
  * An method reference with a context. This can be used by Externals and
  * Conditions when they refer to a method of an Internal or External. The
  * {@link MethodReference#getTypeReference()} should return the value of
- * {@link InstanceContextProvider#getTypeReference()}.
+ * {@link CpsObject#getTypeReference()}.
  * 
  * @author Michiel Hendriks
  */
@@ -39,5 +39,5 @@ public interface InstanceMethodReference extends MethodReference
 	/**
 	 * @return The context on which this method should be executed.
 	 */
-	InstanceContextProvider getContext();
+	CpsObject getCpsObject();
 }

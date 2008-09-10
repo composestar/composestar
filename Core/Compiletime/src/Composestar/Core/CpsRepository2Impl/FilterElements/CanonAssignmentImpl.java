@@ -25,9 +25,9 @@
 package Composestar.Core.CpsRepository2Impl.FilterElements;
 
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
-import Composestar.Core.CpsRepository2.FilterElements.CanonValue;
-import Composestar.Core.CpsRepository2.FilterElements.CanonVariable;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -42,12 +42,12 @@ public class CanonAssignmentImpl extends AbstractRepositoryEntity implements Can
 	/**
 	 * The variable that will get a new value
 	 */
-	protected CanonVariable variable;
+	protected CanonProperty variable;
 
 	/**
 	 * The new value
 	 */
-	protected CanonValue value;
+	protected CpsVariable value;
 
 	/**
 	 * Create a new instance
@@ -62,7 +62,7 @@ public class CanonAssignmentImpl extends AbstractRepositoryEntity implements Can
 	 * @see
 	 * Composestar.Core.CpsRepository2.FilterElements.CanonAssignment#getValue()
 	 */
-	public CanonValue getValue()
+	public CpsVariable getValue()
 	{
 		return value;
 	}
@@ -73,7 +73,7 @@ public class CanonAssignmentImpl extends AbstractRepositoryEntity implements Can
 	 * Composestar.Core.CpsRepository2.FilterElements.CanonAssignment#getVariable
 	 * ()
 	 */
-	public CanonVariable getVariable()
+	public CanonProperty getProperty()
 	{
 		return variable;
 	}
@@ -84,7 +84,7 @@ public class CanonAssignmentImpl extends AbstractRepositoryEntity implements Can
 	 * Composestar.Core.CpsRepository2.FilterElements.CanonAssignment#setCanonValue
 	 * (Composestar.Core.CpsRepository2.FilterElements.CanonValue)
 	 */
-	public void setValue(CanonValue newValue) throws NullPointerException
+	public void setValue(CpsVariable newValue) throws NullPointerException
 	{
 		if (newValue == null)
 		{
@@ -100,7 +100,7 @@ public class CanonAssignmentImpl extends AbstractRepositoryEntity implements Can
 	 * Composestar.Core.CpsRepository2.FilterElements.CanonAssignment#setVariable
 	 * (Composestar.Core.CpsRepository2.FilterElements.CanonVariable)
 	 */
-	public void setVariable(CanonVariable var) throws NullPointerException
+	public void setProperty(CanonProperty var) throws NullPointerException
 	{
 		if (var == null)
 		{

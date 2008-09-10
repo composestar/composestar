@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
-import Composestar.Core.CpsRepository2.FilterElements.CanonVariable;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.Filters.FilterType;
@@ -84,15 +84,15 @@ public class FilterImpl extends AbstractQualifiedRepositoryEntity implements Fil
 		{
 			throw new NullPointerException();
 		}
-		if (argument.getVariable() == null)
+		if (argument.getProperty() == null)
 		{
 			throw new IllegalArgumentException("Argument does not assign a variable");
 		}
-		if (!argument.getVariable().getPrefix().equals(CanonVariable.FILTER_PREFIX))
+		if (!argument.getProperty().getPrefix().equals(CanonProperty.FILTER_PREFIX))
 		{
 			throw new IllegalArgumentException("Argument does not assign a filter argument");
 		}
-		CanonAssignment repl = arguments.put(argument.getVariable().getBaseName(), argument);
+		CanonAssignment repl = arguments.put(argument.getProperty().getBaseName(), argument);
 		argument.setOwner(this);
 		return repl;
 	}

@@ -24,7 +24,6 @@
 package Composestar.Core.CpsRepository2Impl.Reference;
 
 import junit.framework.TestCase;
-import Composestar.Core.CpsRepository2.InstanceContextProvider;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
@@ -32,6 +31,8 @@ import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * @author Michiel Hendriks
@@ -176,7 +177,7 @@ public class ReferenceManagerTest extends TestCase
 		InstanceMethodReference ref = refman.getInstanceMethodReference("5", ctx, JoinPointContextArgument.FULL);
 		assertNotNull(ref);
 		assertEquals("5", ref.getReferenceId());
-		assertSame(ctx, ref.getContext());
+		assertSame(ctx, ref.getCpsObject());
 		assertEquals(JoinPointContextArgument.FULL, ref.getJoinPointContextArgument());
 		assertSame(ctx.getTypeReference(), ref.getTypeReference());
 		InstanceMethodReference ref2 = refman.getInstanceMethodReference("5", ctx, JoinPointContextArgument.FULL);
@@ -246,7 +247,7 @@ public class ReferenceManagerTest extends TestCase
 	/**
 	 * @author Michiel Hendriks
 	 */
-	class DummyCTX implements InstanceContextProvider
+	class DummyCTX implements CpsObject
 	{
 		private static final long serialVersionUID = -8877241455449624479L;
 
@@ -327,5 +328,25 @@ public class ReferenceManagerTest extends TestCase
 		 */
 		public void setSourceInformation(SourceInformation srcInfo)
 		{}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject#getInstance()
+		 */
+		public Object getInstance()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.TypeSystem.CpsProgramElement#
+		 * getProgramElement()
+		 */
+		public ProgramElement getProgramElement()
+		{
+			return ref.getReference();
+		}
 	}
 }

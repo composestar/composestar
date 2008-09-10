@@ -22,20 +22,9 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2;
-
-import Composestar.Core.CpsRepository2.References.TypeReference;
-
 /**
- * Implementing interfaces provide an instance context. This is used by the
- * InstanceMethodReference for the execution context.
- * 
- * @author Michiel Hendriks
+ * This package contains the basic type system as is present in the compose*
+ * language. These types are used in values for assignments and parameters.
  */
-public interface InstanceContextProvider extends QualifiedRepositoryEntity
-{
-	/**
-	 * @return Return the reference to the type of the instance.
-	 */
-	TypeReference getTypeReference();
-}
+package Composestar.Core.CpsRepository2.TypeSystem;
+

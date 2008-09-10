@@ -22,26 +22,27 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
-import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.LAMA.ProgramElement;
 
 /**
- * This represents an internal for a filter module. An internal only has a name
- * and a type reference.
+ * Encapsulates all program elements as a variable which can be used by filter
+ * module parameters and in assignments. Program Elements can only be indirectly
+ * accessed by using the results of selectors, and filter module variables like
+ * internals, externals and conditions. The CpsTypeProgramElement should be used
+ * in case the program element is a type.
  * 
  * @author Michiel Hendriks
  */
-public interface Internal extends FilterModuleVariable, CpsObject, Instantiatable<Internal>
+public interface CpsProgramElement extends CpsVariable
 {
 	/**
-	 * Sets the reference to the type of the internal. The references type
-	 * should have a default constructor.
-	 * 
-	 * @param ref The type of this internal
-	 * @throws NullPointerException Thrown when the type reference is null.
+	 * @return The program element this variable contains. It can return null
+	 *         when no such program element exists, this usually only happens in
+	 *         case of indirect CpsProgramElements (for Conditions, Internals,
+	 *         Externals, and fully qualified names which should be resolved to
+	 *         a Type).
 	 */
-	void setTypeReference(TypeReference ref) throws NullPointerException;
+	ProgramElement getProgramElement();
 }

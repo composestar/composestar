@@ -26,12 +26,12 @@ package Composestar.Core.CpsRepository2Impl.FilterElements;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
-import Composestar.Core.CpsRepository2.FilterElements.CanonValue;
-import Composestar.Core.CpsRepository2.FilterElements.CanonVariable;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -46,12 +46,12 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	/**
 	 * The variable to compare with
 	 */
-	protected CanonVariable lhs;
+	protected CanonProperty lhs;
 
 	/**
 	 * The value to compare the variable with
 	 */
-	protected Collection<CanonValue> rhs;
+	protected Collection<CpsVariable> rhs;
 
 	/**
 	 * 
@@ -59,7 +59,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	protected AbstractMECmpStmt()
 	{
 		super();
-		rhs = new HashSet<CanonValue>();
+		rhs = new LinkedHashSet<CpsVariable>();
 	}
 
 	/*
@@ -68,7 +68,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	 * Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#getLHS
 	 * ()
 	 */
-	public CanonVariable getLHS()
+	public CanonProperty getLHS()
 	{
 		return lhs;
 	}
@@ -79,7 +79,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	 * Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#getRHS
 	 * ()
 	 */
-	public Collection<CanonValue> getRHS()
+	public Collection<CpsVariable> getRHS()
 	{
 		return Collections.unmodifiableCollection(rhs);
 	}
@@ -90,7 +90,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	 * Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setLHS
 	 * (Composestar.Core.CpsRepository2.FilterElements.CanonVariable)
 	 */
-	public void setLHS(CanonVariable var) throws NullPointerException
+	public void setLHS(CanonProperty var) throws NullPointerException
 	{
 		if (var == null)
 		{
@@ -106,7 +106,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	 * Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setRHS
 	 * (java.util.Collection)
 	 */
-	public void setRHS(Collection<CanonValue> values) throws NullPointerException, IllegalArgumentException
+	public void setRHS(Collection<CpsVariable> values) throws NullPointerException, IllegalArgumentException
 	{
 		if (values == null)
 		{
@@ -117,7 +117,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 			throw new IllegalArgumentException();
 		}
 		rhs.clear();
-		for (CanonValue val : values)
+		for (CpsVariable val : values)
 		{
 			rhs.add(val);
 			val.setOwner(this);

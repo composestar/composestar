@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -40,12 +40,12 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setLHS(Composestar.Core.CpsRepository2.FilterElements.CanonVariable)}
+	 * {@link Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setLHS(Composestar.Core.CpsRepository2.FilterElements.CanonProperty)}
 	 * .
 	 */
 	public void testSetLHS()
 	{
-		CanonVariable cv = new DummyCV();
+		CanonProperty cv = new DummyCV();
 		assertNull(mecs.getLHS());
 		mecs.setLHS(cv);
 		assertSame(cv, mecs.getLHS());
@@ -68,8 +68,8 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 	 */
 	public void testSetRHS()
 	{
-		CanonValue cv = new DummyCV();
-		Collection<CanonValue> cvl = new ArrayList<CanonValue>();
+		CpsVariable cv = new DummyCV();
+		Collection<CpsVariable> cvl = new ArrayList<CpsVariable>();
 		cvl.add(cv);
 		assertNotNull(mecs.getRHS());
 		assertEquals(0, mecs.getRHS().size());
@@ -102,25 +102,14 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 	/**
 	 * @author Michiel Hendriks
 	 */
-	protected class DummyCV extends AbstractRepositoryEntity implements CanonVariable
+	protected class DummyCV extends AbstractRepositoryEntity implements CanonProperty
 	{
 		private static final long serialVersionUID = 1L;
 
 		/*
 		 * (non-Javadoc)
-		 * @seeComposestar.Core.CpsRepository2.FilterElements.CanonVariable#
-		 * acceptsValueType
-		 * (Composestar.Core.CpsRepository2.FilterElements.CanonValueType)
-		 */
-		public boolean acceptsValueType(CanonValueType valueType)
-		{
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
 		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonVariable#getBaseName
+		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getBaseName
 		 * ()
 		 */
 		public String getBaseName()
@@ -131,7 +120,7 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonVariable#getName
+		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getName
 		 * ()
 		 */
 		public String getName()
@@ -142,7 +131,7 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonVariable#getPrefix
+		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getPrefix
 		 * ()
 		 */
 		public String getPrefix()
@@ -153,42 +142,15 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonVariable#setValue
-		 * (Composestar.Core.CpsRepository2.FilterElements.CanonValue)
+		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getValue
+		 * ()
 		 */
-		public void setValue(CanonValue newValue) throws NullPointerException, IllegalArgumentException,
-				UnsupportedOperationException
+		public CpsVariable getValue()
+		{
+			return null;
+		}
+
+		public void setValue(CpsVariable newvalue) throws NullPointerException, IllegalArgumentException
 		{}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonValue#getType()
-		 */
-		public CanonValueType getType()
-		{
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonValue#getValue()
-		 */
-		public Object getValue()
-		{
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.Instantiatable.Instantiatable#newInstance
-		 * (Composestar.Core.CpsRepository2.Instantiatable.Instantiator)
-		 */
-		public CanonValue newInstance(Instantiator instantiator) throws UnsupportedOperationException
-		{
-			return null;
-		}
 	}
 }

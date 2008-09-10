@@ -24,14 +24,16 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+
 /**
- * A canonical variable is identifier which can be used on the left hand side of
+ * A canonical property is identifier which can be used on the left hand side of
  * compare statements and, most of them, can be assigned a new value in the
  * assignment part.
  * 
  * @author Michiel Hendriks
  */
-public interface CanonVariable extends CanonValue
+public interface CanonProperty extends CpsVariable
 {
 	/**
 	 * The prefix for all message properties.
@@ -94,27 +96,14 @@ public interface CanonVariable extends CanonValue
 	String getPrefix();
 
 	/**
-	 * Assign a new value to this variable.
-	 * 
-	 * @param newValue Reference to the value instance who's value to take.
-	 * @throws NullPointerException Thrown when the new value is null.
-	 * @throws IllegalArgumentException Thrown when the provided value has a
-	 *             different type that the current type. Values needs to be
-	 *             converted to the correct type.
-	 * @throws UnsupportedOperationException Thrown when this variable is
-	 *             read-only (rare case).
+	 * @return The value of this property.
 	 */
-	// TODO add @see to the CanonTypeConverter thingy
-	void setValue(CanonValue newValue) throws NullPointerException, IllegalArgumentException,
-			UnsupportedOperationException;
+	CpsVariable getValue();
 
 	/**
-	 * Checks if the given value type is accepted as value for this variable. If
-	 * this returns false {@link #setValue(CanonValue)} throws an
-	 * IllegalArgumentException when called with a value of this type.
-	 * 
-	 * @param valueType The value type
-	 * @return True if this type is accepted.
+	 * @param newvalue
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 */
-	boolean acceptsValueType(CanonValueType valueType);
+	void setValue(CpsVariable newvalue) throws NullPointerException, IllegalArgumentException;
 }

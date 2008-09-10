@@ -22,26 +22,19 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
-
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
-import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
 /**
- * This represents an internal for a filter module. An internal only has a name
- * and a type reference.
+ * An object instance. Used for internals, externals, and message properties
+ * like sender, server, inner, etc.
  * 
  * @author Michiel Hendriks
  */
-public interface Internal extends FilterModuleVariable, CpsObject, Instantiatable<Internal>
+public interface CpsObject extends CpsTypeProgramElement
 {
 	/**
-	 * Sets the reference to the type of the internal. The references type
-	 * should have a default constructor.
-	 * 
-	 * @param ref The type of this internal
-	 * @throws NullPointerException Thrown when the type reference is null.
+	 * @return The object instance. Returns null when no instance exists.
 	 */
-	void setTypeReference(TypeReference ref) throws NullPointerException;
+	// TODO: remove this? this could be in a context which is passed around
+	Object getInstance();
 }

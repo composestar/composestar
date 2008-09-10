@@ -72,17 +72,17 @@ public interface FilterModuleBinding extends RepositoryEntity
 	 *         were assigned to this binding an empty list is returned. This
 	 *         list is read-only.
 	 */
-	List<FMParameterValue<?>> getParameterValues();
+	List<FMParameterValue> getParameterValues();
 
 	/**
 	 * Replace the current list of parameter values with the data in the given
 	 * list. Changes made to the given list after calling this function will not
 	 * influence the value list of this binding. A shallow copy of the given
 	 * list is performed. To clear the current list of values, simply pass an
-	 * empty list.
+	 * empty list. On all elements in the list setOwner(this) is called.
 	 * 
 	 * @param list The list from which the values should be copied.
 	 * @throws NullPointerException Thrown when the given list is null.
 	 */
-	void setParameterValues(List<FMParameterValue<?>> list) throws NullPointerException;
+	void setParameterValues(List<FMParameterValue> list) throws NullPointerException;
 }

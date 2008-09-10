@@ -22,26 +22,18 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterElements;
-
-import Composestar.Core.CpsRepository2.RepositoryEntity;
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
 /**
- * Represents a value in the canonical filter model. This is a lightweight
- * interface used for all values.
+ * A literal value. Can be entered directly in a concern specification by
+ * enclosing data embraced with quotes.
  * 
  * @author Michiel Hendriks
  */
-public interface CanonValue extends RepositoryEntity, Instantiatable<CanonValue>
+public interface CpsLiteral extends CpsVariable
 {
 	/**
-	 * @return The type of this value.
+	 * @return The content of this literal.
 	 */
-	CanonValueType getType();
-
-	/**
-	 * @return The value of the of this canonical value.
-	 */
-	Object getValue();
+	String getLiteralValue();
 }

@@ -26,13 +26,14 @@ package Composestar.Core.CpsRepository2.FilterModules;
 
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 
 /**
  * A condition can be used in the matching expression.
  * 
  * @author Michiel Hendriks
  */
-public interface Condition extends FilterModuleVariable, Instantiatable<Condition>
+public interface Condition extends FilterModuleVariable, CpsProgramElement, Instantiatable<Condition>
 {
 	/**
 	 * @return Return the reference to the method which is called when this

@@ -24,10 +24,10 @@
 
 package Composestar.Core.CpsRepository2Impl.Reference;
 
-import Composestar.Core.CpsRepository2.InstanceContextProvider;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
 /**
  * An implementation of the instance method reference
@@ -41,7 +41,7 @@ public class InstanceMethodReferenceImpl extends MethodReferenceImpl implements 
 	/**
 	 * The context for this method reference
 	 */
-	protected InstanceContextProvider context;
+	protected CpsObject cpsObject;
 
 	/**
 	 * Create a new instance method reference
@@ -50,10 +50,10 @@ public class InstanceMethodReferenceImpl extends MethodReferenceImpl implements 
 	 * @param ctx
 	 * @param jpca
 	 */
-	public InstanceMethodReferenceImpl(String refid, InstanceContextProvider ctx, JoinPointContextArgument jpca)
+	public InstanceMethodReferenceImpl(String refid, CpsObject ctx, JoinPointContextArgument jpca)
 	{
 		super(refid, ctx.getTypeReference(), jpca);
-		context = ctx;
+		cpsObject = ctx;
 	}
 
 	/*
@@ -62,9 +62,9 @@ public class InstanceMethodReferenceImpl extends MethodReferenceImpl implements 
 	 * Composestar.Core.CpsRepository2.References.InstanceMethodReference#getContext
 	 * ()
 	 */
-	public InstanceContextProvider getContext()
+	public CpsObject getCpsObject()
 	{
-		return context;
+		return cpsObject;
 	}
 
 	/*
@@ -75,7 +75,7 @@ public class InstanceMethodReferenceImpl extends MethodReferenceImpl implements 
 	@Override
 	public TypeReference getTypeReference()
 	{
-		return context.getTypeReference();
+		return cpsObject.getTypeReference();
 	}
 
 	/*
@@ -87,7 +87,7 @@ public class InstanceMethodReferenceImpl extends MethodReferenceImpl implements 
 	{
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((context == null) ? 0 : context.hashCode());
+		result = prime * result + ((cpsObject == null) ? 0 : cpsObject.hashCode());
 		return result;
 	}
 
@@ -111,14 +111,14 @@ public class InstanceMethodReferenceImpl extends MethodReferenceImpl implements 
 			return false;
 		}
 		InstanceMethodReferenceImpl other = (InstanceMethodReferenceImpl) obj;
-		if (context == null)
+		if (cpsObject == null)
 		{
-			if (other.context != null)
+			if (other.cpsObject != null)
 			{
 				return false;
 			}
 		}
-		else if (!context.equals(other.context))
+		else if (!cpsObject.equals(other.cpsObject))
 		{
 			return false;
 		}

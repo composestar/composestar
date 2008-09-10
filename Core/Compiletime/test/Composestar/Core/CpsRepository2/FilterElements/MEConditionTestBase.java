@@ -29,6 +29,7 @@ import Composestar.Core.CpsRepository2.FilterModules.Condition;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
+import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * @author Michiel Hendriks
@@ -94,6 +95,12 @@ public class MEConditionTestBase extends RepositoryEntityTestBase
 		 */
 		public Condition newInstance(Instantiator instantiator) throws UnsupportedOperationException
 		{
+			return null;
+		}
+
+		public ProgramElement getProgramElement()
+		{
+			// TODO Auto-generated method stub
 			return null;
 		}
 	}

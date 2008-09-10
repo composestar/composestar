@@ -27,6 +27,7 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 
 /**
  * The matching expression compare statement performs a compare operation on
@@ -39,7 +40,7 @@ public interface MECompareStatement extends MatchingExpression, Instantiatable<M
 	/**
 	 * @return The variable which is being checked.
 	 */
-	CanonVariable getLHS();
+	CanonProperty getLHS();
 
 	/**
 	 * Set the variable on the left hand side. setOwner(this) is called on the
@@ -48,14 +49,14 @@ public interface MECompareStatement extends MatchingExpression, Instantiatable<M
 	 * @param var The variable
 	 * @throws NullPointerException Thrown when the variable is null.
 	 */
-	void setLHS(CanonVariable var) throws NullPointerException;
+	void setLHS(CanonProperty var) throws NullPointerException;
 
 	/**
 	 * @return The values on the right hand side. A compare statement is true if
 	 *         the left hand side matches any of the values on the right hand
 	 *         side.
 	 */
-	Collection<CanonValue> getRHS();
+	Collection<CpsVariable> getRHS();
 
 	/**
 	 * Sets the values with which the variable on the left hand side is
@@ -67,5 +68,5 @@ public interface MECompareStatement extends MatchingExpression, Instantiatable<M
 	 * @throws NullPointerException Thrown when the value is null.
 	 * @throws IllegalArgumentException Thrown when the list is empty;
 	 */
-	void setRHS(Collection<CanonValue> values) throws NullPointerException, IllegalArgumentException;
+	void setRHS(Collection<CpsVariable> values) throws NullPointerException, IllegalArgumentException;
 }

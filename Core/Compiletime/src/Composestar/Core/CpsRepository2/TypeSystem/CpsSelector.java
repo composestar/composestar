@@ -22,26 +22,17 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
-
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
-import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
 /**
- * This represents an internal for a filter module. An internal only has a name
- * and a type reference.
+ * A selector
  * 
  * @author Michiel Hendriks
  */
-public interface Internal extends FilterModuleVariable, CpsObject, Instantiatable<Internal>
+public interface CpsSelector extends CpsVariable
 {
 	/**
-	 * Sets the reference to the type of the internal. The references type
-	 * should have a default constructor.
-	 * 
-	 * @param ref The type of this internal
-	 * @throws NullPointerException Thrown when the type reference is null.
+	 * @return The selector name
 	 */
-	void setTypeReference(TypeReference ref) throws NullPointerException;
+	String getName();
 }

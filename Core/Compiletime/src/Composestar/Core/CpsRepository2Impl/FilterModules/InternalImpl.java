@@ -28,6 +28,7 @@ import Composestar.Core.CpsRepository2.FilterModules.Internal;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
+import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * Basic internal implementation
@@ -77,6 +78,30 @@ public class InternalImpl extends AbstractQualifiedRepositoryEntity implements I
 	public TypeReference getTypeReference()
 	{
 		return typeReference;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2.TypeSystem.CpsProgramElement#
+	 * getProgramElement()
+	 */
+	public ProgramElement getProgramElement()
+	{
+		if (typeReference != null)
+		{
+			return typeReference.getReference();
+		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#getInstance()
+	 */
+	public Object getInstance()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/*

@@ -506,15 +506,15 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 		public void setSelector(Selector sel) throws NullPointerException
 		{}
 
-		public void addParameterValue(FMParameterValue<?> value) throws NullPointerException
+		public void addParameterValue(FMParameterValue value) throws NullPointerException
 		{}
 
-		public List<FMParameterValue<?>> getParameterValues()
+		public List<FMParameterValue> getParameterValues()
 		{
 			return null;
 		}
 
-		public void setParameterValues(List<FMParameterValue<?>> list) throws NullPointerException
+		public void setParameterValues(List<FMParameterValue> list) throws NullPointerException
 		{}
 	}
 

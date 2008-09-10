@@ -56,14 +56,14 @@ public class FilterModuleBindingImpl extends AbstractRepositoryEntity implements
 	/**
 	 * List of parameter values
 	 */
-	protected List<FMParameterValue<?>> parameterValues;
+	protected List<FMParameterValue> parameterValues;
 
 	/**
 	 * Create a new filter module binding
 	 */
 	public FilterModuleBindingImpl()
 	{
-		parameterValues = new ArrayList<FMParameterValue<?>>();
+		parameterValues = new ArrayList<FMParameterValue>();
 	}
 
 	/*
@@ -81,7 +81,7 @@ public class FilterModuleBindingImpl extends AbstractRepositoryEntity implements
 	 * @seeComposestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding#
 	 * getParameterValues()
 	 */
-	public List<FMParameterValue<?>> getParameterValues()
+	public List<FMParameterValue> getParameterValues()
 	{
 		return Collections.unmodifiableList(parameterValues);
 	}
@@ -116,14 +116,18 @@ public class FilterModuleBindingImpl extends AbstractRepositoryEntity implements
 	 * @seeComposestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding#
 	 * setParameterValues(java.util.List)
 	 */
-	public void setParameterValues(List<FMParameterValue<?>> list) throws NullPointerException
+	public void setParameterValues(List<FMParameterValue> list) throws NullPointerException
 	{
 		if (list == null)
 		{
 			throw new NullPointerException();
 		}
 		parameterValues.clear();
-		parameterValues.addAll(list);
+		for (FMParameterValue val : list)
+		{
+			parameterValues.add(val);
+			val.setOwner(this);
+		}
 	}
 
 	/*

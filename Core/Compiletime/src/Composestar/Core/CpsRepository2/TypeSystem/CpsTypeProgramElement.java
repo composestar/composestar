@@ -22,26 +22,22 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
 /**
- * This represents an internal for a filter module. An internal only has a name
- * and a type reference.
+ * A more specific program element. This is handled separately because a FQN is
+ * resolved to a Type program element unless it is a local variable.
+ * {@link CpsTypeProgramElement#getProgramElement()} returns the same value as
+ * {@link TypeReference#getReference()} of the returned TypeReference.
  * 
  * @author Michiel Hendriks
  */
-public interface Internal extends FilterModuleVariable, CpsObject, Instantiatable<Internal>
+public interface CpsTypeProgramElement extends CpsProgramElement
 {
 	/**
-	 * Sets the reference to the type of the internal. The references type
-	 * should have a default constructor.
-	 * 
-	 * @param ref The type of this internal
-	 * @throws NullPointerException Thrown when the type reference is null.
+	 * @return Return a reference to the type of this instance.
 	 */
-	void setTypeReference(TypeReference ref) throws NullPointerException;
+	TypeReference getTypeReference();
 }

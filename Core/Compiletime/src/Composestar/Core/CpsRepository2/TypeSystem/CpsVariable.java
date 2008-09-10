@@ -22,26 +22,17 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
-import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
- * This represents an internal for a filter module. An internal only has a name
- * and a type reference.
+ * The base interface for the type system in the Compose* language. All types,
+ * as can be used within the Compose* language, as a subinterface for this
+ * interface.
  * 
  * @author Michiel Hendriks
  */
-public interface Internal extends FilterModuleVariable, CpsObject, Instantiatable<Internal>
+public interface CpsVariable extends RepositoryEntity
 {
-	/**
-	 * Sets the reference to the type of the internal. The references type
-	 * should have a default constructor.
-	 * 
-	 * @param ref The type of this internal
-	 * @throws NullPointerException Thrown when the type reference is null.
-	 */
-	void setTypeReference(TypeReference ref) throws NullPointerException;
 }

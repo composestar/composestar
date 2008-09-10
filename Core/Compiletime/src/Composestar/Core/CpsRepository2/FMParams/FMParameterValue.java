@@ -24,28 +24,27 @@
 
 package Composestar.Core.CpsRepository2.FMParams;
 
-import java.io.Serializable;
 import java.util.Collection;
+
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 
 /**
  * A filter module parameter value. Within the language there is a distinction
  * between a single value and value list. Both are represented by the same
  * interface because at the time of the declaration of the value it is unclear
  * which of the two options is desired by the filter module. During
- * instantiation of the parameterized filter module the the value type will be
- * validated. A list can contain 0 to many values and a single parameter
- * requires 1 value. <br/> This interface is defined as a generic because
- * parameter can contain LAMA program elements or literals. It all depends on
- * where and how they are used. The data will be validated when the filter
- * modules are instantiated. See the ARM for more information on how the
- * parameters are used.
+ * instantiation of the parameterized filter module the value type will be
+ * validated. This is also done because a selector can be used as parameter
+ * value, which can resolve to multiple program elements or just one. A list can
+ * contain 0 to many values and a single parameter requires 1 value.
  * 
  * @author Michiel Hendriks
  */
-public interface FMParameterValue<T> extends Serializable
+public interface FMParameterValue extends RepositoryEntity
 {
 	/**
 	 * @return The values assigned to this filter module parameter.
 	 */
-	Collection<T> getValues();
+	Collection<CpsVariable> getValues();
 }

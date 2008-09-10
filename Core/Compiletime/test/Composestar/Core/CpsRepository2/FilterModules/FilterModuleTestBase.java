@@ -36,6 +36,7 @@ import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
+import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * @author Michiel Hendriks
@@ -643,6 +644,18 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 		{
 			return null;
 		}
+
+		public Object getInstance()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ProgramElement getProgramElement()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	/**
@@ -707,6 +720,18 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 		{
 			return null;
 		}
+
+		public Object getInstance()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ProgramElement getProgramElement()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	/**
@@ -751,6 +776,12 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 		 */
 		public Condition newInstance(Instantiator instantiator) throws UnsupportedOperationException
 		{
+			return null;
+		}
+
+		public ProgramElement getProgramElement()
+		{
+			// TODO Auto-generated method stub
 			return null;
 		}
 	}

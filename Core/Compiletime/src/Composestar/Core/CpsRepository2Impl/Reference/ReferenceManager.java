@@ -30,12 +30,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import Composestar.Core.CpsRepository2.InstanceContextProvider;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
 /**
  * Manages soft-reference instances. Self references are not included in the
@@ -190,7 +190,7 @@ public class ReferenceManager implements Serializable
 	 *             when the reference id is null
 	 * @throws IllegalArgumentException Thrown when the reference id is null
 	 */
-	public InstanceMethodReference getInstanceMethodReference(String refid, InstanceContextProvider context,
+	public InstanceMethodReference getInstanceMethodReference(String refid, CpsObject context,
 			JoinPointContextArgument jpca) throws NullPointerException, IllegalArgumentException
 	{
 		if (context == null)
@@ -206,7 +206,8 @@ public class ReferenceManager implements Serializable
 			throw new IllegalArgumentException("Reference ID is empty");
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append(context.getFullyQualifiedName());
+		// FIXME: needs some work
+		sb.append(System.identityHashCode(context));
 		sb.append(0x1E);
 		sb.append(refid);
 		sb.append(0x1E);

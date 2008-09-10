@@ -27,7 +27,6 @@ package Composestar.Core.CpsRepository2.Instantiatable;
 import Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator;
 import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
-import Composestar.Core.CpsRepository2.FilterElements.CanonValue;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
 import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
 import Composestar.Core.CpsRepository2.FilterElements.MECondition;
@@ -39,6 +38,7 @@ import Composestar.Core.CpsRepository2.FilterModules.External;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.FilterModules.Internal;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 
 /**
  * This is an implementation of the Visitor design pattern, this implements the
@@ -56,7 +56,7 @@ public interface Instantiator
 
 	CanonAssignment instantiate(CanonAssignment base);
 
-	CanonValue instantiate(CanonValue base);
+	CpsVariable instantiate(CpsVariable base);
 
 	Condition instantiate(Condition base);
 

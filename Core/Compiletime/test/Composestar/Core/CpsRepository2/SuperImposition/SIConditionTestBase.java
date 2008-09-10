@@ -24,12 +24,12 @@
 
 package Composestar.Core.CpsRepository2.SuperImposition;
 
-import Composestar.Core.CpsRepository2.InstanceContextProvider;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
@@ -172,7 +172,7 @@ public abstract class SIConditionTestBase extends QualifiedRepositoryEntityTestB
 		 * Composestar.Core.CpsRepository2.References.InstanceMethodReference
 		 * #getContext()
 		 */
-		public InstanceContextProvider getContext()
+		public CpsObject getCpsObject()
 		{
 			return null;
 		}
