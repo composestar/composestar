@@ -29,7 +29,7 @@ import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 /**
  * @author Michiel Hendriks
  */
-public class MELiteralTestBase extends RepositoryEntityTestBase
+public abstract class MELiteralTestBase extends RepositoryEntityTestBase
 {
 
 	protected MELiteral melTrue, melFalse;

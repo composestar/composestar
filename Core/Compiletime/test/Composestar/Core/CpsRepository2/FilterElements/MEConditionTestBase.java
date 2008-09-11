@@ -34,7 +34,7 @@ import Composestar.Core.LAMA.ProgramElement;
 /**
  * @author Michiel Hendriks
  */
-public class MEConditionTestBase extends RepositoryEntityTestBase
+public abstract class MEConditionTestBase extends RepositoryEntityTestBase
 {
 	protected MECondition mec;
 

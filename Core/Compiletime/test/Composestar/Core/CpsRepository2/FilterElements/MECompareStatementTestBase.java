@@ -35,7 +35,7 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 /**
  * @author Michiel Hendriks
  */
-public class MECompareStatementTestBase extends RepositoryEntityTestBase
+public abstract class MECompareStatementTestBase extends RepositoryEntityTestBase
 {
 	protected MECompareStatement mecs;
 
