@@ -24,6 +24,7 @@
 
 package Composestar.Core.CpsRepository2.FilterModules;
 
+import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
 import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
@@ -92,7 +93,7 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 		}
 		try
 		{
-			filter.addArgument(new DummyCA(new DummyCV("xxx", "yyy")));
+			filter.addArgument(new DummyCA(new DummyCV("yyy", PropertyPrefix.MESSAGE)));
 			fail();
 		}
 		catch (IllegalArgumentException e)
@@ -123,7 +124,7 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 		}
 
 		assertNull(filter.removeArgument(new DummyCA(null)));
-		assertNull(filter.removeArgument(new DummyCA(new DummyCV("xxx", "yyy"))));
+		assertNull(filter.removeArgument(new DummyCA(new DummyCV("xxx", PropertyPrefix.MESSAGE))));
 	}
 
 	/**
@@ -307,12 +308,12 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 		/**
 		 * 
 		 */
-		protected String prefix;
+		protected PropertyPrefix prefix;
 
 		/**
 		 * @param vname
 		 */
-		public DummyCV(String vname, String pf)
+		public DummyCV(String vname, PropertyPrefix pf)
 		{
 			super();
 			name = vname;
@@ -321,7 +322,7 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 
 		public DummyCV(String vname)
 		{
-			this(vname, FILTER_PREFIX);
+			this(vname, PropertyPrefix.FILTER);
 		}
 
 		/*
@@ -343,7 +344,7 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 		 */
 		public String getName()
 		{
-			return prefix + "." + name;
+			return prefix.toString() + "." + name;
 		}
 
 		/*
@@ -352,7 +353,7 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 		 * Composestar.Core.CpsRepository2.FilterElements.CanonVariable#getPrefix
 		 * ()
 		 */
-		public String getPrefix()
+		public PropertyPrefix getPrefix()
 		{
 			return prefix;
 		}

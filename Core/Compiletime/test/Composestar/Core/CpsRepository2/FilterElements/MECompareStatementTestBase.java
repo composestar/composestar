@@ -27,6 +27,7 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
@@ -134,7 +135,7 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getPrefix
 		 * ()
 		 */
-		public String getPrefix()
+		public PropertyPrefix getPrefix()
 		{
 			return null;
 		}

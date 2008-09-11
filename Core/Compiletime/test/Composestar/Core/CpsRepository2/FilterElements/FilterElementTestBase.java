@@ -24,6 +24,7 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
+import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
@@ -254,12 +255,12 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		/**
 		 * 
 		 */
-		protected String prefix;
+		protected PropertyPrefix prefix;
 
 		/**
 		 * @param vname
 		 */
-		public DummyCV(String vname, String pf)
+		public DummyCV(String vname, PropertyPrefix pf)
 		{
 			super();
 			name = vname;
@@ -268,7 +269,7 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 
 		public DummyCV(String vname)
 		{
-			this(vname, MESSAGE_PREFIX);
+			this(vname, PropertyPrefix.MESSAGE);
 		}
 
 		/*
@@ -290,7 +291,7 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		 */
 		public String getName()
 		{
-			return prefix + "." + name;
+			return prefix.toString() + "." + name;
 		}
 
 		/*
@@ -299,30 +300,10 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		 * Composestar.Core.CpsRepository2.FilterElements.CanonVariable#getPrefix
 		 * ()
 		 */
-		public String getPrefix()
+		public PropertyPrefix getPrefix()
 		{
 			return prefix;
 		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getValue
-		 * ()
-		 */
-		public CpsVariable getValue()
-		{
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#setValue
-		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
-		 */
-		public void setValue(CpsVariable newvalue) throws NullPointerException, IllegalArgumentException
-		{}
 	}
 
 }

@@ -29,8 +29,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
-import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.Filters.FilterType;
@@ -88,7 +88,7 @@ public class FilterImpl extends AbstractQualifiedRepositoryEntity implements Fil
 		{
 			throw new IllegalArgumentException("Argument does not assign a variable");
 		}
-		if (!argument.getProperty().getPrefix().equals(CanonProperty.FILTER_PREFIX))
+		if (argument.getProperty().getPrefix() != PropertyPrefix.FILTER)
 		{
 			throw new IllegalArgumentException("Argument does not assign a filter argument");
 		}

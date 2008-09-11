@@ -22,37 +22,43 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterElements;
-
-import Composestar.Core.CpsRepository2.PropertyPrefix;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+package Composestar.Core.CpsRepository2;
 
 /**
- * A canonical property is identifier which can be used on the left hand side of
- * compare statements. The value of these properties are stored in a context
- * which should be passed along during evaluation of the filters.
+ * This interface has as only purpose to provide a single entry point for
+ * predefined property names.
  * 
  * @author Michiel Hendriks
  */
-public interface CanonProperty extends CpsVariable
+public interface PropertyNames
 {
 	/**
-	 * @return The full variable name. This is a concatenation of the base and
-	 *         prefix (delimited with a '.')
-	 * @see #getBaseName()
-	 * @see #getPrefix()
+	 * The predefined inner property name. (read-only)
 	 */
-	String getName();
+	static final String INNER = "inner";
 
 	/**
-	 * @return Just the name of the variable without the possible prefix.
+	 * The predefined message.selector property name.
 	 */
-	String getBaseName();
+	static final String SELECTOR = "selector";
 
 	/**
-	 * @return The prefix of the variable name. This is either {
-	 *         {@link #MESSAGE_PREFIX}, {@link #FILTER_PREFIX} or null (in case
-	 *         the name is {@link #INNER})
+	 * The predefined message.self property name.
 	 */
-	PropertyPrefix getPrefix();
+	static final String SELF = "self";
+
+	/**
+	 * The predefined message.sender property name. (read-only)
+	 */
+	static final String SENDER = "sender";
+
+	/**
+	 * The predefined message.server property name.
+	 */
+	static final String SERVER = "server";
+
+	/**
+	 * The predefined message.target property name.
+	 */
+	static final String TARGET = "target";
 }
