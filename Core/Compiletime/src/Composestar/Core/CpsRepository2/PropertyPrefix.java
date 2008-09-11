@@ -74,7 +74,7 @@ public enum PropertyPrefix
 		@Override
 		public String toString()
 		{
-			return null;
+			return "";
 		}
 	};
 
