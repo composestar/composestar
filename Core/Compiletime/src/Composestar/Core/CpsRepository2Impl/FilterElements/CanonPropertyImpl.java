@@ -62,6 +62,10 @@ public class CanonPropertyImpl extends AbstractRepositoryEntity implements Canon
 			IllegalArgumentException
 	{
 		super();
+		if (propPrefix == null)
+		{
+			throw new NullPointerException("prefix can not be null");
+		}
 		if (propPrefix == PropertyPrefix.NONE && !PropertyNames.INNER.equals(propName))
 		{
 			throw new IllegalArgumentException("NONE is only allowed with inner as name");

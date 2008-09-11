@@ -93,7 +93,7 @@ public abstract class AbstractQualifiedRepositoryEntity extends AbstractReposito
 			{
 				if (o instanceof QualifiedRepositoryEntity)
 				{
-					sb.append(((QualifiedRepositoryEntity) getOwner()).getFullyQualifiedName());
+					sb.append(((QualifiedRepositoryEntity) o).getFullyQualifiedName());
 					sb.append('.');
 					break;
 				}
