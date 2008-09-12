@@ -26,14 +26,17 @@ package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraintValue;
+import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
  * A filter module constraint that uses a filter module reference.
  * 
  * @author Michiel Hendriks
  */
-public class FilterModuleConstraintValueImpl implements FilterModuleConstraintValue
+public class FilterModuleConstraintValueImpl extends AbstractRepositoryEntity implements FilterModuleConstraintValue
 {
+	private static final long serialVersionUID = 1752409162279862032L;
+
 	/**
 	 * A reference to a filter module.
 	 */

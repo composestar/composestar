@@ -22,16 +22,41 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SuperImposition;
+package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraintValueTestBase;
 
 /**
- * Interface used for all values of a filter module constraint. This interface
- * is used to group the filter module reference and superimposition condition.
- * 
  * @author Michiel Hendriks
  */
-public interface ConstraintValue extends RepositoryEntity
+public class FilterModuleConstraintValueImplTest extends FilterModuleConstraintValueTestBase
 {
+
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.
+	 * FilterModuleConstraintValueTestBase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		fmcv = new FilterModuleConstraintValueImpl(fmr);
+		re = fmcv;
+	}
+
+	/**
+	 * 
+	 */
+	public void testCtor()
+	{
+		try
+		{
+			new FilterModuleConstraintValueImpl(null);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+	}
 }

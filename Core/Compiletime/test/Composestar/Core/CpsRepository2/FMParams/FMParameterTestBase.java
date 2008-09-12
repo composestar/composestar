@@ -22,16 +22,41 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SuperImposition;
+package Composestar.Core.CpsRepository2.FMParams;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
 
 /**
- * Interface used for all values of a filter module constraint. This interface
- * is used to group the filter module reference and superimposition condition.
- * 
  * @author Michiel Hendriks
  */
-public interface ConstraintValue extends RepositoryEntity
+public abstract class FMParameterTestBase extends QualifiedRepositoryEntityTestBase
 {
+	public static final String FMP_NAME = "foo";
+
+	protected FMParameter sfmp, fmpl;
+
+	/**
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.FMParams.FMParameter#getRawName()}
+	 * .
+	 */
+	public void testGetRawName()
+	{
+		assertEquals(FMP_NAME, sfmp.getRawName());
+		assertEquals(FMP_NAME, fmpl.getRawName());
+		assertEquals("?" + FMP_NAME, sfmp.getName());
+		assertEquals("??" + FMP_NAME, fmpl.getName());
+	}
+
+	/**
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.FMParams.FMParameter#isParameterList()}
+	 * .
+	 */
+	public void testIsParameterList()
+	{
+		assertTrue(fmpl.isParameterList());
+		assertFalse(sfmp.isParameterList());
+	}
+
 }

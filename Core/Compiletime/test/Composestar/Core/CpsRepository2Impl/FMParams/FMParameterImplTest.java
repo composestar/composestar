@@ -22,18 +22,15 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.SuperImposition;
+package Composestar.Core.CpsRepository2Impl.FMParams;
+
+import Composestar.Core.CpsRepository2.FMParams.FMParameterTestBase;
 
 /**
  * @author Michiel Hendriks
  */
-public class LegacySelectorTest extends AbstractSelectorTestBase
+public class FMParameterImplTest extends FMParameterTestBase
 {
-	protected static final String SEL_NAME = "selector1";
-
-	protected static final String SEL_CLASS = "this.is.my.class";
-
-	protected LegacySelector lsel;
 
 	/*
 	 * (non-Javadoc)
@@ -43,41 +40,22 @@ public class LegacySelectorTest extends AbstractSelectorTestBase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		lsel = new LegacySelector(SEL_NAME, SEL_CLASS, true);
-		asel = lsel;
-		sel = lsel;
-		qre = sel;
-		re = sel;
+		sfmp = new FMParameterImpl("?" + FMP_NAME);
+		fmpl = new FMParameterImpl("??" + FMP_NAME);
+		qre = sfmp;
+		re = qre;
 	}
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.LegacySelector#getClassSelection()}
+	 * {@link Composestar.Core.CpsRepository2Impl.FMParams.FMParameterImpl#FMParameterImpl(java.lang.String)}
 	 * .
 	 */
-	public void testGetClassSelection()
-	{
-		assertEquals(SEL_CLASS, lsel.getClassSelection());
-	}
-
-	/**
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.LegacySelector#isIncludeChildren()}
-	 * .
-	 */
-	public void testIsIncludeChildren()
-	{
-		assertTrue(lsel.isIncludeChildren());
-	}
-
-	/**
-	 * 
-	 */
-	public void testCtors()
+	public void testFMParameterImpl()
 	{
 		try
 		{
-			new LegacySelector(null, "1", true);
+			new FMParameterImpl(null);
 			fail();
 		}
 		catch (NullPointerException e)
@@ -85,7 +63,7 @@ public class LegacySelectorTest extends AbstractSelectorTestBase
 		}
 		try
 		{
-			new LegacySelector("", "1", true);
+			new FMParameterImpl("");
 			fail();
 		}
 		catch (IllegalArgumentException e)
@@ -93,15 +71,23 @@ public class LegacySelectorTest extends AbstractSelectorTestBase
 		}
 		try
 		{
-			new LegacySelector("1", null, true);
+			new FMParameterImpl("?");
 			fail();
 		}
-		catch (NullPointerException e)
+		catch (IllegalArgumentException e)
 		{
 		}
 		try
 		{
-			new LegacySelector("1", "", true);
+			new FMParameterImpl("??");
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+		try
+		{
+			new FMParameterImpl("???");
 			fail();
 		}
 		catch (IllegalArgumentException e)

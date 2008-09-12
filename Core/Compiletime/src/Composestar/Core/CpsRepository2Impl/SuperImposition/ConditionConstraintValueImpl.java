@@ -26,14 +26,17 @@ package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
 import Composestar.Core.CpsRepository2.SuperImposition.ConditionConstraintValue;
 import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
+import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
  * A constraint value that use a condition defined in the superimposition block.
  * 
  * @author Michiel Hendriks
  */
-public class ConditionConstraintValueImpl implements ConditionConstraintValue
+public class ConditionConstraintValueImpl extends AbstractRepositoryEntity implements ConditionConstraintValue
 {
+	private static final long serialVersionUID = -4636856061276353316L;
+
 	/**
 	 * The superimposition condition to use
 	 */

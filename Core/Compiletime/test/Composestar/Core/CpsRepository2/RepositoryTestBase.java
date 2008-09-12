@@ -24,7 +24,9 @@
 package Composestar.Core.CpsRepository2;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
@@ -66,8 +68,8 @@ public abstract class RepositoryTestBase extends TestCase
 		repos.add(item2);
 		repos.add(qitem1);
 		repos.add(qitem2);
-		assertNotNull(repos.get(qitem1.getFullyQualifiedName()));
-		assertNotNull(repos.get(qitem2.getFullyQualifiedName()));
+		assertSame(qitem1, repos.get(qitem1.getFullyQualifiedName()));
+		assertSame(qitem2, repos.get(qitem2.getFullyQualifiedName()));
 		repos.clear();
 		assertEquals(0, repos.size());
 		assertNull(repos.get(qitem1.getFullyQualifiedName()));
@@ -76,7 +78,8 @@ public abstract class RepositoryTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#add(Composestar.Core.CpsRepository2.RepositoryEntity)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#add(Composestar.Core.CpsRepository2.RepositoryEntity)}
+	 * .
 	 */
 	public void testAddRepositoryEntity()
 	{
@@ -89,7 +92,8 @@ public abstract class RepositoryTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#remove(java.lang.Object)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#remove(java.lang.Object)}
+	 * .
 	 */
 	public void testRemoveObject()
 	{
@@ -108,7 +112,8 @@ public abstract class RepositoryTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#removeAll(java.util.Collection)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#removeAll(java.util.Collection)}
+	 * .
 	 */
 	public void testRemoveAllCollectionOfQ()
 	{
@@ -128,7 +133,8 @@ public abstract class RepositoryTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#retainAll(java.util.Collection)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#retainAll(java.util.Collection)}
+	 * .
 	 */
 	public void testRetainAllCollectionOfQ()
 	{
@@ -148,18 +154,29 @@ public abstract class RepositoryTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#get(java.lang.String)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#get(java.lang.String)}
+	 * .
 	 */
 	public void testGetString()
 	{
 		repos.add(qitem1);
-		assertNotNull(repos.get(qitem1.getFullyQualifiedName()));
+		assertSame(qitem1, repos.get(qitem1.getFullyQualifiedName()));
 		assertNull(repos.get(qitem2.getFullyQualifiedName()));
+
+		// note: following isn't a safe assumption
+		String old = qitem1.getFullyQualifiedName();
+		qitem2.setOwner(null);
+		qitem1.setOwner(qitem2);
+		assertNull(repos.get(qitem1.getFullyQualifiedName()));
+		assertNull(repos.get(old));
+		// qitem was reinserted with its new id
+		assertSame(qitem1, repos.get(qitem1.getFullyQualifiedName()));
 	}
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#get(java.lang.String, java.lang.Class)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#get(java.lang.String, java.lang.Class)}
+	 * .
 	 */
 	public void testGetStringClassOfT()
 	{
@@ -170,7 +187,8 @@ public abstract class RepositoryTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#getAll(java.lang.Class)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#getAll(java.lang.Class)}
+	 * .
 	 */
 	public void testGetAll()
 	{
@@ -205,11 +223,36 @@ public abstract class RepositoryTestBase extends TestCase
 			}
 		}
 		assertEquals(2, cnt);
+
+		Iterator<RepositoryEntity> it = repos.getAll(RepositoryEntity.class);
+		try
+		{
+			it.remove();
+			fail();
+		}
+		catch (IllegalStateException e)
+		{
+		}
+		assertEquals(it.hasNext(), it.hasNext());
+		while (it.hasNext())
+		{
+			it.next();
+			it.remove();
+		}
+		try
+		{
+			it.next();
+			fail();
+		}
+		catch (NoSuchElementException e)
+		{
+		}
 	}
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#getAllAsSet(java.lang.Class)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#getAllAsSet(java.lang.Class)}
+	 * .
 	 */
 	public void testGetAllAsSet()
 	{

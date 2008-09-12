@@ -22,58 +22,49 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.SuperImposition;
 
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
-import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.LAMA.Type;
+import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
  * @author Michiel Hendriks
  */
-public abstract class InternalTestBase extends QualifiedRepositoryEntityTestBase
+public abstract class FilterModuleConstraintValueTestBase extends RepositoryEntityTestBase
 {
-	protected Internal internal;
+	protected FilterModuleReference fmr;
 
-	/**
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.FilterModules.Internal#setTypeReference(Composestar.Core.CpsRepository2.References.TypeReference)}
-	 * .
+	protected FilterModuleConstraintValue fmcv;
+
+	/*
+	 * (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
 	 */
-	public void testSetTypeReference()
+	@Override
+	protected void setUp() throws Exception
 	{
-		TypeReference ref = new DummTR();
-
-		assertNull(internal.getTypeReference());
-		internal.setTypeReference(ref);
-		assertSame(ref, internal.getTypeReference());
-
-		try
-		{
-			internal.setTypeReference(null);
-		}
-		catch (NullPointerException e)
-		{
-		}
+		super.setUp();
+		fmr = new DummyFMR();
 	}
 
 	/**
-	 * 
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraintValue#getFilterModuleReference()}
+	 * .
 	 */
-	public void testGetProgramElement()
+	public void testGetFilterModuleReference()
 	{
-		assertNull(internal.getProgramElement());
-		TypeReference ref = new DummTR();
-		internal.setTypeReference(ref);
-		assertSame(internal.getTypeReference().getReference(), internal.getProgramElement());
+		assertSame(fmr, fmcv.getFilterModuleReference());
 	}
 
 	/**
 	 * @author Michiel Hendriks
 	 */
-	protected class DummTR implements TypeReference
+	protected class DummyFMR implements FilterModuleReference
 	{
-		private static final long serialVersionUID = 4529927326378786237L;
+
+		private static final long serialVersionUID = 1L;
 
 		/*
 		 * (non-Javadoc)
@@ -88,7 +79,7 @@ public abstract class InternalTestBase extends QualifiedRepositoryEntityTestBase
 		 * @see
 		 * Composestar.Core.CpsRepository2.References.Reference#getReference()
 		 */
-		public Type getReference()
+		public FilterModule getReference()
 		{
 			return null;
 		}
@@ -130,8 +121,8 @@ public abstract class InternalTestBase extends QualifiedRepositoryEntityTestBase
 		 * Composestar.Core.CpsRepository2.References.Reference#setReference
 		 * (java.lang.Object)
 		 */
-		public void setReference(Type element) throws UnsupportedOperationException
+		public void setReference(FilterModule element) throws UnsupportedOperationException
 		{}
-	}
 
+	}
 }

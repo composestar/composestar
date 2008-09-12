@@ -22,16 +22,25 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SuperImposition;
+package Composestar.Core.CpsRepository2.FMParams;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 
 /**
- * Interface used for all values of a filter module constraint. This interface
- * is used to group the filter module reference and superimposition condition.
- * 
  * @author Michiel Hendriks
  */
-public interface ConstraintValue extends RepositoryEntity
+public abstract class FMParameterValueTestBase extends RepositoryEntityTestBase
 {
+	protected FMParameterValue fmpv;
+
+	/**
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.FMParams.FMParameterValue#getValues()}
+	 * .
+	 */
+	public void testGetValues()
+	{
+		assertNotNull(fmpv.getValues());
+	}
+
 }

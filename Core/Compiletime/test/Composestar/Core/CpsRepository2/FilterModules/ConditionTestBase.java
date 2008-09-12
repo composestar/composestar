@@ -67,6 +67,17 @@ public abstract class ConditionTestBase extends QualifiedRepositoryEntityTestBas
 	}
 
 	/**
+	 * 
+	 */
+	public void testGetProgramElement()
+	{
+		assertNull(condition.getProgramElement());
+		MethodReference ref = new DummyMR();
+		condition.setMethodReference(ref);
+		assertSame(condition.getMethodReference().getReference(), condition.getProgramElement());
+	}
+
+	/**
 	 * @author Michiel Hendriks
 	 */
 	protected class DummyMR implements MethodReference

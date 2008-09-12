@@ -57,8 +57,16 @@ public class SelectorFMParamValue extends AbstractRepositoryEntity implements FM
 	 */
 	protected List<CpsVariable> values;
 
-	public SelectorFMParamValue(Selector sel)
+	/**
+	 * @param sel
+	 * @throws NullPointerException Thrown when the selector is null
+	 */
+	public SelectorFMParamValue(Selector sel) throws NullPointerException
 	{
+		if (sel == null)
+		{
+			throw new NullPointerException("selector cannot be null");
+		}
 		selector = sel;
 	}
 

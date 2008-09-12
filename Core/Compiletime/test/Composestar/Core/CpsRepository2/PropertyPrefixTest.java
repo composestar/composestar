@@ -22,16 +22,33 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SuperImposition;
+package Composestar.Core.CpsRepository2;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
+import junit.framework.TestCase;
 
 /**
- * Interface used for all values of a filter module constraint. This interface
- * is used to group the filter module reference and superimposition condition.
- * 
  * @author Michiel Hendriks
  */
-public interface ConstraintValue extends RepositoryEntity
+public class PropertyPrefixTest extends TestCase
 {
+	/**
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.PropertyPrefix#fromString(java.lang.String)}
+	 * .
+	 */
+	public void testFromString()
+	{
+		assertEquals(PropertyPrefix.MESSAGE, PropertyPrefix.fromString(PropertyPrefix.MESSAGE.toString()));
+		assertEquals(PropertyPrefix.FILTER, PropertyPrefix.fromString(PropertyPrefix.FILTER.toString()));
+		assertEquals(PropertyPrefix.NONE, PropertyPrefix.fromString(PropertyPrefix.NONE.toString()));
+		assertEquals(PropertyPrefix.NONE, PropertyPrefix.fromString(null));
+		try
+		{
+			PropertyPrefix.fromString("this prefix does not exist");
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+	}
 }

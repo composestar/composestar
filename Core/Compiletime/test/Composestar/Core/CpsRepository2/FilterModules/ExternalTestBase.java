@@ -63,6 +63,17 @@ public abstract class ExternalTestBase extends QualifiedRepositoryEntityTestBase
 	}
 
 	/**
+	 * 
+	 */
+	public void testGetProgramElement()
+	{
+		assertNull(external.getProgramElement());
+		TypeReference ref = new DummTR();
+		external.setTypeReference(ref);
+		assertSame(external.getTypeReference().getReference(), external.getProgramElement());
+	}
+
+	/**
 	 * Test method for
 	 * {@link Composestar.Core.CpsRepository2.FilterModules.External#setMethodReference(Composestar.Core.CpsRepository2.References.MethodReference)}
 	 * .

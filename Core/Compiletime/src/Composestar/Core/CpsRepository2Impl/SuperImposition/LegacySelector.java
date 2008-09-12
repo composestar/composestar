@@ -61,7 +61,7 @@ public class LegacySelector extends AbstractSelector
 		}
 		if (classFqn.isEmpty())
 		{
-			throw new NullPointerException("Class selection can not be empty");
+			throw new IllegalArgumentException("Class selection can not be empty");
 		}
 		classSelection = classFqn;
 		includeChildren = andSubs;
