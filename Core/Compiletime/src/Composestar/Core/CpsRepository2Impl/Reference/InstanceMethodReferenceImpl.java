@@ -51,6 +51,7 @@ public class InstanceMethodReferenceImpl extends MethodReferenceImpl implements 
 	 * @param jpca
 	 */
 	public InstanceMethodReferenceImpl(String refid, CpsObject ctx, JoinPointContextArgument jpca)
+			throws NullPointerException
 	{
 		super(refid, ctx.getTypeReference(), jpca);
 		cpsObject = ctx;
@@ -76,52 +77,5 @@ public class InstanceMethodReferenceImpl extends MethodReferenceImpl implements 
 	public TypeReference getTypeReference()
 	{
 		return cpsObject.getTypeReference();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((cpsObject == null) ? 0 : cpsObject.hashCode());
-		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-		{
-			return true;
-		}
-		if (!super.equals(obj))
-		{
-			return false;
-		}
-		if (getClass() != obj.getClass())
-		{
-			return false;
-		}
-		InstanceMethodReferenceImpl other = (InstanceMethodReferenceImpl) obj;
-		if (cpsObject == null)
-		{
-			if (other.cpsObject != null)
-			{
-				return false;
-			}
-		}
-		else if (!cpsObject.equals(other.cpsObject))
-		{
-			return false;
-		}
-		return true;
 	}
 }

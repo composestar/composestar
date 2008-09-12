@@ -39,7 +39,7 @@ public class FilterModuleReferenceImpl extends ReferenceImpl<FilterModule> imple
 	/**
 	 * @param refid
 	 */
-	public FilterModuleReferenceImpl(String refid)
+	public FilterModuleReferenceImpl(String refid) throws NullPointerException
 	{
 		super(refid);
 	}

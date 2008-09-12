@@ -49,8 +49,17 @@ public class MethodReferenceImpl extends ReferenceImpl<MethodInfo> implements Me
 	protected JoinPointContextArgument joinPointContextArgument;
 
 	public MethodReferenceImpl(String refid, TypeReference typeRef, JoinPointContextArgument jpca)
+			throws NullPointerException
 	{
 		super(refid);
+		if (typeRef == null)
+		{
+			throw new NullPointerException("type reference cannot be null");
+		}
+		if (jpca == null)
+		{
+			throw new NullPointerException("joinpoint context argument cannot be null");
+		}
 		typeReference = typeRef;
 		joinPointContextArgument = jpca;
 	}
@@ -74,64 +83,5 @@ public class MethodReferenceImpl extends ReferenceImpl<MethodInfo> implements Me
 	public TypeReference getTypeReference()
 	{
 		return typeReference;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + (joinPointContextArgument == null ? 0 : joinPointContextArgument.hashCode());
-		result = prime * result + (typeReference == null ? 0 : typeReference.hashCode());
-		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-		{
-			return true;
-		}
-		if (!super.equals(obj))
-		{
-			return false;
-		}
-		if (getClass() != obj.getClass())
-		{
-			return false;
-		}
-		MethodReferenceImpl other = (MethodReferenceImpl) obj;
-		if (joinPointContextArgument == null)
-		{
-			if (other.joinPointContextArgument != null)
-			{
-				return false;
-			}
-		}
-		else if (!joinPointContextArgument.equals(other.joinPointContextArgument))
-		{
-			return false;
-		}
-		if (typeReference == null)
-		{
-			if (other.typeReference != null)
-			{
-				return false;
-			}
-		}
-		else if (!typeReference.equals(other.typeReference))
-		{
-			return false;
-		}
-		return true;
 	}
 }

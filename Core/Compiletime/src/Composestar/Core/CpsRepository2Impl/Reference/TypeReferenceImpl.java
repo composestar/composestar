@@ -41,7 +41,7 @@ public class TypeReferenceImpl extends ReferenceImpl<Type> implements TypeRefere
 	 * 
 	 * @param refid
 	 */
-	public TypeReferenceImpl(String refid)
+	public TypeReferenceImpl(String refid) throws NullPointerException
 	{
 		super(refid);
 	}

@@ -22,24 +22,13 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.TypeSystem;
+package Composestar.Core.CpsRepository2.References;
+
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 
 /**
- * An object instance. Used for internals, externals, and message properties
- * like sender, server, inner, etc.
- * 
  * @author Michiel Hendriks
  */
-public interface CpsObject extends CpsTypeProgramElement
+public abstract class FilterModuleReferenceTestBase extends ReferenceTestBase<FilterModule>
 {
-	/**
-	 * @return The object instance. Returns null when no instance exists.
-	 */
-	// TODO: remove this? this could be in a context which is passed around
-	Object getInstance();
-
-	/**
-	 * @return The name of this instance
-	 */
-	// String getInstanceName();
 }

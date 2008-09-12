@@ -54,17 +54,19 @@ public class ReferenceImpl<T extends Serializable> implements Reference<T>
 	 */
 	protected T reference;
 
-	public ReferenceImpl()
-	{}
-
 	/**
 	 * Create a reference with a given id;
 	 * 
 	 * @param refid
+	 * @throws NullPointerException Thrown when the reference Id is null
 	 */
-	public ReferenceImpl(String refid)
+	public ReferenceImpl(String refid) throws NullPointerException
 	{
-		this();
+		super();
+		if (refid == null)
+		{
+			throw new NullPointerException("reference id can not be null");
+		}
 		referenceId = refid;
 	}
 
@@ -126,52 +128,5 @@ public class ReferenceImpl<T extends Serializable> implements Reference<T>
 	public boolean isSelfReference()
 	{
 		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (referenceId == null ? 0 : referenceId.hashCode());
-		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-		{
-			return true;
-		}
-		if (obj == null)
-		{
-			return false;
-		}
-		if (getClass() != obj.getClass())
-		{
-			return false;
-		}
-		ReferenceImpl<?> other = (ReferenceImpl<?>) obj;
-		if (referenceId == null)
-		{
-			if (other.referenceId != null)
-			{
-				return false;
-			}
-		}
-		else if (!referenceId.equals(other.referenceId))
-		{
-			return false;
-		}
-		return true;
 	}
 }
