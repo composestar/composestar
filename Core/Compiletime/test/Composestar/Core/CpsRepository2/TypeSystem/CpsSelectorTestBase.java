@@ -22,46 +22,27 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.TypeSystem;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
-import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
-import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
+import junit.framework.TestCase;
 
 /**
- * Basic implementation of the CpsLiteral type
- * 
  * @author Michiel Hendriks
  */
-public class CpsLiteralImpl extends AbstractRepositoryEntity implements CpsLiteral
+public abstract class CpsSelectorTestBase extends TestCase
 {
-	private static final long serialVersionUID = 6880713290852824246L;
+	public static final String NAME = "myselector";
+
+	protected CpsSelector selector;
 
 	/**
-	 * Contains the value of this literal
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.TypeSystem.CpsSelectorTestBase#getName()}
+	 * .
 	 */
-	protected String literalValue;
-
-	/**
-	 * @param value the value of the literal
-	 * @throws NullPointerException Thrown when the value is null
-	 */
-	public CpsLiteralImpl(String value) throws NullPointerException
+	public void testGetName()
 	{
-		super();
-		if (value == null)
-		{
-			throw new NullPointerException("value cannot be null");
-		}
-		literalValue = value;
+		assertEquals(NAME, selector.getName());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral#getLiteralValue()
-	 */
-	public String getLiteralValue()
-	{
-		return literalValue;
-	}
 }

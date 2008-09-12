@@ -24,44 +24,40 @@
 
 package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
-import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
-import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteralTestBase;
 
 /**
- * Basic implementation of the CpsLiteral type
- * 
  * @author Michiel Hendriks
  */
-public class CpsLiteralImpl extends AbstractRepositoryEntity implements CpsLiteral
+public class CpsLiteralImplTest extends CpsLiteralTestBase
 {
-	private static final long serialVersionUID = 6880713290852824246L;
-
-	/**
-	 * Contains the value of this literal
-	 */
-	protected String literalValue;
-
-	/**
-	 * @param value the value of the literal
-	 * @throws NullPointerException Thrown when the value is null
-	 */
-	public CpsLiteralImpl(String value) throws NullPointerException
-	{
-		super();
-		if (value == null)
-		{
-			throw new NullPointerException("value cannot be null");
-		}
-		literalValue = value;
-	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral#getLiteralValue()
+	 * @see junit.framework.TestCase#setUp()
 	 */
-	public String getLiteralValue()
+	@Override
+	protected void setUp() throws Exception
 	{
-		return literalValue;
+		super.setUp();
+		literal = new CpsLiteralImpl(VALUE);
 	}
+
+	/**
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2Impl.TypeSystem.CpsLiteralImpl#CpsLiteralImpl(java.lang.String)}
+	 * .
+	 */
+	public void testCpsLiteralImpl()
+	{
+		try
+		{
+			new CpsLiteralImpl(null);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+	}
+
 }

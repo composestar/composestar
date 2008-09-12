@@ -22,46 +22,27 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.TypeSystem;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
-import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
-import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
+import junit.framework.TestCase;
 
 /**
- * Basic implementation of the CpsLiteral type
- * 
  * @author Michiel Hendriks
  */
-public class CpsLiteralImpl extends AbstractRepositoryEntity implements CpsLiteral
+public abstract class CpsLiteralTestBase extends TestCase
 {
-	private static final long serialVersionUID = 6880713290852824246L;
+	public static final String VALUE = "This is the literal value";
+
+	protected CpsLiteral literal;
 
 	/**
-	 * Contains the value of this literal
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral#getLiteralValue()}
+	 * .
 	 */
-	protected String literalValue;
-
-	/**
-	 * @param value the value of the literal
-	 * @throws NullPointerException Thrown when the value is null
-	 */
-	public CpsLiteralImpl(String value) throws NullPointerException
+	public void testGetLiteralValue()
 	{
-		super();
-		if (value == null)
-		{
-			throw new NullPointerException("value cannot be null");
-		}
-		literalValue = value;
+		assertEquals(VALUE, literal.getLiteralValue());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral#getLiteralValue()
-	 */
-	public String getLiteralValue()
-	{
-		return literalValue;
-	}
 }

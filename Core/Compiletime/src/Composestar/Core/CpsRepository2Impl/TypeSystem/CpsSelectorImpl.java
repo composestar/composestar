@@ -42,11 +42,16 @@ public class CpsSelectorImpl extends AbstractRepositoryEntity implements CpsSele
 	protected String name;
 
 	/**
-	 * 
+	 * @param selectorName the name of the selector
+	 * @throws NullPointerException Thrown when the selector name is null
 	 */
-	public CpsSelectorImpl(String selectorName)
+	public CpsSelectorImpl(String selectorName) throws NullPointerException
 	{
 		super();
+		if (selectorName == null)
+		{
+			throw new NullPointerException("name can not be null");
+		}
 		name = selectorName;
 	}
 
