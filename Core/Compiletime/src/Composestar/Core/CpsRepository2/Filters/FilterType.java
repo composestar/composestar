@@ -37,7 +37,8 @@ public interface FilterType extends RepositoryEntity
 	/**
 	 * @return The full name of this filter type. For FilterModuleFilterTypes
 	 *         this name would be equal to the fully qualified name of the
-	 *         filter module.
+	 *         filter module. For primitive filters this is simply their name
+	 *         (not the implementing class name).
 	 */
 	String getFilterName();
 
