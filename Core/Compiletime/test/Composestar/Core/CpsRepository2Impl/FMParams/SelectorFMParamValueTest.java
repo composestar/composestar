@@ -196,6 +196,9 @@ public class SelectorFMParamValueTest extends FMParameterValueTestBase
 		}
 	}
 
+	/**
+	 * @author Michiel Hendriks
+	 */
 	protected static class DummyTPE extends Type
 	{
 		private static final long serialVersionUID = 1L;
