@@ -96,16 +96,6 @@ public class InternalImpl extends AbstractQualifiedRepositoryEntity implements I
 
 	/*
 	 * (non-Javadoc)
-	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#getInstance()
-	 */
-	public Object getInstance()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see
 	 * Composestar.Core.CpsRepository2.Instantiatable.Instantiatable#newInstance
 	 * (Composestar.Core.CpsRepository2.Instantiatable.Instantiator)

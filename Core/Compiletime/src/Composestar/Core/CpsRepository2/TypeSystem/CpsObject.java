@@ -32,14 +32,5 @@ package Composestar.Core.CpsRepository2.TypeSystem;
  */
 public interface CpsObject extends CpsTypeProgramElement
 {
-	/**
-	 * @return The object instance. Returns null when no instance exists.
-	 */
-	// TODO: remove this? this could be in a context which is passed around
-	Object getInstance();
 
-	/**
-	 * @return The name of this instance
-	 */
-	// String getInstanceName();
 }

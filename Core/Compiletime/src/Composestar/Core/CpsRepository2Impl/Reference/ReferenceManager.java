@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
@@ -207,15 +206,9 @@ public class ReferenceManager implements Serializable
 			throw new IllegalArgumentException("Reference ID is empty");
 		}
 		StringBuilder sb = new StringBuilder();
-		if (context instanceof QualifiedRepositoryEntity)
-		{
-			sb.append(((QualifiedRepositoryEntity) context).getFullyQualifiedName());
-		}
-		else
-		{
-			sb.append('`');
-			sb.append(System.identityHashCode(context));
-		}
+		sb.append(context.getClass().getName());
+		sb.append(0x1E);
+		sb.append(System.identityHashCode(context));
 		sb.append(0x1E);
 		sb.append(refid);
 		sb.append(0x1E);

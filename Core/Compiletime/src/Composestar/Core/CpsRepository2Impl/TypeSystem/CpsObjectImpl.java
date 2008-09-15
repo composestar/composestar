@@ -53,13 +53,4 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 	{
 		super(ref);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#getInstance()
-	 */
-	public Object getInstance()
-	{
-		return null;
-	}
 }
