@@ -22,16 +22,23 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2;
+package Composestar.Core.CpsRepository2Impl.Reference;
 
-import java.util.Iterator;
+import Composestar.Core.CpsRepository2.References.ReferenceManagerTestBase;
 
 /**
- * An iterator and iterable that only returns elemetns from the repository of a
- * given type.
- * 
  * @author Michiel Hendriks
  */
-public interface RepositoryIterator<T> extends Iterator<T>, Iterable<T>
+public class ReferenceManagerImplTest extends ReferenceManagerTestBase
 {
+	/*
+	 * (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		refman = new ReferenceManagerImpl();
+	}
 }

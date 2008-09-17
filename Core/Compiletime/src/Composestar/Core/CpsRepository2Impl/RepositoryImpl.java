@@ -36,7 +36,6 @@ import java.util.Map.Entry;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
-import Composestar.Core.CpsRepository2.RepositoryIterator;
 
 /**
  * Implementation of the repository interface based on a LinkedHashSet for
@@ -217,9 +216,20 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 	 * (non-Javadoc)
 	 * @see Composestar.Core.CpsRepository2.Repository#getAll(java.lang.Class)
 	 */
-	public <T extends RepositoryEntity> RepositoryIterator<T> getAll(Class<T> type)
+	public <T extends RepositoryEntity> Iterable<T> getAll(Class<T> type)
 	{
-		return new RepositoryIteratorImpl<T>(type);
+		return new RepositoryIterable<T>(type);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.Repository#getAllAsIterator(java.lang
+	 * .Class)
+	 */
+	public <T extends RepositoryEntity> Iterator<T> getAllIterator(Class<T> type)
+	{
+		return new RepositoryIterator<T>(type);
 	}
 
 	/*
@@ -227,7 +237,7 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 	 * @see
 	 * Composestar.Core.CpsRepository2.Repository#getAllAsSet(java.lang.Class)
 	 */
-	public <T extends RepositoryEntity> Set<T> getAllAsSet(Class<T> type)
+	public <T extends RepositoryEntity> Set<T> getAllSet(Class<T> type)
 	{
 		Set<T> result = new LinkedHashSet<T>();
 		for (T item : getAll(type))
@@ -238,11 +248,44 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 	}
 
 	/**
+	 * An iterable that creates an filtered iterator when needed
+	 * 
+	 * @author Michiel Hendriks
+	 */
+	private final class RepositoryIterable<T> implements Iterable<T>
+	{
+		/**
+		 * The class to filter on
+		 */
+		private Class<T> filterClass;
+
+		/**
+		 * Create a new repository iterator using a given filter
+		 * 
+		 * @param filter
+		 */
+		public RepositoryIterable(Class<T> filter)
+		{
+			filterClass = filter;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.Iterable#iterator()
+		 */
+		public Iterator<T> iterator()
+		{
+			return new RepositoryIterator<T>(filterClass);
+		}
+
+	}
+
+	/**
 	 * A filtering iterator.
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	private final class RepositoryIteratorImpl<T> implements RepositoryIterator<T>
+	private final class RepositoryIterator<T> implements Iterator<T>
 	{
 		/**
 		 * The base iterator
@@ -269,7 +312,7 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		 * 
 		 * @param filter
 		 */
-		public RepositoryIteratorImpl(Class<T> filter)
+		public RepositoryIterator(Class<T> filter)
 		{
 			it = RepositoryImpl.this.iterator();
 			filterClass = filter;
@@ -321,15 +364,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 				throw new IllegalStateException("next() has not been called yet");
 			}
 			it.remove();
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Iterable#iterator()
-		 */
-		public Iterator<T> iterator()
-		{
-			return this;
 		}
 
 		/**

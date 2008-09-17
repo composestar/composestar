@@ -21,36 +21,21 @@
  *
  * $Id$
  */
-package Composestar.Core.CpsRepository2Impl.Reference;
+package Composestar.Core.CpsRepository2.References;
 
 import junit.framework.TestCase;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
-import Composestar.Core.CpsRepository2.References.FilterModuleReference;
-import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
-import Composestar.Core.CpsRepository2.References.MethodReference;
-import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * @author Michiel Hendriks
  */
-public class ReferenceManagerTest extends TestCase
+public abstract class ReferenceManagerTestBase extends TestCase
 {
 	protected ReferenceManager refman;
-
-	/*
-	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		refman = new ReferenceManager();
-	}
 
 	public void testGetTypeReference()
 	{

@@ -224,7 +224,7 @@ public abstract class RepositoryTestBase extends TestCase
 		}
 		assertEquals(2, cnt);
 
-		Iterator<RepositoryEntity> it = repos.getAll(RepositoryEntity.class);
+		Iterator<RepositoryEntity> it = repos.getAllIterator(RepositoryEntity.class);
 		try
 		{
 			it.remove();
@@ -251,7 +251,7 @@ public abstract class RepositoryTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#getAllAsSet(java.lang.Class)}
+	 * {@link Composestar.Core.CpsRepository2Impl.RepositoryImpl#getAllSet(java.lang.Class)}
 	 * .
 	 */
 	public void testGetAllAsSet()
@@ -260,9 +260,9 @@ public abstract class RepositoryTestBase extends TestCase
 		repos.add(item2);
 		repos.add(qitem1);
 		repos.add(qitem2);
-		assertEquals(4, repos.getAllAsSet(RepositoryEntity.class).size());
-		assertEquals(2, repos.getAllAsSet(QualifiedRepositoryEntity.class).size());
-		assertEquals(2, repos.getAllAsSet(item1.getClass()).size());
+		assertEquals(4, repos.getAllSet(RepositoryEntity.class).size());
+		assertEquals(2, repos.getAllSet(QualifiedRepositoryEntity.class).size());
+		assertEquals(2, repos.getAllSet(item1.getClass()).size());
 	}
 
 }

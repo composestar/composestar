@@ -32,6 +32,7 @@ import java.util.Map;
 
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.References.ReferenceManager;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
@@ -43,7 +44,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
  * 
  * @author Michiel Hendriks
  */
-public class ReferenceManager implements Serializable
+public class ReferenceManagerImpl implements Serializable, ReferenceManager
 {
 	private static final long serialVersionUID = -400983142236822779L;
 
@@ -67,7 +68,7 @@ public class ReferenceManager implements Serializable
 	 */
 	protected Map<String, FilterModuleReference> fmRefs;
 
-	public ReferenceManager()
+	public ReferenceManagerImpl()
 	{
 		typeRefs = new HashMap<String, TypeReference>();
 		methodRefs = new HashMap<String, MethodReference>();
@@ -75,14 +76,10 @@ public class ReferenceManager implements Serializable
 		fmRefs = new HashMap<String, FilterModuleReference>();
 	}
 
-	/**
-	 * Get a type reference with the given reference id. It will create a new
-	 * type reference when no previous reference existed.
-	 * 
-	 * @param refid The reference id.
-	 * @return The type reference
-	 * @throws IllegalArgumentException Thrown when the reference id is empty
-	 * @throws NullPointerException Thrown when the reference id is null
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getTypeReference(java.lang.String)
 	 */
 	public TypeReference getTypeReference(String refid) throws IllegalArgumentException, NullPointerException
 	{
@@ -103,25 +100,21 @@ public class ReferenceManager implements Serializable
 		return typeRefs.get(refid);
 	}
 
-	/**
-	 * @return Read-only list of all known type references.
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getTypeReferences()
 	 */
 	public Collection<TypeReference> getTypeReferences()
 	{
 		return Collections.unmodifiableCollection(typeRefs.values());
 	}
 
-	/**
-	 * Get a MethodInfo reference using a reference id of a type.
-	 * 
-	 * @param refid The reference id of the method reference
-	 * @param typeRef The reference id of the type.
-	 * @param jpca The desired join point context argument of the method
-	 * @return The method reference
-	 * @throws NullPointerException Thrown when the type reference is null or
-	 *             when the reference id is null
-	 * @throws IllegalArgumentException Thrown when the reference id or type
-	 *             reference is empty
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getMethodReference(java.lang.String, java.lang.String,
+	 * Composestar.Core.CpsRepository2.JoinPointContextArgument)
 	 */
 	public MethodReference getMethodReference(String refid, String typeRef, JoinPointContextArgument jpca)
 			throws NullPointerException, IllegalArgumentException
@@ -129,16 +122,12 @@ public class ReferenceManager implements Serializable
 		return getMethodReference(refid, getTypeReference(typeRef), jpca);
 	}
 
-	/**
-	 * Get a method reference using a type reference
-	 * 
-	 * @param refid The reference id of the method reference
-	 * @param typeRef A type reference
-	 * @param The desired join point context argument of the method
-	 * @return The method reference
-	 * @throws NullPointerException Thrown when the type reference is null or
-	 *             when the reference id is null
-	 * @throws IllegalArgumentException Thrown when the reference id is empty
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getMethodReference(java.lang.String,
+	 * Composestar.Core.CpsRepository2.References.TypeReference,
+	 * Composestar.Core.CpsRepository2.JoinPointContextArgument)
 	 */
 	public MethodReference getMethodReference(String refid, TypeReference typeRef, JoinPointContextArgument jpca)
 			throws NullPointerException, IllegalArgumentException
@@ -171,24 +160,22 @@ public class ReferenceManager implements Serializable
 		return methodRefs.get(fullid);
 	}
 
-	/**
-	 * @return Read-only list of all method references
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getMethodReferences()
 	 */
 	public Collection<MethodReference> getMethodReferences()
 	{
 		return Collections.unmodifiableCollection(methodRefs.values());
 	}
 
-	/**
-	 * Get an instance method reference
-	 * 
-	 * @param refid The reference id of the method reference
-	 * @param context A context
-	 * @param The desired join point context argument of the method
-	 * @return The method reference
-	 * @throws NullPointerException Thrown when the context reference is null or
-	 *             when the reference id is null
-	 * @throws IllegalArgumentException Thrown when the reference id is null
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getInstanceMethodReference(java.lang.String,
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject,
+	 * Composestar.Core.CpsRepository2.JoinPointContextArgument)
 	 */
 	public InstanceMethodReference getInstanceMethodReference(String refid, CpsObject context,
 			JoinPointContextArgument jpca) throws NullPointerException, IllegalArgumentException
@@ -223,22 +210,20 @@ public class ReferenceManager implements Serializable
 		return instMethodRefs.get(fullid);
 	}
 
-	/**
-	 * @return Read-only list of all method references
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getInstanceMethodReferences()
 	 */
 	public Collection<InstanceMethodReference> getInstanceMethodReferences()
 	{
 		return Collections.unmodifiableCollection(instMethodRefs.values());
 	}
 
-	/**
-	 * Get a type reference with the given reference id. It will create a new
-	 * type reference when no previous reference existed.
-	 * 
-	 * @param refid The reference id.
-	 * @return The type reference
-	 * @throws IllegalArgumentException Thrown when the reference id is empty
-	 * @throws NullPointerException Thrown when the reference id is null
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getFilterModuleReference(java.lang.String)
 	 */
 	public FilterModuleReference getFilterModuleReference(String refid) throws NullPointerException,
 			IllegalArgumentException
@@ -260,8 +245,10 @@ public class ReferenceManager implements Serializable
 		return fmRefs.get(refid);
 	}
 
-	/**
-	 * @return Read-only list of all known type references.
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Reference.IReferenceManager#
+	 * getFilterModuleReferences()
 	 */
 	public Collection<FilterModuleReference> getFilterModuleReferences()
 	{

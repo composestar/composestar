@@ -25,6 +25,7 @@
 package Composestar.Core.CpsRepository2;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -55,16 +56,30 @@ public interface Repository extends Serializable, Set<RepositoryEntity>
 	<T extends QualifiedRepositoryEntity> T get(String fqn, Class<T> type);
 
 	/**
-	 * Return an iterator that returns all instances of a give type. The
-	 * returned iterator is also an Iterable.
+	 * Return an iterable to all elements in the repository for with a given
+	 * type.
 	 * 
 	 * @param <T>
 	 * @param type The filter type
-	 * @return An RepositoryIterator iterator that returns all repository
-	 *         elements with the given type.
-	 * @see #getAllAsSet(Class)
+	 * @return An iterable that returns all repository elements with the given
+	 *         type.
+	 * @see #getAllIterator(Class)
+	 * @see #getAllSet(Class)
 	 */
-	<T extends RepositoryEntity> RepositoryIterator<T> getAll(Class<T> type);
+	<T extends RepositoryEntity> Iterable<T> getAll(Class<T> type);
+
+	/**
+	 * Return an iterator which only returns the repository elements with the
+	 * given type.
+	 * 
+	 * @param <T>
+	 * @param type The filter type
+	 * @return An iterator which only returns the repository elements of the
+	 *         given type
+	 * @see #getAll(Class)
+	 * @see #getAllSet(Class)
+	 */
+	<T extends RepositoryEntity> Iterator<T> getAllIterator(Class<T> type);
 
 	/**
 	 * Returns an immutable subset that only contains elements of the given
@@ -76,6 +91,7 @@ public interface Repository extends Serializable, Set<RepositoryEntity>
 	 * @param type The filter type
 	 * @return A set with all elements from the repository of the given type.
 	 * @see #getAll(Class)
+	 * @see #getAllIterator(Class)
 	 */
-	<T extends RepositoryEntity> Set<T> getAllAsSet(Class<T> type);
+	<T extends RepositoryEntity> Set<T> getAllSet(Class<T> type);
 }

@@ -202,6 +202,14 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 	{
 		private static final long serialVersionUID = 8340125372676859121L;
 
+		/**
+		 * 
+		 */
+		public DummyFT()
+		{
+			super();
+		}
+
 		/*
 		 * (non-Javadoc)
 		 * @see
@@ -219,6 +227,14 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 	protected class DummyFE extends AbstractRepositoryEntity implements FilterElementExpression
 	{
 		private static final long serialVersionUID = -348280562215152579L;
+
+		/**
+		 * 
+		 */
+		public DummyFE()
+		{
+			super();
+		}
 	}
 
 	/**
