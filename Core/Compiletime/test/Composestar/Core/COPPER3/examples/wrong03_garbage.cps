@@ -1,0 +1,4 @@
+concern foo
+{
+	garbage data
+}
