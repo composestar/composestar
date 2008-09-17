@@ -30,6 +30,14 @@
 				<include name="CpsTreeWalker.java" />
 				<include name="CpsTreeWalker.tokens" />
 			</fileset>
+			<fileset dir="src/Composestar/Core/COPPER3">
+				<include name="CpsLexer.java" />
+				<include name="CpsParser.java" />
+				<include name="Cps__.g" />
+				<include name="Cps.tokens" />
+				<include name="CpsTreeWalker.java" />
+				<include name="CpsTreeWalker.tokens" />
+			</fileset>
 		</delete>
 
 		<delete>
@@ -38,7 +46,7 @@
 				<include name="**/TESTS-*.xml" />
 			</fileset>
 		</delete>
-		
+
 		<ant dir="${build.core}/Compiletime/grammar" target="clean" inheritRefs="true" />
 	</target>
 
@@ -77,7 +85,7 @@
 			<entry key="version.build" value="${version.build}" />
 			<entry key="version.compiledate" type="date" value="now" pattern="EEE, d MMM yyyy HH:mm:ss Z" />
 		</propertyfile>
-		
+
 		<!-- Call javac twice because of a bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6558580 -->
 		<!--<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
@@ -184,6 +192,7 @@
 		<javac srcdir="test" destdir="test" classpathref="lib.test" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java" />
 			<exclude name="**/AssemblyInfo.java" />
+			<exclude name="**/COPPER3/**" />
 		</javac>
 	</target>
 
@@ -198,6 +207,7 @@
 			<batchtest todir="test/test-results">
 				<fileset dir="test">
 					<include name="**/*Test.class" />
+					<exclude name="**/COPPER3/**" />
 				</fileset>
 			</batchtest>
 		</junit>
