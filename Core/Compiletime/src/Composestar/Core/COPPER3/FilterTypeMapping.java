@@ -27,14 +27,13 @@ package Composestar.Core.COPPER3;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -46,7 +45,7 @@ public class FilterTypeMapping
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER + ".FilterTypes");
 
-	public static final String RESOURCE_KEY = "COPPER.FilterTypeMapping";
+	public static final String RESOURCE_KEY = "COPPER3.FilterTypeMapping";
 
 	/**
 	 * Contains a mapping from strings representing filtertypes to FilterType
@@ -59,10 +58,10 @@ public class FilterTypeMapping
 		mapping = new HashMap<String, FilterType>();
 	}
 
-	public FilterTypeMapping(DataStore ds)
+	public FilterTypeMapping(Repository repos)
 	{
 		this();
-		createFilterTypeMapping(ds);
+		createFilterTypeMapping(repos);
 	}
 
 	/**
@@ -106,7 +105,7 @@ public class FilterTypeMapping
 		}
 		else
 		{
-			typeName = ft.getType().toLowerCase();
+			typeName = ft.getFilterName().toLowerCase();
 		}
 		if (mapping.containsKey(typeName))
 		{
@@ -122,14 +121,13 @@ public class FilterTypeMapping
 	/**
 	 * Harvest filter types from the datastore
 	 * 
-	 * @param ds
+	 * @param repos
 	 */
-	private void createFilterTypeMapping(DataStore ds)
+	private void createFilterTypeMapping(Repository repos)
 	{
-		Iterator<FilterType> filterTypeIter = ds.getAllInstancesOf(FilterType.class);
-		while (filterTypeIter.hasNext())
+		for (FilterType flt : repos.getAll(FilterType.class))
 		{
-			registerFilterType(filterTypeIter.next());
+			registerFilterType(flt);
 		}
 	}
 

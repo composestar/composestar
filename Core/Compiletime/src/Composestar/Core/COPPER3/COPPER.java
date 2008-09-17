@@ -38,13 +38,14 @@ import org.apache.log4j.Logger;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.DevNullOutputStream;
 import Composestar.Utils.Logging.CPSLogger;
@@ -96,7 +97,8 @@ public class COPPER implements CTCommonModule
 		filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		if (filterTypes == null)
 		{
-			filterTypes = new FilterTypeMapping(resources.repository());
+			// TODO: use the correct repository
+			filterTypes = new FilterTypeMapping(/* resources.repository() */);
 			resources.put(FilterTypeMapping.RESOURCE_KEY, filterTypes);
 		}
 
@@ -225,8 +227,8 @@ public class COPPER implements CTCommonModule
 		Logger.getRootLogger().setLevel(Level.DEBUG);
 		DataMap.setDataMapClass(DataMapImpl.class);
 		COPPER c = new COPPER();
-		DataStore ds = DataStore.instance();
-		c.filterTypes = new FilterTypeMapping(ds);
+		Repository repos = new RepositoryImpl();
+		c.filterTypes = new FilterTypeMapping(repos);
 		// c.filterFactory = new DefaultFilterFactory(c.filterTypes, ds);
 		// c.filterFactory.setAllowLegacyCustomFilters(true);
 		try

@@ -14,6 +14,7 @@
  *				error recovery.
  * (2007-10-15) michielh	Added constraint processing.
  * (2008-05-09) michielh	Added constraint processing for FILTH2
+ * (2008-09-17) michielh	Start on COPPER3
  */
 tree grammar CpsTreeWalker;
 
@@ -383,149 +384,68 @@ condition [FilterModule fm]
 	
 filterExpression [FilterModule fm] returns [FilterExpression expr]
 // throws CpsSemanticException
-	: (lhs=filter[fm]
-	  (op=filterOperator rhs=filter[fm]
-	    {
-	  	
-	    }
-	  )*
-	  {if (expr == null) { expr = lhs; }}
-	  )
+	: op=filterOperator lhs=filterExpression[fm] rhs=filterExpression[fm]
+		{
+			op.setLHS(lhs);
+			op.setRHS(rhs);
+			expr = op;
+		}
+	| flt=filter[fm] {expr = flt;}
 	;
 
 inputfilters [FilterModule fm]
 // throws CpsSemanticException
-	: ^(INPUT_FILTERS ({Tree errTok = (Tree) input.LT(1);} 
-	  lhs=filter[fm]
-	  {
-	  try {
-	  	if (!fm.addInputFilter(lhs))
+	: ^(INPUT_FILTERS expr=filterExpression[fm]
 		{
-			throw new CpsSemanticException(String.format("Inputfilter name \"\%s\" is not unqiue in filter module: \%s", 
-				lhs.getName(), fm.getQualifiedName()), input, errTok);
-		}
-	  }
-	  catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-	  }
-	  }
-	  )
-	  (op=filterOperator {Tree errTok = (Tree) input.LT(1);} rhs=filter[fm]
-	    {
-	    try {
-	  	lhs.setRightOperator(op);
-	  	op.setParent(lhs);
-	  	op.setRightArgument(rhs);
-		if (!fm.addInputFilter(rhs))
-		{
-			throw new CpsSemanticException(String.format("Inputfilter name \"\%s\" is not unqiue in filter module: \%s", 
-				rhs.getName(), fm.getQualifiedName()), input, errTok);
-		}
-		lhs = rhs;
-	    }
-	    catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-	    }
-	    }
-	  )*
-	  )
+			fm.setInputFilterExpression(expr);
+		})
 	;
 	
 outputfilters [FilterModule fm]
 // throws CpsSemanticException
-	: ^(OUTPUT_FILTERS ({Tree errTok = (Tree) input.LT(1);} 
-	  lhs=filter[fm] 
-	  {
-	  try {
-	  	if (!fm.addOutputFilter(lhs))
+	: ^(OUTPUT_FILTERS expr=filterExpression[fm]
 		{
-			throw new CpsSemanticException(String.format("Outputfilter name \"\%s\" is not unqiue in filter module: \%s", 
-				lhs.getName(), fm.getQualifiedName()), input, errTok);
-		}
-	  }
-	  catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-	  }
-	  }
-	  )
-	  (op=filterOperator {Tree errTok = (Tree) input.LT(1);} rhs=filter[fm]
-	    {
-	    try {
-	  	lhs.setRightOperator(op);
-	  	op.setParent(lhs);
-	  	op.setRightArgument(rhs);
-	 	if (!fm.addOutputFilter(rhs))
-		{
-			throw new CpsSemanticException(String.format("Outputfilter name \"\%s\" is not unqiue in filter module: \%s", 
-				rhs.getName(), fm.getQualifiedName()), input, errTok);
-		}
-	  	lhs = rhs;
-	    }
-	    catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-	    }
-	    }
-	  )*
-	  {
-		FilterCompOper voidop = new VoidFilterCompOper();
-		lhs.setRightOperator(voidop);
-		voidop.setParent(lhs);		
-	  }
-	  )
+			fm.setOutputFilterExpression(expr);
+		})
 	;
 
 // $<Filter
 
-filterOperator returns [FilterCompOper op]
-	: seq=SEMICOLON 
+filterOperator returns [BinaryFilterOperator op]
+	: ^(seq=SEMICOLON 
 	  {
-	  	op = new SEQfilterCompOper();
+	  	op = new SequentialFilterOper();
 	  	setLocInfo(op, $seq);
+	  	repository.add(op);
 	  }
+	  )
 	;
 
 /**
  * Filter module passed to resolve FM elements, parent of various elements are not set yet
  */
-filter [FilterModuleAST fm] returns [FilterAST filter = new FilterAST();]
+filter [FilterModule fm] returns [Filter filter]
 // throws CpsSemanticException
 	: ^(frst=FILTER name=IDENTIFIER ft=filterType 
 	  {
+	  	try {
+	  		if (!fm.isUniqueMemberName($name.text)) {
+	  			throw new CpsSemanticException(String.format("Filter name \"\%s\" is not unqiue in filter module: \%s", 
+					$name.text, fm.getFullyQualifiedName()), input, name);
+	  		}
+	  	}
+	  	catch (RecognitionException re) {
+			reportError(re);
+			recover(input,re);
+	  	}
+	  	filter = new FilterImpl($name.text);
 	  	setLocInfo(filter, $frst);
-	  	filter.setName($name.text);
-	  	filter.setParent(fm);
-	  	filter.setFilterType(ft);
+	  	filter.setOwner(fm); // done so that the correct FQN is produced in repository.add(.._
+	  	filter.setType(ft);
+	  	repository.add(filter);
 	  }
-	  (^(PARAMS (prm=identifierOrSingleFmParam
-	    {
-	  	// fm params
-	  	filter.addParameter($prm.text);
-	    }
-	  )+))?
-	  lhs=filterElement[fm] 
-	  {
-	  	lhs.setParent(filter);
-	  	filter.addFilterElement(lhs);
-	  }
-	  (op=filterElementOperator rhs=filterElement[fm]
-	    {
-		lhs.setRightOperator(op);
-		op.setParent(lhs);
-		op.setRightArgument(rhs);
-		rhs.setParent(filter);
-		filter.addFilterElement(rhs);
-		lhs=rhs;
-	    }
-	  )*
-	  {
-	  	VoidFilterElementCompOper vop = new VoidFilterElementCompOper();
-	  	lhs.setRightOperator(vop);
-	  	vop.setParent(lhs);
-	  }
+	  // TODO: process assingments
+	  // FIXME: process filter element expression
 	  )
 	;
 	
@@ -538,6 +458,7 @@ filterType returns [FilterType ft]
 	  	ft = filterTypes.getFilterType(ftName);
 	  	if ((ft == null) && (filterFactory.allowLegacyCustomFilters()))
 		{
+			/*
 			logger.info(String.format("Creating legacy custom filter with name: \%s", ftName));
 			try {
 				ft = filterFactory.createLegacyCustomFilterType(ftName);
@@ -546,6 +467,7 @@ filterType returns [FilterType ft]
 			{
 				logger.info(String.format("Error creating custom filter type: \%s", ftName));
 			}
+			*/
 		}
 		if (ft == null)
 		{
@@ -557,19 +479,9 @@ filterType returns [FilterType ft]
 		recover(input,re);
 	  }
 	  }
-	| prm=singleFmParam
-	  {
-	  try {
-	  	throw new CpsSemanticException(String.format("Filter Module Parameters are not supported as filter type"), input, $prm.start);
-	  }
-	  catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-	  }
-	  }
 	;	
 	
-filterElementOperator returns [FilterElementCompOper op]
+filterElementOperator returns [BinaryFilterElementOperator op]
 	: or=COMMA 
 	  {
 	  	op = new CORfilterElementCompOper();
@@ -580,7 +492,7 @@ filterElementOperator returns [FilterElementCompOper op]
 /**
  * Filter module passed to resolve FM elements, parent of various elements are not set yet
  */
-filterElement [FilterModuleAST fm] returns [FilterElementAST fe = new FilterElementAST();]
+filterElement [FilterModule fm] returns [FilterElement fe]
 // throws CpsSemanticException
 	: ^(frst=FILTER_ELEMENT 
 	  {
@@ -615,7 +527,7 @@ filterElement [FilterModuleAST fm] returns [FilterElementAST fe = new FilterElem
 
 // $<Condition Expression
 
-conditionExpression [FilterModuleAST fm] returns [ConditionExpression ex]
+conditionExpression [FilterModule fm] returns [ConditionExpression ex]
 	: ^(frst=OR lhs=conditionExpression[fm] rhs=conditionExpression[fm] 
 	    {
 	    	ex = new Or();
@@ -629,7 +541,7 @@ conditionExpression [FilterModuleAST fm] returns [ConditionExpression ex]
 	| andex=andExpr[fm] {ex = andex;}
 	;
 
-andExpr [FilterModuleAST fm] returns [ConditionExpression ex]
+andExpr [FilterModule fm] returns [ConditionExpression ex]
 	: ^(frst=AND lhs=conditionExpression[fm] rhs=conditionExpression[fm] 
 	    {
 	    	ex = new And();
@@ -643,7 +555,7 @@ andExpr [FilterModuleAST fm] returns [ConditionExpression ex]
 	| unex=unaryExpr[fm] {ex = unex;}
 	;
 	
-unaryExpr [FilterModuleAST fm] returns [ConditionExpression ex]
+unaryExpr [FilterModule fm] returns [ConditionExpression ex]
 	: ^(frst=NOT oper=conditionExpression[fm]
 	    {
 	  	ex = new Not();
@@ -655,7 +567,7 @@ unaryExpr [FilterModuleAST fm] returns [ConditionExpression ex]
 	| oex=operandExpr[fm] {ex = oex;}
 	;
 	
-operandExpr [FilterModuleAST fm] returns [ConditionExpression ex]
+operandExpr [FilterModule fm] returns [ConditionExpression ex]
 	: name=IDENTIFIER // literals (True, False) are resolved by the tree walker
 	  {
 	  	String oper = $name.text;
@@ -689,7 +601,7 @@ matchingOperator returns [EnableOperatorType op]
 	| di=DISABLE {op = new DisableOperator(); setLocInfo(op, $di);}
 	;
 	
-messagePatternSet [FilterModuleAST fm] returns [MatchingPatternAST mp = new MatchingPatternAST();]
+messagePatternSet [FilterModule fm] returns [MatchingPatternAST mp = new MatchingPatternAST();]
 // throws CpsSemanticException
 	: ^(frst=MATCHING_PART matchingPart[mp,fm]) (^(SUBST_PART substitutionPart[mp,fm]))?
 	  {
@@ -697,7 +609,7 @@ messagePatternSet [FilterModuleAST fm] returns [MatchingPatternAST mp = new Matc
 	  }
 	;	
 	
-matchingPart [MatchingPatternAST mp, FilterModuleAST fm]
+matchingPart [MatchingPattern mp, FilterModule fm]
 // throws CpsSemanticException
 	: ^(LIST (m1=matchingPattern[fm]
 	    {
@@ -723,7 +635,7 @@ matchingPart [MatchingPatternAST mp, FilterModuleAST fm]
 	  }
 	;
 
-matchingPattern [FilterModuleAST fm] returns [MatchingPartAST mp = new MatchingPartAST()]
+matchingPattern [FilterModule fm] returns [MatchingPartAST mp = new MatchingPartAST()]
 // throws CpsSemanticException
 	: ^(nm=NAME 
 	  {

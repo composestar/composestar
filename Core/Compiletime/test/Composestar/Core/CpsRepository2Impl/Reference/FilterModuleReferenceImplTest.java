@@ -375,6 +375,16 @@ public class FilterModuleReferenceImplTest extends FilterModuleReferenceTestBase
 		{
 			return null;
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.FilterModules.FilterModule#
+		 * isUniqueFilterName(java.lang.String)
+		 */
+		public boolean isUniqueMemberName(String filterName)
+		{
+			return false;
+		}
 	}
 
 }

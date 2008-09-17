@@ -46,6 +46,15 @@ import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference, Instantiatable<FilterModule>
 {
 	/**
+	 * Check if a name is not already used by a
+	 * internal/external/condition/filter.
+	 * 
+	 * @param memberName The name to check
+	 * @return True if the name is not used
+	 */
+	boolean isUniqueMemberName(String memberName);
+
+	/**
 	 * @return True if this filter module has filter module parameters. This is
 	 *         always
 	 */

@@ -26,6 +26,8 @@
  * (2007-10-15) michielh	Constraints are no longer hardcoded
  * (2008-02-25) michielh	Added required check for ending } and EOF
  * (2008-05-29) michielh	Made the grammar even more target neutral
+ * (2008-09-17) michielh	Start on COPPER3. Input/Output filters now create
+ 				filter expressions.
  */
 grammar Cps;
 
@@ -86,7 +88,7 @@ tokens {
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2007 University of Twente.
+ * Copyright (C) 2008 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -112,7 +114,7 @@ tokens {
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2007 University of Twente.
+ * Copyright (C) 2008 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -273,14 +275,18 @@ condition
  * (confusing with a filter operator)
  */	
 inputfilters
-	: 'inputfilters' filter (filterOperator filter)*
-	-> ^(INPUT_FILTERS[$start] filter (filterOperator filter)*)
+	: 'inputfilters' filterExpression
+	-> ^(INPUT_FILTERS[$start] filterExpression)
 	;
 	
 outputfilters
-	: 'outputfilters' filter (filterOperator filter)*
-	-> ^(OUTPUT_FILTERS[$start] filter (filterOperator filter)*)
+	: 'outputfilters' filterExpression
+	-> ^(OUTPUT_FILTERS[$start] filterExpression)
 	;
+	
+filterExpression
+	: filter ( filterOperator^ filterExpression )?
+	;	
 
 // $<Filter
 
@@ -295,15 +301,15 @@ filterOperator
  * Generic filter rules. Used by both input and outputfilters.
  */	
 filter
-	: name=IDENTIFIER COLON filterType filterParams? EQUALS LCURLY filterElement (filterElementOperator filterElement)* RCURLY
-	-> ^(FILTER $name filterType filterParams? filterElement (filterElementOperator filterElement)*)
+	: name=IDENTIFIER COLON filterType filterParams? EQUALS filterElements
+	-> ^(FILTER $name filterType filterParams? filterElements)
 	;
 
 /**
  * Filter type for the filter
  */
 filterType
-	: type=identifierOrSingleFmParam
+	: type=IDENTIFIER
 	-> $type
 	;
 
@@ -311,9 +317,40 @@ filterType
  * filter parameters
  */
 filterParams
-	: (LROUND identifierOrSingleFmParam (COMMA identifierOrSingleFmParam)* RROUND)
-	-> ^(PARAMS identifierOrSingleFmParam+)
+	: (LROUND canonAssignment* RROUND)
+	-> ^(PARAMS canonAssignment*)
 	;
+
+/**
+ * Supports two types of filter elements (the legacy notation, and the canonical notation)
+ */
+filterElements
+	: LCURLY! filterElement (filterElementOperator filterElement)* RCURLY!
+	| canonFilterElements 
+	;
+	
+canonFilterElements
+	: canonFilterElement ( canonFilterElementOperator^ canonFilterElements )?
+	;
+	
+canonFilterElementOperator
+	: 'cor' // ....
+	;
+	
+canonFilterElement
+	: LROUND matchingExpression RROUND ( LCURLY canonAssignment* RCURLY )?
+	-> ^(FILTER_ELEMENT matchingExpression canonAssignment* )
+	;
+	
+matchingExpression
+	: IDENTIFIER // ....
+	;
+	
+canonAssignment
+	: IDENTIFIER // ....
+	;
+	
+
 
 /**
  * Operators that link the filter elements

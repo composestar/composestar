@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.CpsRepository2.FMParams.FMParameter;
+import Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator;
 import Composestar.Core.CpsRepository2.FilterModules.Condition;
 import Composestar.Core.CpsRepository2.FilterModules.External;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
@@ -128,7 +129,7 @@ public class FilterModuleImpl extends AbstractQualifiedRepositoryEntity implemen
 		{
 			throw new NullPointerException();
 		}
-		if (variables.containsKey(var.getName()))
+		if (!isUniqueMemberName(var.getName()))
 		{
 			return false;
 		}
@@ -470,5 +471,64 @@ public class FilterModuleImpl extends AbstractQualifiedRepositoryEntity implemen
 	public FilterModule newInstance(Instantiator instantiator) throws UnsupportedOperationException
 	{
 		return instantiator.instantiate(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#isUniqueFilterName
+	 * (java.lang.String)
+	 */
+	public boolean isUniqueMemberName(String memberName)
+	{
+		if (variables.containsKey(memberName))
+		{
+			return false;
+		}
+		if (filters.containsKey(memberName))
+		{
+			return false;
+		}
+		if (findFilterNameInExpr(inputFilterExpression, memberName) != null)
+		{
+			return false;
+		}
+		if (findFilterNameInExpr(outputFilterExpression, memberName) != null)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Return true there is a filter with the give name in the expression, and
+	 * return it
+	 * 
+	 * @param expr
+	 * @return The filter with the given name.
+	 */
+	protected Filter findFilterNameInExpr(FilterExpression expr, String filterName)
+	{
+		if (expr instanceof Filter)
+		{
+			if (((Filter) expr).getName().equals(filterName))
+			{
+				return (Filter) expr;
+			}
+		}
+		else if (expr instanceof BinaryFilterOperator)
+		{
+			Filter res = findFilterNameInExpr(((BinaryFilterOperator) expr).getLHS(), filterName);
+			if (res != null)
+			{
+				return res;
+			}
+			res = findFilterNameInExpr(((BinaryFilterOperator) expr).getRHS(), filterName);
+			if (res != null)
+			{
+				return res;
+			}
+		}
+		return null;
 	}
 }
