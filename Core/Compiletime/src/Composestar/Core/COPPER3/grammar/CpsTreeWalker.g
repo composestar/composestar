@@ -28,7 +28,7 @@ options {
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2007 University of Twente.
+ * Copyright (C) 2008 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -47,26 +47,45 @@ options {
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  */
  
-package Composestar.Core.COPPER2;
+package Composestar.Core.COPPER3;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
-import Composestar.Core.CpsProgramRepository.Filters.*;
+import Composestar.Core.CpsRepository2.*;
+import Composestar.Core.CpsRepository2.FilterElements.*;
+import Composestar.Core.CpsRepository2.FilterModules.*;
+import Composestar.Core.CpsRepository2.Filters.*;
+import Composestar.Core.CpsRepository2.FMParams.*;
+import Composestar.Core.CpsRepository2.References.*;
+import Composestar.Core.CpsRepository2.SuperImposition.*;
+import Composestar.Core.CpsRepository2.TypeSystem.*;
+
+import Composestar.Core.CpsRepository2Impl.*;
+import Composestar.Core.CpsRepository2Impl.FilterElements.*;
+import Composestar.Core.CpsRepository2Impl.FilterModules.*;
+import Composestar.Core.CpsRepository2Impl.Filters.*;
+import Composestar.Core.CpsRepository2Impl.FMParams.*;
+import Composestar.Core.CpsRepository2Impl.References.*;
+import Composestar.Core.CpsRepository2Impl.SuperImposition.*;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.*;
+
 import Composestar.Core.Exception.*;
 
 import java.util.Vector;
 }
 
-concern returns [CpsConcern c = new CpsConcern();]
+concern returns [CpsConcern c]
 // throws CpsSemanticException
-	: ^(strt=CONCERN {setLocInfo(c, strt);}
-		name=IDENTIFIER {c.setName($name.text);}
-		(concernParameters[c])?
-		(^(IN ns=fqnAsList {c.setNamespace(ns);}))?
+@init {
+	ns = new ArrayList<String>();
+}
+	: ^(strt=CONCERN
+		name=IDENTIFIER
+		(concernParameters)?
+		(^(IN ns=fqnAsList))?
+		{
+			c = new CpsConcernImpl($name.text, ns);
+			setLocInfo(c, strt);
+			repository.add(c);
+		}
 		(filtermodule[c])*
 		(superimposition[c])?
 		(implementation[c])?
@@ -81,36 +100,29 @@ fqnAsList returns [List<String> l = new ArrayList<String>();]
 	: ^(FQN first=IDENTIFIER { l.add($first.text); } (PERIOD nxt=IDENTIFIER { l.add($nxt.text); })*)
 	;
 	
-concernParameters [CpsConcern c]
+concernParameters
+// obsolete
 	: ^(CONCERN_PARAMETERS 
-		(^(PARAM name=IDENTIFIER type=fqnAsList
-			{
-			// FIXME needs to be tested
-			LabeledConcernReference ref = new LabeledConcernReference($name.text, type);
-			setLocInfo(ref, $name);
-			c.addParameter(ref);
-			}
-		))*
+		(^(PARAM name=IDENTIFIER type=fqnAsList))*
 	  )
 	;
 
 // $<Filter Modules
 
-filtermodule [CpsConcern c] returns [FilterModuleAST fm = new FilterModuleAST()]
+filtermodule [CpsConcern c] returns [FilterModule fm]
 // throws CpsSemanticException
 	: ^(strt=FILTER_MODULE 
 		name=IDENTIFIER
 		{
 		try {
-			fm.setName($name.text);
+			fm = new FilterModuleImpl($name.text);
 			setLocInfo(fm, strt);
-			if (c.getFilterModuleAST(fm.getName()) != null)
+			if (!c.addFilterModule(fm))
 			{
 				throw new CpsSemanticException(String.format("Duplicate filter module name \"\%s\" in concern: \%s", 
-					fm.getName(), c.getQualifiedName()), input, $name);
+					fm.getName(), c.getFullyQualifiedName()), input, $name);
 			}
-			fm.setParent(c);
-			c.addFilterModuleAST(fm);
+			repository.add(fm);
 		}
 		catch (RecognitionException re) {
 			reportError(re);
@@ -126,19 +138,18 @@ filtermodule [CpsConcern c] returns [FilterModuleAST fm = new FilterModuleAST()]
 	  )
 	;
 	
-filtermoduleParameters [FilterModuleAST fm]
+filtermoduleParameters [FilterModule fm]
 // throws CpsSemanticException
 	: ^(PARAMS ({Tree errTok = (Tree) input.LT(1);} prm=fmParamEntry
 	  {
 	  try {
-	  	if (!fm.parameterExists(prm))
+	  	if (fm.addParameter(prm))
 	  	{
-	  		prm.setParent(fm);
-	  		fm.addParameter(prm);
+	  		repository.add(prm);
 	  	}
 	  	else {
 	  		throw new CpsSemanticException(String.format("Parameter \"\%s\" not unique within filtermodule: \%s", 
-	  			prm.getName(), fm.getQualifiedName()), input, errTok);
+	  			prm.getName(), fm.getFullyQualifiedName()), input, errTok);
 	  	}
 	  }
 	  catch (RecognitionException re) {
@@ -149,15 +160,15 @@ filtermoduleParameters [FilterModuleAST fm]
 	  )+)
 	;
 	
-fmParamEntry returns [FilterModuleParameterAST param = new FilterModuleParameterAST()]
+fmParamEntry returns [FMParameter param]
 	: sn=singleFmParam 
 	  {
-		param.setName($sn.text); 
+		param = new FMParameterImpl($sn.text); 
 		setLocInfo(param, $sn.start);
 	  }
 	| ln=fmParamList 
 	  {
-	  	param.setName($ln.text); 
+	  	param = new FMParameterImpl($ln.text);
 		setLocInfo(param, $ln.start);
 	  }
 	;	
@@ -178,52 +189,49 @@ fqnOrSingleFmParam
  * Returns a concern reference instance.
  * Used by: internal, external
  */	
-concernReference returns [ConcernReference ref]
-@init {
-	List<String> tp = new ArrayList<String>();
-}
-	: // this mimics the fqnAsList
-	  ^(FQN first=IDENTIFIER {tp.add($first.text);} (PERIOD nxt=IDENTIFIER {tp.add($nxt.text);})*
-	  {
-	  	ref = new ConcernReference(tp);
-	  	setLocInfo(ref, $first);
-	  }
-	  )
+// FIXME remove
+concernReference returns [Object ref]
+	:
+	  ^(FQN first=IDENTIFIER (PERIOD nxt=IDENTIFIER)*)
 	;	
 	
 identifierOrSingleFmParam
 	: IDENTIFIER | singleFmParam
 	;	
 
-internal [FilterModuleAST fm]
+internal [FilterModule fm]
 // throws CpsSemanticException
-	: ^(INTERNAL (ref=concernReference | prm=singleFmParam) ^(NAMES (
+	: ^(INTERNAL (ref=fqn | prm=singleFmParam) ^(NAMES (
 		name=IDENTIFIER
 		{
 		try {
-			InternalAST internal;
+			Internal internal = new InternalImpl($name.text);
+			TypeReference tr = null;
 			if (ref != null)
 			{
-				internal = new InternalAST();
-				internal.setType(ref);			
+				tr = references.getTypeReference(ref);			
 			}
 			else if (prm != null)
 			{
-				internal = new ParameterizedInternalAST();
-				((ParameterizedInternalAST) internal).setParameter($prm.text);
+				// FIXME: create parameterized type ref
+				FMParameter fmp = fm.getParameter($prm.text);
+				if (fmp == null) {
+					throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
+						fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
+				}
 			}
 			else {
-				throw new CpsSemanticException(String.format("Internal \"\%s\" is not an qualified name or parameter", 
+				throw new CpsSemanticException(String.format("Internal \"\%s\" is not a fully qualified name or parameter", 
 					$name.text), input, name);
 			}
-			internal.setName($name.text);
-			internal.setParent(fm);
+			internal.setTypeReference(tr);
 			setLocInfo(internal, $name);
-			if (!fm.addInternal(internal))
+			if (!fm.addVariable(internal))
 			{
 				throw new CpsSemanticException(String.format("Internal name \"\%s\" is not unqiue in filter module: \%s", 
-					internal.getName(), fm.getQualifiedName()), input, name);
+					internal.getName(), fm.getFullyQualifiedName()), input, name);
 			}
+			repository.add(internal);
 		}
 		catch (RecognitionException re) {
 			reportError(re);
@@ -233,33 +241,54 @@ internal [FilterModuleAST fm]
 	  )+))
 	;
 
-externalConcernReference returns [ExternalConcernReference ecr]
+// FIXME remove
+externalConcernReference returns [Object ecr]
 // throws CpsSemanticException
 @init {
 	List<String> lst = new ArrayList<String>();
+}
+	: ^(FQN first=IDENTIFIER (PERIOD nxt=IDENTIFIER)*)
+	| prm=singleFmParam
+	/* params */
+	;
+	
+methodReference[FilterModule fm] returns [MethodReference mref]
+// throws CpsSemanticException
+@init {
+	List<String> lst = new ArrayList<String>();
+	// FIXME: should be a language construct
+	JoinPointContextArgument jpca = JoinPointContextArgument.NONE;
 }
 	: ^(FQN first=IDENTIFIER {lst.add($first.text);} (PERIOD nxt=IDENTIFIER {lst.add($nxt.text);})*
 	  {
 	  try {
 		if (lst.size() < 2)
 		{
-			throw new CpsSemanticException(String.format("Invalid external initializer: \%s", lst.toString()), 
+			throw new CpsSemanticException(String.format("Invalid method reference: \%s", lst.toString()), 
 				input, first);
 		}
-		// the fqn is: ns.type.method
-		// concern reference should point to: ns.type
-		// initial target should be: ns.type
-		// initial selector should me: method
-		ecr = new ExternalConcernReference(lst.subList(0, lst.size()-1));
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < lst.size()-1; i++)
+		if (lst.size() == 2)
 		{
-			if (sb.length() > 0) sb.append(".");
-			sb.append(lst.get(i));
+			FilterModuleVariable fmvar = fm.getVariable(lst.get(0));
+			if (fmvar instanceof CpsObject)
+			{
+				CpsObject ctx = (CpsObject) fmvar;
+				mref = references.getInstanceMethodReference(lst.get(1), ctx, jpca);
+			}
 		}
-		ecr.setInitSelector(lst.get(lst.size()-1));
-		ecr.setInitTarget(sb.toString());
-		setLocInfo(ecr, $first);
+		if (mref == null)
+		{
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < lst.size()-1; i++)
+			{
+				if (sb.length() > 0)
+				{
+					sb.append('.');
+				}
+				sb.append(lst.get(i));			
+			}
+			mref = references.getMethodReference(lst.get(lst.size()-1), sb.toString(), jpca);
+		}
 	  }
 	  catch (RecognitionException re) {
 		reportError(re);
@@ -270,7 +299,12 @@ externalConcernReference returns [ExternalConcernReference ecr]
 	| prm=singleFmParam 
 	  {
 	  try {
-		throw new CpsSemanticException(String.format("Filter Module Parameters are not supported in the external initializer"), input, $prm.start);
+		// FIXME: parameterized method reference
+		FMParameter fmp = fm.getParameter($prm.text);
+		if (fmp == null) {
+			throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
+				fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
+		}
 	  }
 	  catch (RecognitionException re) {
 		reportError(re);
@@ -280,43 +314,41 @@ externalConcernReference returns [ExternalConcernReference ecr]
 	/* params */
 	;
 
-external [FilterModuleAST fm]
+external [FilterModule fm]
 // throws CpsSemanticException
-	: ^(EXTERNAL name=IDENTIFIER (ref=concernReference | prm=singleFmParam) (^(INIT init=externalConcernReference))?
+	: ^(EXTERNAL name=IDENTIFIER (ref=fqn | prm=singleFmParam) (^(INIT init=methodReference[fm]))?
 	  {
 	  try {
-	  	External external = new External();
-	  	if (ref != null)
+	  	External external = new ExternalImpl($name.text);
+	  	TypeReference tr = null;
+		if (ref != null)
 		{
-			external.setType(ref);			
+			tr = references.getTypeReference(ref);			
 		}
 		else if (prm != null)
 		{
-			// apperently there is no special External instance of parameterized externals!?
-			throw new CpsSemanticException(String.format("Parameterized externals are currently not supported"), 
-				input, name);
+			// FIXME: create parameterized type ref
+			FMParameter fmp = fm.getParameter($prm.text);
+			if (fmp == null) {
+				throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
+					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
+			}
 		}
 		else {
-			throw new CpsSemanticException(String.format("External \"\%s\" is not an qualified name or parameter", 
+			throw new CpsSemanticException(String.format("External \"\%s\" is not a fully qualified name or parameter", 
 				$name.text), input, name);
-		}
-		external.setName($name.text);
-		external.setParent(fm);
+		}	  	
 		if (init != null)
 		{
-			external.setShortinit(init);
-		}
-		else {
-		  // C*/C uses no initializer
-			//throw new CpsSemanticException(String.format("Static object references are not implemented. An initialization expression is required."), 
-			//	input, name);
+			external.setMethodReference(init);
 		}
 		setLocInfo(external, $name);
-		if (!fm.addExternal(external))
+		if (!fm.addVariable(external))
 		{
 			throw new CpsSemanticException(String.format("External name \"\%s\" is not unqiue in filter module: \%s", 
-				external.getName(), fm.getQualifiedName()), input, name);
+				external.getName(), fm.getFullyQualifiedName()), input, name);
 		}
+		repository.add(external);
 	  }
 	  catch (RecognitionException re) {
 		reportError(re);
@@ -326,81 +358,42 @@ external [FilterModuleAST fm]
 	  )
 	;	
 
-condition [FilterModuleAST fm]
+condition [FilterModule fm]
 // throws CpsSemanticException
-	: ^(CONDITION name=IDENTIFIER
+	: ^(CONDITION name=IDENTIFIER mref=methodReference[fm]
 	  {
-	  	Condition cond = new Condition();
-	  	cond.setName($name.text);
-		cond.setParent(fm);
-		fm.addCondition(cond);
+	  try {
+	  	Condition cond = new ConditionImpl($name.text);
+		cond.setMethodReference(mref);
 		setLocInfo(cond, $name);
-	  } 
-	  ( ^(FQN first=IDENTIFIER 
-	    {
-	    	List<String> lst = new ArrayList<String>();
-	    	lst.add($first.text);
-	    } 
-		(PERIOD nxt=IDENTIFIER {lst.add($nxt.text);})*
-	    {
-	    try {
-	    	if (lst.size() < 2)
+		if (!fm.addVariable(cond))
 		{
-			throw new CpsSemanticException(String.format("Invalid conditional method: \%s", lst.toString()), 
-				input, first);
+			throw new CpsSemanticException(String.format("Condition name \"\%s\" is not unqiue in filter module: \%s", 
+				cond.getName(), fm.getFullyQualifiedName()), input, name);
 		}
-		String tar = lst.get(0);
-		String sel = lst.get(lst.size()-1);
-		if (tar.equals(Target.INNER) && (lst.size() == 2))
-		{
-			// inner object
-			DeclaredObjectReference dor = new DeclaredObjectReference();
-			dor.setName(Target.INNER);
-			setLocInfo(dor, $first);
-			cond.setShortref(dor);
-		}
-		else if ((lst.size() == 2) && (fm.isExternal(tar) || fm.isInternal(tar)))
-		{
-			// internal or external
-			DeclaredObjectReference dor = new DeclaredObjectReference();
-			dor.setName(tar);
-			dor.setFilterModule(fm.getName());
-			CpsConcern conc = (CpsConcern) fm.getParent();
-			dor.setConcern(conc.getName());
-			dor.setPackage(conc.getNamespace());
-			setLocInfo(dor, $first);
-			cond.setShortref(dor);
-		}
-		else 
-		{
-			// static method call
-			ConcernReference ref = new ConcernReference(lst.subList(0, lst.size()-1));
-		  	setLocInfo(ref, $first);
-		  	cond.setShortref(ref);
-		}
-		cond.addDynObject("selector", sel);
-	    }
-	    catch (RecognitionException re) {
+		repository.add(cond);
+	  }
+	  catch (RecognitionException re) {
 		reportError(re);
 		recover(input,re);
-	    }
-	    }
-	    )
-	  | prm=singleFmParam 
-	    {
-	    try {
-	    	throw new CpsSemanticException(String.format("Filter Module Parameters are not supported in conditionals"), input, $prm.start);
-	    }
-	    catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-	    }
-	    }
+	  }
+	  }
 	  )
-	  /* params */ )
 	;	
 	
-inputfilters [FilterModuleAST fm]
+filterExpression [FilterModule fm] returns [FilterExpression expr]
+// throws CpsSemanticException
+	: (lhs=filter[fm]
+	  (op=filterOperator rhs=filter[fm]
+	    {
+	  	
+	    }
+	  )*
+	  {if (expr == null) { expr = lhs; }}
+	  )
+	;
+
+inputfilters [FilterModule fm]
 // throws CpsSemanticException
 	: ^(INPUT_FILTERS ({Tree errTok = (Tree) input.LT(1);} 
 	  lhs=filter[fm]
@@ -437,15 +430,10 @@ inputfilters [FilterModuleAST fm]
 	    }
 	    }
 	  )*
-	  {
-		FilterCompOper voidop = new VoidFilterCompOper();
-		lhs.setRightOperator(voidop);
-		voidop.setParent(lhs);		
-	  }
 	  )
 	;
 	
-outputfilters [FilterModuleAST fm]
+outputfilters [FilterModule fm]
 // throws CpsSemanticException
 	: ^(OUTPUT_FILTERS ({Tree errTok = (Tree) input.LT(1);} 
 	  lhs=filter[fm] 

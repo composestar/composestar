@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.COPPER2;
+package Composestar.Core.COPPER3;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,8 +88,8 @@ public class COPPER implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
+	 * @seeComposestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.
+	 * CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
@@ -99,16 +99,18 @@ public class COPPER implements CTCommonModule
 			filterTypes = new FilterTypeMapping(resources.repository());
 			resources.put(FilterTypeMapping.RESOURCE_KEY, filterTypes);
 		}
-		filterFactory = resources.get(DefaultFilterFactory.RESOURCE_KEY);
-		if (filterFactory == null)
-		{
-			filterFactory = new DefaultFilterFactory(filterTypes, resources.repository());
-			resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
-		}
-		else
-		{
-			filterFactory.setTypeMapping(filterTypes);
-		}
+
+		// filterFactory = resources.get(DefaultFilterFactory.RESOURCE_KEY);
+		// if (filterFactory == null)
+		// {
+		// filterFactory = new DefaultFilterFactory(filterTypes,
+		// resources.repository());
+		// resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+		// }
+		// else
+		// {
+		// filterFactory.setTypeMapping(filterTypes);
+		// }
 
 		errorCnt = 0;
 
@@ -182,7 +184,7 @@ public class COPPER implements CTCommonModule
 			CommonTreeNodeStream nodes = new CommonTreeNodeStream(rootNode);
 			nodes.setTokenStream(tokens);
 			CpsTreeWalker w = new CpsTreeWalker(nodes);
-			w.setSourceFile(file.toString());
+			w.setSourceFile(file);
 			w.setConstraintSpec(constraintSpec);
 			w.setFilterTypeMapping(filterTypes);
 			w.setFilterFactory(filterFactory);
@@ -225,8 +227,8 @@ public class COPPER implements CTCommonModule
 		COPPER c = new COPPER();
 		DataStore ds = DataStore.instance();
 		c.filterTypes = new FilterTypeMapping(ds);
-		c.filterFactory = new DefaultFilterFactory(c.filterTypes, ds);
-		c.filterFactory.setAllowLegacyCustomFilters(true);
+		// c.filterFactory = new DefaultFilterFactory(c.filterTypes, ds);
+		// c.filterFactory.setAllowLegacyCustomFilters(true);
 		try
 		{
 			c.parseConcernFile(new File(args[0]));

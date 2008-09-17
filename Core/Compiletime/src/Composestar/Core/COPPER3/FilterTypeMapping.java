@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.COPPER2;
+package Composestar.Core.COPPER3;
 
 import java.util.Collection;
 import java.util.Collections;

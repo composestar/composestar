@@ -86,6 +86,7 @@
 		-->
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
+			<exclude name="**/COPPER3/**" />
 			<compilerarg line="-proc:none" />
 		</javac>
 	</target>

@@ -22,7 +22,9 @@
  * $Id$
  */
 
-package Composestar.Core.COPPER2;
+package Composestar.Core.COPPER3;
+
+import java.io.File;
 
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.Token;
@@ -31,15 +33,19 @@ import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Meta.FileInformation;
+import Composestar.Core.CpsRepository2.Meta.SourceInformation;
+import Composestar.Core.CpsRepository2.References.ReferenceManager;
 import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
 
 /**
- * Base class for the Cps tree walker.
+ * Base class for the Cps tree walker for the CpsRepository2
  * 
  * @author Michiel Hendriks
  */
@@ -48,9 +54,19 @@ public class CpsTreeWalkerBase extends TreeParser
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER);
 
 	/**
+	 * The repository to add the elements to
+	 */
+	protected Repository repository;
+
+	/**
+	 * The reference manager
+	 */
+	protected ReferenceManager references;
+
+	/**
 	 * Used for error reporting
 	 */
-	protected String sourceFile;
+	protected FileInformation fileInformation;
 
 	/**
 	 * Number of reported errors. Must be 0 or else COPPER will raise an
@@ -84,9 +100,25 @@ public class CpsTreeWalkerBase extends TreeParser
 	 * 
 	 * @param srcfl
 	 */
-	public void setSourceFile(String srcfl)
+	public void setSourceFile(File srcfl)
 	{
-		sourceFile = srcfl;
+		fileInformation = new FileInformation(srcfl);
+	}
+
+	/**
+	 * @param repository
+	 */
+	public void setRepository(Repository val)
+	{
+		repository = val;
+	}
+
+	/**
+	 * @param refman
+	 */
+	public void setReferenceManager(ReferenceManager refman)
+	{
+		references = refman;
 	}
 
 	/**
@@ -119,9 +151,9 @@ public class CpsTreeWalkerBase extends TreeParser
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.antlr.runtime.BaseRecognizer#displayRecognitionError(java.lang.String[],
-	 *      org.antlr.runtime.RecognitionException)
+	 * @see
+	 * org.antlr.runtime.BaseRecognizer#displayRecognitionError(java.lang.String
+	 * [], org.antlr.runtime.RecognitionException)
 	 */
 	@Override
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
@@ -129,12 +161,11 @@ public class CpsTreeWalkerBase extends TreeParser
 		++errorCnt;
 		// String hdr = getErrorHeader(e);
 		String msg = getErrorMessage(e, tokenNames);
-		logger.error(new LogMessage(msg, sourceFile, e.line, e.charPositionInLine));
+		logger.error(new LogMessage(msg, fileInformation.getLocation().toString(), e.line, e.charPositionInLine));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.antlr.runtime.BaseRecognizer#emitErrorMessage(java.lang.String)
 	 */
 	@Override
@@ -146,9 +177,8 @@ public class CpsTreeWalkerBase extends TreeParser
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.antlr.runtime.tree.TreeParser#getErrorMessage(org.antlr.runtime.RecognitionException,
-	 *      java.lang.String[])
+	 * @seeorg.antlr.runtime.tree.TreeParser#getErrorMessage(org.antlr.runtime.
+	 * RecognitionException, java.lang.String[])
 	 */
 	@Override
 	public String getErrorMessage(RecognitionException e, String[] tokenNames)
@@ -167,11 +197,12 @@ public class CpsTreeWalkerBase extends TreeParser
 	 */
 	protected void setLocInfo(RepositoryEntity re, Token t)
 	{
-		re.setDescriptionFileName(sourceFile);
+		SourceInformation srcInfo = new SourceInformation(fileInformation);
+		re.setSourceInformation(srcInfo);
 		if (t != null)
 		{
-			re.setDescriptionLineNumber(t.getLine());
-			re.setDescriptionLinePosition(t.getCharPositionInLine());
+			srcInfo.setLine(t.getLine());
+			srcInfo.setLinePos(t.getCharPositionInLine());
 		}
 	}
 
@@ -181,11 +212,12 @@ public class CpsTreeWalkerBase extends TreeParser
 	 */
 	protected void setLocInfo(RepositoryEntity re, Tree t)
 	{
-		re.setDescriptionFileName(sourceFile);
+		SourceInformation srcInfo = new SourceInformation(fileInformation);
+		re.setSourceInformation(srcInfo);
 		if (t != null)
 		{
-			re.setDescriptionLineNumber(t.getLine());
-			re.setDescriptionLinePosition(t.getCharPositionInLine());
+			srcInfo.setLine(t.getLine());
+			srcInfo.setLinePos(t.getCharPositionInLine());
 		}
 	}
 

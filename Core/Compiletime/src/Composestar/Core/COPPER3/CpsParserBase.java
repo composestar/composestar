@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.COPPER2;
+package Composestar.Core.COPPER3;
 
 import org.antlr.runtime.Parser;
 import org.antlr.runtime.RecognitionException;
@@ -79,9 +79,9 @@ public abstract class CpsParserBase extends Parser
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.antlr.runtime.BaseRecognizer#displayRecognitionError(java.lang.String[],
-	 *      org.antlr.runtime.RecognitionException)
+	 * @see
+	 * org.antlr.runtime.BaseRecognizer#displayRecognitionError(java.lang.String
+	 * [], org.antlr.runtime.RecognitionException)
 	 */
 	@Override
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
@@ -94,7 +94,6 @@ public abstract class CpsParserBase extends Parser
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.antlr.runtime.BaseRecognizer#emitErrorMessage(java.lang.String)
 	 */
 	@Override

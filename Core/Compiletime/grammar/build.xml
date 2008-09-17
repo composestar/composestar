@@ -10,10 +10,12 @@
 	</target>
 
 	<target name="init_local" depends="init">
+		<property name="copper.version" value="2" />
+		
 		<property name="antlr3.classpath" location="${basedir}/../lib/antlr/antlr.jar;${basedir}/../lib/antlr/antlr-3.jar;${basedir}/../lib/antlr/stringtemplate-3.jar" />
-
+		
 		<property name="grammar.dir" location="${basedir}" />
-		<property name="copper.dir" location="${build.core}/Compiletime/src/Composestar/Core/COPPER2" />
+		<property name="copper.dir" location="${build.core}/Compiletime/src/Composestar/Core/COPPER${copper.version}" />
 		<property name="CpsParser.dir" location="${build.starlight}/Source/CpsParser" />
 
 		<property name="cps.g" location="${copper.dir}/grammar/Cps.g" />

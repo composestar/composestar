@@ -105,7 +105,7 @@ tokens {
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  */
  
-@Java@package Composestar.Core.COPPER2;
+@Java@package Composestar.Core.COPPER3;
 }
 
 @lexer::header {
@@ -131,7 +131,7 @@ tokens {
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  */
  
-@Java@package Composestar.Core.COPPER2;
+@Java@package Composestar.Core.COPPER3;
 }
 
 // Namespace for C# targets
