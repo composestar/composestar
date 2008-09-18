@@ -284,6 +284,10 @@ outputfilters
 	-> ^(OUTPUT_FILTERS[$start] filterExpression)
 	;
 	
+/**
+ * The input and output filters are now created as a filter expression. This
+ * constructs a tree of operators and filters
+ */
 filterExpression
 	: filter ( filterOperator^ filterExpression )?
 	;	
@@ -306,15 +310,16 @@ filter
 	;
 
 /**
- * Filter type for the filter
+ * Filter type for the filter. This is a fully qualified name. Which can point
+ * to either a primitive filter type or a filter module
  */
 filterType
-	: type=IDENTIFIER
-	-> $type
+	: fqn
 	;
 
 /**
- * filter parameters
+ * Filter parameters. Uses the canonical assignments. The assignments have an implicit
+ * "filter." prefix. This should be handled by the tree walker.
  */
 filterParams
 	: (LROUND canonAssignment* RROUND)
@@ -326,22 +331,35 @@ filterParams
  */
 filterElements
 	: LCURLY! filterElement (filterElementOperator filterElement)* RCURLY!
-	| canonFilterElements 
+	| canonFilterElementExpression 
 	;
 	
-canonFilterElements
-	: canonFilterElement ( canonFilterElementOperator^ canonFilterElements )?
+/**
+ * The filter element expression in the canonical form
+ */
+canonFilterElementExpression
+	: canonFilterElement ( canonFilterElementOperator^ canonFilterElementExpression )?
 	;
 	
+/**
+ * The filter element operators as used in the canonical notation
+ */
 canonFilterElementOperator
-	: 'cor' // ....
+	: 'cor'
 	;
 	
+/**
+ * A filter element in the canonical notation contains a matching expression
+ * and zero or more assignments 
+ */
 canonFilterElement
 	: LROUND matchingExpression RROUND ( LCURLY canonAssignment* RCURLY )?
 	-> ^(FILTER_ELEMENT matchingExpression canonAssignment* )
 	;
 	
+/**
+ * The matching expression in the canonical notation
+ */
 matchingExpression
 	: IDENTIFIER // ....
 	;
@@ -357,6 +375,7 @@ canonAssignment
  */	
 filterElementOperator
 	: COMMA
+	-> 'cor'
 	;	
 	
 /**

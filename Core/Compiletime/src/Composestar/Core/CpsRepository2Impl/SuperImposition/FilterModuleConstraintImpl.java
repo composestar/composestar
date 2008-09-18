@@ -58,7 +58,7 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 	 * @throws NullPointerException
 	 * @throws IllegalArgumentException
 	 */
-	protected FilterModuleConstraintImpl(String type) throws NullPointerException, IllegalArgumentException
+	public FilterModuleConstraintImpl(String type) throws NullPointerException, IllegalArgumentException
 	{
 		super();
 		if (type == null)
