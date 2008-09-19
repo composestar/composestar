@@ -109,6 +109,7 @@ public abstract class CpsParserBase extends Parser
 	 */
 	protected String extractEmbeddedCode(TreeAdaptor adaptor)
 	{
+
 		Token start = input.LT(-1);
 		matchAny(input);
 		Token stop = null;

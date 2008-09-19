@@ -118,6 +118,7 @@ public class CpsParserTest extends TestCase
 			fail(String.format("Parsing of \"%s\" failed: %s", file.toString(), e.getMessage()));
 			return -1;
 		}
+		ASTExporter.dotExport(new File(file + ".dot"), rootNode);
 		if (parser.getErrorCnt() > 0)
 		{
 			return parser.getErrorCnt();

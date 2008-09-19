@@ -37,6 +37,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
@@ -83,6 +84,9 @@ public class COPPER implements CTCommonModule
 	 * The filter factory to use
 	 */
 	protected DefaultFilterFactory filterFactory;
+
+	@ModuleSetting
+	protected boolean debugExportDot = false;
 
 	public COPPER()
 	{}
@@ -175,6 +179,11 @@ public class COPPER implements CTCommonModule
 				throw new ModuleException(e.getMessage(), ModuleNames.COPPER, file.toString(), e.line, e);
 			}
 			localErrCnt += p.getErrorCnt();
+
+			if (debugExportDot)
+			{
+				ASTExporter.dotExport(new File(file + ".dot"), rootNode);
+			}
 
 			if (localErrCnt > 0)
 			{

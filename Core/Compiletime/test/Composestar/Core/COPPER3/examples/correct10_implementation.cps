@@ -2,7 +2,7 @@
 concern correct10_implementation
 {
 	implementation in CSharp by SomeClass as "SomeClass.cs"
-	{
+	<<ASIS
 	0 1 2 3 4 ! @ # $ % ^ &
 		everything in this section should be considered AS IS
 		included { and }, don't rely on counting { and } because it
@@ -11,5 +11,5 @@ concern correct10_implementation
 		
 		this is the end.
 	
-	}
+ASIS;
 }

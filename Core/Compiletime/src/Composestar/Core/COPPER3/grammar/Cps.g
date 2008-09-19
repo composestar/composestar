@@ -61,6 +61,10 @@ tokens {
 	FILTER_ELEMENT;
 	EXPRESSION;
 	OPERATOR;
+	OPERAND;
+	CMPSTMT;
+	ASSIGNMENT;
+	
 	MATCHING_PART;
 	SUBST_PART;
 	LIST;
@@ -182,7 +186,7 @@ concernParameters
 filtermodule
 	: 'filtermodule' IDENTIFIER filtermoduleParameters? LCURLY 
 		internals? externals? conditions? inputfilters? outputfilters? 
-	  RCURLY
+		RCURLY
 	-> ^(FILTER_MODULE[$start] IDENTIFIER filtermoduleParameters? internals? externals? conditions? inputfilters? outputfilters?)
 	;
 	
@@ -318,12 +322,11 @@ filterType
 	;
 
 /**
- * Filter parameters. Uses the canonical assignments. The assignments have an implicit
- * "filter." prefix. This should be handled by the tree walker.
+ * Filter parameters. Uses the canonical assignments. 
  */
 filterParams
-	: (LROUND canonAssignment* RROUND)
-	-> ^(PARAMS canonAssignment*)
+	: (LROUND (IDENTIFIER EQUALS canonAssignRhs)* RROUND)
+	-> ^(PARAMS ^(ASSIGNMENT ^(OPERAND IDENTIFIER["filter"] IDENTIFIER) ^(OPERAND canonAssignRhs))*)
 	;
 
 /**
@@ -361,14 +364,50 @@ canonFilterElement
  * The matching expression in the canonical notation
  */
 matchingExpression
-	: IDENTIFIER // ....
+	: meAndExpr ( OR^ matchingExpression )?
+	;
+	
+meAndExpr
+	: meUnaryExpr ( AND^ meAndExpr )?
+	;
+	
+meUnaryExpr
+	: (NOT^)? meCompoundExpr
+	;
+	
+meCompoundExpr
+	: meCmpLhs meCmpOpr meCmpRhs 
+	-> ^(CMPSTMT ^(OPERATOR meCmpOpr) ^(OPERAND meCmpLhs) ^(OPERAND meCmpRhs))
+	| IDENTIFIER
+	;
+	
+meCmpLhs
+	: 'message' PERIOD! IDENTIFIER
+	| 'target'
+	| 'selector'
+	;		
+	
+meCmpOpr
+	: '==' | '$=' | '~=' | '@='
+	;
+
+meCmpRhs
+	: fqn | fmParamEntry | LITERAL
 	;
 	
 canonAssignment
-	: IDENTIFIER // ....
+	: canonAssingLhs EQUALS canonAssignRhs
+	-> ^(ASSIGNMENT ^(OPERAND canonAssingLhs) ^(OPERAND canonAssignRhs))
 	;
 	
+canonAssingLhs
+	: meCmpLhs
+	| 'filter' PERIOD! IDENTIFIER
+	;
 
+canonAssignRhs
+	: fqn | singleFmParam | LITERAL
+	;
 
 /**
  * Operators that link the filter elements
@@ -376,7 +415,7 @@ canonAssignment
 filterElementOperator
 	: COMMA
 	-> 'cor'
-	;	
+	;
 	
 /**
  * This rule contains a predicate in order to keep the grammar LL(1). The conditionExpression
@@ -428,9 +467,9 @@ messagePatternSet
 	-> ^(MATCHING_PART matchingPart) ^(SUBST_PART substitutionPart)?
 	// single target.selector alternative dropped per 2007-10-05 (MichielH+Lodewijk)
 	| targetSelector[1] 
-	  {
-	  	warning("Naked target.selector signature matching has been deprecated.", $start);
-	  }
+	{
+		warning("Naked target.selector signature matching has been deprecated.", $start);
+	}
 	-> ^(MATCHING_PART ^(SIGN targetSelector))
 	;	
 	
@@ -450,17 +489,10 @@ matchingPart
  * Note that a 2nd notation for signature matching is defined in the messagePatternSet rule
  */
 matchingPattern
-	: (
-		LSQUARE targetSelector[1] RSQUARE
-	  // "target.selector" no longer available. support for this construction
-	  // has been dropped before version 0.5
-	  //|	DOUBLEQUOTE targetSelector DOUBLEQUOTE 
-	  )
-	  -> ^(NAME targetSelector)
-	| (
-		LANGLE targetSelector[1] RANGLE
-	  )
-	  -> ^(SIGN targetSelector)
+	: (LSQUARE targetSelector[1] RSQUARE)
+	-> ^(NAME targetSelector)
+	| (LANGLE targetSelector[1] RANGLE)
+	-> ^(SIGN targetSelector)
 	;
 	
 /**
@@ -541,11 +573,11 @@ selectors
  */	
 selectorSi
 	: name=IDENTIFIER EQUALS LCURLY 
-	  ( leg=selectorExprLegacy
-	  -> ^(SELECTOR $name $leg)
-	  | expr=selectorExprPredicate
-	  -> ^(SELECTOR $name $expr)
-	  )
+	( leg=selectorExprLegacy
+	-> ^(SELECTOR $name $leg)
+	| expr=selectorExprPredicate
+	-> ^(SELECTOR $name $expr)
+	)
 	;
 	
 /**
@@ -678,7 +710,7 @@ implementation
 	: 'implementation' 
 	( 'by' asm=fqn SEMICOLON
 	-> ^(IMPLEMENTATION[$start] $asm)
-	| 'in' lang=IDENTIFIER 'by' cls=fqn 'as' DOUBLEQUOTE fn=filename DOUBLEQUOTE code=codeBlock
+	| 'in' lang=IDENTIFIER 'by' cls=fqn 'as' fn=LITERAL code=codeBlock
 	-> ^(IMPLEMENTATION[$start] $lang $cls $fn $code)
 	)
 	;
@@ -696,10 +728,12 @@ filename
  */	
 codeBlock
 @init {String codeTxt = "";}
-	: strt=LCURLY 
-	  {codeTxt = extractEmbeddedCode(adaptor);}
-	  RCURLY
-	  -> ^(CODE_BLOCK[$strt, codeTxt])
+	: al=ALIEN
+	-> ^(CODE_BLOCK[al])
+	| strt=LCURLY 
+	{codeTxt = extractEmbeddedCode(adaptor);}
+	RCURLY
+	-> ^(CODE_BLOCK[$strt, codeTxt])
 	;	
 // $>
 		
@@ -707,48 +741,60 @@ codeBlock
 
 // $<Tokens
 
-AND		: '&'; 
-OR		: '|';
-NOT		: '!';
+AND				: '&'; 
+OR				: '|';
+NOT				: '!';
 
-LROUND		: '(';
-RROUND		: ')';
-LCURLY		: '{';
-RCURLY	 	: '}';
-LSQUARE		: '[';
-RSQUARE		: ']';
-LANGLE		: '<';
-RANGLE		: '>';
+LROUND			: '(';
+RROUND			: ')';
+LCURLY			: '{';
+RCURLY	 		: '}';
+LSQUARE			: '[';
+RSQUARE			: ']';
+LANGLE			: '<';
+RANGLE			: '>';
 
-EQUALS		: '=';
-COLON		: ':';
-DOUBLECOLON	: '::';
-SEMICOLON	: ';';
+EQUALS			: '=';
+COLON			: ':';
+DOUBLECOLON		: '::';
+SEMICOLON		: ';';
 
-COMMA		: ',';
-PERIOD		: '.';
-ASTERISK	: '*';
-HASH		: '#';
-QUOTE		: '\'';
-DOUBLEQUOTE	: '"';
-QUESTION	: '?';
+COMMA			: ',';
+PERIOD			: '.';
+ASTERISK		: '*';
+HASH			: '#';
+QUOTE			: '\'';
+DOUBLEQUOTE		: '"';
+QUESTION		: '?';
 DOUBLEQUESTION	: '??';
 
 // matching operators
-ENABLE		: '=>';
-DISABLE		: '~>';
+ENABLE			: '=>';
+DISABLE			: '~>';
 
 // weaving operators
-WEAVE		: '<-';
+WEAVE			: '<-';
 
-IDENTIFIER	: ('a' .. 'z' | 'A' .. 'Z' | '_') ('a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9')*;
+IDENTIFIER		: ('a' .. 'z' | 'A' .. 'Z' | '_') ('a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9')*;
+
+// string literal (quotes are removed, but)
+LITERAL : 
+	  ('"' s1=LIT_ALT1  '"') { setText($s1.text); }
+	| ('\'' s2=LIT_ALT2 '\'') { setText($s2.text); }
+	;
+fragment LIT_ALT1 		: LIT_INTERNAL ('\'' LIT_INTERNAL)*;
+fragment LIT_ALT2 		: LIT_INTERNAL ('"' LIT_INTERNAL)* ;
+fragment LIT_INTERNAL 	: (LIT_ESC | '\t' | '\r' | '\n' | ~('\u0000'..'\u001f' | '\\' | '"' | '\'' ))*;
+fragment LIT_ESC 		: '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\');
+
+ALIEN : '<<ASIS' (' '|'\n'|'\r') .* ('\n'|'\r') 'ASIS;';
 
 // Whitespace
-WS 		:  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};
+WS : (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};
 // Block comment
-COMMENT		:   '/*' .* '*/' {$channel=HIDDEN;};
+COMMENT	: '/*' .* '*/' {$channel=HIDDEN;};
 // Single line comment
-LINE_COMMENT    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;} ;
+LINE_COMMENT : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;} ;
 
 // this token is needed to include garbage data in the tokenizer/lexer
 // without it ANTLR will simply ingore all garbage

@@ -5,6 +5,7 @@
 	<classpathentry kind="lib" path="lib/antlr/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit/junit.jar"/>
 	<classpathentry kind="lib" path="lib/prolog/prolog.jar" sourcepath="lib/prolog/prolog-src.jar"/>
+	<classpathentry kind="lib" path="lib/antlr/stringtemplate-3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/groove/castor-0_9_5_2-xml.jar"/>
 	<classpathentry kind="lib" path="lib/groove/groove-1_2_0.jar"/>
