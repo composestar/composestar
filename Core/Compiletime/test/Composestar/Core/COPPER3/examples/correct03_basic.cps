@@ -10,7 +10,7 @@ concern correct03_basic in Concern.Examples
 	superimposition
 	{
 		selectors
-			sel = { C | isClassWithName(C, 'AClass') };
+			sel = { C | isClassWithName(C, /*fgh*/ 'AClass') };
 		filtermodules
 			sel <- FM1;
 	}

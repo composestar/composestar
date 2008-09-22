@@ -63,7 +63,6 @@ tokens {
 	OPERATOR;
 	OPERAND;
 	CMPSTMT;
-	ASSIGNMENT;
 	
 	MATCHING_PART;
 	SUBST_PART;
@@ -84,7 +83,6 @@ tokens {
 	CONSTRAINT;
 	
 	IMPLEMENTATION;
-	FILENAME;
 	CODE_BLOCK;
 }
 
@@ -157,13 +155,11 @@ concern
 	;
 
 /**
- * A generic fully qualified name. Each section is separated by a '.'. Each part is
- * individually available (including the dot). This way the FQN is available AS IS through
- * the text value but still available for modifications
+ * A generic fully qualified name.
  */
 fqn
 	: IDENTIFIER (PERIOD IDENTIFIER)*
-	-> ^(FQN[$text] IDENTIFIER (PERIOD IDENTIFIER)*)
+	-> ^(FQN[$start] IDENTIFIER+)
 	;	
 	
 /**
@@ -171,6 +167,9 @@ fqn
  */	
 concernParameters
 	: LROUND IDENTIFIER COLON fqn (SEMICOLON IDENTIFIER COLON fqn)* RROUND
+	{
+		warning("Concern parameters are deprecated.", $start);
+	}
 	-> ^(CONCERN_PARAMETERS ^(PARAM IDENTIFIER fqn)*)
 	;	
 	
@@ -195,7 +194,7 @@ filtermodule
  */	
 filtermoduleParameters
 	: LROUND fmParamEntry (COMMA fmParamEntry)* RROUND
-	-> ^(PARAMS fmParamEntry+)
+	-> ^(PARAMS[$start] fmParamEntry+)
 	;
 	
 fmParamEntry
@@ -237,7 +236,7 @@ internals
  */	
 fmInternal
 	: IDENTIFIER (COMMA IDENTIFIER)* COLON fqnOrSingleFmParam SEMICOLON
-	-> ^(INTERNAL fqnOrSingleFmParam  ^(NAMES IDENTIFIER+))
+	-> ^(INTERNAL[$start] fqnOrSingleFmParam  ^(NAMES IDENTIFIER+))
 	;
 
 /**
@@ -255,7 +254,7 @@ externals
  */
 fmExternal
 	: IDENTIFIER COLON type=fqnOrSingleFmParam (eq=EQUALS init=fqnOrSingleFmParam LROUND /* params */ RROUND)? SEMICOLON
-	-> ^(EXTERNAL IDENTIFIER $type ^(INIT[$eq] $init /* params */)?)
+	-> ^(EXTERNAL[$start] IDENTIFIER $type ^(INIT[$eq] $init /* params */)?)
 	;	
 
 /**
@@ -270,7 +269,7 @@ conditions
  */	
 condition
 	: IDENTIFIER COLON fqnOrSingleFmParam LROUND /* params */ RROUND SEMICOLON
-	-> ^(CONDITION IDENTIFIER fqnOrSingleFmParam /* params */ )
+	-> ^(CONDITION[$start] IDENTIFIER fqnOrSingleFmParam /* params */ )
 	;	
 	
 /**
@@ -303,6 +302,7 @@ filterExpression
  */
 filterOperator
 	: SEMICOLON
+	-> ^(OPERATOR[$start] SEMICOLON)
 	;
 
 /**
@@ -310,7 +310,7 @@ filterOperator
  */	
 filter
 	: name=IDENTIFIER COLON filterType filterParams? EQUALS filterElements
-	-> ^(FILTER $name filterType filterParams? filterElements)
+	-> ^(FILTER[$start] $name filterType filterParams? filterElements)
 	;
 
 /**
@@ -325,8 +325,13 @@ filterType
  * Filter parameters. Uses the canonical assignments. 
  */
 filterParams
-	: (LROUND (IDENTIFIER EQUALS canonAssignRhs)* RROUND)
-	-> ^(PARAMS ^(ASSIGNMENT ^(OPERAND IDENTIFIER["filter"] IDENTIFIER) ^(OPERAND canonAssignRhs))*)
+	: (LROUND filterParam* RROUND)
+	-> ^(PARAMS[$start] filterParam*)
+	;
+
+filterParam
+	: IDENTIFIER EQUALS canonAssignRhs
+	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["filter"] IDENTIFIER) ^(OPERAND canonAssignRhs))
 	;
 
 /**
@@ -349,6 +354,7 @@ canonFilterElementExpression
  */
 canonFilterElementOperator
 	: 'cor'
+	-> ^(OPERATOR[$start] 'cor')
 	;
 	
 /**
@@ -357,7 +363,7 @@ canonFilterElementOperator
  */
 canonFilterElement
 	: LROUND matchingExpression RROUND ( LCURLY canonAssignment* RCURLY )?
-	-> ^(FILTER_ELEMENT matchingExpression canonAssignment* )
+	-> ^(FILTER_ELEMENT[$start] matchingExpression canonAssignment* )
 	;
 	
 /**
@@ -377,8 +383,8 @@ meUnaryExpr
 	
 meCompoundExpr
 	: meCmpLhs meCmpOpr meCmpRhs 
-	-> ^(CMPSTMT ^(OPERATOR meCmpOpr) ^(OPERAND meCmpLhs) ^(OPERAND meCmpRhs))
-	| IDENTIFIER
+	-> ^(CMPSTMT[$start] ^(OPERATOR meCmpOpr) ^(OPERAND meCmpLhs) ^(OPERAND meCmpRhs))
+	| IDENTIFIER // 'true', 'false', or condition
 	;
 	
 meCmpLhs
@@ -397,7 +403,7 @@ meCmpRhs
 	
 canonAssignment
 	: canonAssingLhs EQUALS canonAssignRhs
-	-> ^(ASSIGNMENT ^(OPERAND canonAssingLhs) ^(OPERAND canonAssignRhs))
+	-> ^(EQUALS[$start] ^(OPERAND canonAssingLhs) ^(OPERAND canonAssignRhs))
 	;
 	
 canonAssingLhs
@@ -410,17 +416,17 @@ canonAssignRhs
 	;
 
 /**
- * Operators that link the filter elements
+ * Operators that link the filter elements. (Legacy notation) 
  */	
 filterElementOperator
 	: COMMA
-	-> 'cor'
+	-> ^(OPERATOR[$start] 'cor')
 	;
 	
 /**
  * This rule contains a predicate in order to keep the grammar LL(1). The conditionExpression
  * and messagePatternSet can both start with an IDENTIFIER, the predicate will see if there's an
- * optional conditionExpression.
+ * optional conditionExpression. (Legacy notation)
  */	
 filterElement
 	: (conditionExpression matchingOperator)=> conditionExpression matchingOperator messagePatternSet
@@ -432,26 +438,38 @@ filterElement
 // $<Condition Expression
 
 /**
- * Condition expressions only contain boolean operators
+ * Condition expressions only contain boolean operators (Legacy notation)
  */
 conditionExpression
 	: andExpr ( OR^ conditionExpression )?
 	;
 
+/**
+ * (Legacy notation)
+ */
 andExpr
 	: unaryExpr ( AND^ andExpr )?
 	;
-	
+
+/**
+ * (Legacy notation)
+ */	
 unaryExpr
 	: (NOT^)? operandExpr
 	;
-	
+
+/**
+ * (Legacy notation)
+ */	
 operandExpr
 	: LROUND! conditionExpression RROUND!
 	| IDENTIFIER // literals (True, False) are resolved by the tree walker
 	;		
 // $> Condition Expression
 
+/**
+ * (Legacy notation)
+ */
 matchingOperator
 	: ENABLE | DISABLE
 	;
@@ -460,7 +478,7 @@ matchingOperator
  * Matching and optional Substitution
  * or only target.selector which is a signature matching.
  * A matchingMatchingPattern set creates two root nodes, a MatchingPart and optional SubstPart.
- * These nodes will be a child node of a FilterElement node
+ * These nodes will be a child node of a FilterElement node (Legacy notation)
  */
 messagePatternSet
 	: matchingPart substitutionPart?
@@ -475,6 +493,7 @@ messagePatternSet
 	
 /**
  * The matching part can be a list of patterns, or a message list or a single pattern.
+ * (Legacy notation)
  */	
 matchingPart
 	: LCURLY matchingPattern (COMMA matchingPattern)* RCURLY
@@ -487,6 +506,7 @@ matchingPart
 /** 
  * Either name or signature matching.
  * Note that a 2nd notation for signature matching is defined in the messagePatternSet rule
+ * (Legacy notation)
  */
 matchingPattern
 	: (LSQUARE targetSelector[1] RSQUARE)
@@ -497,7 +517,7 @@ matchingPattern
 	
 /**
  * Substitution part of the filter element. The second rule provides message list
- * support.
+ * support. (Legacy notation)
  */	
 substitutionPart
 	: targetSelector[0]
@@ -507,8 +527,8 @@ substitutionPart
 	
 /**
  * The target is optional. However the target and selector contain similar constructions,
- * therefor a predicate is used to check if the target is present.
- */	
+ * therefor a predicate is used to check if the target is present. (Legacy notation)
+ */
 targetSelector [int allowParamList]
 	: (target PERIOD)=> target PERIOD! selector[allowParamList]
 	| selector[allowParamList]
@@ -516,6 +536,7 @@ targetSelector [int allowParamList]
 
 /**
  * The target part of the targeSelector. The target can also be a single filter module parameter.
+ * (Legacy notation)
  */		
 target
 	: identifierOrSingleFmParam
@@ -526,6 +547,7 @@ target
 
 /**
  * The selector. The selector may contain both filter module parameter types.
+ * (Legacy notation)
  */
 selector [int allowParamList]
 	: IDENTIFIER
@@ -561,7 +583,7 @@ superimposition
  */	
 conditionalSi
 	: 'conditions' (IDENTIFIER COLON fqn  (LROUND /* params */ RROUND)? SEMICOLON)+
-	-> ^(CONDITION IDENTIFIER fqn)+
+	-> ^(CONDITION[$start] IDENTIFIER fqn)+
 	;
 	
 selectors
@@ -574,9 +596,9 @@ selectors
 selectorSi
 	: name=IDENTIFIER EQUALS LCURLY 
 	( leg=selectorExprLegacy
-	-> ^(SELECTOR $name $leg)
+	-> ^(SELECTOR[$start] $name $leg)
 	| expr=selectorExprPredicate
-	-> ^(SELECTOR $name $expr)
+	-> ^(SELECTOR[$start] $name $expr)
 	)
 	;
 	
@@ -595,7 +617,7 @@ selectorExprLegacy
  */	
 selectorExprPredicate
 	: id=IDENTIFIER '|' expr=allButRcurly RCURLY
-	-> ^(PREDICATE_SELECTOR $id { adaptorCreate(adaptor, PROLOG_EXPR, inputToString($expr.start, $expr.stop)) } )
+	-> ^(PREDICATE_SELECTOR[$start] $id { adaptorCreate(adaptor, PROLOG_EXPR, inputToString($expr.start, $expr.stop)) } )
 	;	
 
 /**
@@ -621,7 +643,7 @@ filtermoduleSi
 	( LCURLY fmBinding (COMMA fmBinding)* RCURLY
 	| fmBinding (COMMA fmBinding)*
 	)
-	-> ^(FM_BINDINGS $sel fmBinding+)
+	-> ^(FM_BINDINGS[$start] $sel fmBinding+)
 	;
 
 /** 
@@ -641,7 +663,7 @@ condBinding
  */
 fmBinding
 	: fmref=concernFmRef (LROUND param (COMMA param)* RROUND)?
-	-> ^(BINDING $fmref ^(PARAMS param+)?)
+	-> ^(BINDING[$start] $fmref ^(PARAMS param+)?)
 	;	
 	
 /**
@@ -650,18 +672,30 @@ fmBinding
  * or a reference to a filter module in a external concern (fqn::IDENTIFIER)
  */
 concernFmRef
-	: fqn (DOUBLECOLON IDENTIFIER)?
+	: qn=fqn (dc=DOUBLECOLON IDENTIFIER
+	{
+		warning("The namespace.concern::filterModule is deprectated. Use namespace.concern.filterModule.", $start);
+	}
+	-> ^($qn IDENTIFIER)
+	|
+	-> $qn
+	)
 	;		
 	
 /**
  * A filter module parameter, used in the fmBinding rule
  */
 param
-	: LCURLY fqn (COMMA fqn)* RCURLY
-	-> ^(LIST fqn+)
-	| fqn
-	-> ^(PARAM fqn)
-	;		
+	: LCURLY paramValue (COMMA paramValue)* RCURLY
+	-> ^(LIST[$start] paramValue+)
+	| paramValue
+	-> ^(PARAM[$start] paramValue)
+	;
+	
+paramValue
+	: fqn
+	| LITERAL
+	;	
 	
 /**
  * Annotation binding, a bit like filter module binding, except that it uses annotation classes	
@@ -678,7 +712,7 @@ annotationSi
 	( LCURLY fqn (COMMA fqn)* RCURLY
 	| fqn (COMMA fqn)*
 	)
-	-> ^(ANNOTATION_BINDINGS $sel fqn+)
+	-> ^(ANNOTATION_BINDINGS[$start] $sel fqn+)
 	;	
 	
 /**
@@ -692,8 +726,8 @@ constraints
  * The available orderning constrains. Currently only a pre constraint.
  */	
 constraint
-	: oper=IDENTIFIER LROUND lhs=concernFmRef COMMA rhs=concernFmRef RROUND
-	-> ^(CONSTRAINT $oper $lhs $rhs)
+	: IDENTIFIER LROUND concernFmRef (COMMA concernFmRef)* RROUND
+	-> ^(CONSTRAINT[$start] IDENTIFIER concernFmRef+)
 	;			
 
 // $>
@@ -714,14 +748,6 @@ implementation
 	-> ^(IMPLEMENTATION[$start] $lang $cls $fn $code)
 	)
 	;
-
-/**
- * Creates a filename token.
- */
-filename
-	: (IDENTIFIER | '-')+ (PERIOD (PERIOD | IDENTIFIER | '-')+)?
-	-> ^(FILENAME[$text])
-	;	
 	
 /**
  * extractEmbeddedCode method will manually scan to the end of the codeblock
@@ -734,7 +760,7 @@ codeBlock
 	{codeTxt = extractEmbeddedCode(adaptor);}
 	RCURLY
 	-> ^(CODE_BLOCK[$strt, codeTxt])
-	;	
+	;
 // $>
 		
 
@@ -777,11 +803,8 @@ WEAVE			: '<-';
 
 IDENTIFIER		: ('a' .. 'z' | 'A' .. 'Z' | '_') ('a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9')*;
 
-// string literal (quotes are removed, but)
-LITERAL : 
-	  ('"' s1=LIT_ALT1  '"') { setText($s1.text); }
-	| ('\'' s2=LIT_ALT2 '\'') { setText($s2.text); }
-	;
+// string literal
+LITERAL 				: ('"' s1=LIT_ALT1  '"') | ('\'' s2=LIT_ALT2 '\'');
 fragment LIT_ALT1 		: LIT_INTERNAL ('\'' LIT_INTERNAL)*;
 fragment LIT_ALT2 		: LIT_INTERNAL ('"' LIT_INTERNAL)* ;
 fragment LIT_INTERNAL 	: (LIT_ESC | '\t' | '\r' | '\n' | ~('\u0000'..'\u001f' | '\\' | '"' | '\'' ))*;

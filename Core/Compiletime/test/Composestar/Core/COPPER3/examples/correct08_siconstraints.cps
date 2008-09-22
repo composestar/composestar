@@ -22,5 +22,6 @@ concern correct06_si
 		constraints
 			pre(FM3, FM1);
 			pre(FM2, FM3);
+			skip(FM1, FM2, FM3);
 	}
 }

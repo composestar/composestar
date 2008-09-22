@@ -8,6 +8,7 @@ concern correct09_externalfms
 			s2 = { C | isClassWithName(C, 'C2') };
 		filtermodules
 			s1 <- correct06_si::FM1;
-			s2 <- Concern.Examples.correct03_basic::FM1, correct06_si::FM2;
+			s1 <- correct06_si.FM1;
+			s2 <- Concern.Examples.correct03_basic.FM1, correct06_si.FM2;
 	}
 }

@@ -94,11 +94,22 @@ concern returns [CpsConcern c]
 	;
 	
 fqn returns [String res]
-	: ^(frst=FQN {res = $frst.text;} IDENTIFIER (PERIOD IDENTIFIER)* )
+@init {
+	StringBuffer sb = new StringBuffer();
+}
+	: ^(FQN (id=IDENTIFIER
+		{
+			if (sb.length() > 0) sb.append('.');
+			sb.append($id.text);
+		}
+		)+
+		{
+			res = sb.toString();
+		})
 	;
 
 fqnAsList returns [List<String> l = new ArrayList<String>();]
-	: ^(FQN first=IDENTIFIER { l.add($first.text); } (PERIOD nxt=IDENTIFIER { l.add($nxt.text); })*)
+	: ^(FQN (idf=IDENTIFIER {l.add($idf.text);} )+)
 	;
 	
 concernParameters
