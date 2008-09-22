@@ -81,7 +81,6 @@ concern returns [CpsConcern c]
 }
 	: ^(strt=CONCERN
 		name=IDENTIFIER
-		(concernParameters)?
 		(^(IN ns=fqnAsList))?
 		{
 			c = new CpsConcernImpl($name.text, ns);
@@ -111,13 +110,6 @@ fqn returns [String res]
 
 fqnAsList returns [List<String> l = new ArrayList<String>();]
 	: ^(FQN (idf=IDENTIFIER {l.add($idf.text);} )+)
-	;
-	
-concernParameters
-// obsolete
-	: ^(CONCERN_PARAMETERS 
-		(^(PARAM name=IDENTIFIER type=fqnAsList))*
-		)
 	;
 
 // $<Filter Modules
@@ -194,24 +186,6 @@ fmParamList
 	: ^(FM_PARAM_LIST IDENTIFIER)
 	;		
 
-fqnOrSingleFmParam
-	: fqn | singleFmParam
-	;
-	
-/**
- * Returns a concern reference instance.
- * Used by: internal, external
- */	
-// FIXME remove
-concernReference returns [Object ref]
-	:
-		^(FQN first=IDENTIFIER (PERIOD nxt=IDENTIFIER)*)
-	;	
-	
-identifierOrSingleFmParam
-	: IDENTIFIER | singleFmParam
-	;	
-
 internal [FilterModule fm]
 // throws CpsSemanticException
 	: ^(INTERNAL (ref=fqn | prm=singleFmParam) ^(NAMES (
@@ -254,32 +228,21 @@ internal [FilterModule fm]
 		)+))
 	;
 
-// FIXME remove
-externalConcernReference returns [Object ecr]
-// throws CpsSemanticException
-@init {
-	List<String> lst = new ArrayList<String>();
-}
-	: ^(FQN first=IDENTIFIER (PERIOD nxt=IDENTIFIER)*)
-	| prm=singleFmParam
-	/* params */
-	;
-	
 methodReference[FilterModule fm] returns [MethodReference mref]
 // throws CpsSemanticException
 @init {
-	List<String> lst = new ArrayList<String>();
+	Tree errTok = (Tree) input.LT(1);
 	// FIXME: should be a language construct
 	JoinPointContextArgument jpca = JoinPointContextArgument.NONE;
 	// FIXME: handle "inner" references 
 }
-	: ^(FQN first=IDENTIFIER {lst.add($first.text);} (PERIOD nxt=IDENTIFIER {lst.add($nxt.text);})*
+	: lst=fqnAsList
 		{
 			try {
 				if (lst.size() < 2)
 				{
 					throw new CpsSemanticException(String.format("Invalid method reference: \%s", lst.toString()), 
-						input, first);
+						input, errTok);
 				}
 				if (lst.size() == 2)
 				{
@@ -309,7 +272,6 @@ methodReference[FilterModule fm] returns [MethodReference mref]
 				recover(input,re);
 			}
 		}
-		)
 	| prm=singleFmParam 
 		{
 			try {
@@ -427,7 +389,7 @@ outputfilters [FilterModule fm]
 // $<Filter
 
 filterOperator returns [BinaryFilterOperator op]
-	: ^(seq=SEMICOLON 
+	: ^(OPERATOR seq=SEMICOLON 
 		{
 			op = new SequentialFilterOper();
 			setLocInfo(op, $seq);
@@ -455,7 +417,7 @@ filter [FilterModule fm] returns [Filter filter]
 			}
 			filter = new FilterImpl($name.text);
 			setLocInfo(filter, $frst);
-			filter.setOwner(fm); // done so that the correct FQN is produced in repository.add(.._
+			filter.setOwner(fm); // done so that the correct FQN is produced in repository.add(..)
 			filter.setType(ft);
 			repository.add(filter);
 		}
@@ -501,7 +463,7 @@ filterType returns [FilterType ft]
 	;	
 	
 filterElementOperator returns [BinaryFilterElementOperator op]
-	: or=COMMA 
+	: or='cor' 
 		{
 			op = new CORfilterElementCompOper();
 			setLocInfo(op, $or);

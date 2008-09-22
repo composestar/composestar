@@ -322,7 +322,7 @@ filterParams
 	;
 
 filterParam
-	: IDENTIFIER EQUALS canonAssignRhs
+	: IDENTIFIER EQUALS canonAssignRhs SEMICOLON
 	-> ^(EQUALS[$start] ^(OPERAND 'filter' IDENTIFIER) ^(OPERAND canonAssignRhs))
 	;
 
@@ -376,6 +376,7 @@ meUnaryExpr
 meCompoundExpr
 	: meCmpLhs meCmpOpr meCmpRhs 
 	-> ^(CMPSTMT[$start] ^(OPERATOR meCmpOpr) ^(OPERAND meCmpLhs) ^(OPERAND meCmpRhs))
+	| LROUND! matchingExpression RROUND!
 	| IDENTIFIER // 'true', 'false', or condition
 	;
 	
@@ -394,7 +395,7 @@ meCmpRhs
 	;
 	
 canonAssignment
-	: canonAssingLhs EQUALS canonAssignRhs
+	: canonAssingLhs EQUALS canonAssignRhs SEMICOLON
 	-> ^(EQUALS[$start] ^(OPERAND canonAssingLhs) ^(OPERAND canonAssignRhs))
 	;
 	
