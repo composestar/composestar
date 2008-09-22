@@ -14,7 +14,8 @@
  *				error recovery.
  * (2007-10-15) michielh	Added constraint processing.
  * (2008-05-09) michielh	Added constraint processing for FILTH2
- * (2008-09-17) michielh	Start on COPPER3
+ * (2008-09-17) michielh	COPPER3, various changes to the grammer to better
+ *				suit the new repository model and canonical filter notation.
  */
 tree grammar CpsTreeWalker;
 

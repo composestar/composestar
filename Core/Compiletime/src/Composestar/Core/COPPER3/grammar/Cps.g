@@ -26,8 +26,8 @@
  * (2007-10-15) michielh	Constraints are no longer hardcoded
  * (2008-02-25) michielh	Added required check for ending } and EOF
  * (2008-05-29) michielh	Made the grammar even more target neutral
- * (2008-09-17) michielh	Start on COPPER3. Input/Output filters now create
- 				filter expressions.
+ * (2008-09-17) michielh	COPPER3, various changes to the grammer to better
+ *				suit the new repository model and canonical filter notation.
  */
 grammar Cps;
 
@@ -331,14 +331,14 @@ filterParams
 
 filterParam
 	: IDENTIFIER EQUALS canonAssignRhs
-	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["filter"] IDENTIFIER) ^(OPERAND canonAssignRhs))
+	-> ^(EQUALS[$start] ^(OPERAND 'filter' IDENTIFIER) ^(OPERAND canonAssignRhs))
 	;
 
 /**
  * Supports two types of filter elements (the legacy notation, and the canonical notation)
  */
 filterElements
-	: LCURLY! filterElement (filterElementOperator filterElement)* RCURLY!
+	: LCURLY! legacyFilterElement RCURLY!
 	| canonFilterElementExpression 
 	;
 	
@@ -363,7 +363,7 @@ canonFilterElementOperator
  */
 canonFilterElement
 	: LROUND matchingExpression RROUND ( LCURLY canonAssignment* RCURLY )?
-	-> ^(FILTER_ELEMENT[$start] matchingExpression canonAssignment* )
+	-> ^(FILTER_ELEMENT[$start] ^(EXPRESSION matchingExpression) canonAssignment* )
 	;
 	
 /**
@@ -416,6 +416,13 @@ canonAssignRhs
 	;
 
 /**
+ * (Legacy notation) 
+ */		
+legacyFilterElement
+	: filterElement (filterElementOperator^ legacyFilterElement)?
+	;
+
+/**
  * Operators that link the filter elements. (Legacy notation) 
  */	
 filterElementOperator
@@ -429,10 +436,21 @@ filterElementOperator
  * optional conditionExpression. (Legacy notation)
  */	
 filterElement
-	: (conditionExpression matchingOperator)=> conditionExpression matchingOperator messagePatternSet
-	-> ^(FILTER_ELEMENT ^(EXPRESSION conditionExpression) ^(OPERATOR matchingOperator) messagePatternSet)
-	| messagePatternSet
-	-> ^(FILTER_ELEMENT messagePatternSet)
+	: (conditionExpression (ENABLE | DISABLE) )=> feWithCond substitutionPart?
+	-> ^(FILTER_ELEMENT feWithCond substitutionPart?)
+	| matchingPart substitutionPart?
+	-> ^(FILTER_ELEMENT matchingPart substitutionPart?)
+	;
+	
+feWithCond
+	: conditionExpression feOperMatchPart
+	-> ^(EXPRESSION ^(AND conditionExpression feOperMatchPart))
+	;
+
+feOperMatchPart
+	: ENABLE matchingPart
+	| DISABLE matchingPart
+	-> ^(NOT matchingPart)
 	;
 
 // $<Condition Expression
@@ -466,20 +484,14 @@ operandExpr
 	| IDENTIFIER // literals (True, False) are resolved by the tree walker
 	;		
 // $> Condition Expression
-
-/**
- * (Legacy notation)
- */
-matchingOperator
-	: ENABLE | DISABLE
-	;
 	
 /** 
  * Matching and optional Substitution
  * or only target.selector which is a signature matching.
  * A matchingMatchingPattern set creates two root nodes, a MatchingPart and optional SubstPart.
  * These nodes will be a child node of a FilterElement node (Legacy notation)
- */
+ */ 
+// FIXME no longer used
 messagePatternSet
 	: matchingPart substitutionPart?
 	-> ^(MATCHING_PART matchingPart) ^(SUBST_PART substitutionPart)?
@@ -496,11 +508,25 @@ messagePatternSet
  * (Legacy notation)
  */	
 matchingPart
-	: LCURLY matchingPattern (COMMA matchingPattern)* RCURLY
-	-> ^(LIST matchingPattern+)
+	: LCURLY! matchingPatternList RCURLY!
+	/* 
+	// no longer supported in the new repository (and never supported in FIRE/INLINE)
 	| HASH LROUND matchingPattern (SEMICOLON matchingPattern)* RROUND
 	-> ^(MESSAGE_LIST matchingPattern+)
+	*/
 	| matchingPattern
+	;
+	
+matchingPatternList
+	: matchingPattern (COMMA matchingPatternList
+	-> ^(OR matchingPattern matchingPatternList)
+	|
+	-> matchingPattern
+	)
+	;
+
+identifierOrFmParam
+	: IDENTIFIER | singleFmParam | fmParamList
 	;
 
 /** 
@@ -509,10 +535,39 @@ matchingPart
  * (Legacy notation)
  */
 matchingPattern
-	: (LSQUARE targetSelector[1] RSQUARE)
-	-> ^(NAME targetSelector)
-	| (LANGLE targetSelector[1] RANGLE)
-	-> ^(SIGN targetSelector)
+	: (LSQUARE (n1=identifierOrFmParam 
+			(PERIOD 
+				(n2=identifierOrFmParam // foo.bar
+				-> ^(AND
+						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'target') ^(OPERAND $n1))
+						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'selector') ^(OPERAND $n2))
+					)
+				| ASTERISK // foo.*
+				-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'target') ^(OPERAND $n1))
+				)
+			| // bar
+			-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'selector') ^(OPERAND $n1))
+			)
+		| ASTERISK PERIOD n3=identifierOrFmParam // *.bar
+		-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'selector') ^(OPERAND $n3))
+		) RSQUARE)
+	| (LANGLE 
+		(s1=identifierOrFmParam 
+			(PERIOD 
+				(s2=identifierOrFmParam // foo.bar
+				-> ^(AND
+						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'target') ^(OPERAND $s1))
+						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'selector') ^(OPERAND $s2))
+					)
+				| ASTERISK // foo.*
+				-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'target') ^(OPERAND $s1))
+				)
+			| // bar
+			-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'selector') ^(OPERAND $s1))
+			)
+		| ASTERISK PERIOD s3=identifierOrFmParam // *.bar
+		-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'selector') ^(OPERAND $s3))
+		) RANGLE)
 	;
 	
 /**
@@ -520,9 +575,24 @@ matchingPattern
  * support. (Legacy notation)
  */	
 substitutionPart
-	: targetSelector[0]
-	| HASH  LROUND targetSelector[0] (SEMICOLON targetSelector[0])* RROUND
-	-> ^(MESSAGE_LIST targetSelector+)
+	: n1=identifierOrSingleFmParam 
+		(PERIOD 
+			(n2=identifierOrSingleFmParam // foo.bar
+			-> ^(AND
+					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND $n1))
+					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND $n2))
+				)
+			| ASTERISK // foo.*
+			-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND $n1))
+				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND 'selector'))
+			)
+		| // bar
+		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND $n1))
+			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND 'target'))
+		)
+	| ASTERISK PERIOD n3=identifierOrSingleFmParam // *.bar
+	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND $n3))
+		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND 'target'))
 	;		
 	
 /**

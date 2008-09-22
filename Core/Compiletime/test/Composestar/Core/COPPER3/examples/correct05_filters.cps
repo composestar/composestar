@@ -7,8 +7,7 @@ concern correct05_filters in ConcernExamples
 			f1 : Dispatch = { [*.foo] *.bar };
 			f2 : Dispatch = { <inner.*> inner.* };
 			f3 : Dispatch = { [*.foo] };
-			f4 : Dispatch = { <inner.*> };
-			f5 : Dispatch = { *.foo } // implies signature matching
+			f4 : Dispatch = { <inner.*> }
 	}
 	
 	filtermodule basicconds
