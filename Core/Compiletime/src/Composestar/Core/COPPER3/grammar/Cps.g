@@ -42,7 +42,6 @@ options {
 tokens {
 	CONCERN;	
 	FQN;
-	CONCERN_PARAMETERS;
 	PARAM;
 	IN;
 	
@@ -64,16 +63,8 @@ tokens {
 	OPERAND;
 	CMPSTMT;
 	
-	MATCHING_PART;
-	SUBST_PART;
-	LIST;
-	MESSAGE_LIST;
-	NAME;
-	SIGN;
-	TARGET;
-	SELECTOR;
-	
 	SUPERIMPOSITION;
+	SELECTOR;
 	LEGACY_SELECTOR;
 	PREDICATE_SELECTOR;
 	PROLOG_EXPR;
@@ -81,6 +72,7 @@ tokens {
 	BINDING;
 	ANNOTATION_BINDINGS;
 	CONSTRAINT;
+	LIST;
 	
 	IMPLEMENTATION;
 	CODE_BLOCK;
@@ -170,7 +162,7 @@ concernParameters
 	{
 		warning("Concern parameters are deprecated.", $start);
 	}
-	-> ^(CONCERN_PARAMETERS ^(PARAM IDENTIFIER fqn)*)
+	-> // delete all
 	;	
 	
 // $<Filter Module
@@ -485,24 +477,6 @@ operandExpr
 	;		
 // $> Condition Expression
 	
-/** 
- * Matching and optional Substitution
- * or only target.selector which is a signature matching.
- * A matchingMatchingPattern set creates two root nodes, a MatchingPart and optional SubstPart.
- * These nodes will be a child node of a FilterElement node (Legacy notation)
- */ 
-// FIXME no longer used
-messagePatternSet
-	: matchingPart substitutionPart?
-	-> ^(MATCHING_PART matchingPart) ^(SUBST_PART substitutionPart)?
-	// single target.selector alternative dropped per 2007-10-05 (MichielH+Lodewijk)
-	| targetSelector[1] 
-	{
-		warning("Naked target.selector signature matching has been deprecated.", $start);
-	}
-	-> ^(MATCHING_PART ^(SIGN targetSelector))
-	;	
-	
 /**
  * The matching part can be a list of patterns, or a message list or a single pattern.
  * (Legacy notation)
@@ -593,41 +567,6 @@ substitutionPart
 	| ASTERISK PERIOD n3=identifierOrSingleFmParam // *.bar
 	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND $n3))
 		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND 'target'))
-	;		
-	
-/**
- * The target is optional. However the target and selector contain similar constructions,
- * therefor a predicate is used to check if the target is present. (Legacy notation)
- */
-targetSelector [int allowParamList]
-	: (target PERIOD)=> target PERIOD! selector[allowParamList]
-	| selector[allowParamList]
-	;
-
-/**
- * The target part of the targeSelector. The target can also be a single filter module parameter.
- * (Legacy notation)
- */		
-target
-	: identifierOrSingleFmParam
-	-> ^(TARGET identifierOrSingleFmParam)
-	| ASTERISK
-	-> ^(TARGET ASTERISK)
-	;
-
-/**
- * The selector. The selector may contain both filter module parameter types.
- * (Legacy notation)
- */
-selector [int allowParamList]
-	: IDENTIFIER
-	-> ^(SELECTOR IDENTIFIER)
-	| ASTERISK
-	-> ^(SELECTOR ASTERISK)
-	| singleFmParam
-	-> ^(SELECTOR singleFmParam)
-	| {allowParamList != 0}? fmParamList
-	-> ^(SELECTOR fmParamList)
 	;
 
 // $> Filter
