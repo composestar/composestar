@@ -22,26 +22,24 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.Reference;
+package Composestar.Core.CpsRepository2Impl.References;
 
-import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.LAMA.Type;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
- * Implementation of the TypeReference interface
+ * A soft-reference to a filter module
  * 
  * @author Michiel Hendriks
  */
-public class TypeReferenceImpl extends ReferenceImpl<Type> implements TypeReference
+public class FilterModuleReferenceImpl extends ReferenceImpl<FilterModule> implements FilterModuleReference
 {
-	private static final long serialVersionUID = 4120394329799222059L;
+	private static final long serialVersionUID = 2043847810058668108L;
 
 	/**
-	 * Create a new type reference
-	 * 
 	 * @param refid
 	 */
-	public TypeReferenceImpl(String refid) throws NullPointerException
+	public FilterModuleReferenceImpl(String refid) throws NullPointerException
 	{
 		super(refid);
 	}

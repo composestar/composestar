@@ -27,6 +27,7 @@ package Composestar.Core.CpsRepository2Impl.Reference;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.References.TypeReferenceTestBase;
+import Composestar.Core.CpsRepository2Impl.References.TypeReferenceImpl;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
@@ -51,7 +52,7 @@ public class TypeReferenceImplTest extends TypeReferenceTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.Reference.TypeReferenceImpl#TypeReferenceImpl(java.lang.String)}
+	 * {@link Composestar.Core.CpsRepository2Impl.References.TypeReferenceImpl#TypeReferenceImpl(java.lang.String)}
 	 * .
 	 */
 	public void testTypeReferenceImpl()

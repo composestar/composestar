@@ -25,6 +25,7 @@
 package Composestar.Core.CpsRepository2Impl.Reference;
 
 import Composestar.Core.CpsRepository2.References.ReferenceManagerTestBase;
+import Composestar.Core.CpsRepository2Impl.References.ReferenceManagerImpl;
 
 /**
  * @author Michiel Hendriks

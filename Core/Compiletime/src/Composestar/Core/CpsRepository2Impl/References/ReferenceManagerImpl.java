@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.Reference;
+package Composestar.Core.CpsRepository2Impl.References;
 
 import java.io.Serializable;
 import java.util.Collection;

@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.FilterModules.Filters;
+package Composestar.Core.CpsRepository2Impl.Filters;
 
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
 import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;

@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.Reference;
+package Composestar.Core.CpsRepository2Impl.References;
 
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.References.MethodReference;

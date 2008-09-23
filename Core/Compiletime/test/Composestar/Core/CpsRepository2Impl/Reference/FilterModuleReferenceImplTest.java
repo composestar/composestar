@@ -39,6 +39,7 @@ import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.References.FilterModuleReferenceTestBase;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.FilterModules.FilterModuleImpl;
+import Composestar.Core.CpsRepository2Impl.References.FilterModuleReferenceImpl;
 
 /**
  * @author Michiel Hendriks
@@ -60,7 +61,7 @@ public class FilterModuleReferenceImplTest extends FilterModuleReferenceTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.Reference.FilterModuleReferenceImpl#FilterModuleReferenceImpl(java.lang.String)}
+	 * {@link Composestar.Core.CpsRepository2Impl.References.FilterModuleReferenceImpl#FilterModuleReferenceImpl(java.lang.String)}
 	 * .
 	 */
 	public void testFilterModuleReferenceImpl()

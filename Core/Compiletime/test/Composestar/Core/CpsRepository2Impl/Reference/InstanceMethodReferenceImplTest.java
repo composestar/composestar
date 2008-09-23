@@ -25,6 +25,7 @@
 package Composestar.Core.CpsRepository2Impl.Reference;
 
 import Composestar.Core.CpsRepository2.References.InstanceMethodReferenceTestBase;
+import Composestar.Core.CpsRepository2Impl.References.InstanceMethodReferenceImpl;
 
 /**
  * @author Michiel Hendriks
@@ -49,7 +50,7 @@ public class InstanceMethodReferenceImplTest extends InstanceMethodReferenceTest
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.Reference.InstanceMethodReferenceImpl#InstanceMethodReferenceImpl(java.lang.String, Composestar.Core.CpsRepository2.TypeSystem.CpsObject, Composestar.Core.CpsRepository2.JoinPointContextArgument)}
+	 * {@link Composestar.Core.CpsRepository2Impl.References.InstanceMethodReferenceImpl#InstanceMethodReferenceImpl(java.lang.String, Composestar.Core.CpsRepository2.TypeSystem.CpsObject, Composestar.Core.CpsRepository2.JoinPointContextArgument)}
 	 * .
 	 */
 	public void testInstanceMethodReferenceImpl()
