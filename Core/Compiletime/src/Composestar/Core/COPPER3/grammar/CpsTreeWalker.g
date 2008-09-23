@@ -71,7 +71,8 @@ import Composestar.Core.CpsRepository2Impl.TypeSystem.*;
 
 import Composestar.Core.Exception.*;
 
-import java.util.Vector;
+import java.util.Collection;
+import java.util.ArrayList;
 }
 
 concern returns [CpsConcern c]
@@ -408,7 +409,7 @@ filter [FilterModule fm] returns [Filter filter]
 			try {
 				if (!fm.isUniqueMemberName($name.text)) {
 					throw new CpsSemanticException(String.format("Filter name \"\%s\" is not unqiue in filter module: \%s", 
-					$name.text, fm.getFullyQualifiedName()), input, name);
+						$name.text, fm.getFullyQualifiedName()), input, name);
 				}
 			}
 			catch (RecognitionException re) {
@@ -421,8 +422,29 @@ filter [FilterModule fm] returns [Filter filter]
 			filter.setType(ft);
 			repository.add(filter);
 		}
-		// TODO: process assingments
-		// FIXME: process filter element expression
+		(^(PARAMS
+			(asgn=canonAssign[fm]
+				{
+					try {
+						try {
+							filter.addArgument(asgn);
+						}
+						catch (IllegalArgumentException iae)
+						{
+							throw new CpsSemanticException(iae.getMessage(), input, name);
+						}
+					}
+					catch (RecognitionException re) {
+						reportError(re);
+						recover(input,re);
+					}
+				}
+			)*
+		))?
+		expr=filterElementExpression[fm]
+		{
+			filter.setElementExpression(expr);
+		}
 		)
 	;
 	
@@ -460,14 +482,27 @@ filterType returns [FilterType ft]
 				recover(input,re);
 			}
 		}
-	;	
+	;
+	
+filterElementExpression [FilterModule fm] returns [FilterElementExpression expr]
+// throws CpsSemanticException
+	: op=filterElementOperator lhs=filterElementExpression[fm] rhs=filterElementExpression[fm]
+		{
+			op.setLHS(lhs);
+			op.setRHS(rhs);
+			expr = op;
+		}
+	| elm=filterElement[fm] {expr = elm;}
+	;
 	
 filterElementOperator returns [BinaryFilterElementOperator op]
-	: or='cor' 
+	: ^(OPERATOR cor='cor' 
 		{
-			op = new CORfilterElementCompOper();
-			setLocInfo(op, $or);
+			op = new CORFilterElmOper();
+			setLocInfo(op, $cor);
+			repository.add(op);
 		}
+	)
 	;	
 
 /**
@@ -475,304 +510,206 @@ filterElementOperator returns [BinaryFilterElementOperator op]
  */
 filterElement [FilterModule fm] returns [FilterElement fe]
 // throws CpsSemanticException
-	: ^(frst=FILTER_ELEMENT 
+	: ^(strt=FILTER_ELEMENT 
 		{
-			setLocInfo(fe, $frst);
+			fe = new FilterElementImpl();
+			setLocInfo(fe, $strt);
+			repository.add(fe);
 		}
-		(^(EXPRESSION ex=conditionExpression[fm]))? 
-		(^(OPERATOR op=matchingOperator))?
+		expr=matchingExpression[fm] 
 		{
-			if (ex == null)
+			fe.setMatchingExpression(expr);
+		}
+		(asgn=canonAssign[fm]
 			{
-				ex = new True();
-				setLocInfo(ex, $frst);
+				fe.addAssignment(asgn);
 			}
-			ex.setParent(fe);
-			fe.setConditionPart(ex);
-			
-			if (op == null)
-			{
-				op = new EnableOperator();
-				setLocInfo(op, $frst);
-			}
-			op.setParent(fe);
-			fe.setEnableOperatorType(op);
-		}
-		mp=messagePatternSet[fm]
+		)*
+	)
+	;
+	
+canonAssign [FilterModule fm] returns [CanonAssignment asgn]
+	: ^(strt=EQUALS ^(OPERAND lhs=assignLhs[fm]) ^(OPERAND rhs=assignRhs[fm])
 		{
-			mp.setParent(fe);
-			fe.setMatchingPattern(mp);
+			asgn = new CanonAssignmentImpl();
+			setLocInfo(asgn, strt);
+			repository.add(asgn);
+			asgn.setProperty(lhs);
+			asgn.setValue(rhs);
 		}
-		)
+	)
+	;
+	
+assignLhs [FilterModule fm] returns [CanonProperty prop]
+	: p1=IDENTIFIER p2=IDENTIFIER?
+	{
+		
+	}
+	;
+	
+assignRhs [FilterModule fm] returns [CpsVariable val]
+	: fqn | singleFmParam | LITERAL
 	;
 
 // $<Condition Expression
 
-conditionExpression [FilterModule fm] returns [ConditionExpression ex]
-	: ^(frst=OR lhs=conditionExpression[fm] rhs=conditionExpression[fm] 
+matchingExpression [FilterModule fm] returns [MatchingExpression ex]
+	: ^(frst=OR lhs=matchingExpression[fm] rhs=matchingExpression[fm] 
 			{
-				ex = new Or();
+				ex = new OrMEOper();
 				setLocInfo(ex, $frst);
-				lhs.setParent(ex);
-				rhs.setParent(ex);
-				((BinaryOperator) ex).setLeft(lhs);
-				((BinaryOperator) ex).setRight(rhs);
+				repository.add(ex);
+				((BinaryMEOperator) ex).setLHS(lhs);
+				((BinaryMEOperator) ex).setRHS(rhs);
 			}
 		)
 	| andex=andExpr[fm] {ex = andex;}
 	;
 
-andExpr [FilterModule fm] returns [ConditionExpression ex]
-	: ^(frst=AND lhs=conditionExpression[fm] rhs=conditionExpression[fm] 
+andExpr [FilterModule fm] returns [MatchingExpression ex]
+	: ^(frst=AND lhs=matchingExpression[fm] rhs=matchingExpression[fm] 
 			{
-				ex = new And();
+				ex = new AndMEOper();
 				setLocInfo(ex, $frst);
-				lhs.setParent(ex);
-				rhs.setParent(ex);
-				((BinaryOperator) ex).setLeft(lhs);
-				((BinaryOperator) ex).setRight(rhs);
+				repository.add(ex);
+				((BinaryMEOperator) ex).setLHS(lhs);
+				((BinaryMEOperator) ex).setRHS(rhs);
 			}
 		)
 	| unex=unaryExpr[fm] {ex = unex;}
 	;
 	
-unaryExpr [FilterModule fm] returns [ConditionExpression ex]
-	: ^(frst=NOT oper=conditionExpression[fm]
+unaryExpr [FilterModule fm] returns [MatchingExpression ex]
+	: ^(frst=NOT oper=matchingExpression[fm]
 			{
-			ex = new Not();
+			ex = new NotMEOper();
 			setLocInfo(ex, $frst);
-			oper.setParent(ex);
-			((Not) ex).setOperand(oper);
+			((UnaryMEOperator) ex).setOperand(oper);
 			}
 		)
 	| oex=operandExpr[fm] {ex = oex;}
 	;
 	
-operandExpr [FilterModule fm] returns [ConditionExpression ex]
-	: name=IDENTIFIER // literals (True, False) are resolved by the tree walker
+operandExpr [FilterModule fm] returns [MatchingExpression ex]
+	: name=IDENTIFIER
 		{
-			String oper = $name.text;
-			if ("true".equalsIgnoreCase(oper))
-			{
-				ex = new True();
+			try {
+				String oper = $name.text;
+				if ("true".equalsIgnoreCase(oper))
+				{
+					ex = new MELiteralImpl(true);
+				}
+				else if ("false".equalsIgnoreCase(oper))
+				{
+					ex = new MELiteralImpl(false);
+				}
+				else {
+					Condition cond = fm.getCondition(oper);
+					if (cond == null)
+					{
+						throw new CpsSemanticException(String.format("\"\%s\" does not contain a condition with the name \"\%s\"", 
+							fm.getFullyQualifiedName(), oper), input, $name);
+					}
+					else {
+						ex = new MEConditionImpl();
+						((MEConditionImpl) ex).setCondition(cond);
+					}
+				}
+				setLocInfo(ex, $name);
+				repository.add(ex);
 			}
-			else if ("false".equalsIgnoreCase(oper))
+			catch (RecognitionException re) {
+				reportError(re);
+				recover(input,re);
+			} 
+		}
+	| cmp=compareStatement[fm] { ex = cmp; }
+	;
+	
+compareStatement [FilterModule fm] returns [MECompareStatement cmp]
+	: ^(strt=CMPSTMT oper=cmpOperator ^(OPERAND lhs=assignLhs[fm]) ^(OPERAND rhs=cmpRhs[fm])
+	{
+		cmp = oper;
+		cmp.setLHS(lhs);
+		cmp.setRHS(rhs);
+	}
+	)
+	;
+	
+cmpOperator returns [MECompareStatement cmp]
+	: ^(OPERATOR {	Tree ftok = (Tree) input.LT(1); }
+	( '=='	{ cmp = new InstanceMatching(); } 
+	| '$=' 	{ cmp = new SignatureMatching(); }
+	| '~='  { cmp = new CompatibilityMatching(); }
+	| '@='	{ cmp = new AnnotationMatching(); }
+	)
+	{
+		if (cmp != null)
+		{
+			setLocInfo(cmp, ftok);
+			repository.add(cmp);
+		}
+		else {
+			throw new CpsSemanticException(String.format("Unknown compare operator \"\%s\"", 
+				ftok.getText()), input, ftok);
+		}
+	}
+	)
+	; 
+
+cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<CpsVariable>();]
+@init{
+	Tree errTok = (Tree) input.LT(1); 
+}
+	: qn=fqnAsList
+		{
+			if (qn.size() == 0)
 			{
-				ex = new False();
+				// fixme: error
+			}
+			
+			// fixme: check for message.*, filter.*, target, selector
+			
+			if (qn.size() == 1)
+			FilterModuleVariable fmVar = fm.getVariable(qn);
+			if (fmVar == null)
+			{
+				// qualified name, resolve to a type reference
+				res.add(new CpsTypeProgramElementImpl(references.getTypeReference(qn)));
+			}
+			else if (fmVar instanceof Condition)
+			{
+				res.add((Condition) fmVar);
+			}
+			else if (fmVar instanceof Internal)
+			{
+				res.add((Internal) fmVar);
+			}
+			else if (fmVar instanceof External)
+			{
+				res.add((External) fmVar);
 			}
 			else {
-				ex = new ConditionVariable();
-				ConditionReference cref = new ConditionReference();
-				cref.setName(oper);
-				cref.setFilterModule(fm.getName());
-				CpsConcern cpsc = (CpsConcern) fm.getParent();
-				cref.setConcern(cpsc.getName());
-				cref.setPackage(cpsc.getNamespace());
-				setLocInfo(cref, name);
-				((ConditionVariable) ex).setCondition(cref);
+				// fixme: error
 			}
-			setLocInfo(ex, $name);
+		}
+	| ^(FM_PARAM_SINGLE IDENTIFIER)
+	| ^(FM_PARAM_LIST IDENTIFIER)
+	| l=LITERAL 
+		{
+			String lvalue = $l.text;
+			if (lvalue.length() >= 2)
+			{
+				lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-2));
+			}
+			else {
+				lvalue = "";
+			}
+			res.add(new CpsLiteralImpl(lvalue)); 
 		}
 	;
 
 // $> Condition Expression
-
-matchingOperator returns [EnableOperatorType op]
-	: en=ENABLE {op = new EnableOperator(); setLocInfo(op, $en);}
-	| di=DISABLE {op = new DisableOperator(); setLocInfo(op, $di);}
-	;
-	
-messagePatternSet [FilterModule fm] returns [MatchingPatternAST mp = new MatchingPatternAST();]
-// throws CpsSemanticException
-	: ^(frst=MATCHING_PART matchingPart[mp,fm]) (^(SUBST_PART substitutionPart[mp,fm]))?
-		{
-			setLocInfo(mp, $frst);
-		}
-	;	
-	
-matchingPart [MatchingPattern mp, FilterModule fm]
-// throws CpsSemanticException
-	: ^(LIST (m1=matchingPattern[fm]
-			{
-				m1.setParent(mp);
-				mp.addMatchingPart(m1);
-			}
-		)+)
-	| ^(MESSAGE_LIST 
-			(m2=matchingPattern[fm]
-				{
-					m2.setParent(mp);
-					mp.addMatchingPart(m2);
-				}
-			)+
-			{
-				mp.setIsMessageList(true);
-			}
-		)
-	| m3=matchingPattern[fm]
-		{
-			m3.setParent(mp);
-			mp.addMatchingPart(m3);
-		}
-	;
-
-matchingPattern [FilterModule fm] returns [MatchingPartAST mp = new MatchingPartAST()]
-// throws CpsSemanticException
-	: ^(nm=NAME 
-		{
-			MatchingType mt = new NameMatchingType();
-			setLocInfo(mt, $nm);
-			mt.setParent(mp);
-			mp.setMatchType(mt);
-			setLocInfo(mp, $nm);
-		}
-			targetSelector[mp,fm]
-		)
-	| ^(sm=SIGN 
-		{
-			MatchingType mt = new SignatureMatchingType();
-			setLocInfo(mt, $sm);
-			mt.setParent(mp);
-			mp.setMatchType(mt);
-			setLocInfo(mp, $sm);
-		}
-			targetSelector[mp,fm]
-		)
-	;
-	
-substitutionPart [MatchingPatternAST mp, FilterModuleAST fm]
-// throws CpsSemanticException
-@init {
-	SubstitutionPartAST sp;
-}
-	: {sp = new SubstitutionPartAST();}
-		ts=targetSelector[sp,fm]
-		{
-		try {
-			if (mp.getIsMessageList())
-			{
-				throw new CpsSemanticException("Substitution part can not be a message list", input, $start);
-			}
-			setLocInfo(sp, $start);
-			sp.setParent(mp);
-		mp.addSubstitutionPart(sp);
-		}
-		catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-		}
-		}
-	| ^(strt=MESSAGE_LIST 
-			({sp = new SubstitutionPartAST();}
-				targetSelector[sp,fm]
-		{
-			setLocInfo(sp, $start);
-			sp.setParent(mp);
-						mp.addSubstitutionPart(sp);
-		}
-			)+
-		{
-		try {
-			if (!mp.getIsMessageList())
-			{
-				throw new CpsSemanticException("Substitution part must also be a message list", input, strt);
-			}
-		}
-		catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-		}
-		}
-		)
-	;		
-	
-targetSelector [AbstractPatternAST ap, FilterModuleAST fm]
-	: t=target[fm] s=selector
-		{
-			t.setParent(ap);
-			ap.setTarget(t);
-			s.setParent(ap);
-			ap.setSelector(s);
-		}
-	| ss=selector
-		{
-			Target tt = new Target();
-			tt.setName("*");
-			tt.setParent(ap);
-			ap.setTarget(tt);
-			
-			ss.setParent(ap);
-			ap.setSelector(ss);
-		}
-	;
-
-target [FilterModuleAST fm] returns [Target t = new Target();]
-// throws CpsSemanticException
-	: ^(TARGET ident=IDENTIFIER
-			{
-				setLocInfo(t, $ident);
-				if (Target.INNER.equals($ident.text))
-				{
-					t.setName(Target.INNER);
-				}
-				else {
-					t.setName($ident.text);
-					DeclaredObjectReference dor = new DeclaredObjectReference();
-					dor.setName($ident.text);
-					dor.setFilterModule(fm.getName());
-					CpsConcern cpsc = (CpsConcern) fm.getParent();
-					dor.setConcern(cpsc.getName());
-					dor.setPackage(cpsc.getNamespace());
-					t.setRef(dor);
-				}
-			}
-		)
-	| ^(TARGET p=singleFmParam
-			{
-			try {
-				throw new CpsSemanticException("Filter module parameters have not been implemented for targets", 
-					input, $p.start);
-			}
-			catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-			}
-			}
-		)
-	| ^(TARGET a=ASTERISK {t.setName($a.text); setLocInfo(t, $a); })
-	;
-
-selector returns [MessageSelectorAST s]
-	: ^(SELECTOR ident=IDENTIFIER
-			{
-				s = new MessageSelectorAST();
-				s.setName($ident.text); 
-				setLocInfo(s, $ident);
-			}
-		)
-	| ^(SELECTOR a=ASTERISK
-			{
-				s = new MessageSelectorAST();
-				s.setName($a.text); 
-				setLocInfo(s, $a);
-			}
-		)
-	| ^(SELECTOR sp=singleFmParam
-			{
-		s = new ParameterizedMessageSelectorAST();
-		s.setName($sp.text); 
-				setLocInfo(s, $sp.start);
-			}
-		)
-	| ^(SELECTOR pl=fmParamList
-			{
-		s = new ParameterizedMessageSelectorAST();
-		s.setName($pl.text); 
-		((ParameterizedMessageSelectorAST) s).setList(true);
-				setLocInfo(s, $pl.start);
-			}
-		)
-	;
 
 // $> Filter
 

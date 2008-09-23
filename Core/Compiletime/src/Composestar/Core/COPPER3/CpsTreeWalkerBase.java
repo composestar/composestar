@@ -230,4 +230,65 @@ public class CpsTreeWalkerBase extends TreeParser
 	{
 		constraintSpec = value;
 	}
+
+	/**
+	 * Converts the input string to the unescaped counter part.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static final String unescapeLiteral(String value)
+	{
+		StringBuffer sb = new StringBuffer(value.length());
+		boolean escaped = false;
+		for (int i = 0; i < value.length(); ++i)
+		{
+			char c = value.charAt(i);
+			if (escaped)
+			{
+				escaped = false;
+				switch (c)
+				{
+					case 'r':
+						sb.append('\r');
+						break;
+					case 'n':
+						sb.append('\n');
+						break;
+					case 't':
+						sb.append('\t');
+						break;
+					case 'f':
+						sb.append('\f');
+						break;
+					case '\\':
+						sb.append('\\');
+						break;
+					case '\'':
+						sb.append('\'');
+						break;
+					case '"':
+						sb.append('"');
+						break;
+					case 'b':
+						sb.append('\b');
+						break;
+					/*
+					 * case 'u': // ... break;
+					 */
+					default:
+						sb.append(c);
+				}
+			}
+			else if (c == '\\')
+			{
+				escaped = true;
+			}
+			else
+			{
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
 }

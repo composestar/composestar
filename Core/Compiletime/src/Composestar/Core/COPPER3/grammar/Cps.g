@@ -323,7 +323,7 @@ filterParams
 
 filterParam
 	: IDENTIFIER EQUALS canonAssignRhs SEMICOLON
-	-> ^(EQUALS[$start] ^(OPERAND 'filter' IDENTIFIER) ^(OPERAND canonAssignRhs))
+	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["filter"] IDENTIFIER) ^(OPERAND canonAssignRhs))
 	;
 
 /**
@@ -381,9 +381,12 @@ meCompoundExpr
 	;
 	
 meCmpLhs
-	: 'message' PERIOD! IDENTIFIER
-	| 'target'
-	| 'selector'
+	: m='message' PERIOD IDENTIFIER
+	-> IDENTIFIER[m] IDENTIFIER
+	| t='target'
+	-> IDENTIFIER[t]
+	| s='selector'
+	-> IDENTIFIER[s]
 	;		
 	
 meCmpOpr
@@ -401,7 +404,8 @@ canonAssignment
 	
 canonAssingLhs
 	: meCmpLhs
-	| 'filter' PERIOD! IDENTIFIER
+	| f='filter' PERIOD IDENTIFIER
+	-> IDENTIFIER[f] IDENTIFIER
 	;
 
 canonAssignRhs
@@ -514,34 +518,34 @@ matchingPattern
 			(PERIOD 
 				(n2=identifierOrFmParam // foo.bar
 				-> ^(AND
-						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'target') ^(OPERAND $n1))
-						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'selector') ^(OPERAND $n2))
+						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
+						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n2))
 					)
 				| ASTERISK // foo.*
-				-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'target') ^(OPERAND $n1))
+				-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'selector') ^(OPERAND $n1))
+			-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n1))
 			)
 		| ASTERISK PERIOD n3=identifierOrFmParam // *.bar
-		-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND 'selector') ^(OPERAND $n3))
+		-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n3))
 		) RSQUARE)
 	| (LANGLE 
 		(s1=identifierOrFmParam 
 			(PERIOD 
 				(s2=identifierOrFmParam // foo.bar
 				-> ^(AND
-						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'target') ^(OPERAND $s1))
-						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'selector') ^(OPERAND $s2))
+						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
+						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s2))
 					)
 				| ASTERISK // foo.*
-				-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'target') ^(OPERAND $s1))
+				-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'selector') ^(OPERAND $s1))
+			-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s1))
 			)
 		| ASTERISK PERIOD s3=identifierOrFmParam // *.bar
-		-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND 'selector') ^(OPERAND $s3))
+		-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s3))
 		) RANGLE)
 	;
 	
@@ -554,20 +558,20 @@ substitutionPart
 		(PERIOD 
 			(n2=identifierOrSingleFmParam // foo.bar
 			-> ^(AND
-					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND $n1))
-					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND $n2))
+					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND $n1))
+					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n2))
 				)
 			| ASTERISK // foo.*
-			-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND $n1))
-				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND 'selector'))
+			-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND $n1))
+				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND IDENTIFIER["selector"]))
 			)
 		| // bar
-		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND $n1))
-			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND 'target'))
+		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n1))
+			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND IDENTIFIER["target"]))
 		)
 	| ASTERISK PERIOD n3=identifierOrSingleFmParam // *.bar
-	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] 'selector') ^(OPERAND $n3))
-		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] 'target') ^(OPERAND 'target'))
+	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n3))
+		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND IDENTIFIER["target"]))
 	;
 
 // $> Filter
