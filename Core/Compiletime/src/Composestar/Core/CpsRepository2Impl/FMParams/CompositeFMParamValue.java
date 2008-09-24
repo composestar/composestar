@@ -24,52 +24,53 @@
 
 package Composestar.Core.CpsRepository2Impl.FMParams;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.List;
 
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
- * A basic filter module parameter list.
+ * A filter module parameter value that is constructed from other filter module
+ * parameter values. An instance of this is only used in case of a list of
+ * values.
  * 
  * @author Michiel Hendriks
  */
-public class BasicFMParamValue extends AbstractRepositoryEntity implements FMParameterValue
+public class CompositeFMParamValue extends AbstractRepositoryEntity implements FMParameterValue
 {
-	private static final long serialVersionUID = -2009091299407476099L;
+	private static final long serialVersionUID = 2365380768980948972L;
 
 	/**
-	 * Contains the values
+	 * List of values
 	 */
-	protected Collection<CpsVariable> values;
+	protected List<FMParameterValue> values;
 
 	/**
-	 * Create a new basic collection
+	 * 
 	 */
-	public BasicFMParamValue()
+	public CompositeFMParamValue()
 	{
-		super();
-		values = new LinkedHashSet<CpsVariable>();
+		values = new ArrayList<FMParameterValue>();
 	}
 
 	/**
-	 * Add a new variable to this filter module variable. Called setOwner(this)
-	 * after the variable was added.
+	 * Add a new value to this list. Calls setOwner(this) on the value after
+	 * adding it
 	 * 
-	 * @param var The variable to add
-	 * @throws NullPointerException Thrown when the variable is null
+	 * @param value
+	 * @throws NullPointerException Thrown when the value is null
 	 */
-	public void addValue(CpsVariable var) throws NullPointerException
+	public void addValue(FMParameterValue value) throws NullPointerException
 	{
-		if (var == null)
+		if (value == null)
 		{
 			throw new NullPointerException();
 		}
-		values.add(var);
-		var.setOwner(this);
+		values.add(value);
+		value.setOwner(this);
 	}
 
 	/*
@@ -79,7 +80,12 @@ public class BasicFMParamValue extends AbstractRepositoryEntity implements FMPar
 	 */
 	public Collection<CpsVariable> getValues()
 	{
-		return Collections.unmodifiableCollection(values);
+		Collection<CpsVariable> result = new ArrayList<CpsVariable>();
+		for (FMParameterValue value : values)
+		{
+			result.addAll(value.getValues());
+		}
+		return result;
 	}
 
 }

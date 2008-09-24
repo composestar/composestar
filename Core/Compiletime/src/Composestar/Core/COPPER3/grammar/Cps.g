@@ -703,12 +703,13 @@ param
 	: LCURLY paramValue (COMMA paramValue)* RCURLY
 	-> ^(LIST[$start] paramValue+)
 	| paramValue
-	-> ^(PARAM[$start] paramValue)
 	;
 	
 paramValue
-	: fqn
+	: fqn 
+	-> ^(PARAM[$start] fqn)
 	| LITERAL
+	-> ^(PARAM[$start] LITERAL)
 	;	
 	
 /**

@@ -24,57 +24,53 @@
 
 package Composestar.Core.CpsRepository2Impl.FMParams;
 
-import Composestar.Core.CpsRepository2.FMParams.FMParameterValueTestBase;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
+import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
+ * A basic filter module parameter list.
+ * 
  * @author Michiel Hendriks
  */
-public class BasicFMParamValueTest extends FMParameterValueTestBase
+public class SimpleFMParamValue extends AbstractRepositoryEntity implements FMParameterValue
 {
-	protected BasicFMParamValue bfmpv;
+	private static final long serialVersionUID = -2009091299407476099L;
+
+	/**
+	 * Contains the values
+	 */
+	protected Collection<CpsVariable> values;
+
+	/**
+	 * Create a new basic collection
+	 * 
+	 * @param var The value of this parameter value
+	 * @throws NullPointerException Thrown when the value is null
+	 */
+	public SimpleFMParamValue(CpsVariable var) throws NullPointerException
+	{
+		super();
+		if (var == null)
+		{
+			throw new NullPointerException("Variable can not be null");
+		}
+		values = new ArrayList<CpsVariable>();
+		values.add(var);
+	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
+	 * @see
+	 * Composestar.Core.CpsRepository2.FMParams.FMParameterValue#getValues()
 	 */
-	@Override
-	protected void setUp() throws Exception
+	public Collection<CpsVariable> getValues()
 	{
-		super.setUp();
-		bfmpv = new BasicFMParamValue();
-		fmpv = bfmpv;
-		re = bfmpv;
-	}
-
-	/**
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.FMParams.BasicFMParamValue#addValue(Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)}
-	 * .
-	 */
-	public void testAddValue()
-	{
-		CpsVariable var = new DummyCPSV();
-		bfmpv.addValue(var);
-		assertTrue(bfmpv.getValues().contains(var));
-
-		try
-		{
-			bfmpv.addValue(null);
-			fail();
-		}
-		catch (NullPointerException e)
-		{
-		}
-	}
-
-	/**
-	 * @author Michiel Hendriks
-	 */
-	protected static class DummyCPSV extends AbstractRepositoryEntity implements CpsVariable
-	{
-		private static final long serialVersionUID = 1L;
+		return Collections.unmodifiableCollection(values);
 	}
 
 }

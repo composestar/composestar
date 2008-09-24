@@ -668,29 +668,65 @@ cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<Cp
 				// fixme: error
 			}
 			
-			// fixme: check for message.*, filter.*, target, selector
-			
+			CpsVariable entity = null;
 			if (qn.size() == 1)
-			FilterModuleVariable fmVar = fm.getVariable(qn);
-			if (fmVar == null)
+			{
+				if (PropertyNames.INNER.equals(qn.get(0)))
+				{
+				}
+				else if (PropertyNames.TARGET.equals(qn.get(0)))
+				{
+				}
+				else if (PropertyNames.SELECTOR.equals(qn.get(0)))
+				{
+				}
+				else {
+					FilterModuleVariable fmVar = fm.getVariable(qn.get(0));
+					if (fmVar instanceof Condition)
+					{
+						entity = (Condition) fmVar;
+					}
+					else if (fmVar instanceof Internal)
+					{
+						entity = (Internal) fmVar;
+					}
+					else if (fmVar instanceof External)
+					{
+						entity = (External) fmVar;
+					}
+					else {
+						// fixme: error
+					}
+				}
+			}
+			else if (qn.size() == 2)
+			{
+				if (PropertyPrefix.fromString(qn.get(0)) == PropertyPrefix.MESSAGE)
+				{
+				}
+				else if (PropertyPrefix.fromString(qn.get(0)) == PropertyPrefix.FILTER)
+				{
+				}
+			}
+			
+			if (entity == null)
 			{
 				// qualified name, resolve to a type reference
-				res.add(new CpsTypeProgramElementImpl(references.getTypeReference(qn)));
+				StringBuilder sb = new StringBuilder();
+				for (String s : qn)
+				{
+					if (sb.length() > 0)
+					{
+						sb.append('.');
+					}
+					sb.append(s);
+				}
+				entity = new CpsTypeProgramElementImpl(references.getTypeReference(sb.toString()));
 			}
-			else if (fmVar instanceof Condition)
+			
+			if (entity != null)
 			{
-				res.add((Condition) fmVar);
-			}
-			else if (fmVar instanceof Internal)
-			{
-				res.add((Internal) fmVar);
-			}
-			else if (fmVar instanceof External)
-			{
-				res.add((External) fmVar);
-			}
-			else {
-				// fixme: error
+				res.add(entity);
 			}
 		}
 	| ^(FM_PARAM_SINGLE IDENTIFIER)
@@ -743,7 +779,33 @@ conditionalSi [SuperImposition si]
 			try {
 				SICondition cond = new SIConditionImpl($name.text);
 				setLocInfo(cond, $strt);
-				MethodReference mref;
+				
+				if (expr.size() < 2)
+				{
+					StringBuilder fqnAsString = new StringBuilder();
+					for (String s : expr)
+					{
+						if (fqnAsString.length() > 0)
+						{
+							fqnAsString.append('.');
+						}
+						fqnAsString.append(s);
+					} 
+					throw new CpsSemanticException(String.format("Invalid method reference: \"\%s\"",
+						fqnAsString.toString()), input, $strt);
+				}
+				
+				StringBuilder sb = new StringBuilder();
+				for (String s : expr.subList(0, expr.size()-2))
+				{
+					if (sb.length() > 0)
+					{
+						sb.append('.');
+					}
+					sb.append(s);
+				}
+				JoinPointContextArgument jpca = JoinPointContextArgument.PARTIAL;
+				MethodReference mref = references.getMethodReference(expr.get(expr.size()-1), sb.toString(), jpca);
 				cond.setMethodReference(mref);			
 				if (!si.addCondition(cond))
 				{
@@ -868,18 +930,11 @@ fmBinding [SuperImposition si] returns [FilterModuleBinding fmb = new FilterModu
 	{
 		throw new CpsSemanticException("Superimposition is not owned by a CpsConcern", input);
 	}
-	CpsConcern concern = (CpsConcern) si.getOwner();
 }
 	: ^(strt=BINDING fmr=concernFmRef[si] 
 		{
-			try {
-				setLocInfo(fmb, $strt);
-				fmb.setFilterModuleReference(fmr);
-			}
-			catch (RecognitionException re) {
-				reportError(re);
-				recover(input,re);
-			}
+			setLocInfo(fmb, $strt);
+			fmb.setFilterModuleReference(fmr);
 		}
 		(^(PARAMS
 			{
@@ -899,41 +954,54 @@ fmBinding [SuperImposition si] returns [FilterModuleBinding fmb = new FilterModu
 	
 // TODO: !!!
 param [SuperImposition si] returns [FMParameterValue fmp]
-@init {
-	Vector v = new Vector();
-}
-	: ^(strt=LIST (lp=fqn
+	: ^(strt=LIST 
+		{
+			CompositeFMParamValue cfmpv = new CompositeFMParamValue();
+			setLocInfo(cfmpv, $strt);
+			repository.add(cfmpv);
+			fmp = cfmpv;
+		}
+		(val=paramValue[si]
 			{
-				SelectorDefinition seldef = si.getSelectorDefinitionByName(lp);
-				if (seldef != null)
-				{
-					v.add(new SelectorFilterModuleParameterValue(seldef));
-				}
-				else {
-					v.add(new LiteralFilterModuleParameterValue(lp));
-				}
+				cfmpv.addValue(val);
 			}
 		)+
-		{
-			setLocInfo(fmp, $strt);
-			fmp.setValue(v);
-		}
-		)
-	| ^(strt=PARAM sp=fqn
-		{
-			setLocInfo(fmp, $strt);
-			SelectorDefinition seldef = si.getSelectorDefinitionByName(sp);
-			if (seldef != null)
+	)
+	| sv=paramValue[si] {fmp = sv;}
+	;
+	
+paramValue [SuperImposition si] returns [FMParameterValue fmp]
+	: ^(strt=PARAM 
+		(sp=fqn 	
 			{
-				v.add(new SelectorFilterModuleParameterValue(seldef));
+				Selector sel = si.getSelector(sp);
+				if (sel != null)
+				{
+					fmp = new SelectorFMParamValue(sel);
+				}
+				else {
+					fmp = new SimpleFMParamValue(new CpsTypeProgramElementImpl(references.getTypeReference(sp)));
+				}
 			}
-			else {
-				v.add(new LiteralFilterModuleParameterValue(sp));
+		|lt=LITERAL	
+			{
+				String lvalue = $lt.text;
+				if (lvalue.length() >= 2)
+				{
+					lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-2));
+				}
+				else {
+					lvalue = "";
+				}
+				fmp = new SimpleFMParamValue(new CpsLiteralImpl(lvalue));
 			}
-			fmp.setValue(v);
-		}
 		)
-	;		
+		{
+			setLocInfo(fmp, $strt);
+			repository.add(fmp);
+		}
+	)
+	;
 
 annotationSi [SuperImposition si]
 	: ^(strt=ANNOTATION_BINDINGS sel=IDENTIFIER
@@ -967,16 +1035,10 @@ annotationSi [SuperImposition si]
 concernFmRef [SuperImposition si] returns [FilterModuleReference res]
 // throws CpsSemanticException	
 	: {Tree errTok = (Tree) input.LT(1);}
-		fr=fqn (DOUBLECOLON id=IDENTIFIER)?
+		fr=fqn
 		{
 			try {
-				if (fr.indexOf(".") > -1 && id == null)
-				{
-					throw new CpsSemanticException(String.format("\"\%s\" must refer to a local or external filter module", 
-						fr), input, errTok);
-				}
-				// note keep the DOUBLECOLON -> . in sync with the naming convention
-				if (id == null)
+				if (fr.indexOf(".") == -1)
 				{
 					// local concern
 					CpsConcern cpsc = (CpsConcern) si.getOwner();
@@ -989,7 +1051,7 @@ concernFmRef [SuperImposition si] returns [FilterModuleReference res]
 				}
 				else {
 					// external reference
-					res = references.getFilterModuleReference(fr + "." + $id.text);
+					res = references.getFilterModuleReference(fr);
 				}
 			}
 			catch (RecognitionException re) {
