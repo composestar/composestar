@@ -62,6 +62,7 @@ tokens {
 	OPERATOR;
 	OPERAND;
 	CMPSTMT;
+	JPCA;
 	
 	SUPERIMPOSITION;
 	SELECTOR;
@@ -162,7 +163,7 @@ concernParameters
 	{
 		warning("Concern parameters are deprecated.", $start);
 	}
-	-> // delete all
+	-> // delete all tokens
 	;	
 	
 // $<Filter Module
@@ -189,15 +190,28 @@ filtermoduleParameters
 	-> ^(PARAMS[$start] fmParamEntry+)
 	;
 	
+/**
+ * The two forms of filter module parameters, either a single item or a list
+ */
 fmParamEntry
 	: singleFmParam | fmParamList
 	;	
 	
+/**
+ * A parameter with should contain only a single value. The FM_PARAM_SINGLE 
+ * should have as text value the complete name of the parameter, including the
+ * '?' prefix.
+ */	
 singleFmParam
 	: QUESTION IDENTIFIER
 	-> ^(FM_PARAM_SINGLE[$start] IDENTIFIER)
 	;
 
+/**
+ * A parameter with should contain zero or more values. The FM_PARAM_LIST 
+ * should have as text value the complete name of the parameter, including the
+ * '??' prefix.
+ */	
 fmParamList
 	: DOUBLEQUESTION IDENTIFIER
 	-> ^(FM_PARAM_LIST[$start] IDENTIFIER)
@@ -210,6 +224,9 @@ fqnOrSingleFmParam
 	: fqn | singleFmParam
 	;
 	
+/**
+ * Shorthand for an identifier or single parameter. 
+ */
 identifierOrSingleFmParam
 	: IDENTIFIER | singleFmParam
 	;	
@@ -242,12 +259,30 @@ externals
  * An external can contain an optional initialization expression.
  * Without an initialization expression the external should be considered
  * as an static object reference rather than an instance.
- * Note: currently paramaters are not supported in the init expression
  */
 fmExternal
-	: IDENTIFIER COLON type=fqnOrSingleFmParam (eq=EQUALS init=fqnOrSingleFmParam LROUND /* params */ RROUND)? SEMICOLON
-	-> ^(EXTERNAL[$start] IDENTIFIER $type ^(INIT[$eq] $init /* params */)?)
+	: IDENTIFIER COLON type=fqnOrSingleFmParam (eq=EQUALS init=fqnOrSingleFmParam joinPointContext?)? SEMICOLON
+	-> ^(EXTERNAL[$start] IDENTIFIER $type ^(INIT[$eq] $init joinPointContext?)?)
 	;	
+	
+/**
+ * The desired join point context that the refered to method desires.
+ * When the join point context is defined the method has to have that argument type
+ * in its signature. If it's completely omitted it will be considered as a "don't care"
+ * The 
+ */
+joinPointContext
+	: LROUND 
+	( 'full'
+	-> ^(JPCA[$start] 'full')
+	| 'partial'
+	-> ^(JPCA[$start] 'partial')
+	| ASTERISK
+	-> // don't care
+	| // none
+	-> ^(JPCA[$start])
+	) RROUND
+	;
 
 /**
  * List of conditions. No root node is created.
@@ -260,8 +295,8 @@ conditions
  * Note: currently paramaters are not supported in the expression
  */	
 condition
-	: IDENTIFIER COLON fqnOrSingleFmParam LROUND /* params */ RROUND SEMICOLON
-	-> ^(CONDITION[$start] IDENTIFIER fqnOrSingleFmParam /* params */ )
+	: IDENTIFIER COLON fqnOrSingleFmParam joinPointContext? SEMICOLON
+	-> ^(CONDITION[$start] IDENTIFIER fqnOrSingleFmParam joinPointContext? )
 	;	
 	
 /**
@@ -373,6 +408,10 @@ meUnaryExpr
 	: (NOT^)? meCompoundExpr
 	;
 	
+/**
+ * Either a simple identifier for 'true' , 'false' or a condition reference, or a
+ * compare statement or a compound expression
+ */	
 meCompoundExpr
 	: meCmpLhs meCmpOpr meCmpRhs 
 	-> ^(CMPSTMT[$start] ^(OPERATOR meCmpOpr) ^(OPERAND meCmpLhs) ^(OPERAND meCmpRhs))
@@ -380,6 +419,9 @@ meCompoundExpr
 	| IDENTIFIER // 'true', 'false', or condition
 	;
 	
+/**
+ * The left hand side of a compare statement
+ */	
 meCmpLhs
 	: m='message' PERIOD IDENTIFIER
 	-> IDENTIFIER[m] IDENTIFIER
@@ -389,31 +431,50 @@ meCmpLhs
 	-> IDENTIFIER[s]
 	;		
 	
+/**
+ * The accepted compare operators
+ */
 meCmpOpr
 	: '==' | '$=' | '~=' | '@='
 	;
 
+/**
+ * The right hand side of the compare statement
+ */
 meCmpRhs
 	: fqn | fmParamEntry | LITERAL
 	;
 	
+/**
+ * An assignment part. The filter arguments contains a similar construction
+ */	
 canonAssignment
 	: canonAssingLhs EQUALS canonAssignRhs SEMICOLON
 	-> ^(EQUALS[$start] ^(OPERAND canonAssingLhs) ^(OPERAND canonAssignRhs))
 	;
 	
+/**
+ * The left hand side of the assignment. This is almost the same as for the
+ * left hand side of the compare statement, except that the filter structure
+ * can also be given assignments
+ */
 canonAssingLhs
 	: meCmpLhs
 	| f='filter' PERIOD IDENTIFIER
 	-> IDENTIFIER[f] IDENTIFIER
 	;
 
+/**
+ * The right hand side of the assignment
+ */
 canonAssignRhs
 	: fqn | singleFmParam | LITERAL
 	;
 
 /**
- * (Legacy notation) 
+ * (Legacy notation) Converts the legacy filter element notation to
+ * the canonical notation. This does not do a 100% safe conversion. The
+ * assignment part needs some extra attention. 
  */		
 legacyFilterElement
 	: filterElement (filterElementOperator^ legacyFilterElement)?
@@ -439,13 +500,20 @@ filterElement
 	-> ^(FILTER_ELEMENT matchingPart substitutionPart?)
 	;
 	
+/**
+ * A filter element with a condition construction
+ */	
 feWithCond
 	: conditionExpression feOperMatchPart
 	-> ^(EXPRESSION ^(AND conditionExpression feOperMatchPart))
 	;
 
+/**
+ * The matching operator
+ */
 feOperMatchPart
 	: ENABLE matchingPart
+	-> matchingPart
 	| DISABLE matchingPart
 	-> ^(NOT matchingPart)
 	;
@@ -496,6 +564,9 @@ matchingPart
 	| matchingPattern
 	;
 	
+/**
+ * Convert the matching pattern to a sequence of OR matchings (Legacy notation)
+ */
 matchingPatternList
 	: matchingPattern (COMMA matchingPatternList
 	-> ^(OR matchingPattern matchingPatternList)
@@ -504,14 +575,17 @@ matchingPatternList
 	)
 	;
 
+/**
+ * Even though the original syntax did not always allow a filter module
+ * parameter list it is accepted in the canonical notation (Legacy notation)
+ */
 identifierOrFmParam
 	: IDENTIFIER | singleFmParam | fmParamList
 	;
 
 /** 
- * Either name or signature matching.
- * Note that a 2nd notation for signature matching is defined in the messagePatternSet rule
- * (Legacy notation)
+ * Either name or signature matching. Converted to a canonical compare
+ * statement (Legacy notation).
  */
 matchingPattern
 	: (LSQUARE (n1=identifierOrFmParam 
@@ -550,8 +624,9 @@ matchingPattern
 	;
 	
 /**
- * Substitution part of the filter element. The second rule provides message list
- * support. (Legacy notation)
+ * Substitution part of the filter element. (Legacy notation) Note that all assignments
+ * have the variable prefix 'legacy', this should eventually be converted to 'message' or
+ * 'filter', but it depends on the filter type.
  */	
 substitutionPart
 	: n1=identifierOrSingleFmParam 
@@ -592,12 +667,10 @@ superimposition
 
 /**
  * A conditional superimposition declaration. 
- * (michielh 2007-10-08) Initially the condital declaration did not support the parenthesis, but I've
- * added it for conformity.
  */	
 conditionalSi
-	: 'conditions' (IDENTIFIER COLON fqn  (LROUND /* params */ RROUND)? SEMICOLON)+
-	-> ^(CONDITION[$start] IDENTIFIER fqn)+
+	: 'conditions' (IDENTIFIER COLON fqn joinPointContext? SEMICOLON)+
+	-> ^(CONDITION[$start] IDENTIFIER fqn joinPointContext?)+
 	;
 	
 selectors
@@ -643,6 +716,9 @@ allButRcurly
 	//-> ^(PrologExpr[$text])
 	;		
 	
+/**
+ * Filter module bindings
+ */
 filtermodules
 	: 'filtermodules'! (filtermoduleSi SEMICOLON!)+
 	;
@@ -684,6 +760,7 @@ fmBinding
  * reference to a filtermodule
  * this can be a local reference (just IDENTIFIER) 
  * or a reference to a filter module in a external concern (fqn::IDENTIFIER)
+ * The double colon is the old notation, FQN is prefered.
  */
 concernFmRef
 	: qn=fqn (dc=DOUBLECOLON IDENTIFIER
@@ -705,6 +782,9 @@ param
 	| paramValue
 	;
 	
+/**
+ * A single parameter value
+ */
 paramValue
 	: fqn 
 	-> ^(PARAM[$start] fqn)
@@ -769,7 +849,7 @@ implementation
  */	
 codeBlock
 @init {String codeTxt = "";}
-	: al=ALIEN
+	: al=HEREDOC
 	-> ^(CODE_BLOCK[al])
 	| strt=LCURLY 
 	{codeTxt = extractEmbeddedCode(adaptor);}
@@ -819,13 +899,14 @@ WEAVE			: '<-';
 IDENTIFIER		: ('a' .. 'z' | 'A' .. 'Z' | '_') ('a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9')*;
 
 // string literal
-LITERAL 				: ('"' s1=LIT_ALT1  '"') | ('\'' s2=LIT_ALT2 '\'');
+LITERAL 				: ('"' LIT_ALT1  '"') | ('\'' LIT_ALT2 '\'');
 fragment LIT_ALT1 		: LIT_INTERNAL ('\'' LIT_INTERNAL)*;
 fragment LIT_ALT2 		: LIT_INTERNAL ('"' LIT_INTERNAL)* ;
 fragment LIT_INTERNAL 	: (LIT_ESC | '\t' | '\r' | '\n' | ~('\u0000'..'\u001f' | '\\' | '"' | '\'' ))*;
 fragment LIT_ESC 		: '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\');
 
-ALIEN : '<<ASIS' (' '|'\n'|'\r') .* ('\n'|'\r') 'ASIS;';
+// not really heredoc, but almost
+HEREDOC : '<<ASIS' {int mystart = getCharIndex();} (' '|'\n'|'\r') .* ('\n'|'\r') { setText(input.substring(mystart, getCharIndex())); } 'ASIS;';
 
 // Whitespace
 WS : (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};

@@ -85,8 +85,11 @@ public class COPPER implements CTCommonModule
 	 */
 	protected DefaultFilterFactory filterFactory;
 
+	/**
+	 * If true export the antlr tree to a .dot file. Useful for debugging.
+	 */
 	@ModuleSetting
-	protected boolean debugExportDot = false;
+	protected boolean debugExportDot;
 
 	public COPPER()
 	{}
