@@ -76,7 +76,12 @@
 	</target>
 
 	<target name="antlr" depends="local_init">
-		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java" inheritRefs="true" />
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java" inheritRefs="true">
+			<property name="copper.version" value="2" />
+		</ant>
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java" inheritRefs="true">
+			<property name="copper.version" value="3" />
+		</ant>
 	</target>
 
 	<target name="compile" depends="local_init,antlr">
@@ -94,7 +99,6 @@
 		-->
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
-			<exclude name="**/COPPER3/**" />
 			<compilerarg line="-proc:none" />
 		</javac>
 	</target>
@@ -192,7 +196,6 @@
 		<javac srcdir="test" destdir="test" classpathref="lib.test" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java" />
 			<exclude name="**/AssemblyInfo.java" />
-			<exclude name="**/COPPER3/**" />
 		</javac>
 	</target>
 
@@ -207,7 +210,6 @@
 			<batchtest todir="test/test-results">
 				<fileset dir="test">
 					<include name="**/*Test.class" />
-					<exclude name="**/COPPER3/**" />
 				</fileset>
 			</batchtest>
 		</junit>

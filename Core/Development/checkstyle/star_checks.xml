@@ -184,6 +184,15 @@
 		<module	name="UpperEll"/>
 		<!--<module	name="Indentation"/>-->
 		
+		<module name="TodoComment">
+    	<property name="format" value="TODO"/>
+    	<property name="severity" value="warning"/>
+		</module>
+		<module name="TodoComment">
+    	<property name="format" value="FIXME"/>
+    	<property name="severity" value="warning"/>
+		</module>
+		
 	</module>
 
 </module>

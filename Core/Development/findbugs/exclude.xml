@@ -3,9 +3,11 @@
 	<Match><Class name="~.*TreeWalker" /></Match>
 	
 	<Match><Class name="Composestar.Core.COPPER.CpsLexer" /></Match>
+	<Match><Class name="Composestar.Core.COPPER2.CpsLexer" /></Match>
+	<Match><Class name="Composestar.Core.COPPER3.CpsLexer" /></Match>
 	<Match><Class name="Composestar.Core.COPPER.CpsParser" /></Match>
-	
 	<Match><Class name="Composestar.Core.COPPER2.CpsParser" /></Match>
+	<Match><Class name="Composestar.Core.COPPER3.CpsParser" /></Match>
 	
 	<Match><Package name="Composestar.C.wrapper.parsing.GnuC" /></Match>
 	<Match><Package name="Composestar.C.wrapper.parsing.StdC" /></Match>

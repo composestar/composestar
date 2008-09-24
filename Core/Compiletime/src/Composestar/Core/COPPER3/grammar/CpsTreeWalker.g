@@ -543,12 +543,15 @@ canonAssign [FilterModule fm] returns [CanonAssignment asgn]
 assignLhs [FilterModule fm] returns [CanonProperty prop]
 	: p1=IDENTIFIER p2=IDENTIFIER?
 	{
-		
+		// FIXME
 	}
 	;
 	
 assignRhs [FilterModule fm] returns [CpsVariable val]
 	: fqn | singleFmParam | LITERAL
+	{
+		// FIXME
+	}
 	;
 
 // $<Condition Expression
@@ -729,8 +732,16 @@ cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<Cp
 				res.add(entity);
 			}
 		}
-	| ^(FM_PARAM_SINGLE IDENTIFIER)
-	| ^(FM_PARAM_LIST IDENTIFIER)
+	| ^(FM_PARAM_SINGLE IDENTIFIER
+		{
+			// FIXME
+		}
+	)
+	| ^(FM_PARAM_LIST IDENTIFIER
+		{
+			// FIXME
+		}
+	)
 	| l=LITERAL 
 		{
 			String lvalue = $l.text;
@@ -1069,11 +1080,44 @@ constraint [SuperImposition si]
 			setLocInfo(fmc, opr);
 			si.addFilterModuleConstraint(fmc);
 			repository.add(fmc);
-			List<FilterModuleConstraintValue> args = new ArrayList<FilterModuleConstraintValue>();
-		}
-		(lhs=concernFmRef[si]
+			List<ConstraintValue> args = new ArrayList<ConstraintValue>();
+			
+			if (si.getOwner() == null || !(si.getOwner() instanceof CpsConcern)) 
 			{
-				// ...
+				throw new CpsSemanticException("Superimposition is not owned by a CpsConcern", input);
+			}
+			CpsConcern concern = (CpsConcern) si.getOwner();
+			Tree tok = (Tree) input.LT(1);
+		}
+		(arg=fqn
+			{
+				FilterModule fm = concern.getFilterModule(arg);
+				SICondition sic = si.getCondition(arg);
+				if (fm != null)
+				{
+					FilterModuleConstraintValue fmcv = new FilterModuleConstraintValueImpl(fm);
+					setLocInfo(fmcv, tok);
+					repository.add(fmcv);
+					args.add(fmcv);
+				}
+				else if (sic != null)
+				{
+					ConditionConstraintValue ccv = new ConditionConstraintValueImpl(sic);
+					setLocInfo(sic, tok);
+					repository.add(ccv);
+					args.add(ccv);
+				}
+				else if (arg.indexOf('.') > 0)
+				{
+					FilterModuleConstraintValue fmcv = new FilterModuleConstraintValueImpl(references.getFilterModuleReference(arg));
+					setLocInfo(fmcv, tok);
+					repository.add(fmcv);
+					args.add(fmcv);
+				}
+				else {
+					throw new CpsSemanticException(String.format("\"\%s\" does not contain a filter module with the name \"\%s\"", 
+						concern.getFullyQualifiedName(), arg), input, tok);
+				}				
 			}
 		)+
 		{
@@ -1082,7 +1126,7 @@ constraint [SuperImposition si]
 					fmc.setArguments(args);
 				}
 				catch (IllegalArgumentException e) {
-					throw new CpsSemanticException(IllegalArgumentException.getMessage(), input, opr);
+					throw new CpsSemanticException(e.getMessage(), input, opr);
 				}
 			}
 			catch (RecognitionException re) {
@@ -1099,23 +1143,10 @@ constraint [SuperImposition si]
 
 // TODO
 implementation [CpsConcern c]
-	: ^(astr=IMPLEMENTATION asm=fqn
-		{
-			CompiledImplementation compimp = new CompiledImplementation();
-			setLocInfo(compimp, $astr);
-			compimp.setClassName(asm);
-			c.setImplementation(compimp);			
-		}
-		)
+	: ^(astr=IMPLEMENTATION asm=fqn)
 	| ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=FILENAME code=CODE_BLOCK
 		{
-			Source src = new Source();
-			setLocInfo(src, $strt);
-			src.setLanguage($lang.text);
-			src.setClassName(cls);
-			src.setSourceFile($fn.text);
-			src.setSource($code.text);
-			c.setImplementation(src);
+			// FIXME:
 		}
 		)
 	;

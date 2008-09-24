@@ -20,11 +20,11 @@
 
 		<property name="cps.g" location="${copper.dir}/grammar/Cps.g" />
 		<property name="cpsw.g" location="${copper.dir}/grammar/CpsTreeWalker.g" />
-		<property name="cps-java.g" location="${basedir}/java/Cps.g" />
-		<property name="cps-csharp.g" location="${basedir}/csharp/Cps.g" />
+		<property name="cps-java.g" location="${basedir}/java/v${copper.version}/Cps.g" />
+		<property name="cps-csharp.g" location="${basedir}/csharp/v${copper.version}/Cps.g" />
 
-		<mkdir dir="${basedir}/java" />
-		<mkdir dir="${basedir}/csharp" />
+		<mkdir dir="${basedir}/java/v${copper.version}" />
+		<mkdir dir="${basedir}/csharp/v${copper.version}" />
 
 		<property name="warning" value="This file was generated from ${cps.g}. Do not modify!" />
 	</target>
