@@ -38,7 +38,6 @@ import org.apache.log4j.Logger;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
 import Composestar.Core.Exception.ModuleException;
@@ -83,7 +82,7 @@ public class COPPER implements CTCommonModule
 	/**
 	 * The filter factory to use
 	 */
-	protected DefaultFilterFactory filterFactory;
+	protected FilterFactory filterFactory;
 
 	/**
 	 * If true export the antlr tree to a .dot file. Useful for debugging.
@@ -109,17 +108,16 @@ public class COPPER implements CTCommonModule
 			resources.put(FilterTypeMapping.RESOURCE_KEY, filterTypes);
 		}
 
-		// filterFactory = resources.get(DefaultFilterFactory.RESOURCE_KEY);
-		// if (filterFactory == null)
-		// {
-		// filterFactory = new DefaultFilterFactory(filterTypes,
-		// resources.repository());
-		// resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
-		// }
-		// else
-		// {
-		// filterFactory.setTypeMapping(filterTypes);
-		// }
+		filterFactory = resources.get(FilterFactory.RESOURCE_KEY);
+		if (filterFactory == null)
+		{
+			filterFactory = new FilterFactory(null, filterTypes);
+			resources.put(FilterFactory.RESOURCE_KEY, filterFactory);
+		}
+		else
+		{
+			filterFactory.setTypeMapping(filterTypes);
+		}
 
 		errorCnt = 0;
 

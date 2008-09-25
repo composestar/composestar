@@ -580,7 +580,18 @@ matchingPatternList
  * parameter list it is accepted in the canonical notation (Legacy notation)
  */
 identifierOrFmParam
-	: IDENTIFIER | singleFmParam | fmParamList
+	: IDENTIFIER
+	-> ^(FQN[$start] IDENTIFIER) // model is as an FQN 
+	| singleFmParam | fmParamList
+	;
+	
+/**
+ * Converts an identifier to a literal
+ */
+literalOrFmParam
+	: v=IDENTIFIER
+	-> LITERAL[$v] 
+	| singleFmParam | fmParamList
 	;
 
 /** 
@@ -590,7 +601,7 @@ identifierOrFmParam
 matchingPattern
 	: (LSQUARE (n1=identifierOrFmParam 
 			(PERIOD 
-				(n2=identifierOrFmParam // foo.bar
+				(n2=literalOrFmParam // foo.bar
 				-> ^(AND
 						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
 						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n2))
@@ -599,15 +610,15 @@ matchingPattern
 				-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n1))
+			-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND LITERAL[$n1.text]))
 			)
-		| ASTERISK PERIOD n3=identifierOrFmParam // *.bar
+		| ASTERISK PERIOD n3=literalOrFmParam // *.bar
 		-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n3))
 		) RSQUARE)
 	| (LANGLE 
 		(s1=identifierOrFmParam 
 			(PERIOD 
-				(s2=identifierOrFmParam // foo.bar
+				(s2=literalOrFmParam // foo.bar
 				-> ^(AND
 						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
 						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s2))
@@ -616,9 +627,9 @@ matchingPattern
 				-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s1))
+			-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND LITERAL[$s1.text]))
 			)
-		| ASTERISK PERIOD s3=identifierOrFmParam // *.bar
+		| ASTERISK PERIOD s3=literalOrFmParam // *.bar
 		-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s3))
 		) RANGLE)
 	;
@@ -631,7 +642,7 @@ matchingPattern
 substitutionPart
 	: n1=identifierOrSingleFmParam 
 		(PERIOD 
-			(n2=identifierOrSingleFmParam // foo.bar
+			(n2=literalOrFmParam // foo.bar
 			-> ^(AND
 					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND $n1))
 					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n2))
@@ -641,10 +652,10 @@ substitutionPart
 				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND IDENTIFIER["selector"]))
 			)
 		| // bar
-		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n1))
+		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND LITERAL[$n1.text]))
 			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND IDENTIFIER["target"]))
 		)
-	| ASTERISK PERIOD n3=identifierOrSingleFmParam // *.bar
+	| ASTERISK PERIOD n3=literalOrFmParam // *.bar
 	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n3))
 		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND IDENTIFIER["target"]))
 	;

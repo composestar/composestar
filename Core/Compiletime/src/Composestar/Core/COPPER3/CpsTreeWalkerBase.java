@@ -32,7 +32,6 @@ import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.Meta.FileInformation;
@@ -49,7 +48,7 @@ import Composestar.Utils.Logging.LogMessage;
  * 
  * @author Michiel Hendriks
  */
-public class CpsTreeWalkerBase extends TreeParser
+public abstract class CpsTreeWalkerBase extends TreeParser
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER);
 
@@ -85,10 +84,9 @@ public class CpsTreeWalkerBase extends TreeParser
 	protected FilterTypeMapping filterTypes;
 
 	/**
-	 * Will be set when legacyFilterTypes are used. Will be used to construct
-	 * legacy custom filter types on the fly.
+	 * ...
 	 */
-	protected DefaultFilterFactory filterFactory;
+	protected FilterFactory filterFactory;
 
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
@@ -136,7 +134,7 @@ public class CpsTreeWalkerBase extends TreeParser
 	 * 
 	 * @param lft
 	 */
-	public void setFilterFactory(DefaultFilterFactory lft)
+	public void setFilterFactory(FilterFactory lft)
 	{
 		filterFactory = lft;
 	}

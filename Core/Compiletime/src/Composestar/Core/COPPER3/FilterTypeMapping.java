@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.Master.ModuleNames;
@@ -99,14 +98,7 @@ public class FilterTypeMapping
 	public void registerFilterType(FilterType ft)
 	{
 		String typeName;
-		if (ft instanceof LegacyCustomFilterType)
-		{
-			typeName = ((LegacyCustomFilterType) ft).getName();
-		}
-		else
-		{
-			typeName = ft.getFilterName().toLowerCase();
-		}
+		typeName = ft.getFilterName().toLowerCase();
 		if (mapping.containsKey(typeName))
 		{
 			logger.warn(String.format("Two filters with the same name: %s", typeName));

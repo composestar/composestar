@@ -75,6 +75,54 @@ import java.util.Collection;
 import java.util.ArrayList;
 }
 
+@members {
+
+	protected CanonProperty createProperty(String prefixStr, String varname, FilterType filterType)
+	{
+		PropertyPrefix prefix = null;
+		if (prefixStr == null)
+		{
+			if (PropertyNames.INNER.equals(varname)) 
+			{
+				prefix = PropertyPrefix.NONE;
+			}
+			else {
+				prefix = PropertyPrefix.MESSAGE;
+			}
+		}
+		else {
+			if ("legacy".equals(prefixStr)) 
+			{
+				// FIXME
+				if (filterType == null)
+				{
+					throw new IllegalArgumentException("Cannot process 'legacy' prefix without a filter type");
+				}
+				if ("dispatch".equalsIgnoreCase(filterType.getFilterName())
+					|| "send".equalsIgnoreCase(filterType.getFilterName()))
+				{
+					prefix = PropertyPrefix.MESSAGE;
+				}
+				else if ("before".equalsIgnoreCase(filterType.getFilterName())
+					|| "after".equalsIgnoreCase(filterType.getFilterName())
+					|| "meta".equalsIgnoreCase(filterType.getFilterName())
+					|| "error".equalsIgnoreCase(filterType.getFilterName()) // actually doesn't use it
+				)
+				{
+					prefix = PropertyPrefix.FILTER;
+				}
+				else {
+					throw new IllegalArgumentException("Unable to convert legacy substitution structure. Please switch to the canonical notation.");
+				}
+			}
+			else {
+				prefix = PropertyPrefix.fromString(prefixStr);
+			}
+		}
+		return new CanonPropertyImpl(prefix, varname);		
+	}
+}
+
 concern returns [CpsConcern c]
 // throws CpsSemanticException
 @init {
@@ -423,7 +471,7 @@ filter [FilterModule fm] returns [Filter filter]
 			repository.add(filter);
 		}
 		(^(PARAMS
-			(asgn=canonAssign[fm]
+			(asgn=canonAssign[fm,null]
 				{
 					try {
 						try {
@@ -441,7 +489,7 @@ filter [FilterModule fm] returns [Filter filter]
 				}
 			)*
 		))?
-		expr=filterElementExpression[fm]
+		expr=filterElementExpression[fm,ft]
 		{
 			filter.setElementExpression(expr);
 		}
@@ -458,8 +506,9 @@ filterType returns [FilterType ft]
 			try {
 				// TODO: handle filter module as filter type
 				ft = filterTypes.getFilterType(ftName);
-				if ((ft == null) && (filterFactory.allowLegacyCustomFilters()))
+				if ((ft == null) && (filterFactory != null))
 				{
+					ft = filterFactory.createFilter(ftName);
 					// TODO: do something with custom filters
 					/*
 					logger.info(String.format("Creating legacy custom filter with name: \%s", ftName));
@@ -484,15 +533,15 @@ filterType returns [FilterType ft]
 		}
 	;
 	
-filterElementExpression [FilterModule fm] returns [FilterElementExpression expr]
+filterElementExpression [FilterModule fm, FilterType ft] returns [FilterElementExpression expr]
 // throws CpsSemanticException
-	: op=filterElementOperator lhs=filterElementExpression[fm] rhs=filterElementExpression[fm]
+	: op=filterElementOperator lhs=filterElementExpression[fm,ft] rhs=filterElementExpression[fm,ft]
 		{
 			op.setLHS(lhs);
 			op.setRHS(rhs);
 			expr = op;
 		}
-	| elm=filterElement[fm] {expr = elm;}
+	| elm=filterElement[fm,ft] {expr = elm;}
 	;
 	
 filterElementOperator returns [BinaryFilterElementOperator op]
@@ -508,7 +557,7 @@ filterElementOperator returns [BinaryFilterElementOperator op]
 /**
  * Filter module passed to resolve FM elements, parent of various elements are not set yet
  */
-filterElement [FilterModule fm] returns [FilterElement fe]
+filterElement [FilterModule fm, FilterType ft] returns [FilterElement fe]
 // throws CpsSemanticException
 	: ^(strt=FILTER_ELEMENT 
 		{
@@ -520,7 +569,7 @@ filterElement [FilterModule fm] returns [FilterElement fe]
 		{
 			fe.setMatchingExpression(expr);
 		}
-		(asgn=canonAssign[fm]
+		(asgn=canonAssign[fm,ft]
 			{
 				fe.addAssignment(asgn);
 			}
@@ -528,8 +577,8 @@ filterElement [FilterModule fm] returns [FilterElement fe]
 	)
 	;
 	
-canonAssign [FilterModule fm] returns [CanonAssignment asgn]
-	: ^(strt=EQUALS ^(OPERAND lhs=assignLhs[fm]) ^(OPERAND rhs=assignRhs[fm])
+canonAssign [FilterModule fm, FilterType ft] returns [CanonAssignment asgn]
+	: ^(strt=EQUALS ^(OPERAND lhs=assignLhs[fm,ft]) ^(OPERAND rhs=assignRhs[fm,ft])
 		{
 			asgn = new CanonAssignmentImpl();
 			setLocInfo(asgn, strt);
@@ -540,18 +589,54 @@ canonAssign [FilterModule fm] returns [CanonAssignment asgn]
 	)
 	;
 	
-assignLhs [FilterModule fm] returns [CanonProperty prop]
+assignLhs [FilterModule fm, FilterType ft] returns [CanonProperty prop]
 	: p1=IDENTIFIER p2=IDENTIFIER?
 	{
-		// FIXME
+		try {
+			try {
+				if ($p2 == null)
+				{
+					prop = createProperty(null, $p1.text, ft);
+				}
+				else {
+					prop = createProperty($p1.text, $p2.text, ft);
+				}
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new CpsSemanticException(e.toString(), input, $p1);
+			}
+			if (prop != null)
+			{
+				setLocInfo(prop, $p1);
+				repository.add(prop);
+			}
+		}
+		catch (RecognitionException re) {
+			reportError(re);
+			recover(input,re);
+		} 
 	}
 	;
 	
-assignRhs [FilterModule fm] returns [CpsVariable val]
-	: fqn | singleFmParam | LITERAL
-	{
-		// FIXME
-	}
+assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
+	: qn=cpsVariableFqn[fm] { val = qn;	}
+	| singleFmParam 
+		{
+			// FIXME
+		} 
+	| l=LITERAL
+		{
+			String lvalue = $l.text;
+			if (lvalue.length() >= 2)
+			{
+				lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-2));
+			}
+			else {
+				lvalue = "";
+			}
+			val = new CpsLiteralImpl(lvalue);
+		}
 	;
 
 // $<Condition Expression
@@ -630,7 +715,7 @@ operandExpr [FilterModule fm] returns [MatchingExpression ex]
 	;
 	
 compareStatement [FilterModule fm] returns [MECompareStatement cmp]
-	: ^(strt=CMPSTMT oper=cmpOperator ^(OPERAND lhs=assignLhs[fm]) ^(OPERAND rhs=cmpRhs[fm])
+	: ^(strt=CMPSTMT oper=cmpOperator ^(OPERAND lhs=assignLhs[fm,null]) ^(OPERAND rhs=cmpRhs[fm])
 	{
 		cmp = oper;
 		cmp.setLHS(lhs);
@@ -659,8 +744,8 @@ cmpOperator returns [MECompareStatement cmp]
 	}
 	)
 	; 
-
-cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<CpsVariable>();]
+	
+cpsVariableFqn [FilterModule fm] returns [CpsVariable entity]
 @init{
 	Tree errTok = (Tree) input.LT(1); 
 }
@@ -671,17 +756,19 @@ cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<Cp
 				// fixme: error
 			}
 			
-			CpsVariable entity = null;
 			if (qn.size() == 1)
 			{
 				if (PropertyNames.INNER.equals(qn.get(0)))
 				{
+					entity = createProperty(null, qn.get(0), null);
 				}
 				else if (PropertyNames.TARGET.equals(qn.get(0)))
 				{
+					entity = createProperty(null, qn.get(0), null);
 				}
 				else if (PropertyNames.SELECTOR.equals(qn.get(0)))
 				{
+					entity = createProperty(null, qn.get(0), null);
 				}
 				else {
 					FilterModuleVariable fmVar = fm.getVariable(qn.get(0));
@@ -706,9 +793,11 @@ cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<Cp
 			{
 				if (PropertyPrefix.fromString(qn.get(0)) == PropertyPrefix.MESSAGE)
 				{
+					entity = createProperty(qn.get(0), qn.get(1), null);
 				}
 				else if (PropertyPrefix.fromString(qn.get(0)) == PropertyPrefix.FILTER)
 				{
+					entity = createProperty(qn.get(0), qn.get(1), null);
 				}
 			}
 			
@@ -726,12 +815,14 @@ cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<Cp
 				}
 				entity = new CpsTypeProgramElementImpl(references.getTypeReference(sb.toString()));
 			}
-			
-			if (entity != null)
-			{
-				res.add(entity);
-			}
 		}
+	;
+
+cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<CpsVariable>();]
+@init{
+	Tree errTok = (Tree) input.LT(1); 
+}
+	: fqnv=cpsVariableFqn[fm] { res.add(fqnv); }
 	| ^(FM_PARAM_SINGLE IDENTIFIER
 		{
 			// FIXME
