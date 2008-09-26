@@ -277,15 +277,20 @@ internal [FilterModule fm]
 		)+))
 	;
 
+joinPointContext returns [JoinPointContextArgument jpca]
+	: ^(JPCA 'full' {jpca = JoinPointContextArgument.FULL;})
+	| ^(JPCA 'partial' {jpca = JoinPointContextArgument.PARTIAL;})
+	| ^(JPCA {jpca = JoinPointContextArgument.NONE;})
+	;
+
 methodReference[FilterModule fm] returns [MethodReference mref]
 // throws CpsSemanticException
 @init {
 	Tree errTok = (Tree) input.LT(1);
-	// FIXME: should be a language construct
 	JoinPointContextArgument jpca = JoinPointContextArgument.NONE;
 	// FIXME: handle "inner" references 
 }
-	: lst=fqnAsList
+	: lst=fqnAsList (jpca1=joinPointContext {jpca = jpca1;})?
 		{
 			try {
 				if (lst.size() < 2)
@@ -321,7 +326,7 @@ methodReference[FilterModule fm] returns [MethodReference mref]
 				recover(input,re);
 			}
 		}
-	| prm=singleFmParam 
+	| prm=singleFmParam (jpca2=joinPointContext {jpca = jpca2;})?
 		{
 			try {
 				// FIXME: parameterized method reference
@@ -818,21 +823,26 @@ cpsVariableFqn [FilterModule fm] returns [CpsVariable entity]
 		}
 	;
 
-cmpRhs [FilterModule fm] returns [Collection<CpsVariable> res = new ArrayList<CpsVariable>();]
+cmpRhs [FilterModule fm] returns [CpsVariableCollection res]
 @init{
 	Tree errTok = (Tree) input.LT(1); 
 }
-	: fqnv=cpsVariableFqn[fm] { res.add(fqnv); }
+	: ^(FM_PARAM_LIST IDENTIFIER
+		{
+			// FIXME
+		}
+		)
+	| ^(LIST { res = new CpsVariableCollectionImpl(); } meCmpRhsSingle[fm, res]+)
+	| { res = new CpsVariableCollectionImpl(); } meCmpRhsSingle[fm, res]
+	;
+	
+meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
+	: fqnv=cpsVariableFqn[fm] { res.add(fqnv); } 
 	| ^(FM_PARAM_SINGLE IDENTIFIER
 		{
 			// FIXME
-		}
-	)
-	| ^(FM_PARAM_LIST IDENTIFIER
-		{
-			// FIXME
-		}
-	)
+		} 
+		)
 	| l=LITERAL 
 		{
 			String lvalue = $l.text;
@@ -876,7 +886,10 @@ superimposition [CpsConcern c]
 
 conditionalSi [SuperImposition si]
 // throws CpsSemanticException
-	: ^(strt=CONDITION name=IDENTIFIER expr=fqnAsList
+@init {
+	JoinPointContextArgument jpca = JoinPointContextArgument.PARTIAL;
+}
+	: ^(strt=CONDITION name=IDENTIFIER expr=fqnAsList (jpca1=joinPointContext {jpca = jpca1;})?
 		{
 			try {
 				SICondition cond = new SIConditionImpl($name.text);
@@ -906,7 +919,6 @@ conditionalSi [SuperImposition si]
 					}
 					sb.append(s);
 				}
-				JoinPointContextArgument jpca = JoinPointContextArgument.PARTIAL;
 				MethodReference mref = references.getMethodReference(expr.get(expr.size()-1), sb.toString(), jpca);
 				cond.setMethodReference(mref);			
 				if (!si.addCondition(cond))

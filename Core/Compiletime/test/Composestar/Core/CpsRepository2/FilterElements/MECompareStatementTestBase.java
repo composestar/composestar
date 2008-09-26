@@ -24,13 +24,12 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariableCollection;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsVariableCollectionImpl;
 
 /**
  * @author Michiel Hendriks
@@ -64,21 +63,19 @@ public abstract class MECompareStatementTestBase extends RepositoryEntityTestBas
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setRHS(Collection)}
+	 * {@link Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setRHS(CpsVariableCollection)}
 	 * .
 	 */
 	public void testSetRHS()
 	{
 		CpsVariable cv = new DummyCV();
-		Collection<CpsVariable> cvl = new ArrayList<CpsVariable>();
+		CpsVariableCollection cvl = new CpsVariableCollectionImpl();
 		cvl.add(cv);
-		assertNotNull(mecs.getRHS());
-		assertEquals(0, mecs.getRHS().size());
+		assertNull(mecs.getRHS());
 		mecs.setRHS(cvl);
+		assertSame(cvl, mecs.getRHS());
 		assertEquals(1, mecs.getRHS().size());
 		assertTrue(mecs.getRHS().contains(cv));
-		assertSame(mecs, cv.getOwner());
-		assertNotSame(cvl, mecs.getRHS());
 
 		try
 		{
@@ -86,16 +83,6 @@ public abstract class MECompareStatementTestBase extends RepositoryEntityTestBas
 			fail();
 		}
 		catch (NullPointerException e)
-		{
-		}
-
-		try
-		{
-			cvl.clear();
-			mecs.setRHS(cvl);
-			fail();
-		}
-		catch (IllegalArgumentException e)
 		{
 		}
 	}

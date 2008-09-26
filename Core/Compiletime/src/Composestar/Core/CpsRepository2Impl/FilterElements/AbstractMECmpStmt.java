@@ -24,14 +24,10 @@
 
 package Composestar.Core.CpsRepository2Impl.FilterElements;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-
 import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariableCollection;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -51,7 +47,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	/**
 	 * The value to compare the variable with
 	 */
-	protected Collection<CpsVariable> rhs;
+	protected CpsVariableCollection rhs;
 
 	/**
 	 * 
@@ -59,7 +55,6 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	protected AbstractMECmpStmt()
 	{
 		super();
-		rhs = new LinkedHashSet<CpsVariable>();
 	}
 
 	/*
@@ -79,9 +74,9 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	 * Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#getRHS
 	 * ()
 	 */
-	public Collection<CpsVariable> getRHS()
+	public CpsVariableCollection getRHS()
 	{
-		return Collections.unmodifiableCollection(rhs);
+		return rhs;
 	}
 
 	/*
@@ -106,7 +101,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	 * Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setRHS
 	 * (java.util.Collection)
 	 */
-	public void setRHS(Collection<CpsVariable> values) throws NullPointerException, IllegalArgumentException
+	public void setRHS(CpsVariableCollection values) throws NullPointerException
 	{
 		if (values == null)
 		{
@@ -116,12 +111,8 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 		{
 			throw new IllegalArgumentException();
 		}
-		rhs.clear();
-		for (CpsVariable val : values)
-		{
-			rhs.add(val);
-			val.setOwner(this);
-		}
+		rhs = values;
+		rhs.setOwner(this);
 	}
 
 	/*

@@ -439,10 +439,21 @@ meCmpOpr
 	;
 
 /**
- * The right hand side of the compare statement
+ * The right hand side of the compare statement. This can be a single
+ * entry, a paramlist, or a list of single entries
  */
 meCmpRhs
-	: fqn | fmParamEntry | LITERAL
+	: fmParamList
+	| LCURLY meCmpRhsSingle (COMMA meCmpRhsSingle)* RCURLY
+	-> ^(LIST[$start] meCmpRhsSingle+)
+	| meCmpRhsSingle
+	;
+	
+/** 
+ * A single entry on the right hand side
+ */
+meCmpRhsSingle
+	: fqn | singleFmParam | LITERAL
 	;
 	
 /**

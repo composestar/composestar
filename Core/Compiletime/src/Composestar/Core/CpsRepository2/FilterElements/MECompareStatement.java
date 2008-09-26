@@ -24,10 +24,8 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
-import java.util.Collection;
-
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariableCollection;
 
 /**
  * The matching expression compare statement performs a compare operation on
@@ -56,17 +54,13 @@ public interface MECompareStatement extends MatchingExpression, Instantiatable<M
 	 *         the left hand side matches any of the values on the right hand
 	 *         side.
 	 */
-	Collection<CpsVariable> getRHS();
+	CpsVariableCollection getRHS();
 
 	/**
-	 * Sets the values with which the variable on the left hand side is
-	 * compared. setOwner(this) is called on all values after assigning. This
-	 * will completely override the previous list of values. The values in the
-	 * collection are copied, to the local collection.
+	 * The set of values on the right hand side to compare with
 	 * 
 	 * @param values The values to add
 	 * @throws NullPointerException Thrown when the value is null.
-	 * @throws IllegalArgumentException Thrown when the list is empty;
 	 */
-	void setRHS(Collection<CpsVariable> values) throws NullPointerException, IllegalArgumentException;
+	void setRHS(CpsVariableCollection values) throws NullPointerException;
 }

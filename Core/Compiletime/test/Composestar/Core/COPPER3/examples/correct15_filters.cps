@@ -49,6 +49,7 @@ concern correct05_filters in ConcernExamples
 			f2 : Dispatch = (
 					selector == 'foo' | (selector == 'bar' | selector == 'baz')
 				) 
-				{ selector = 'quux'; }
+				{ selector = 'quux'; };
+			f3 : Dispatch = ( selector == {'foo', 'bar', 'baz'} ) { selector = 'wuux'; }
 	}
 }
