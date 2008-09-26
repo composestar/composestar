@@ -251,12 +251,12 @@ internal [FilterModule fm]
 				}
 				else if (prm != null)
 				{
-					// FIXME: create parameterized type ref
 					FMParameter fmp = fm.getParameter($prm.text);
 					if (fmp == null) {
 						throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
 							fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 					}
+					tr = new ParameterizedTypeReference(fmp);
 				}
 				else {
 					throw new CpsSemanticException(String.format("Internal \"\%s\" is not a fully qualified name or parameter", 
@@ -282,7 +282,7 @@ internal [FilterModule fm]
 joinPointContext returns [JoinPointContextArgument jpca]
 	: ^(JPCA 'full' {jpca = JoinPointContextArgument.FULL;})
 	| ^(JPCA 'partial' {jpca = JoinPointContextArgument.PARTIAL;})
-	| ^(JPCA {jpca = JoinPointContextArgument.NONE;})
+	| ^(JPCA NONE {jpca = JoinPointContextArgument.NONE;})
 	;
 
 methodReference[FilterModule fm] returns [MethodReference mref]
@@ -331,12 +331,12 @@ methodReference[FilterModule fm] returns [MethodReference mref]
 	| prm=singleFmParam (jpca2=joinPointContext {jpca = jpca2;})?
 		{
 			try {
-				// FIXME: parameterized method reference
 				FMParameter fmp = fm.getParameter($prm.text);
 				if (fmp == null) {
 					throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
 						fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 				}
+				mref = new ParameterizedMethodReference(fmp, jpca);
 			}
 			catch (RecognitionException re) {
 				reportError(re);
@@ -359,12 +359,12 @@ external [FilterModule fm]
 				}
 				else if (prm != null)
 				{
-					// FIXME: create parameterized type ref
 					FMParameter fmp = fm.getParameter($prm.text);
 					if (fmp == null) {
 						throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
 							fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 					}
+					tr = new ParameterizedTypeReference(fmp);
 				}
 				else {
 					throw new CpsSemanticException(String.format("External \"\%s\" is not a fully qualified name or parameter", 
@@ -631,12 +631,12 @@ assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
 	| prm=singleFmParam 
 		{
 			try {
-				// FIXME: parameterizes CpsVariable
 				FMParameter fmp = fm.getParameter($prm.text);
 				if (fmp == null) {
 				throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
 					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 				}
+				val = new ParameterizedCpsVariable(fmp);
 			}
 			catch (RecognitionException re) {
 				reportError(re);
@@ -843,12 +843,12 @@ cmpRhs [FilterModule fm] returns [CpsVariableCollection res]
 	: prm=fmParamList
 		{
 			try {
-				// FIXME: parameterizes CpsVariableCollection
 				FMParameter fmp = fm.getParameter($prm.text);
 				if (fmp == null) {
 				throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
 					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 				}
+				res = new ParameterizedCpsVariableCollection(fmp);
 			}
 			catch (RecognitionException re) {
 				reportError(re);
@@ -864,12 +864,12 @@ meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
 	| prm=singleFmParam
 		{
 			try {
-				// FIXME: parameterizes CpsVariable
 				FMParameter fmp = fm.getParameter($prm.text);
 				if (fmp == null) {
 				throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
 					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 				}
+				res.add(new ParameterizedCpsVariable(fmp));
 			}
 			catch (RecognitionException re) {
 				reportError(re);

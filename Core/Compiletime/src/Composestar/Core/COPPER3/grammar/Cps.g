@@ -63,6 +63,7 @@ tokens {
 	OPERAND;
 	CMPSTMT;
 	JPCA;
+	NONE;
 	
 	SUPERIMPOSITION;
 	SELECTOR;
@@ -223,13 +224,6 @@ fmParamList
 fqnOrSingleFmParam
 	: fqn | singleFmParam
 	;
-	
-/**
- * Shorthand for an identifier or single parameter. 
- */
-identifierOrSingleFmParam
-	: IDENTIFIER | singleFmParam
-	;	
 
 /**
  * List of internals. No root node is created. Child elements can be identifier by
@@ -280,7 +274,7 @@ joinPointContext
 	| ASTERISK
 	-> // don't care
 	| // none
-	-> ^(JPCA[$start])
+	-> ^(JPCA[$start] NONE)
 	) RROUND
 	;
 
@@ -591,8 +585,8 @@ matchingPatternList
  * parameter list it is accepted in the canonical notation (Legacy notation)
  */
 identifierOrFmParam
-	: IDENTIFIER
-	-> ^(FQN[$start] IDENTIFIER) // model is as an FQN 
+	: v=IDENTIFIER
+	-> ^(FQN[$start] $v) // model it as an FQN 
 	| singleFmParam | fmParamList
 	;
 	
@@ -651,24 +645,22 @@ matchingPattern
  * 'filter', but it depends on the filter type.
  */	
 substitutionPart
-	: n1=identifierOrSingleFmParam 
+	: n1=identifierOrFmParam 
 		(PERIOD 
 			(n2=literalOrFmParam // foo.bar
-			-> ^(AND
-					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND $n1))
-					^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n2))
-				)
+			-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND $n1))
+				^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n2))
 			| ASTERISK // foo.*
 			-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND $n1))
-				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND IDENTIFIER["selector"]))
+				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND ^(FQN IDENTIFIER["selector"])))
 			)
 		| // bar
 		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND LITERAL[$n1.text]))
-			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND IDENTIFIER["target"]))
+			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
 		)
 	| ASTERISK PERIOD n3=literalOrFmParam // *.bar
 	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n3))
-		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND IDENTIFIER["target"]))
+		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
 	;
 
 // $> Filter
