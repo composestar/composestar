@@ -38,10 +38,11 @@ import org.apache.log4j.Logger;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
+import Composestar.Core.EMBEX.EmbeddedSources;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataMap;
@@ -70,11 +71,6 @@ public class COPPER implements CTCommonModule
 	protected int errorCnt;
 
 	/**
-	 * The constraint specification for FILTH2
-	 */
-	protected ConstraintSpecification constraintSpec;
-
-	/**
 	 * Defined filter types
 	 */
 	protected FilterTypeMapping filterTypes;
@@ -89,6 +85,9 @@ public class COPPER implements CTCommonModule
 	 */
 	@ModuleSetting
 	protected boolean debugExportDot;
+
+	@ResourceManager
+	protected EmbeddedSources embeddedSourceManager;
 
 	public COPPER()
 	{}
@@ -120,9 +119,6 @@ public class COPPER implements CTCommonModule
 		}
 
 		errorCnt = 0;
-
-		constraintSpec = new ConstraintSpecification();
-		resources.put(ConstraintSpecification.RESOURCE_KEY, constraintSpec);
 
 		CPSTimer timer = CPSTimer.getTimer(ModuleNames.COPPER);
 		for (File file : resources.configuration().getProject().getConcernFiles())
@@ -197,9 +193,9 @@ public class COPPER implements CTCommonModule
 			nodes.setTokenStream(tokens);
 			CpsTreeWalker w = new CpsTreeWalker(nodes);
 			w.setSourceFile(file);
-			w.setConstraintSpec(constraintSpec);
 			w.setFilterTypeMapping(filterTypes);
 			w.setFilterFactory(filterFactory);
+			w.setEmbeddedSourceManager(embeddedSourceManager);
 			try
 			{
 				w.concern();

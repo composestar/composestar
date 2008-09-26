@@ -37,8 +37,8 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.Meta.FileInformation;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.EMBEX.EmbeddedSources;
 import Composestar.Core.Exception.CpsSemanticException;
-import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -74,11 +74,6 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	protected int errorCnt;
 
 	/**
-	 * The FILTH2 constraint specification
-	 */
-	protected ConstraintSpecification constraintSpec;
-
-	/**
 	 * Contains the filter type mapping which is used to retrieve the filtertype
 	 */
 	protected FilterTypeMapping filterTypes;
@@ -87,6 +82,11 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	 * ...
 	 */
 	protected FilterFactory filterFactory;
+
+	/**
+	 * 
+	 */
+	protected EmbeddedSources embeddedSourceManager;
 
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
@@ -137,6 +137,14 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	public void setFilterFactory(FilterFactory lft)
 	{
 		filterFactory = lft;
+	}
+
+	/**
+	 * @param srcMan
+	 */
+	public void setEmbeddedSourceManager(EmbeddedSources srcMan)
+	{
+		embeddedSourceManager = srcMan;
 	}
 
 	/**
@@ -217,16 +225,6 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 			srcInfo.setLine(t.getLine());
 			srcInfo.setLinePos(t.getCharPositionInLine());
 		}
-	}
-
-	/**
-	 * Set the constraint specification
-	 * 
-	 * @param constraintSpec
-	 */
-	public void setConstraintSpec(ConstraintSpecification value)
-	{
-		constraintSpec = value;
 	}
 
 	/**

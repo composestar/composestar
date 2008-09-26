@@ -56,6 +56,7 @@ import Composestar.Core.CpsRepository2.FilterElements.*;
 import Composestar.Core.CpsRepository2.FilterModules.*;
 import Composestar.Core.CpsRepository2.Filters.*;
 import Composestar.Core.CpsRepository2.FMParams.*;
+import Composestar.Core.CpsRepository2.Meta.*;
 import Composestar.Core.CpsRepository2.References.*;
 import Composestar.Core.CpsRepository2.SuperImposition.*;
 import Composestar.Core.CpsRepository2.TypeSystem.*;
@@ -68,6 +69,8 @@ import Composestar.Core.CpsRepository2Impl.FMParams.*;
 import Composestar.Core.CpsRepository2Impl.References.*;
 import Composestar.Core.CpsRepository2Impl.SuperImposition.*;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.*;
+
+import Composestar.Core.EMBEX.EmbeddedSource;
 
 import Composestar.Core.Exception.*;
 
@@ -1273,12 +1276,22 @@ constraint [SuperImposition si]
 	
 // $<Implementation
 
-// TODO
 implementation [CpsConcern c]
 	: ^(astr=IMPLEMENTATION asm=fqn)
-	| ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=FILENAME code=CODE_BLOCK
+	| ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=LITERAL code=CODE_BLOCK
 		{
-			// FIXME: extract the source code
+			if (embeddedSourceManager != null)
+			{
+				EmbeddedSource src = new EmbeddedSource($lang.text, unescapeLiteral($fn.text), $code.text);
+				SourceInformation srcInfo = new SourceInformation(fileInformation);
+				src.setSourceInformation(srcInfo);
+				if (strt != null)
+				{
+					srcInfo.setLine(strt.getLine());
+					srcInfo.setLinePos(strt.getCharPositionInLine());
+				}
+				embeddedSourceManager.addSource(src);
+			}
 		}
 		)
 	;
