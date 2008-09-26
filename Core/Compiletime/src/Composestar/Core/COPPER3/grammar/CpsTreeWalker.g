@@ -93,7 +93,6 @@ import java.util.ArrayList;
 		else {
 			if ("legacy".equals(prefixStr)) 
 			{
-				// FIXME
 				if (filterType == null)
 				{
 					throw new IllegalArgumentException("Cannot process 'legacy' prefix without a filter type");
@@ -626,9 +625,20 @@ assignLhs [FilterModule fm, FilterType ft] returns [CanonProperty prop]
 	
 assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
 	: qn=cpsVariableFqn[fm] { val = qn;	}
-	| singleFmParam 
+	| prm=singleFmParam 
 		{
-			// FIXME
+			try {
+				// FIXME: parameterizes CpsVariable
+				FMParameter fmp = fm.getParameter($prm.text);
+				if (fmp == null) {
+				throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
+					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
+				}
+			}
+			catch (RecognitionException re) {
+				reportError(re);
+				recover(input,re);
+			} 
 		} 
 	| l=LITERAL
 		{
@@ -827,22 +837,42 @@ cmpRhs [FilterModule fm] returns [CpsVariableCollection res]
 @init{
 	Tree errTok = (Tree) input.LT(1); 
 }
-	: ^(FM_PARAM_LIST IDENTIFIER
+	: prm=fmParamList
 		{
-			// FIXME
+			try {
+				// FIXME: parameterizes CpsVariableCollection
+				FMParameter fmp = fm.getParameter($prm.text);
+				if (fmp == null) {
+				throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
+					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
+				}
+			}
+			catch (RecognitionException re) {
+				reportError(re);
+				recover(input,re);
+			}
 		}
-		)
 	| ^(LIST { res = new CpsVariableCollectionImpl(); } meCmpRhsSingle[fm, res]+)
 	| { res = new CpsVariableCollectionImpl(); } meCmpRhsSingle[fm, res]
 	;
 	
 meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
 	: fqnv=cpsVariableFqn[fm] { res.add(fqnv); } 
-	| ^(FM_PARAM_SINGLE IDENTIFIER
+	| prm=singleFmParam
 		{
-			// FIXME
+			try {
+				// FIXME: parameterizes CpsVariable
+				FMParameter fmp = fm.getParameter($prm.text);
+				if (fmp == null) {
+				throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
+					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
+				}
+			}
+			catch (RecognitionException re) {
+				reportError(re);
+				recover(input,re);
+			}
 		} 
-		)
 	| l=LITERAL 
 		{
 			String lvalue = $l.text;
@@ -1066,7 +1096,6 @@ fmBinding [SuperImposition si] returns [FilterModuleBinding fmb = new FilterModu
 		)?)
 	;	
 	
-// TODO: !!!
 param [SuperImposition si] returns [FMParameterValue fmp]
 	: ^(strt=LIST 
 		{
@@ -1249,7 +1278,7 @@ implementation [CpsConcern c]
 	: ^(astr=IMPLEMENTATION asm=fqn)
 	| ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=FILENAME code=CODE_BLOCK
 		{
-			// FIXME:
+			// FIXME: extract the source code
 		}
 		)
 	;
