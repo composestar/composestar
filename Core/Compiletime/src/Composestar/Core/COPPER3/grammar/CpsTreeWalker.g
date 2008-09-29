@@ -369,7 +369,8 @@ external [FilterModule fm]
 				else {
 					throw new CpsSemanticException(String.format("External \"\%s\" is not a fully qualified name or parameter", 
 						$name.text), input, name);
-				}			
+				}
+				external.setTypeReference(tr);			
 				if (init != null)
 				{
 					external.setMethodReference(init);
@@ -415,12 +416,13 @@ condition [FilterModule fm]
 	
 filterExpression [FilterModule fm] returns [FilterExpression expr]
 // throws CpsSemanticException
-	: op=filterOperator lhs=filterExpression[fm] rhs=filterExpression[fm]
+	: ^(op=filterOperator lhs=filterExpression[fm] rhs=filterExpression[fm]
 		{
 			op.setLHS(lhs);
 			op.setRHS(rhs);
 			expr = op;
 		}
+	)
 	| flt=filter[fm] {expr = flt;}
 	;
 
@@ -445,13 +447,12 @@ outputfilters [FilterModule fm]
 // $<Filter
 
 filterOperator returns [BinaryFilterOperator op]
-	: ^(OPERATOR seq=SEMICOLON 
+	: seq=SEMICOLON 
 		{
 			op = new SequentialFilterOper();
 			setLocInfo(op, $seq);
 			repository.add(op);
 		}
-		)
 	;
 
 /**
@@ -542,23 +543,23 @@ filterType returns [FilterType ft]
 	
 filterElementExpression [FilterModule fm, FilterType ft] returns [FilterElementExpression expr]
 // throws CpsSemanticException
-	: op=filterElementOperator lhs=filterElementExpression[fm,ft] rhs=filterElementExpression[fm,ft]
+	: ^(op=filterElementOperator lhs=filterElementExpression[fm,ft] rhs=filterElementExpression[fm,ft]
 		{
 			op.setLHS(lhs);
 			op.setRHS(rhs);
 			expr = op;
 		}
+	)
 	| elm=filterElement[fm,ft] {expr = elm;}
 	;
 	
 filterElementOperator returns [BinaryFilterElementOperator op]
-	: ^(OPERATOR cor='cor' 
+	: cor='cor' 
 		{
 			op = new CORFilterElmOper();
 			setLocInfo(op, $cor);
 			repository.add(op);
 		}
-	)
 	;	
 
 /**
@@ -660,7 +661,11 @@ assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
 // $<Condition Expression
 
 matchingExpression [FilterModule fm] returns [MatchingExpression ex]
-	: ^(frst=OR lhs=matchingExpression[fm] rhs=matchingExpression[fm] 
+	: ^(EXPRESSION orexp=orExp[fm] {ex = orexp;})
+	;
+
+orExp [FilterModule fm] returns [MatchingExpression ex]
+	: ^(frst=OR lhs=orExp[fm] rhs=orExp[fm] 
 			{
 				ex = new OrMEOper();
 				setLocInfo(ex, $frst);
@@ -673,7 +678,7 @@ matchingExpression [FilterModule fm] returns [MatchingExpression ex]
 	;
 
 andExpr [FilterModule fm] returns [MatchingExpression ex]
-	: ^(frst=AND lhs=matchingExpression[fm] rhs=matchingExpression[fm] 
+	: ^(frst=AND lhs=orExp[fm] rhs=orExp[fm] 
 			{
 				ex = new AndMEOper();
 				setLocInfo(ex, $frst);
@@ -686,7 +691,7 @@ andExpr [FilterModule fm] returns [MatchingExpression ex]
 	;
 	
 unaryExpr [FilterModule fm] returns [MatchingExpression ex]
-	: ^(frst=NOT oper=matchingExpression[fm]
+	: ^(frst=NOT oper=orExp[fm]
 			{
 			ex = new NotMEOper();
 			setLocInfo(ex, $frst);

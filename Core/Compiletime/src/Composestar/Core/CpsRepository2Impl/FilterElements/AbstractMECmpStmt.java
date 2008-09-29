@@ -107,10 +107,6 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 		{
 			throw new NullPointerException();
 		}
-		if (values.isEmpty())
-		{
-			throw new IllegalArgumentException();
-		}
 		rhs = values;
 		rhs.setOwner(this);
 	}

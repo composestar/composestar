@@ -323,7 +323,6 @@ filterExpression
  */
 filterOperator
 	: SEMICOLON
-	-> ^(OPERATOR[$start] SEMICOLON)
 	;
 
 /**
@@ -375,7 +374,6 @@ canonFilterElementExpression
  */
 canonFilterElementOperator
 	: 'cor'
-	-> ^(OPERATOR[$start] 'cor')
 	;
 	
 /**
@@ -490,7 +488,7 @@ legacyFilterElement
  */	
 filterElementOperator
 	: COMMA
-	-> ^(OPERATOR[$start] 'cor')
+	-> 'cor'
 	;
 	
 /**
@@ -500,9 +498,9 @@ filterElementOperator
  */	
 filterElement
 	: (conditionExpression (ENABLE | DISABLE) )=> feWithCond substitutionPart?
-	-> ^(FILTER_ELEMENT feWithCond substitutionPart?)
+	-> ^(FILTER_ELEMENT[$start] ^(EXPRESSION feWithCond) substitutionPart?)
 	| matchingPart substitutionPart?
-	-> ^(FILTER_ELEMENT matchingPart substitutionPart?)
+	-> ^(FILTER_ELEMENT[$start] ^(EXPRESSION matchingPart) substitutionPart?)
 	;
 	
 /**
@@ -510,7 +508,7 @@ filterElement
  */	
 feWithCond
 	: conditionExpression feOperMatchPart
-	-> ^(EXPRESSION ^(AND conditionExpression feOperMatchPart))
+	-> ^(AND[$start] conditionExpression feOperMatchPart)
 	;
 
 /**
@@ -520,7 +518,7 @@ feOperMatchPart
 	: ENABLE matchingPart
 	-> matchingPart
 	| DISABLE matchingPart
-	-> ^(NOT matchingPart)
+	-> ^(NOT[$start] matchingPart)
 	;
 
 // $<Condition Expression
@@ -574,7 +572,7 @@ matchingPart
  */
 matchingPatternList
 	: matchingPattern (COMMA matchingPatternList
-	-> ^(OR matchingPattern matchingPatternList)
+	-> ^(OR[$start] matchingPattern matchingPatternList)
 	|
 	-> matchingPattern
 	)
