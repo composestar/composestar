@@ -182,4 +182,14 @@ public class PrimitiveFilterTypeImpl extends AbstractRepositoryEntity implements
 		return filterName;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return getFilterName() + " [" + super.toString() + "]";
+	}
+
 }

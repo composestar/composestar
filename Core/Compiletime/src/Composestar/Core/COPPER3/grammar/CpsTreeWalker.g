@@ -649,7 +649,7 @@ assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
 			String lvalue = $l.text;
 			if (lvalue.length() >= 2)
 			{
-				lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-2));
+				lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-1));
 			}
 			else {
 				lvalue = "";
@@ -886,7 +886,7 @@ meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
 			String lvalue = $l.text;
 			if (lvalue.length() >= 2)
 			{
-				lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-2));
+				lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-1));
 			}
 			else {
 				lvalue = "";
@@ -1139,7 +1139,7 @@ paramValue [SuperImposition si] returns [FMParameterValue fmp]
 				String lvalue = $lt.text;
 				if (lvalue.length() >= 2)
 				{
-					lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-2));
+					lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-1));
 				}
 				else {
 					lvalue = "";

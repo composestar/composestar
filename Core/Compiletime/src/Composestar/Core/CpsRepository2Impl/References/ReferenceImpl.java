@@ -129,4 +129,14 @@ public class ReferenceImpl<T extends Serializable> implements Reference<T>
 	{
 		return false;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return getReferenceId() + " [" + super.toString() + "]";
+	}
 }

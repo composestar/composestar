@@ -120,6 +120,6 @@ public abstract class AbstractQualifiedRepositoryEntity extends AbstractReposito
 	@Override
 	public String toString()
 	{
-		return "[" + super.toString() + "] " + getFullyQualifiedName();
+		return getFullyQualifiedName() + " [" + super.toString() + "]";
 	}
 }

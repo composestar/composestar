@@ -45,7 +45,8 @@ public interface CanonAssignment extends RepositoryEntity, Instantiatable<CanonA
 
 	/**
 	 * Sets the property that is set in this assignment. setOwner(this) is
-	 * called on the expression after assigning.
+	 * called on the expression after assigning (when the current owner is
+	 * null).
 	 * 
 	 * @param prop The property
 	 * @throws NullPointerException Thrown when the variable is null

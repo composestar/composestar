@@ -91,7 +91,10 @@ public class CanonAssignmentImpl extends AbstractRepositoryEntity implements Can
 			throw new NullPointerException();
 		}
 		value = newValue;
-		value.setOwner(this);
+		if (value.getOwner() == null)
+		{
+			value.setOwner(this);
+		}
 	}
 
 	/*
@@ -121,4 +124,13 @@ public class CanonAssignmentImpl extends AbstractRepositoryEntity implements Can
 		return instantiator.instantiate(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return getProperty().toString() + " = " + getValue().toString() + " [" + super.toString() + "]";
+	}
 }

@@ -84,4 +84,16 @@ public class MethodReferenceImpl extends ReferenceImpl<MethodInfo> implements Me
 	{
 		return typeReference;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.References.ReferenceImpl#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return getTypeReference().getReferenceId() + "." + getReferenceId() + "(" + joinPointContextArgument.toString()
+				+ ")" + " [" + getClass().getName() + "@" + System.identityHashCode(this) + "]";
+	}
 }

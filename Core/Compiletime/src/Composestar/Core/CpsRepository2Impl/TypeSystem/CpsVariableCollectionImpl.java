@@ -64,7 +64,10 @@ public class CpsVariableCollectionImpl extends AbstractRepositoryEntity implemen
 		}
 		if (values.add(e))
 		{
-			e.setOwner(this);
+			if (e.getOwner() == null)
+			{
+				e.setOwner(this);
+			}
 			return true;
 		}
 		return false;
@@ -84,7 +87,7 @@ public class CpsVariableCollectionImpl extends AbstractRepositoryEntity implemen
 		{
 			for (CpsVariable v : c)
 			{
-				if (v != null)
+				if (v != null && v.getOwner() == null)
 				{
 					v.setOwner(this);
 				}
