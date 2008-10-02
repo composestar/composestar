@@ -12,7 +12,8 @@ package Composestar.Utils.Logging;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 import Composestar.Utils.Logging.Log4j.CPSLoggingEvent;
 
 /**
@@ -24,12 +25,11 @@ import Composestar.Utils.Logging.Log4j.CPSLoggingEvent;
  * protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
  * </pre>
  * 
- * Then simply called the proper <em>error</em>, <em>warn</em>,
- * <em>info</em> and <em>debug</em> functions to add a log entry. To add
- * sourcefile information you will need to create an instance of LogMessage and
- * use that as the message argument for the former methods. Classes that are
- * also part of the runtime should create a ILogger through the SafeLogger
- * class:
+ * Then simply called the proper <em>error</em>, <em>warn</em>, <em>info</em>
+ * and <em>debug</em> functions to add a log entry. To add sourcefile
+ * information you will need to create an instance of LogMessage and use that as
+ * the message argument for the former methods. Classes that are also part of
+ * the runtime should create a ILogger through the SafeLogger class:
  * 
  * <pre>
  * protected static final ILogger logger = SafeLogger.getILogger(MODULE_NAME);
@@ -114,6 +114,62 @@ public class CPSLogger extends Logger implements ILogger
 	}
 
 	/**
+	 * Trace log entry with a SourceInformation
+	 */
+	public void trace(Object message, SourceInformation re)
+	{
+		super.trace(new LogMessage(message, re));
+	}
+
+	/**
+	 * Debug log entry with a SourceInformation
+	 */
+	public void debug(Object message, SourceInformation re)
+	{
+		super.debug(new LogMessage(message, re));
+	}
+
+	/**
+	 * Error log entry with a SourceInformation
+	 */
+	public void error(Object message, SourceInformation re)
+	{
+		super.error(new LogMessage(message, re));
+	}
+
+	/**
+	 * Fatal log entry with a SourceInformation
+	 */
+	public void fatal(Object message, SourceInformation re)
+	{
+		super.fatal(new LogMessage(message, re));
+	}
+
+	/**
+	 * Information log entry with a SourceInformation
+	 */
+	public void info(Object message, SourceInformation re)
+	{
+		super.info(new LogMessage(message, re));
+	}
+
+	/**
+	 * Warning log entry with a SourceInformation
+	 */
+	public void warn(Object message, SourceInformation re)
+	{
+		super.warn(new LogMessage(message, re));
+	}
+
+	/**
+	 * A log entry with a SourceInformation
+	 */
+	public void log(Priority prio, Object message, SourceInformation re)
+	{
+		super.log(prio, new LogMessage(message, re));
+	}
+
+	/**
 	 * Trace log entry with a LocationProvider
 	 */
 	public void trace(Object message, LocationProvider re)
@@ -176,9 +232,8 @@ public class CPSLogger extends Logger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.apache.log4j.Category#forcedLog(java.lang.String,
-	 *      org.apache.log4j.Priority, java.lang.Object, java.lang.Throwable)
+	 * org.apache.log4j.Priority, java.lang.Object, java.lang.Throwable)
 	 */
 	@Override
 	protected void forcedLog(String fqcn, Priority level, Object message, Throwable t)

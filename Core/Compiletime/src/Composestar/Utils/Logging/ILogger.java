@@ -10,14 +10,7 @@
 
 package Composestar.Utils.Logging;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-
-//
-// !! Compose* Runtime Warning !!
-//
-// This class is referenced in the Compose* Runtime for .NET 1.1
-// Do not use Java features added after Java 2.0
-//
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
  * Helper interface to allow the mixing of the runtime safe logger and normal

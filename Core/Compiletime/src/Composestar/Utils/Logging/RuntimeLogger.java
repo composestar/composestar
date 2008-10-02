@@ -10,14 +10,7 @@
 
 package Composestar.Utils.Logging;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-
-//
-// !! Compose* Runtime Warning !!
-//
-// This class is referenced in the Compose* Runtime for .NET 1.1
-// Do not use Java features added after Java 2.0
-//
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
  * A runtime safe logger instance, mimics a log4j logger without creating
@@ -55,9 +48,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#debug(java.lang.Object,
-	 *      java.lang.Throwable)
+	 * java.lang.Throwable)
 	 */
 	public void debug(Object arg0, Throwable arg1)
 	{
@@ -70,7 +62,6 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#debug(java.lang.Object)
 	 */
 	public void debug(Object arg0)
@@ -80,9 +71,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#error(java.lang.Object,
-	 *      java.lang.Throwable)
+	 * java.lang.Throwable)
 	 */
 	public void error(Object arg0, Throwable arg1)
 	{
@@ -95,7 +85,6 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#error(java.lang.Object)
 	 */
 	public void error(Object arg0)
@@ -105,9 +94,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#fatal(java.lang.Object,
-	 *      java.lang.Throwable)
+	 * java.lang.Throwable)
 	 */
 	public void fatal(Object arg0, Throwable arg1)
 	{
@@ -120,7 +108,6 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#fatal(java.lang.Object)
 	 */
 	public void fatal(Object arg0)
@@ -130,9 +117,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#info(java.lang.Object,
-	 *      java.lang.Throwable)
+	 * java.lang.Throwable)
 	 */
 	public void info(Object arg0, Throwable arg1)
 	{
@@ -145,7 +131,6 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#info(java.lang.Object)
 	 */
 	public void info(Object arg0)
@@ -155,9 +140,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#warn(java.lang.Object,
-	 *      java.lang.Throwable)
+	 * java.lang.Throwable)
 	 */
 	public void warn(Object arg0, Throwable arg1)
 	{
@@ -170,7 +154,6 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#warn(java.lang.Object)
 	 */
 	public void warn(Object arg0)
@@ -180,9 +163,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#debug(java.lang.Object,
-	 *      Composestar.Core.RepositoryImplementation.RepositoryEntity)
+	 * Composestar.Core.RepositoryImplementation.RepositoryEntity)
 	 */
 	public void debug(Object arg0, RepositoryEntity arg1)
 	{
@@ -191,9 +173,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#error(java.lang.Object,
-	 *      Composestar.Core.RepositoryImplementation.RepositoryEntity)
+	 * Composestar.Core.RepositoryImplementation.RepositoryEntity)
 	 */
 	public void error(Object arg0, RepositoryEntity arg1)
 	{
@@ -202,9 +183,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#fatal(java.lang.Object,
-	 *      Composestar.Core.RepositoryImplementation.RepositoryEntity)
+	 * Composestar.Core.RepositoryImplementation.RepositoryEntity)
 	 */
 	public void fatal(Object arg0, RepositoryEntity arg1)
 	{
@@ -213,9 +193,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#info(java.lang.Object,
-	 *      Composestar.Core.RepositoryImplementation.RepositoryEntity)
+	 * Composestar.Core.RepositoryImplementation.RepositoryEntity)
 	 */
 	public void info(Object arg0, RepositoryEntity arg1)
 	{
@@ -224,9 +203,8 @@ public class RuntimeLogger implements ILogger
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.ILogger#warn(java.lang.Object,
-	 *      Composestar.Core.RepositoryImplementation.RepositoryEntity)
+	 * Composestar.Core.RepositoryImplementation.RepositoryEntity)
 	 */
 	public void warn(Object arg0, RepositoryEntity arg1)
 	{

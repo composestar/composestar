@@ -25,7 +25,7 @@ import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.Out;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.BuildConfig;
-import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -59,9 +59,9 @@ public class CommonResources implements Serializable
 	protected BuildConfig config;
 
 	/**
-	 * The compose* datastore
+	 * The CPS Language repository
 	 */
-	protected DataStore dataStore;
+	protected Repository repository;
 
 	/**
 	 * Reference to the path resolver. The path resolver provides means to
@@ -96,9 +96,9 @@ public class CommonResources implements Serializable
 		return config;
 	}
 
-	public void setRepository(DataStore ds)
+	public void setRepository(Repository ds)
 	{
-		dataStore = ds;
+		repository = ds;
 	}
 
 	/**
@@ -107,9 +107,9 @@ public class CommonResources implements Serializable
 	 * 
 	 * @return
 	 */
-	public DataStore repository()
+	public Repository repository()
 	{
-		return dataStore;
+		return repository;
 	}
 
 	/**

@@ -59,6 +59,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * @author Michiel Hendriks
  */
 @ComposestarModule(ID = ModuleNames.COPPER)
+@Deprecated
 public class COPPER implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER);
@@ -88,21 +89,22 @@ public class COPPER implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
+	 * @seeComposestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.
+	 * CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
+		DataStore ds = DataStore.instance();
 		filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		if (filterTypes == null)
 		{
-			filterTypes = new FilterTypeMapping(resources.repository());
+			filterTypes = new FilterTypeMapping(ds);
 			resources.put(FilterTypeMapping.RESOURCE_KEY, filterTypes);
 		}
 		filterFactory = resources.get(DefaultFilterFactory.RESOURCE_KEY);
 		if (filterFactory == null)
 		{
-			filterFactory = new DefaultFilterFactory(filterTypes, resources.repository());
+			filterFactory = new DefaultFilterFactory(filterTypes, ds);
 			resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
 		}
 		else

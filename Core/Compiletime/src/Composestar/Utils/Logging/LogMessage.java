@@ -12,7 +12,8 @@ package Composestar.Utils.Logging;
 
 import java.io.Serializable;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 
 /**
  * A message object to combine a message and source file information.
@@ -35,58 +36,43 @@ public class LogMessage implements LocationProvider, Serializable
 	protected RepositoryEntity repoEntity;
 
 	/**
-	 * The source filename
+	 * Optional source information
 	 */
-	protected String sourceFilename = "";
-
-	/**
-	 * Line in the source file
-	 */
-	protected int sourceLine;
-
-	/**
-	 * Position on the line
-	 */
-	protected int sourceLinePos;
+	protected SourceInformation srcInfo;
 
 	public LogMessage(Object inMsg)
 	{
 		message = inMsg;
-		if (message instanceof LocationProvider)
-		{
-			sourceFilename = ((LocationProvider) message).getFilename();
-			sourceLine = ((LocationProvider) message).getLineNumber();
-			sourceLinePos = ((LocationProvider) message).getLinePosition();
-		}
+		// FIXME
 	}
 
 	public LogMessage(Object inMsg, Throwable t)
 	{
 		this(inMsg);
-		if (t instanceof LocationProvider)
-		{
-			sourceFilename = ((LocationProvider) t).getFilename();
-			sourceLine = ((LocationProvider) t).getLineNumber();
-			sourceLinePos = ((LocationProvider) t).getLinePosition();
-		}
+		// FIXME
 	}
 
 	public LogMessage(Object inMsg, String inFN, int inLN, int onLine)
 	{
 		this(inMsg);
-		sourceFilename = inFN;
-		sourceLine = inLN;
-		sourceLinePos = onLine;
+		// FIXME
 	}
 
 	public LogMessage(Object inMsg, String inFN, int inLN)
 	{
 		this(inMsg, inFN, inLN, 0);
+		// FIXME
+	}
+
+	public LogMessage(Object inMsg, SourceInformation sourceInformation)
+	{
+		this(inMsg);
+		srcInfo = sourceInformation;
 	}
 
 	public LogMessage(Object inMsg, RepositoryEntity re)
 	{
-		this(inMsg, re.getDescriptionFileName(), re.getDescriptionLineNumber(), re.getDescriptionLinePosition());
+		this(inMsg, re.getSourceInformation());
 		repoEntity = re;
 	}
 
@@ -105,32 +91,29 @@ public class LogMessage implements LocationProvider, Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.LocationProvider#getFilename()
 	 */
 	public String getFilename()
 	{
-		return sourceFilename;
+		return srcInfo.getFilename().toString();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.LocationProvider#getLineNumber()
 	 */
 	public int getLineNumber()
 	{
-		return sourceLine;
+		return srcInfo.getLine();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.LocationProvider#getLinePosition()
 	 */
 	public int getLinePosition()
 	{
-		return sourceLinePos;
+		return srcInfo.getLinePos();
 	}
 
 	/**
@@ -141,9 +124,16 @@ public class LogMessage implements LocationProvider, Serializable
 		return repoEntity;
 	}
 
+	/**
+	 * @return the source information
+	 */
+	public SourceInformation getSourceInformation()
+	{
+		return srcInfo;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

@@ -4,17 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
 
 import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.BuildConfig;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Implementation;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -32,6 +28,9 @@ public class EMBEX implements CTCommonModule
 
 	protected BuildConfig config;
 
+	@ResourceManager
+	protected EmbeddedSources embeddedSourceManager;
+
 	public EMBEX()
 	{}
 
@@ -42,7 +41,6 @@ public class EMBEX implements CTCommonModule
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		config = resources.configuration();
-		DataStore ds = resources.repository();
 		// create directory for embedded code
 		File embeddedDir = new File(config.getProject().getIntermediate(), EMBEDDED_PATH);
 		if (!embeddedDir.exists() && !embeddedDir.mkdirs())
@@ -51,60 +49,58 @@ public class EMBEX implements CTCommonModule
 					.toString()), ModuleNames.EMBEX);
 		}
 
-		// iterate over all cps concerns
-		Iterator<CpsConcern> concernIt = ds.getAllInstancesOf(CpsConcern.class);
-		while (concernIt.hasNext())
+		boolean success = true;
+		for (EmbeddedSource src : embeddedSourceManager.getSources())
 		{
-			// fetch implementation
-			CpsConcern cps = concernIt.next();
-			Implementation imp = cps.getImplementation();
+			String language = src.getLanguage();
+			File target = new File(embeddedDir, src.getFilename());
 
-			if (imp instanceof Source)
+			logger.debug("Found embedded source; Language: " + language + "; File: " + src.getFilename(), src
+					.getSourceInformation());
+			Composestar.Core.Config.Source source = new Composestar.Core.Config.Source();
+			source.setEmbedded(true);
+			// TODO: set original source location and line offset
+			source.setLanguage(language);
+			source.setFile(target);
+			config.getProject().addSource(source);
+
+			logger.debug("Added embedded code to project: " + config.getProject().getName());
+
+			if (src.getCode() != null)
 			{
-				// fetch embedded source and save
-				Source sourceCode = (Source) imp;
-				String language = sourceCode.getLanguage();
-				File target = new File(embeddedDir, sourceCode.getSourceFile());
-
-				logger.debug("Found embedded source: " + sourceCode.getClassName() + "; Language: " + language
-						+ "; File: " + sourceCode.getSourceFile());
-				Composestar.Core.Config.Source source = new Composestar.Core.Config.Source();
-				source.setEmbedded(true);
-				source.setLanguage(language);
-				source.setFile(target);
-				config.getProject().addSource(source);
-				config.getProject().getTypeMapping().addType(sourceCode.getClassName(), source);
-
-				logger.debug("Added embedded code to project: " + config.getProject().getName());
-
-				if (sourceCode.getSource() != null)
-				{
-					saveToFile(target, sourceCode);
-				}
+				success &= saveToFile(target, src);
 			}
 		}
-		// TODO return Error when code could not be extracted
-		return ModuleReturnValue.Ok;
+		if (success)
+		{
+			return ModuleReturnValue.Ok;
+		}
+		else
+		{
+			return ModuleReturnValue.Error;
+		}
 	}
 
 	/**
 	 * Stores the embedded source in a new file.
 	 */
-	private void saveToFile(File target, Source src) throws ModuleException
+	private boolean saveToFile(File target, EmbeddedSource src) throws ModuleException
 	{
 		BufferedWriter bw = null;
 		try
 		{
 			bw = new BufferedWriter(new FileWriter(target));
-			bw.write(src.getSource());
+			bw.write(src.getCode());
+			return true;
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Could not save embedded source: " + e.getMessage(), ModuleNames.EMBEX);
+			logger.error("Could not save embedded source: " + e.getMessage(), src.getSourceInformation());
 		}
 		finally
 		{
 			FileUtils.close(bw);
 		}
+		return false;
 	}
 }

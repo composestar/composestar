@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
@@ -146,7 +147,7 @@ public class CompileHistory implements Serializable
 		return new Date(savedOn.getTime());
 	}
 
-	public DataStore getDataStore()
+	public Repository getRepository()
 	{
 		return resources.repository();
 	}

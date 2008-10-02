@@ -70,6 +70,8 @@ public class COPPER implements CTCommonModule
 	 */
 	protected int errorCnt;
 
+	protected Repository repository;
+
 	/**
 	 * Defined filter types
 	 */
@@ -99,11 +101,11 @@ public class COPPER implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
+		repository = resources.repository();
 		filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		if (filterTypes == null)
 		{
-			// TODO: use the correct repository
-			filterTypes = new FilterTypeMapping(/* resources.repository() */);
+			filterTypes = new FilterTypeMapping(repository);
 			resources.put(FilterTypeMapping.RESOURCE_KEY, filterTypes);
 		}
 
@@ -132,6 +134,7 @@ public class COPPER implements CTCommonModule
 		{
 			throw new ModuleException(String.format("%d error(s) detected in the concern sources.", errorCnt),
 					ModuleNames.COPPER);
+			// return ModuleReturnValue.Error;
 		}
 		return ModuleReturnValue.Ok;
 	}
@@ -193,6 +196,7 @@ public class COPPER implements CTCommonModule
 			nodes.setTokenStream(tokens);
 			CpsTreeWalker w = new CpsTreeWalker(nodes);
 			w.setSourceFile(file);
+			w.setRepository(repository);
 			w.setFilterTypeMapping(filterTypes);
 			w.setFilterFactory(filterFactory);
 			w.setEmbeddedSourceManager(embeddedSourceManager);

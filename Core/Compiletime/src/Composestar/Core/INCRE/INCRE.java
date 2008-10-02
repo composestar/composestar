@@ -390,7 +390,7 @@ public final class INCRE implements CTCommonModule
 		}
 
 		historyTypes = new ArrayList<PlatformRepresentation>();
-		Iterator<PrimitiveConcern> iterConcerns = history.getDataStore().getAllInstancesOf(PrimitiveConcern.class);
+		Iterator<PrimitiveConcern> iterConcerns = history.getRepository().getAllInstancesOf(PrimitiveConcern.class);
 		while (iterConcerns.hasNext())
 		{
 			PrimitiveConcern pc = iterConcerns.next();
@@ -422,7 +422,7 @@ public final class INCRE implements CTCommonModule
 		List<RepositoryEntity> list;
 		if (searchingHistory)
 		{
-			list = history.getDataStore().getListOfAllInstances(c);
+			list = history.getRepository().getListOfAllInstances(c);
 		}
 		else
 		{
@@ -912,7 +912,7 @@ public final class INCRE implements CTCommonModule
 				if (!files.isEmpty() && files.get(0).equals("EMPTY_CONFIG"))
 				{
 					// special case, file has not been configured
-					currentRepository = history.getDataStore();
+					currentRepository = history.getRepository();
 					searchingHistory = true;
 					List<String> hfiles = (List<String>) dep.getDepObject(input);
 					if (!hfiles.get(0).equals("EMPTY_CONFIG"))
@@ -974,7 +974,7 @@ public final class INCRE implements CTCommonModule
 					if (historyobject != null)
 					{
 						// get dependent object of the 'history' object
-						currentRepository = history.getDataStore();
+						currentRepository = history.getRepository();
 						searchingHistory = true;
 						depofhistoryobject = dep.getDepObject(historyobject);
 

@@ -35,10 +35,10 @@ import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Xml.BuildConfigHandler;
 import Composestar.Core.Config.Xml.PlatformConfigHandler;
+import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.PathResolver;
 import Composestar.Core.TASMAN.Manager;
@@ -411,9 +411,9 @@ public abstract class Master
 	 * Loads the platform configuration. The platform configuration is loaded
 	 * from three locations, in the following order:
 	 * <ol>
-	 * <li> file provided through via a commandline argument </li>
-	 * <li> Platforms.xml in the compose* base directory </li>
-	 * <li> Platforms.xml provided in the port's Jar file </li>
+	 * <li>file provided through via a commandline argument</li>
+	 * <li>Platforms.xml in the compose* base directory</li>
+	 * <li>Platforms.xml provided in the port's Jar file</li>
 	 * </ol>
 	 * When non of these files can be loaded a fatal exception will be raised.
 	 */
@@ -507,7 +507,7 @@ public abstract class Master
 
 		// create the repository and common resources
 		resources = new CommonResources();
-		resources.setRepository(DataStore.instance());
+		resources.setRepository(new RepositoryImpl());
 		resources.put(RESOURCE_CONFIGFILE, configFilename);
 		BuildConfig config = BuildConfigHandler.loadBuildConfig(configFile);
 		resources.setConfiguration(config);
