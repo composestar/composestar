@@ -31,6 +31,7 @@ import java.util.List;
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
+import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
@@ -52,6 +53,11 @@ public class FilterModuleBindingImpl extends AbstractRepositoryEntity implements
 	 * The used selector
 	 */
 	protected Selector selector;
+
+	/**
+	 * Optional condition which should be true
+	 */
+	protected SICondition condition;
 
 	/**
 	 * List of parameter values
@@ -144,4 +150,23 @@ public class FilterModuleBindingImpl extends AbstractRepositoryEntity implements
 		selector = sel;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding#
+	 * getCondition()
+	 */
+	public SICondition getCondition()
+	{
+		return condition;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding#
+	 * setCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)
+	 */
+	public void setCondition(SICondition cond)
+	{
+		condition = cond;
+	}
 }

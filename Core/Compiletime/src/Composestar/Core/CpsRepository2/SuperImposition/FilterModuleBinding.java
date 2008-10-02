@@ -54,6 +54,19 @@ public interface FilterModuleBinding extends RepositoryEntity
 	Selector getSelector();
 
 	/**
+	 * Set a condition to be true for this binding to be valid.
+	 * 
+	 * @param cond
+	 */
+	void setCondition(SICondition cond);
+
+	/**
+	 * @return The superimposition condition which should be true for the
+	 *         binding to be executed.
+	 */
+	SICondition getCondition();
+
+	/**
 	 * Sets the reference to a filter module which should be bound to a
 	 * selector.
 	 * 

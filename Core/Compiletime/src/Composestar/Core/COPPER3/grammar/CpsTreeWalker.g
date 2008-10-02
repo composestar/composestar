@@ -182,7 +182,7 @@ filtermodule [CpsConcern c] returns [FilterModule fm]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		(filtermoduleParameters[fm])? 
@@ -210,7 +210,7 @@ filtermoduleParameters [FilterModule fm]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		)+)
@@ -273,7 +273,7 @@ internal [FilterModule fm]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		)+))
@@ -325,7 +325,7 @@ methodReference[FilterModule fm] returns [MethodReference mref]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 	| prm=singleFmParam (jpca2=joinPointContext {jpca = jpca2;})?
@@ -340,10 +340,9 @@ methodReference[FilterModule fm] returns [MethodReference mref]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
-	/* params */
 	;
 
 external [FilterModule fm]
@@ -385,7 +384,7 @@ external [FilterModule fm]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		)
@@ -397,7 +396,7 @@ condition [FilterModule fm]
 		{
 			try {
 				Condition cond = new ConditionImpl($name.text);
-				cond.setMethodReference(mref);
+				if (mref != null) cond.setMethodReference(mref);
 				setLocInfo(cond, $name);
 				if (!fm.addVariable(cond))
 				{
@@ -408,7 +407,7 @@ condition [FilterModule fm]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		)
@@ -418,8 +417,8 @@ filterExpression [FilterModule fm] returns [FilterExpression expr]
 // throws CpsSemanticException
 	: ^(op=filterOperator lhs=filterExpression[fm] rhs=filterExpression[fm]
 		{
-			op.setLHS(lhs);
-			op.setRHS(rhs);
+			if (lhs != null) op.setLHS(lhs);
+			if (rhs != null) op.setRHS(rhs);
 			expr = op;
 		}
 	)
@@ -470,12 +469,12 @@ filter [FilterModule fm] returns [Filter filter]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 			filter = new FilterImpl($name.text);
 			setLocInfo(filter, $frst);
 			filter.setOwner(fm); // done so that the correct FQN is produced in repository.add(..)
-			filter.setType(ft);
+			if (ft != null) filter.setType(ft);
 			repository.add(filter);
 		}
 		(^(PARAMS
@@ -492,7 +491,7 @@ filter [FilterModule fm] returns [Filter filter]
 					}
 					catch (RecognitionException re) {
 						reportError(re);
-						recover(input,re);
+						//recover(input,re);
 					}
 				}
 			)*
@@ -536,7 +535,7 @@ filterType returns [FilterType ft]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 	;
@@ -545,8 +544,8 @@ filterElementExpression [FilterModule fm, FilterType ft] returns [FilterElementE
 // throws CpsSemanticException
 	: ^(op=filterElementOperator lhs=filterElementExpression[fm,ft] rhs=filterElementExpression[fm,ft]
 		{
-			op.setLHS(lhs);
-			op.setRHS(rhs);
+			if (lhs != null) op.setLHS(lhs);
+			if (rhs != null) op.setRHS(rhs);
 			expr = op;
 		}
 	)
@@ -554,7 +553,7 @@ filterElementExpression [FilterModule fm, FilterType ft] returns [FilterElementE
 	;
 	
 filterElementOperator returns [BinaryFilterElementOperator op]
-	: cor='cor' 
+	: cor=COR
 		{
 			op = new CORFilterElmOper();
 			setLocInfo(op, $cor);
@@ -575,11 +574,11 @@ filterElement [FilterModule fm, FilterType ft] returns [FilterElement fe]
 		}
 		expr=matchingExpression[fm] 
 		{
-			fe.setMatchingExpression(expr);
+			if (expr != null) fe.setMatchingExpression(expr);
 		}
 		(asgn=canonAssign[fm,ft]
 			{
-				fe.addAssignment(asgn);
+				if (asgn != null) fe.addAssignment(asgn);
 			}
 		)*
 	)
@@ -591,8 +590,8 @@ canonAssign [FilterModule fm, FilterType ft] returns [CanonAssignment asgn]
 			asgn = new CanonAssignmentImpl();
 			setLocInfo(asgn, strt);
 			repository.add(asgn);
-			asgn.setProperty(lhs);
-			asgn.setValue(rhs);
+			if (lhs != null) asgn.setProperty(lhs);
+			if (rhs != null) asgn.setValue(rhs);
 		}
 	)
 	;
@@ -622,7 +621,7 @@ assignLhs [FilterModule fm, FilterType ft] returns [CanonProperty prop]
 		}
 		catch (RecognitionException re) {
 			reportError(re);
-			recover(input,re);
+			//recover(input,re);
 		} 
 	}
 	;
@@ -634,14 +633,14 @@ assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
 			try {
 				FMParameter fmp = fm.getParameter($prm.text);
 				if (fmp == null) {
-				throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
-					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
+					throw new CpsSemanticException(String.format("\"\%s\" does not contain a parameter with the name \"\%s\"", 
+						fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 				}
 				val = new ParameterizedCpsVariable(fmp);
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			} 
 		} 
 	| l=LITERAL
@@ -670,8 +669,8 @@ orExp [FilterModule fm] returns [MatchingExpression ex]
 				ex = new OrMEOper();
 				setLocInfo(ex, $frst);
 				repository.add(ex);
-				((BinaryMEOperator) ex).setLHS(lhs);
-				((BinaryMEOperator) ex).setRHS(rhs);
+				if (lhs != null) ((BinaryMEOperator) ex).setLHS(lhs);
+				if (rhs != null) ((BinaryMEOperator) ex).setRHS(rhs);
 			}
 		)
 	| andex=andExpr[fm] {ex = andex;}
@@ -683,8 +682,8 @@ andExpr [FilterModule fm] returns [MatchingExpression ex]
 				ex = new AndMEOper();
 				setLocInfo(ex, $frst);
 				repository.add(ex);
-				((BinaryMEOperator) ex).setLHS(lhs);
-				((BinaryMEOperator) ex).setRHS(rhs);
+				if (lhs != null) ((BinaryMEOperator) ex).setLHS(lhs);
+				if (rhs != null) ((BinaryMEOperator) ex).setRHS(rhs);
 			}
 		)
 	| unex=unaryExpr[fm] {ex = unex;}
@@ -693,9 +692,9 @@ andExpr [FilterModule fm] returns [MatchingExpression ex]
 unaryExpr [FilterModule fm] returns [MatchingExpression ex]
 	: ^(frst=NOT oper=orExp[fm]
 			{
-			ex = new NotMEOper();
-			setLocInfo(ex, $frst);
-			((UnaryMEOperator) ex).setOperand(oper);
+				ex = new NotMEOper();
+				setLocInfo(ex, $frst);
+				if (oper != null) ((UnaryMEOperator) ex).setOperand(oper);
 			}
 		)
 	| oex=operandExpr[fm] {ex = oex;}
@@ -731,7 +730,7 @@ operandExpr [FilterModule fm] returns [MatchingExpression ex]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			} 
 		}
 	| cmp=compareStatement[fm] { ex = cmp; }
@@ -741,8 +740,8 @@ compareStatement [FilterModule fm] returns [MECompareStatement cmp]
 	: ^(strt=CMPSTMT oper=cmpOperator ^(OPERAND lhs=assignLhs[fm,null]) ^(OPERAND rhs=cmpRhs[fm])
 	{
 		cmp = oper;
-		cmp.setLHS(lhs);
-		cmp.setRHS(rhs);
+		if (lhs != null) cmp.setLHS(lhs);
+		if (rhs != null) cmp.setRHS(rhs);
 	}
 	)
 	;
@@ -755,14 +754,20 @@ cmpOperator returns [MECompareStatement cmp]
 	| CMP_ANNOT		{ cmp = new AnnotationMatching(); }
 	)
 	{
-		if (cmp != null)
-		{
-			setLocInfo(cmp, ftok);
-			repository.add(cmp);
+		try {
+			if (cmp != null)
+			{
+				setLocInfo(cmp, ftok);
+				repository.add(cmp);
+			}
+			else {
+				throw new CpsSemanticException(String.format("Unknown compare operator \"\%s\"", 
+					ftok.getText()), input, ftok);
+			}
 		}
-		else {
-			throw new CpsSemanticException(String.format("Unknown compare operator \"\%s\"", 
-				ftok.getText()), input, ftok);
+		catch (RecognitionException re) {
+			reportError(re);
+			//recover(input,re);
 		}
 	}
 	)
@@ -774,69 +779,75 @@ cpsVariableFqn [FilterModule fm] returns [CpsVariable entity]
 }
 	: qn=fqnAsList
 		{
-			if (qn.size() == 0)
-			{
-				// fixme: error
-			}
-			
-			if (qn.size() == 1)
-			{
-				if (PropertyNames.INNER.equals(qn.get(0)))
+			try {
+				if (qn.size() == 0)
 				{
-					entity = createProperty(null, qn.get(0), null);
+					throw new CpsSemanticException(String.format("Invalid data: \%s", errTok.getText()), input, errTok);
 				}
-				else if (PropertyNames.TARGET.equals(qn.get(0)))
+				
+				if (qn.size() == 1)
 				{
-					entity = createProperty(null, qn.get(0), null);
-				}
-				else if (PropertyNames.SELECTOR.equals(qn.get(0)))
-				{
-					entity = createProperty(null, qn.get(0), null);
-				}
-				else {
-					FilterModuleVariable fmVar = fm.getVariable(qn.get(0));
-					if (fmVar instanceof Condition)
+					if (PropertyNames.INNER.equals(qn.get(0)))
 					{
-						entity = (Condition) fmVar;
+						entity = createProperty(null, qn.get(0), null);
 					}
-					else if (fmVar instanceof Internal)
+					else if (PropertyNames.TARGET.equals(qn.get(0)))
 					{
-						entity = (Internal) fmVar;
+						entity = createProperty(null, qn.get(0), null);
 					}
-					else if (fmVar instanceof External)
+					else if (PropertyNames.SELECTOR.equals(qn.get(0)))
 					{
-						entity = (External) fmVar;
+						entity = createProperty(null, qn.get(0), null);
 					}
 					else {
-						// fixme: error
+						FilterModuleVariable fmVar = fm.getVariable(qn.get(0));
+						if (fmVar instanceof Condition)
+						{
+							entity = (Condition) fmVar;
+						}
+						else if (fmVar instanceof Internal)
+						{
+							entity = (Internal) fmVar;
+						}
+						else if (fmVar instanceof External)
+						{
+							entity = (External) fmVar;
+						}
+						else {
+							// fixme: error
+						}
 					}
 				}
-			}
-			else if (qn.size() == 2)
-			{
-				if (PropertyPrefix.fromString(qn.get(0)) == PropertyPrefix.MESSAGE)
+				else if (qn.size() == 2)
 				{
-					entity = createProperty(qn.get(0), qn.get(1), null);
-				}
-				else if (PropertyPrefix.fromString(qn.get(0)) == PropertyPrefix.FILTER)
-				{
-					entity = createProperty(qn.get(0), qn.get(1), null);
-				}
-			}
-			
-			if (entity == null)
-			{
-				// qualified name, resolve to a type reference
-				StringBuilder sb = new StringBuilder();
-				for (String s : qn)
-				{
-					if (sb.length() > 0)
+					if (PropertyPrefix.fromString(qn.get(0)) == PropertyPrefix.MESSAGE)
 					{
-						sb.append('.');
+						entity = createProperty(qn.get(0), qn.get(1), null);
 					}
-					sb.append(s);
+					else if (PropertyPrefix.fromString(qn.get(0)) == PropertyPrefix.FILTER)
+					{
+						entity = createProperty(qn.get(0), qn.get(1), null);
+					}
 				}
-				entity = new CpsTypeProgramElementImpl(references.getTypeReference(sb.toString()));
+				
+				if (entity == null)
+				{
+					// qualified name, resolve to a type reference
+					StringBuilder sb = new StringBuilder();
+					for (String s : qn)
+					{
+						if (sb.length() > 0)
+						{
+							sb.append('.');
+						}
+						sb.append(s);
+					}
+					entity = new CpsTypeProgramElementImpl(references.getTypeReference(sb.toString()));
+				}
+			}
+			catch (RecognitionException re) {
+				reportError(re);
+				//recover(input,re);
 			}
 		}
 	;
@@ -857,7 +868,7 @@ cmpRhs [FilterModule fm] returns [CpsVariableCollection res]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 	| ^(LIST { res = new CpsVariableCollectionImpl(); } meCmpRhsSingle[fm, res]+)
@@ -865,7 +876,7 @@ cmpRhs [FilterModule fm] returns [CpsVariableCollection res]
 	;
 	
 meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
-	: fqnv=cpsVariableFqn[fm] { res.add(fqnv); } 
+	: fqnv=cpsVariableFqn[fm] { if (fqnv != null) res.add(fqnv); } 
 	| prm=singleFmParam
 		{
 			try {
@@ -878,7 +889,7 @@ meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		} 
 	| l=LITERAL 
@@ -968,7 +979,7 @@ conditionalSi [SuperImposition si]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		)
@@ -990,7 +1001,7 @@ selectorSi [SuperImposition si]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		)
@@ -1008,7 +1019,7 @@ selectorSi [SuperImposition si]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		)
@@ -1032,7 +1043,7 @@ filtermoduleSi [SuperImposition si]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		(^(CONDITION condName=IDENTIFIER
@@ -1047,29 +1058,18 @@ filtermoduleSi [SuperImposition si]
 				}
 				catch (RecognitionException re) {
 					reportError(re);
-					recover(input,re);
+					//recover(input,re);
 				}
 			}
 		))? 
 		(bnd=fmBinding[si]
 		{
-			bnd.setSelector(sel);
-			si.addFilterModuleBinding(bnd);
-			repository.add(bnd);
-			if (cond != null)
+			if (bnd != null)
 			{
-				FilterModuleConstraint fmc = new FilterModuleConstraintImpl("cond");
-				setLocInfo(fmc, strt);
-				List<ConstraintValue> args = new ArrayList<ConstraintValue>();
-				ConstraintValue cv = new ConditionConstraintValueImpl(cond);
-				repository.add(cv);
-				args.add(cv);
-				cv = new FilterModuleConstraintValueImpl(bnd.getFilterModuleReference());
-				repository.add(cv);
-				args.add(cv);
-				fmc.setArguments(args);
-				si.addFilterModuleConstraint(fmc);
-				repository.add(fmc);
+				bnd.setSelector(sel);
+				if (cond != null) bnd.setCondition(cond);
+				si.addFilterModuleBinding(bnd);
+				repository.add(bnd);
 			}
 		}
 		)+)
@@ -1086,7 +1086,7 @@ fmBinding [SuperImposition si] returns [FilterModuleBinding fmb = new FilterModu
 	: ^(strt=BINDING fmr=concernFmRef[si] 
 		{
 			setLocInfo(fmb, $strt);
-			fmb.setFilterModuleReference(fmr);
+			if (fmr != null) fmb.setFilterModuleReference(fmr);
 		}
 		(^(PARAMS
 			{
@@ -1094,7 +1094,7 @@ fmBinding [SuperImposition si] returns [FilterModuleBinding fmb = new FilterModu
 			} 
 				(prm=param[si]
 				{
-					args.add(prm);
+					if (prm != null) args.add(prm);
 				}
 				)+
 			{
@@ -1114,7 +1114,7 @@ param [SuperImposition si] returns [FMParameterValue fmp]
 		}
 		(val=paramValue[si]
 			{
-				cfmpv.addValue(val);
+				if (val != null) cfmpv.addValue(val);
 			}
 		)+
 	)
@@ -1170,7 +1170,7 @@ annotationSi [SuperImposition si]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 			si.addAnnotationBinding(ab);
 			repository.add(ab);
@@ -1207,7 +1207,7 @@ concernFmRef [SuperImposition si] returns [FilterModuleReference res]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 	;				
@@ -1271,7 +1271,7 @@ constraint [SuperImposition si]
 			}
 			catch (RecognitionException re) {
 				reportError(re);
-				recover(input,re);
+				//recover(input,re);
 			}
 		}
 		)

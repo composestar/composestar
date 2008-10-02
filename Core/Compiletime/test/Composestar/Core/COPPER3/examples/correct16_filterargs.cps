@@ -4,8 +4,11 @@ concern correct16_filterargs in ConcernExamples
 	filtermodule simple
 	{
 		inputfilters
-			f1 : Before(target=inner, selector='foo') = (true);
-			f2 : Meta(foo="bar") = (true);
+			f1 : Before(target=inner, selector='foo') = (true) {
+				filter.target = inner;
+				filter.selector = 'foo';
+			};
+			f2 : Meta(foo="bar") = (true) { filter.foo = "bar"; };
 			f3 : Dispatch() = (true)
 	}
 }

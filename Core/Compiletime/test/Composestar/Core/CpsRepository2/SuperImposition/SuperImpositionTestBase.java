@@ -516,6 +516,14 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 		public void setParameterValues(List<FMParameterValue> list) throws NullPointerException
 		{}
+
+		public SICondition getCondition()
+		{
+			return null;
+		}
+
+		public void setCondition(SICondition cond)
+		{}
 	}
 
 	protected static class DummyFMC extends AbstractRepositoryEntity implements FilterModuleConstraint
