@@ -79,7 +79,8 @@ import java.util.ArrayList;
 }
 
 @members {
-
+	protected ArrayList<String> currentFilterNames = new ArrayList<String>();
+	
 	protected CanonProperty createProperty(String prefixStr, String varname, FilterType filterType)
 	{
 		PropertyPrefix prefix = null;
@@ -184,6 +185,7 @@ filtermodule [CpsConcern c] returns [FilterModule fm]
 				reportError(re);
 				//recover(input,re);
 			}
+			currentFilterNames.clear();
 		}
 		(filtermoduleParameters[fm])? 
 		(internal[fm])* 
@@ -462,7 +464,7 @@ filter [FilterModule fm] returns [Filter filter]
 	: ^(frst=FILTER name=IDENTIFIER ft=filterType 
 		{
 			try {
-				if (!fm.isUniqueMemberName($name.text)) {
+				if (!fm.isUniqueMemberName($name.text) || currentFilterNames.contains($name.text)) {
 					throw new CpsSemanticException(String.format("Filter name \"\%s\" is not unqiue in filter module: \%s", 
 						$name.text, fm.getFullyQualifiedName()), input, name);
 				}
@@ -471,6 +473,7 @@ filter [FilterModule fm] returns [Filter filter]
 				reportError(re);
 				//recover(input,re);
 			}
+			currentFilterNames.add($name.text);
 			filter = new FilterImpl($name.text);
 			setLocInfo(filter, $frst);
 			filter.setOwner(fm); // done so that the correct FQN is produced in repository.add(..)
