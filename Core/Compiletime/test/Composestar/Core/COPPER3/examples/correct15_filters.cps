@@ -7,7 +7,8 @@ concern correct05_filters in ConcernExamples
 			f1 : Dispatch = (selector == 'foo') { selector = 'bar'; };
 			f2 : Dispatch = (selector $= inner) { target = inner; };
 			f3 : Dispatch = (selector == 'foo');
-			f4 : Dispatch = (selector $= inner)
+			f4 : Dispatch = (selector $= inner);
+			f5 : Dispatch = (target ~= this.is.some.type | target @= iam.an.annotation)
 	}
 	
 	filtermodule basicconds
@@ -50,6 +51,9 @@ concern correct05_filters in ConcernExamples
 					selector == 'foo' | (selector == 'bar' | selector == 'baz')
 				) 
 				{ selector = 'quux'; };
-			f3 : Dispatch = ( selector == {'foo', 'bar', 'baz'} ) { selector = 'wuux'; }
+			f3 : Dispatch = ( selector == {'foo', 'bar', 'baz'} ) { 
+				selector = 'wuux';
+				message.target = inner; 
+			}
 	}
 }

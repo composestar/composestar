@@ -83,18 +83,15 @@ public class CpsVariableCollectionImpl extends AbstractRepositoryEntity implemen
 		{
 			throw new NullPointerException();
 		}
-		if (values.addAll(c))
+		boolean res = false;
+		for (CpsVariable v : c)
 		{
-			for (CpsVariable v : c)
+			if (v != null)
 			{
-				if (v != null && v.getOwner() == null)
-				{
-					v.setOwner(this);
-				}
+				res |= add(v);
 			}
-			return true;
 		}
-		return false;
+		return res;
 	}
 
 	/*

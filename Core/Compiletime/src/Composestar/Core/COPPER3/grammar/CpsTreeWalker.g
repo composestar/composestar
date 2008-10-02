@@ -746,13 +746,13 @@ compareStatement [FilterModule fm] returns [MECompareStatement cmp]
 	}
 	)
 	;
-	
+
 cmpOperator returns [MECompareStatement cmp]
-	: ^(OPERATOR {	Tree ftok = (Tree) input.LT(1); }
-	( '=='	{ cmp = new InstanceMatching(); } 
-	| '$=' 	{ cmp = new SignatureMatching(); }
-	| '~='  { cmp = new CompatibilityMatching(); }
-	| '@='	{ cmp = new AnnotationMatching(); }
+	: ^(OPERATOR 	{ Tree ftok = (Tree) input.LT(1); }
+	( CMP_INSTANCE	{ cmp = new InstanceMatching(); } 
+	| CMP_SIGN 		{ cmp = new SignatureMatching(); }
+	| CMP_COMPAT  	{ cmp = new CompatibilityMatching(); }
+	| CMP_ANNOT		{ cmp = new AnnotationMatching(); }
 	)
 	{
 		if (cmp != null)

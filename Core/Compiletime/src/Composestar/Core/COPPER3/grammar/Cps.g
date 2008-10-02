@@ -38,45 +38,62 @@ options {
 	language = @TargetLanguage@;
 }
 
-// Magic tokes used for tree construction
+// Imaginary tokens and keywords
 tokens {
-	CONCERN;	
+	CONCERN = 'concern';	
 	FQN;
 	PARAM;
-	IN;
+	IN = 'in';
 	
-	FILTER_MODULE;
+	FILTER_MODULE = 'filtermodule';
 	PARAMS;
 	FM_PARAM_SINGLE;
-	FM_PARAM_LIST;	
+	FM_PARAM_LIST;
+	INTERNALS = 'internals';
 	INTERNAL;
 	NAMES;
+	EXTERNALS = 'externals';
 	EXTERNAL;
 	INIT;
+	CONDITIONS = 'conditions';
 	CONDITION;
-	INPUT_FILTERS;
-	OUTPUT_FILTERS;	
-	FILTER;
+	INPUT_FILTERS = 'inputfilters';
+	OUTPUT_FILTERS = 'outputfilters';	
+	FILTER = 'filter';
 	FILTER_ELEMENT;
+	COR = 'cor';
 	EXPRESSION;
 	OPERATOR;
 	OPERAND;
 	CMPSTMT;
 	JPCA;
+	JPCA_FULL = 'full';
+	JPCA_PARTIAL = 'partial';
 	NONE;
 	
-	SUPERIMPOSITION;
+	TARGET = 'target';
+	SELECTOR = 'selector';
+	MESSAGE = 'message';
+	INNER = 'inner';
+	
+	SUPERIMPOSITION = 'superimposition';
+	SELECTORS = 'selectors';
 	SELECTOR;
 	LEGACY_SELECTOR;
 	PREDICATE_SELECTOR;
 	PROLOG_EXPR;
+	FILTERMODULES = 'filtermodules';
 	FM_BINDINGS;
 	BINDING;
+	ANNOTATIONS = 'annotations';
 	ANNOTATION_BINDINGS;
+	CONSTRAINTS = 'constraints';
 	CONSTRAINT;
 	LIST;
 	
-	IMPLEMENTATION;
+	IMPLEMENTATION = 'implementation';
+	BY = 'by';
+	AS = 'as';
 	CODE_BLOCK;
 }
 
@@ -144,16 +161,30 @@ tokens {
  * or an implementation rule.
  */
 concern
-	: 'concern' IDENTIFIER concernParameters? (inToken='in' fqn)? LCURLY filtermodule* superimposition? implementation? RCURLY EOF
-	-> ^(CONCERN[$start] IDENTIFIER concernParameters? ^(IN[$inToken] fqn)? filtermodule* superimposition? implementation?)
+	: CONCERN IDENTIFIER concernParameters? (IN fqn)? LCURLY filtermodule* superimposition? implementation? RCURLY EOF
+	-> ^(CONCERN IDENTIFIER concernParameters? ^(IN fqn)? filtermodule* superimposition? implementation?)
+	;
+
+/**
+ * Workaround for keywords. They are all converted to a identifier tokens. This
+ * rule should be used when the IDENTIFIER may also contain certain keywords, which
+ * is usually the case in external symbol references or properties
+ */
+identifier
+	: (TARGET | SELECTOR | INNER | MESSAGE | FILTER | IN | BY | AS | CONSTRAINTS
+	| ANNOTATIONS | COR | EXTERNALS | INTERNALS | CONDITIONS | SELECTORS
+	| CONCERN | FILTER_MODULE | FILTERMODULES | JPCA_PARTIAL | JPCA_FULL
+	)
+	-> IDENTIFIER[$start]
+	| IDENTIFIER
 	;
 
 /**
  * A generic fully qualified name.
  */
 fqn
-	: IDENTIFIER (PERIOD IDENTIFIER)*
-	-> ^(FQN[$start] IDENTIFIER+)
+	: identifier (PERIOD identifier)*
+	-> ^(FQN[$start] identifier+)
 	;	
 	
 /**
@@ -177,10 +208,10 @@ concernParameters
  * identified by their node type.
  */
 filtermodule
-	: 'filtermodule' IDENTIFIER filtermoduleParameters? LCURLY 
+	: FILTER_MODULE IDENTIFIER filtermoduleParameters? LCURLY 
 		internals? externals? conditions? inputfilters? outputfilters? 
 		RCURLY
-	-> ^(FILTER_MODULE[$start] IDENTIFIER filtermoduleParameters? internals? externals? conditions? inputfilters? outputfilters?)
+	-> ^(FILTER_MODULE IDENTIFIER filtermoduleParameters? internals? externals? conditions? inputfilters? outputfilters?)
 	;
 	
 /**
@@ -230,7 +261,7 @@ fqnOrSingleFmParam
  * their corresponding root node.
  */
 internals
-	: 'internals'! fmInternal*
+	: INTERNALS! fmInternal*
 	;
 	
 /**
@@ -246,7 +277,7 @@ fmInternal
  * List of externals. No root node is created.
  */
 externals
-	: 'externals'! fmExternal*
+	: EXTERNALS! fmExternal*
 	;
 
 /**
@@ -267,10 +298,10 @@ fmExternal
  */
 joinPointContext
 	: LROUND 
-	( 'full'
-	-> ^(JPCA[$start] 'full')
-	| 'partial'
-	-> ^(JPCA[$start] 'partial')
+	( JPCA_FULL
+	-> ^(JPCA[$start] JPCA_FULL)
+	| JPCA_PARTIAL
+	-> ^(JPCA[$start] JPCA_PARTIAL)
 	| ASTERISK
 	-> // don't care
 	| // none
@@ -282,7 +313,7 @@ joinPointContext
  * List of conditions. No root node is created.
  */
 conditions
-	: 'conditions'! condition*
+	: CONDITIONS! condition*
 	;
 
 /**
@@ -299,13 +330,13 @@ condition
  * (confusing with a filter operator)
  */	
 inputfilters
-	: 'inputfilters' filterExpression
-	-> ^(INPUT_FILTERS[$start] filterExpression)
+	: INPUT_FILTERS filterExpression
+	-> ^(INPUT_FILTERS filterExpression)
 	;
 	
 outputfilters
-	: 'outputfilters' filterExpression
-	-> ^(OUTPUT_FILTERS[$start] filterExpression)
+	: OUTPUT_FILTERS filterExpression
+	-> ^(OUTPUT_FILTERS filterExpression)
 	;
 	
 /**
@@ -345,13 +376,13 @@ filterType
  * Filter parameters. Uses the canonical assignments. 
  */
 filterParams
-	: (LROUND filterParam* RROUND)
+	: (LROUND (filterParam (COMMA filterParam)*)? RROUND)
 	-> ^(PARAMS[$start] filterParam*)
 	;
 
 filterParam
-	: IDENTIFIER EQUALS canonAssignRhs SEMICOLON
-	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["filter"] IDENTIFIER) ^(OPERAND canonAssignRhs))
+	: identifier EQUALS canonAssignRhs
+	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["filter"] identifier) ^(OPERAND canonAssignRhs))
 	;
 
 /**
@@ -373,7 +404,7 @@ canonFilterElementExpression
  * The filter element operators as used in the canonical notation
  */
 canonFilterElementOperator
-	: 'cor'
+	: COR
 	;
 	
 /**
@@ -415,11 +446,11 @@ meCompoundExpr
  * The left hand side of a compare statement
  */	
 meCmpLhs
-	: m='message' PERIOD IDENTIFIER
-	-> IDENTIFIER[m] IDENTIFIER
-	| t='target'
+	: m=MESSAGE PERIOD identifier
+	-> IDENTIFIER[m] identifier
+	| t=TARGET
 	-> IDENTIFIER[t]
-	| s='selector'
+	| s=SELECTOR
 	-> IDENTIFIER[s]
 	;		
 	
@@ -427,7 +458,7 @@ meCmpLhs
  * The accepted compare operators
  */
 meCmpOpr
-	: '==' | '$=' | '~=' | '@='
+	: CMP_INSTANCE | CMP_SIGN | CMP_COMPAT | CMP_ANNOT
 	;
 
 /**
@@ -463,8 +494,8 @@ canonAssignment
  */
 canonAssingLhs
 	: meCmpLhs
-	| f='filter' PERIOD IDENTIFIER
-	-> IDENTIFIER[f] IDENTIFIER
+	| f=FILTER PERIOD identifier
+	-> IDENTIFIER[f] identifier
 	;
 
 /**
@@ -488,7 +519,7 @@ legacyFilterElement
  */	
 filterElementOperator
 	: COMMA
-	-> 'cor'
+	-> COR
 	;
 	
 /**
@@ -579,11 +610,22 @@ matchingPatternList
 	;
 
 /**
+ * Valid identifiers in the legacy matching and subst parts
+ */
+legacyIdentifier
+	: (
+		INNER
+	)
+	-> IDENTIFIER[$start]
+	| IDENTIFIER
+	;
+
+/**
  * Even though the original syntax did not always allow a filter module
  * parameter list it is accepted in the canonical notation (Legacy notation)
  */
 identifierOrFmParam
-	: v=IDENTIFIER
+	: v=legacyIdentifier
 	-> ^(FQN[$start] $v) // model it as an FQN 
 	| singleFmParam | fmParamList
 	;
@@ -595,7 +637,7 @@ literalOrFmParam
 @init {
 	String strVal;
 }
-	: v=IDENTIFIER
+	: v=legacyIdentifier
 	-> { adaptorCreate(adaptor, LITERAL, $v.text) } 
 	| singleFmParam | fmParamList
 	;
@@ -609,34 +651,34 @@ matchingPattern
 			(PERIOD 
 				(n2=literalOrFmParam // foo.bar
 				-> ^(AND
-						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
-						^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n2))
+						^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
+						^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n2))
 					)
 				| ASTERISK // foo.*
-				-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
+				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $n1.text) }))
+			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $n1.text) }))
 			)
 		| ASTERISK PERIOD n3=literalOrFmParam // *.bar
-		-> ^(CMPSTMT[$start] ^(OPERATOR '==') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n3))
+		-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n3))
 		) RSQUARE)
 	| (LANGLE 
 		(s1=identifierOrFmParam 
 			(PERIOD 
 				(s2=literalOrFmParam // foo.bar
 				-> ^(AND
-						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
-						^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s2))
+						^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
+						^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s2))
 					)
 				| ASTERISK // foo.*
-				-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
+				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $s1.text) } ))
+			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $s1.text) } ))
 			)
 		| ASTERISK PERIOD s3=literalOrFmParam // *.bar
-		-> ^(CMPSTMT[$start] ^(OPERATOR '$=') ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s3))
+		-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s3))
 		) RANGLE)
 	;
 	
@@ -679,20 +721,20 @@ substitutionPart
  * nodes. So it will be simply a list of conditions, selectors, etc.
  */
 superimposition
-	: 'superimposition' LCURLY conditionalSi? selectors? filtermodules? annotations? constraints? RCURLY
-	-> ^(SUPERIMPOSITION[$start] conditionalSi? selectors? filtermodules? annotations? constraints?)
+	: SUPERIMPOSITION LCURLY conditionalSi? selectors? filtermodules? annotations? constraints? RCURLY
+	-> ^(SUPERIMPOSITION conditionalSi? selectors? filtermodules? annotations? constraints?)
 	;
 
 /**
  * A conditional superimposition declaration. 
  */	
 conditionalSi
-	: 'conditions' (IDENTIFIER COLON fqn joinPointContext? SEMICOLON)+
+	: CONDITIONS (IDENTIFIER COLON fqn joinPointContext? SEMICOLON)+
 	-> ^(CONDITION[$start] IDENTIFIER fqn joinPointContext?)+
 	;
 	
 selectors
-	: 'selectors'! (selectorSi SEMICOLON!)+
+	: SELECTORS! (selectorSi SEMICOLON!)+
 	;
 
 /**
@@ -721,7 +763,7 @@ selectorExprLegacy
  * AS IS.
  */	
 selectorExprPredicate
-	: id=IDENTIFIER '|' expr=allButRcurly RCURLY
+	: id=IDENTIFIER OR expr=allButRcurly RCURLY
 	-> ^(PREDICATE_SELECTOR[$start] $id { adaptorCreate(adaptor, PROLOG_EXPR, inputToString($expr.start, $expr.stop)) } )
 	;	
 
@@ -738,7 +780,7 @@ allButRcurly
  * Filter module bindings
  */
 filtermodules
-	: 'filtermodules'! (filtermoduleSi SEMICOLON!)+
+	: FILTERMODULES! (filtermoduleSi SEMICOLON!)+
 	;
 	
 /**
@@ -814,7 +856,7 @@ paramValue
  * Annotation binding, a bit like filter module binding, except that it uses annotation classes	
  */
 annotations
-	: 'annotations'! (annotationSi SEMICOLON!)+
+	: ANNOTATIONS! (annotationSi SEMICOLON!)+
 	;
 	
 /**
@@ -832,7 +874,7 @@ annotationSi
  * filter module orderning constraints	
  */
 constraints
-	: 'constraints'! (constraint SEMICOLON!)+
+	: CONSTRAINTS! (constraint SEMICOLON!)+
 	;
 
 /**
@@ -854,11 +896,11 @@ constraint
  * provide any functionality
  */
 implementation
-	: 'implementation' 
-	( 'by' asm=fqn SEMICOLON
-	-> ^(IMPLEMENTATION[$start] $asm)
-	| 'in' lang=IDENTIFIER 'by' cls=fqn 'as' fn=LITERAL code=codeBlock
-	-> ^(IMPLEMENTATION[$start] $lang $cls $fn $code)
+	: IMPLEMENTATION 
+	( BY asm=fqn SEMICOLON
+	-> ^(IMPLEMENTATION $asm)
+	| IN lang=IDENTIFIER BY cls=fqn AS fn=LITERAL code=codeBlock
+	-> ^(IMPLEMENTATION $lang $cls $fn $code)
 	)
 	;
 	
@@ -910,6 +952,12 @@ DOUBLEQUESTION	: '??';
 // matching operators
 ENABLE			: '=>';
 DISABLE			: '~>';
+
+// compare operators
+CMP_INSTANCE	: '==';
+CMP_SIGN		: '$=';
+CMP_COMPAT		: '~=';
+CMP_ANNOT		: '@=';
 
 // weaving operators
 WEAVE			: '<-';

@@ -24,33 +24,24 @@
 
 package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
-import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
-import Composestar.Core.LAMA.Type;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariableCollectionTestBase;
 
 /**
  * @author Michiel Hendriks
  */
-// TODO: implement?
-public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObject
+public class CpsVariableCollectionImplTest extends CpsVariableCollectionTestBase
 {
-	private static final long serialVersionUID = -5151470511518075199L;
 
-	/**
-	 * @param type
-	 * @throws NullPointerException
+	/*
+	 * (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
 	 */
-	public CpsObjectImpl(Type type) throws NullPointerException
+	@Override
+	protected void setUp() throws Exception
 	{
-		super(type);
+		super.setUp();
+		col = new CpsVariableCollectionImpl();
+		re = col;
 	}
 
-	/**
-	 * @param ref
-	 * @throws NullPointerException
-	 */
-	public CpsObjectImpl(TypeReference ref) throws NullPointerException
-	{
-		super(ref);
-	}
 }
