@@ -5,6 +5,12 @@ import java.util.Collection;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
+/**
+ * The reference manager is responsible for creating and managing the various
+ * reference types.
+ * 
+ * @author Michiel Hendriks
+ */
 public interface ReferenceManager
 {
 
@@ -17,12 +23,12 @@ public interface ReferenceManager
 	 * @throws IllegalArgumentException Thrown when the reference id is empty
 	 * @throws NullPointerException Thrown when the reference id is null
 	 */
-	public abstract TypeReference getTypeReference(String refid) throws IllegalArgumentException, NullPointerException;
+	TypeReference getTypeReference(String refid) throws IllegalArgumentException, NullPointerException;
 
 	/**
 	 * @return Read-only list of all known type references.
 	 */
-	public abstract Collection<TypeReference> getTypeReferences();
+	Collection<TypeReference> getTypeReferences();
 
 	/**
 	 * Get a MethodInfo reference using a reference id of a type.
@@ -36,7 +42,7 @@ public interface ReferenceManager
 	 * @throws IllegalArgumentException Thrown when the reference id or type
 	 *             reference is empty
 	 */
-	public abstract MethodReference getMethodReference(String refid, String typeRef, JoinPointContextArgument jpca)
+	MethodReference getMethodReference(String refid, String typeRef, JoinPointContextArgument jpca)
 			throws NullPointerException, IllegalArgumentException;
 
 	/**
@@ -50,13 +56,13 @@ public interface ReferenceManager
 	 *             when the reference id is null
 	 * @throws IllegalArgumentException Thrown when the reference id is empty
 	 */
-	public abstract MethodReference getMethodReference(String refid, TypeReference typeRef,
-			JoinPointContextArgument jpca) throws NullPointerException, IllegalArgumentException;
+	MethodReference getMethodReference(String refid, TypeReference typeRef, JoinPointContextArgument jpca)
+			throws NullPointerException, IllegalArgumentException;
 
 	/**
 	 * @return Read-only list of all method references
 	 */
-	public abstract Collection<MethodReference> getMethodReferences();
+	Collection<MethodReference> getMethodReferences();
 
 	/**
 	 * Get an instance method reference
@@ -69,13 +75,13 @@ public interface ReferenceManager
 	 *             when the reference id is null
 	 * @throws IllegalArgumentException Thrown when the reference id is null
 	 */
-	public abstract InstanceMethodReference getInstanceMethodReference(String refid, CpsObject context,
-			JoinPointContextArgument jpca) throws NullPointerException, IllegalArgumentException;
+	InstanceMethodReference getInstanceMethodReference(String refid, CpsObject context, JoinPointContextArgument jpca)
+			throws NullPointerException, IllegalArgumentException;
 
 	/**
 	 * @return Read-only list of all method references
 	 */
-	public abstract Collection<InstanceMethodReference> getInstanceMethodReferences();
+	Collection<InstanceMethodReference> getInstanceMethodReferences();
 
 	/**
 	 * Get a type reference with the given reference id. It will create a new
@@ -86,12 +92,11 @@ public interface ReferenceManager
 	 * @throws IllegalArgumentException Thrown when the reference id is empty
 	 * @throws NullPointerException Thrown when the reference id is null
 	 */
-	public abstract FilterModuleReference getFilterModuleReference(String refid) throws NullPointerException,
-			IllegalArgumentException;
+	FilterModuleReference getFilterModuleReference(String refid) throws NullPointerException, IllegalArgumentException;
 
 	/**
 	 * @return Read-only list of all known type references.
 	 */
-	public abstract Collection<FilterModuleReference> getFilterModuleReferences();
+	Collection<FilterModuleReference> getFilterModuleReferences();
 
 }

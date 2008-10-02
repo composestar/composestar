@@ -30,35 +30,41 @@ package Composestar.Core.CpsRepository2;
  * 
  * @author Michiel Hendriks
  */
-public interface PropertyNames
+public final class PropertyNames
 {
 	/**
 	 * The predefined inner property name. (read-only)
 	 */
-	static final String INNER = "inner";
+	public static final String INNER = "inner";
 
 	/**
 	 * The predefined message.selector property name.
 	 */
-	static final String SELECTOR = "selector";
+	public static final String SELECTOR = "selector";
 
 	/**
 	 * The predefined message.self property name.
 	 */
-	static final String SELF = "self";
+	public static final String SELF = "self";
 
 	/**
 	 * The predefined message.sender property name. (read-only)
 	 */
-	static final String SENDER = "sender";
+	public static final String SENDER = "sender";
 
 	/**
 	 * The predefined message.server property name.
 	 */
-	static final String SERVER = "server";
+	public static final String SERVER = "server";
 
 	/**
 	 * The predefined message.target property name.
 	 */
-	static final String TARGET = "target";
+	public static final String TARGET = "target";
+
+	/**
+	 * Utility class
+	 */
+	private PropertyNames()
+	{}
 }
