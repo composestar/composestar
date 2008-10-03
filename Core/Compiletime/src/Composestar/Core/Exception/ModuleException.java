@@ -9,7 +9,7 @@
  */
 package Composestar.Core.Exception;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Utils.Logging.LocationProvider;
 
 /**
@@ -65,8 +65,8 @@ public class ModuleException extends Exception implements LocationProvider
 
 	public ModuleException(String message, String inmodule, RepositoryEntity errorLocation, Throwable throwable)
 	{
-		this(message, inmodule, errorLocation.getDescriptionFileName(), errorLocation.getDescriptionLineNumber(),
-				errorLocation.getDescriptionLinePosition(), throwable);
+		this(message, inmodule, errorLocation.getSourceInformation().getFileInfo().toString(), errorLocation
+				.getSourceInformation().getLine(), errorLocation.getSourceInformation().getLinePos(), throwable);
 	}
 
 	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
@@ -131,7 +131,6 @@ public class ModuleException extends Exception implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.LocationProvider#getFilename()
 	 */
 	public String getFilename()
@@ -141,7 +140,6 @@ public class ModuleException extends Exception implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.LocationProvider#getLineNumber()
 	 */
 	public int getLineNumber()
@@ -151,7 +149,6 @@ public class ModuleException extends Exception implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Utils.Logging.LocationProvider#getLinePosition()
 	 */
 	public int getLinePosition()
@@ -161,7 +158,6 @@ public class ModuleException extends Exception implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Throwable#toString()
 	 */
 	@Override

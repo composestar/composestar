@@ -80,7 +80,6 @@ public abstract class AbstractSelector extends AbstractQualifiedRepositoryEntity
 		{
 			throw new NullPointerException();
 		}
-		selection.clear();
-		selection.addAll(elements);
+		selection = new HashSet<ProgramElement>(elements);
 	}
 }

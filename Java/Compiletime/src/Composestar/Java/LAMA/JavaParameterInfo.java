@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
@@ -71,7 +72,7 @@ public class JavaParameterInfo extends ParameterInfo
 		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator<JavaAnnotation> i = getAnnotations().iterator();
+			Iterator<Annotation> i = getAnnotations().iterator();
 			HashSet<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{

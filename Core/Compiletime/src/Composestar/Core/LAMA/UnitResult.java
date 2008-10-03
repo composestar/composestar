@@ -11,21 +11,14 @@ package Composestar.Core.LAMA;
 
 import java.util.Set;
 
-//
-// !! Compose* Runtime Warning !!
-//
-// This class is referenced in the Compose* Runtime for .NET 1.1
-// Do not use Java features added after Java 2.0
-//
-
 /**
  * @author havingaw
  */
 public class UnitResult
 {
-	private Set multiRes; // Used by INCRE
+	private Set<? extends ProgramElement> multiRes;
 
-	private ProgramElement singleRes; // Used by INCRE
+	private ProgramElement singleRes;
 
 	public UnitResult()
 	{ // Has to exist for .NET serialization
@@ -37,7 +30,7 @@ public class UnitResult
 		multiRes = null;
 	}
 
-	public UnitResult(Set multi)
+	public UnitResult(Set<? extends ProgramElement> multi)
 	{
 		multiRes = multi;
 		singleRes = null;
@@ -56,7 +49,7 @@ public class UnitResult
 	 * @return a hashset containing program elements, or null if the relation is
 	 * unique
 	 */
-	public Set multiValue()
+	public Set<? extends ProgramElement> multiValue()
 	{
 		return multiRes;
 	}

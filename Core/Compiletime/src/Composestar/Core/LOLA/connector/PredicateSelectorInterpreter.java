@@ -24,12 +24,10 @@
 
 package Composestar.Core.LOLA.connector;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import tarau.jinni.Clause;
 import tarau.jinni.Const;
@@ -38,16 +36,10 @@ import tarau.jinni.JavaObject;
 import tarau.jinni.Prog;
 import tarau.jinni.PrologErrorState;
 import tarau.jinni.Term;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ProgramElementReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
+import Composestar.Core.CpsRepository2Impl.SuperImposition.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.LAMA.ProgramElement;
-import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
-import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
@@ -58,6 +50,9 @@ import Composestar.Utils.Perf.CPSTimer;
 public class PredicateSelectorInterpreter
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
+
+	// TODO:Arbitrary number...what would be reasonable to expect?
+	protected static final int MAX_RESULT = 50000;
 
 	protected ComposestarBuiltins composestarBuiltins;
 
@@ -83,18 +78,17 @@ public class PredicateSelectorInterpreter
 	 */
 	protected void run() throws ModuleException
 	{
-		CPSTimer timer = CPSTimer.getTimer(ModuleNames.LOLA, currentSel.getQuery());
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.LOLA, currentSel.getExpression());
 
 		// tell ComposestarBuiltins that we are executing this selector
 		composestarBuiltins.setCurrentSelector(currentSel);
 
 		// Debug.out(Debug.MODE_DEBUG, "LOLA", "Interpret a predicate selector("
 		// + outputVar + ", " + query + ")");
-		Vector<Reference> result = new Vector<Reference>();
-		HashSet<ProgramElement> resultSet = new HashSet<ProgramElement>();
+		Set<ProgramElement> result = new HashSet<ProgramElement>();
 
-		Clause prologGoal = Clause.goalFromString(currentSel.getQuery());
-		Vector<Object> answers = evaluateGoal(prologGoal, currentSel.getOutputVar());
+		Clause prologGoal = Clause.goalFromString(currentSel.getExpression());
+		List<Object> answers = evaluateGoal(prologGoal, currentSel.getResultTerm());
 		if (PrologErrorState.SUCCESS != PrologErrorState.getCode())
 		{
 			throw new ModuleException("During predicate evaluation: " + PrologErrorState.getMessage(), "LOLA",
@@ -103,38 +97,25 @@ public class PredicateSelectorInterpreter
 
 		// Ensure that list of answers does not contain duplicates, the lame
 		// way....
-		HashSet<Object> uniqAnswers = new HashSet<Object>();
-		for (int i = 0; i < answers.size(); i++)
-		{
-			if (answers.get(i) != null)
-			{
-				uniqAnswers.add(answers.get(i));
-			}
-		}
 
-		for (Object element : uniqAnswers)
+		for (Object element : answers)
 		{
 			if (!(element instanceof ProgramElement))
 			{
-				logger.warn("Error: the output variable '" + currentSel.getOutputVar()
-						+ "' does not return (only) Language Units for this query:\n" + currentSel.getQuery(),
+				logger.warn("Error: the output variable '" + currentSel.getResultTerm()
+						+ "' does not return (only) Language Units for this query:\n" + currentSel.getExpression(),
 						currentSel);
 			}
 			else
 			{
-				ProgramElement unit = (ProgramElement) element;
-				Reference ref;
-				ref = resolveUnit(unit);
-				result.add(ref);
-				resultSet.add(unit);
+				result.add((ProgramElement) element);
 			}
 		}
 
-		currentSel.setSelectedUnitRefs(result);
-		currentSel.setSelectedUnits(resultSet);
+		currentSel.setSelection(result);
 
 		// finish type information
-		finishTypeInfo();
+		// finishTypeInfo();
 		timer.stop();
 	}
 
@@ -146,11 +127,11 @@ public class PredicateSelectorInterpreter
 	 * @return A vector of values found for the answerVar (containing the real
 	 *         java Objects, e.g. dereferenced JavaObjects)
 	 */
-	private Vector<Object> evaluateGoal(Clause goal, String answerVar) throws ModuleException
+	private List<Object> evaluateGoal(Clause goal, String answerVar) throws ModuleException
 	{
 		Clause namedGoal = goal.cnumbervars(false);
 		Term names = namedGoal.getHead();
-		Vector<Object> answers = new Vector<Object>();
+		List<Object> answers = new ArrayList<Object>();
 		int answerVarPos = -1;
 
 		// First check wether the answer variable occurs at all in this prolog
@@ -218,239 +199,156 @@ public class PredicateSelectorInterpreter
 			r = Prog.ask_engine(e);
 		}
 
-		// TODO:Arbitrary number...what would be reasonable to expect?
-		if (answers.size() >= 50000)
+		if (answers.size() >= MAX_RESULT)
 		{
-			logger.warn("Over 50k results; maybe this prolog expression generates infinite results:\n"
-					+ currentSel.getQuery(), currentSel);
+			logger.warn("Over " + MAX_RESULT + " results; maybe this prolog expression generates infinite results:\n"
+					+ currentSel.getExpression(), currentSel);
 		}
 		return answers;
 	}
 
-	public void finishTypeInfo()
-	{
-
-		// look at current type info and search for relations.
-		// Correct the 'dead links' to those relations
-		Iterator<String> typesItr = currentSel.getTymInfo().keySet().iterator();
-		try
-		{
-			String classType = composestarBuiltins.getCurrentLangModel().getLanguageUnitType("Class")
-					.getImplementingClass().getName();
-			while (typesItr.hasNext())
-			{
-				String keyType = typesItr.next();
-				Map<String, MethodNode> relations = composestarBuiltins.getCurrentLangModel().getPathOfUnitRelations(
-						classType, keyType);
-				if (relations != null)
-				{
-					Iterator<Entry<String, MethodNode>> entries = relations.entrySet().iterator();
-					while (entries.hasNext())
-					{
-						Entry<String, MethodNode> entry = entries.next();
-						currentSel.addTYMInfo(entry.getKey(), entry.getValue());
-					}
-				}
-			}
-		}
-		catch (ModelClashException mce)
-		{
-			logger.warn("Error while finishing type information:  " + mce.getMessage());
-		}
-
-		// add tym information according to type of answer
-		// Currently only queries with DotNETTypes as answer supported by INCRE
-		// Because of current repository design
-		// LanguageUnits like methods and parameters cannot be found without
-		// using UnitDictionary
-		// We would like to skip the initialization of the Dictionary
-		// Also not able to find methods and parameters by ID or by a reference
-		/*
-		 * if(!selectedUnits.isEmpty()){ try { String classType =
-		 * ComposestarBuiltins.currentLangModel.getLanguageUnitType("Class").getImplementingClass().getName();
-		 * String answerType = selectedUnits.toArray()[0].getClass().getName();
-		 * HashMap relations =
-		 * ComposestarBuiltins.currentLangModel.getPathOfUnitRelations(classType,answerType);
-		 * if(relations!=null){ Iterator keys = relations.keySet().iterator();
-		 * while(keys.hasNext()){ String key = (String)keys.next(); Object obj =
-		 * relations.get(key); System.out.println("Add tym info:
-		 * "+key+":"+((MethodNode)obj).getObjectRef()); addTYMInfo(key,obj); } }
-		 * else // relations cannot be found this.toBeCheckedByINCRE = false; }
-		 * catch(ModelClashException mce){ Debug.out(Debug.MODE_WARNING, "LOLA",
-		 * "Error while adding TYM information according to type of answer:
-		 * "+mce.getMessage()); } }
-		 */
-	}
-
-	public Reference resolveUnit(ProgramElement unit)
-	{
-
-		Reference ref;
-		if (unit instanceof Type)
-		{
-			Type type = (Type) unit;
-			ConcernReference concernRef = new ConcernReference();
-			concernRef.setRef(type.getParentConcern());
-			concernRef.setName(type.getParentConcern().getQualifiedName());
-			concernRef.setResolved(true);
-			ref = concernRef;
-		}
-		else
-		{
-			ProgramElementReference elemRef = new ProgramElementReference();
-			elemRef.setRef(unit);
-			elemRef.setResolved(true);
-			ref = elemRef;
-		}
-		return ref;
-	}
-
-	// TODO: not used?
-	// private boolean resolveAnswers()
+	// public void finishTypeInfo()
 	// {
-	//
-	// Vector<Reference> resolvedSelectedUnitRefs = new Vector<Reference>();
-	// HashSet<ProgramElement> resolvedSelectedUnits = new
-	// HashSet<ProgramElement>();
-	// boolean answersResolved = true;
-	//
-	// // iterate over answers
-	// Iterator<ProgramElement> units =
-	// currentSel.getSelectedUnits().iterator();
-	// while (units.hasNext())
+	// // look at current type info and search for relations.
+	// // Correct the 'dead links' to those relations
+	// Iterator<String> typesItr = currentSel.getTymInfo().keySet().iterator();
+	// try
 	// {
-	//
-	// // find unit in current repository
-	// ProgramElement unit = units.next();
-	// ProgramElement unit2 = null;
-	// boolean unitfound = false;
-	//
-	// Object obj = DataStore.instance().getObjectByID(unit.getUnitName());
-	//
-	// if (obj instanceof PrimitiveConcern)
+	// String classType =
+	// composestarBuiltins.getCurrentLangModel().getLanguageUnitType("Class")
+	// .getImplementingClass().getName();
+	// while (typesItr.hasNext())
 	// {
-	// PrimitiveConcern pc = (PrimitiveConcern) obj;
-	// unit2 = (ProgramElement) pc.platformRepr;
+	// String keyType = typesItr.next();
+	// Map<String, MethodNode> relations =
+	// composestarBuiltins.getCurrentLangModel().getPathOfUnitRelations(
+	// classType, keyType);
+	// if (relations != null)
+	// {
+	// Iterator<Entry<String, MethodNode>> entries =
+	// relations.entrySet().iterator();
+	// while (entries.hasNext())
+	// {
+	// Entry<String, MethodNode> entry = entries.next();
+	// currentSel.addTYMInfo(entry.getKey(), entry.getValue());
 	// }
-	// else if (obj instanceof CpsConcern)
-	// {
-	// CpsConcern concern = (CpsConcern) obj;
-	// Object impl = concern.getImplementation();
-	// String className = "";
-	//
-	// if (impl instanceof Source)
-	// {
-	// Source source = (Source) impl;
-	// className = source.getClassName();
 	// }
-	// else if (impl instanceof CompiledImplementation)
+	// }
+	// }
+	// catch (ModelClashException mce)
 	// {
-	// className = ((CompiledImplementation) impl).getClassName();
+	// logger.warn("Error while finishing type information:  " +
+	// mce.getMessage());
 	// }
 	//
-	// unit2 = register.getType(className);
+	// // add tym information according to type of answer
+	// // Currently only queries with DotNETTypes as answer supported by INCRE
+	// // Because of current repository design
+	// // LanguageUnits like methods and parameters cannot be found without
+	// // using UnitDictionary
+	// // We would like to skip the initialization of the Dictionary
+	// // Also not able to find methods and parameters by ID or by a reference
+	// /*
+	// * if(!selectedUnits.isEmpty()){ try { String classType =
+	// * ComposestarBuiltins
+	// * .currentLangModel.getLanguageUnitType("Class").getImplementingClass
+	// * ().getName(); String answerType =
+	// * selectedUnits.toArray()[0].getClass().getName(); HashMap relations =
+	// * ComposestarBuiltins
+	// * .currentLangModel.getPathOfUnitRelations(classType,answerType);
+	// * if(relations!=null){ Iterator keys = relations.keySet().iterator();
+	// * while(keys.hasNext()){ String key = (String)keys.next(); Object obj =
+	// * relations.get(key); System.out.println("Add tym info:
+	// * "+key+":"+((MethodNode)obj).getObjectRef()); addTYMInfo(key,obj); } }
+	// * else // relations cannot be found this.toBeCheckedByINCRE = false; }
+	// * catch(ModelClashException mce){ Debug.out(Debug.MODE_WARNING, "LOLA",
+	// * "Error while adding TYM information according to type of answer:
+	// * "+mce.getMessage()); } }
+	// */
 	// }
 	//
-	// if (unit2 != null)
+	// /**
+	// * @param type - Type of TYM information: 'Class','Method'...
+	// * @param methodname - Name of method
+	// */
+	// public void addTYMInfo(String type, String methodname)
 	// {
-	// Reference ref = resolveUnit(unit2);
-	// resolvedSelectedUnitRefs.add(ref);
-	// resolvedSelectedUnits.add(unit2);
-	// unitfound = true;
-	// }
-	//
-	// if (!unitfound)
+	// try
 	// {
-	// logger.warn("Cannot resolve Unit " + unit.getUnitName());
-	// answersResolved = false;
+	// String fullname =
+	// composestarBuiltins.getCurrentLangModel().getLanguageUnitType(type)
+	// .getImplementingClass().getName();
+	// MethodNode method = new MethodNode(methodname);
+	// currentSel.addTYMInfo(fullname, method);
+	// }
+	// catch (ModelClashException mce)
+	// {
+	// logger.warn("Cannot add TYM information of type " + type);
+	// }
 	// }
 	//
+	// /**
+	// * @param type - Type of TYM information: 'Class','Method'...
+	// * @param methodname - Name of method
+	// * @param params - List of method parameters
+	// */
+	// public void addTYMInfo(String type, String methodname, List<String>
+	// params)
+	// {
+	// try
+	// {
+	// String fullname =
+	// composestarBuiltins.getCurrentLangModel().getLanguageUnitType(type)
+	// .getImplementingClass().getName();
+	// MethodNode method = new MethodNode(methodname);
+	// method.setParameters(params);
+	// currentSel.addTYMInfo(fullname, method);
+	// }
+	// catch (ModelClashException mce)
+	// {
+	// logger.warn("Cannot add TYM information of type " + type);
+	// }
 	// }
 	//
-	// currentSel.setSelectedUnitRefs(resolvedSelectedUnitRefs);
-	// currentSel.setSelectedUnits(resolvedSelectedUnits);
-	// return answersResolved;
+	// /**
+	// * @param unit - a bounded LanguageUnit
+	// * @param methodname - Name of a method
+	// */
+	// public void addTYMInfo(ProgramElement unit, String methodname)
+	// {
 	//
+	// if (unit.getUnitType().equals("Annotation"))
+	// {
+	// // add annotation to the set of annotations
+	// currentSel.addAnnotations(unit.getUnitName());
 	// }
-
-	/**
-	 * @param type - Type of TYM information: 'Class','Method'...
-	 * @param methodname - Name of method
-	 */
-	public void addTYMInfo(String type, String methodname)
-	{
-		try
-		{
-			String fullname = composestarBuiltins.getCurrentLangModel().getLanguageUnitType(type)
-					.getImplementingClass().getName();
-			MethodNode method = new MethodNode(methodname);
-			currentSel.addTYMInfo(fullname, method);
-		}
-		catch (ModelClashException mce)
-		{
-			logger.warn("Cannot add TYM information of type " + type);
-		}
-	}
-
-	/**
-	 * @param type - Type of TYM information: 'Class','Method'...
-	 * @param methodname - Name of method
-	 * @param params - List of method parameters
-	 */
-	public void addTYMInfo(String type, String methodname, List<String> params)
-	{
-		try
-		{
-			String fullname = composestarBuiltins.getCurrentLangModel().getLanguageUnitType(type)
-					.getImplementingClass().getName();
-			MethodNode method = new MethodNode(methodname);
-			method.setParameters(params);
-			currentSel.addTYMInfo(fullname, method);
-		}
-		catch (ModelClashException mce)
-		{
-			logger.warn("Cannot add TYM information of type " + type);
-		}
-	}
-
-	/**
-	 * @param unit - a bounded LanguageUnit
-	 * @param methodname - Name of a method
-	 */
-	public void addTYMInfo(ProgramElement unit, String methodname)
-	{
-
-		if (unit.getUnitType().equals("Annotation"))
-		{
-			// add annotation to the set of annotations
-			currentSel.addAnnotations(unit.getUnitName());
-		}
-
-		String fullname = unit.getClass().getName();
-		// String type = unit.getUnitType();
-		MethodNode method = new MethodNode(methodname);
-		currentSel.addTYMInfo(fullname, method);
-	}
-
-	/**
-	 * @param unit - a bounded LanguageUnit
-	 * @param methodname - Name of a method
-	 * @param params - List of method parameters
-	 */
-	public void addTYMInfo(ProgramElement unit, String methodname, List<String> params)
-	{
-
-		if (unit.getUnitType().equals("Annotation"))
-		{
-			// add annotation to the set of annotations
-			currentSel.addAnnotations(unit.getUnitName());
-		}
-
-		String fullname = unit.getClass().getName();
-		// String type = unit.getUnitType();
-		MethodNode method = new MethodNode(methodname);
-		method.setParameters(params);
-		currentSel.addTYMInfo(fullname, method);
-	}
+	//
+	// String fullname = unit.getClass().getName();
+	// // String type = unit.getUnitType();
+	// MethodNode method = new MethodNode(methodname);
+	// currentSel.addTYMInfo(fullname, method);
+	// }
+	//
+	// /**
+	// * @param unit - a bounded LanguageUnit
+	// * @param methodname - Name of a method
+	// * @param params - List of method parameters
+	// */
+	// public void addTYMInfo(ProgramElement unit, String methodname,
+	// List<String> params)
+	// {
+	//
+	// if (unit.getUnitType().equals("Annotation"))
+	// {
+	// // add annotation to the set of annotations
+	// currentSel.addAnnotations(unit.getUnitName());
+	// }
+	//
+	// String fullname = unit.getClass().getName();
+	// // String type = unit.getUnitType();
+	// MethodNode method = new MethodNode(methodname);
+	// method.setParameters(params);
+	// currentSel.addTYMInfo(fullname, method);
+	// }
 
 }

@@ -11,6 +11,7 @@ package Composestar.Core.LAMA;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
@@ -57,7 +58,7 @@ public abstract class ProgramElement extends PlatformRepresentation
 
 	/** Stuff for annotations * */
 
-	private List annotations = new ArrayList();
+	protected List<Annotation> annotations = new ArrayList<Annotation>();
 
 	public void addAnnotation(Annotation annotation)
 	{
@@ -69,8 +70,8 @@ public abstract class ProgramElement extends PlatformRepresentation
 		this.annotations.remove(annotation);
 	}
 
-	public List getAnnotations()
+	public List<Annotation> getAnnotations()
 	{
-		return this.annotations;
+		return Collections.unmodifiableList(annotations);
 	}
 }

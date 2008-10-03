@@ -24,11 +24,7 @@
 
 package Composestar.CwC.LOLA;
 
-import java.util.ArrayList;
-
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.LOLA.LOLA;
-import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.CwC.LOLA.Metamodel.CwCLanguageModel;
 
 /**
@@ -41,20 +37,6 @@ public class CwCLOLA extends LOLA
 	 */
 	public CwCLOLA()
 	{
-		this(new CwCLanguageModel());
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param model the language model to be used by this instance of the logic
-	 *            language
-	 */
-	public CwCLOLA(CwCLanguageModel model)
-	{
-		initialized = false;
-		langModel = model;
-		unitDict = new UnitDictionary(model);
-		selectors = new ArrayList<PredicateSelector>();
+		super(CwCLanguageModel.class);
 	}
 }

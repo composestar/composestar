@@ -11,13 +11,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
- * An instance of <code>JavaFieldInfo</code> represents a field object in
- * Java. It extends the generic object <code>FieldInfo</code>.
+ * An instance of <code>JavaFieldInfo</code> represents a field object in Java.
+ * It extends the generic object <code>FieldInfo</code>.
  * 
  * @see Composestar.Core.LAMA.FieldInfo
  */
@@ -88,7 +89,7 @@ public class JavaFieldInfo extends FieldInfo
 		}
 		else if ("Annotations".equals(argumentName))
 		{
-			Iterator<JavaAnnotation> i = getAnnotations().iterator();
+			Iterator<Annotation> i = getAnnotations().iterator();
 			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{

@@ -1,8 +1,6 @@
 package Composestar.Core.LOLA;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,8 +9,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Level;
@@ -22,18 +19,20 @@ import tarau.jinni.DataBase;
 import tarau.jinni.IO;
 import tarau.jinni.Init;
 import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
+import Composestar.Core.CpsRepository2Impl.SuperImposition.LegacySelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
+import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.LOLA.connector.ModelGenerator;
+import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.LanguageModel;
 import Composestar.Core.LOLA.metamodel.ModelException;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.OutputStreamRedirector;
@@ -43,14 +42,12 @@ import Composestar.Utils.Perf.CPSTimer;
  * LOLA evaluates the superimposition selector statements in order to return the
  * program elements the filter modules should be imposed upon.
  */
-@ComposestarModule(ID = ModuleNames.LOLA, dependsOn = { ModuleNames.COLLECTOR, ModuleNames.PARUM_REXREF })
+@ComposestarModule(ID = ModuleNames.LOLA, dependsOn = { ModuleNames.COLLECTOR })
 public abstract class LOLA implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
 
 	protected boolean initialized; // Initialize only once
-
-	protected DataStore dataStore;
 
 	/**
 	 * Contains the program element data of the base program
@@ -58,9 +55,9 @@ public abstract class LOLA implements CTCommonModule
 	protected UnitDictionary unitDict;
 
 	/**
-	 * All predicate selectors that will be resolved
+	 * Contains relations between various program elements
 	 */
-	protected List<PredicateSelector> selectors;
+	protected Class<? extends LanguageModel> langModelClass;
 
 	/**
 	 * Contains relations between various program elements
@@ -72,40 +69,18 @@ public abstract class LOLA implements CTCommonModule
 	 */
 	protected ComposestarBuiltins composestarBuiltins;
 
-	/**
-	 * Initializes the specified language model. This means the createMetaModel
-	 * method is invoked on the model, and the predicate generator will be run
-	 * on this meta model.
-	 * 
-	 * @param model The language meta-model to use (e.g. the DotNETModel)
-	 * @return The filename of the generated language predicate library
-	 * @throws ModuleException when it is detected that the model is invalid, or
-	 *             when the predicate library can not be written to the temp dir
-	 * @deprecated use {@link #initLanguageModelEx(CommonResources)}
-	 */
-	@Deprecated
-	public File initLanguageModel(CommonResources resources) throws ModuleException
-	{
-		File langmap = new File(resources.configuration().getProject().getIntermediate(), "langmap.pro");
-		try
-		{
-			langModel.createMetaModel();
+	protected UnitRegister register;
 
-			PrintStream languagePredicateFile = new PrintStream(new FileOutputStream(langmap));
-			ModelGenerator.prologGenerator(langModel, languagePredicateFile);
-			languagePredicateFile.close();
-		}
-		catch (IOException e)
+	/**
+	 * @param modelClass
+	 */
+	protected LOLA(Class<? extends LanguageModel> modelClass)
+	{
+		if (modelClass == null)
 		{
-			e.printStackTrace();
-			logger.warn("Can not write language predicates to temporary directory! Filename: " + langmap);
+			throw new NullPointerException("LanguageModel can not be null");
 		}
-		catch (ModelException e)
-		{
-			e.printStackTrace();
-			throw new ModuleException(e.getMessage(), ModuleNames.LOLA);
-		}
-		return langmap;
+		langModelClass = modelClass;
 	}
 
 	/**
@@ -122,7 +97,6 @@ public abstract class LOLA implements CTCommonModule
 		Reader reader = null;
 		try
 		{
-			langModel.createMetaModel();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			PrintStream languagePredicateFile = new PrintStream(baos);
 			ModelGenerator.prologGenerator(langModel, languagePredicateFile);
@@ -165,7 +139,7 @@ public abstract class LOLA implements CTCommonModule
 			return;
 		}
 		Init.builtinDict = new Builtins();
-		UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
 		if (register == null)
 		{
 			register = new UnitRegister();
@@ -276,8 +250,7 @@ public abstract class LOLA implements CTCommonModule
 		}
 		catch (ModelException e)
 		{
-			e.printStackTrace();
-			logger.warn("An error occurred while creating a model of the static language units");
+			logger.warn("An error occurred while creating a model of the static language units", e);
 		}
 
 	}
@@ -291,11 +264,29 @@ public abstract class LOLA implements CTCommonModule
 		 * While this module runs, redirect stderr to stdout, so error messages
 		 * printed by the prolog interpreter will be visible
 		 */
-		/*
-		 * PrintStream stderr = System.err; System.setErr(System.out);
-		 */
+
+		ModuleReturnValue result = ModuleReturnValue.Ok;
 
 		CPSTimer timer = CPSTimer.getTimer(ModuleNames.LOLA);
+
+		try
+		{
+			langModel = langModelClass.newInstance();
+		}
+		catch (Exception e)
+		{
+			logger.error(e, e);
+			throw new ModuleException(e.getMessage(), ModuleNames.LOLA);
+		}
+		try
+		{
+			langModel.createMetaModel();
+		}
+		catch (ModelException e)
+		{
+			logger.error(e, e);
+			throw new ModuleException(e.getMessage(), ModuleNames.LOLA);
+		}
 
 		Writer oldIOOutput = IO.output;
 		try
@@ -303,112 +294,128 @@ public abstract class LOLA implements CTCommonModule
 			IO.output = new OutputStreamWriter(new OutputStreamRedirector(CPSLogger.getCPSLogger(ModuleNames.LOLA
 					+ ".Jinni"), Level.WARN));
 
-			dataStore = resources.repository();
-
+			unitDict = new UnitDictionary(langModel);
 			resources.put(UnitDictionary.REPOSITORY_KEY, unitDict);
 
-			// step 0: gather all predicate selectors
-			Iterator<PredicateSelector> predicateIter = dataStore.getAllInstancesOf(PredicateSelector.class);
-			while (predicateIter.hasNext())
-			{
-				PredicateSelector predSel = predicateIter.next();
-				selectors.add(predSel);
-			}
-
-			// initialize when we have one or more predicate selectors
-			if (selectors.isEmpty())
-			{
-				initialized = true;
-			}
-
 			/* Initialize this module (only on the first call) */
-			if (!initialized)
+			timer.start("Initialize prolog engine");
+			initPrologEngine(resources);
+			timer.stop();
+
+			/*
+			 * Create an index of language units by type and name so that Prolog
+			 * can look them up faster
+			 */
+			timer.start("Creation of unit index");
+			UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+			if (register == null)
 			{
-				timer.start("Initialize prolog engine");
-				initPrologEngine(resources);
-				timer.stop();
-				initialized = true;
+				register = new UnitRegister();
+				resources.put(UnitRegister.RESOURCE_KEY, register);
 			}
+			createUnitIndex(register);
+			timer.stop();
 
-			if (!selectors.isEmpty())
+			// Init.standardTop(); // Enable this line if you want to debug
+			// the
+			// prolog engine in interactive mode
+
+			// Run the superimposition algorithm; this will also calculate
+			// the
+			// values of all selectors
+			timer.start("Calculating values of selectors");
+			for (LegacySelector sel : resources.repository().getAll(LegacySelector.class))
 			{
-				/*
-				 * Create an index of language units by type and name so that
-				 * Prolog can look them up faster
-				 */
-				timer.start("Creation of unit index");
-				UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
-				if (register == null)
-				{
-					register = new UnitRegister();
-					resources.put(UnitRegister.RESOURCE_KEY, register);
-				}
-				createUnitIndex(register);
-				timer.stop();
-
-				// Init.standardTop(); // Enable this line if you want to debug
-				// the
-				// prolog engine in interactive mode
-
-				// Run the superimposition algorithm; this will also calculate
-				// the
-				// values of all selectors
-				timer.start("Calculating values of selectors");
-				AnnotationSuperImposition asi = new AnnotationSuperImposition(dataStore, selectors);
-				asi.run(composestarBuiltins);
-				timer.stop();
+				calculateSimpleSelector(sel);
 			}
+			AnnotationSuperImposition asi = new AnnotationSuperImposition(resources.repository());
+			asi.run(composestarBuiltins);
+			timer.stop();
 		}
 		finally
 		{
 			IO.output = oldIOOutput;
 		}
-
-		/* Connect stderr to the original stream again */
-		// System.setErr(stderr);
-		// TODO return Error?
-		return ModuleReturnValue.Ok;
+		return result;
 	}
 
 	/**
-	 * * helper method: moving selectors between lists
+	 * Calculate the values of the simple selectors
 	 * 
-	 * @param from
-	 * @param list
-	 * @param to
+	 * @param sel
 	 */
-	public void moveSelectors(List<PredicateSelector> list, List<PredicateSelector> from, List<PredicateSelector> to)
+	protected void calculateSimpleSelector(LegacySelector sel)
 	{
-		if (!list.isEmpty())
+		String clsName = sel.getClassSelection();
+		Set<ProgramElement> types = new HashSet<ProgramElement>();
+		Type tp = register.getType(clsName);
+		if (tp == null)
 		{
-			for (PredicateSelector predSel : list)
+			if (!"self".equals(sel.getName()))
 			{
-				moveSelector(predSel, from, to);
+				logger.warn(String.format("No type with name '%s' found for selector %s", clsName, sel
+						.getFullyQualifiedName()), sel);
 			}
-			list.clear();
 		}
+		else
+		{
+			types.add(tp);
+			if (sel.isIncludeChildren())
+			{
+				selectSubTypes(tp, types);
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		for (ProgramElement pe : types)
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(", ");
+			}
+			sb.append(pe.getUnitName());
+		}
+		if (types.size() > 0)
+		{
+			logger.debug(String.format("%s selected: %s", sel.getFullyQualifiedName(), sb), sel);
+		}
+		sel.setSelection(types);
 	}
 
 	/**
-	 * * helper method: move selector between lists
-	 * 
-	 * @param from
-	 * @param to
-	 * @param predSel
+	 * @param tp
+	 * @param types
 	 */
-	public void moveSelector(PredicateSelector predSel, List<PredicateSelector> from, List<PredicateSelector> to)
+	protected void selectSubTypes(Type tp, Set<ProgramElement> types)
 	{
-
-		if (!to.contains(predSel))
+		UnitResult res = tp.getUnitRelation(ERelationType.CHILD_CLASSES.toString());
+		if (res != null)
 		{
-			to.add(predSel);
+			if (res.isSingleValue())
+			{
+				ProgramElement pe = res.singleValue();
+				if (pe instanceof Type)
+				{
+					if (!types.contains(pe))
+					{
+						types.add(pe);
+						selectSubTypes((Type) pe, types);
+					}
+				}
+			}
+			else if (res.isMultiValue())
+			{
+				for (ProgramElement pe : res.multiValue())
+				{
+					if (pe instanceof Type)
+					{
+						if (!types.contains(pe))
+						{
+							types.add(pe);
+							selectSubTypes((Type) pe, types);
+						}
+					}
+				}
+			}
 		}
-		if (from.contains(predSel))
-		{
-			from.remove(predSel);
-		}
-
-		logger.debug("[Moved] " + predSel.getQuery());
 	}
-
 }

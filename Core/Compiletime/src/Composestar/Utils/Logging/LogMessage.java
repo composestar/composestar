@@ -95,6 +95,10 @@ public class LogMessage implements LocationProvider, Serializable
 	 */
 	public String getFilename()
 	{
+		if (srcInfo == null)
+		{
+			return null;
+		}
 		return srcInfo.getFilename().toString();
 	}
 
@@ -104,6 +108,10 @@ public class LogMessage implements LocationProvider, Serializable
 	 */
 	public int getLineNumber()
 	{
+		if (srcInfo == null)
+		{
+			return 0;
+		}
 		return srcInfo.getLine();
 	}
 
@@ -113,6 +121,10 @@ public class LogMessage implements LocationProvider, Serializable
 	 */
 	public int getLinePosition()
 	{
+		if (srcInfo == null)
+		{
+			return 0;
+		}
 		return srcInfo.getLinePos();
 	}
 

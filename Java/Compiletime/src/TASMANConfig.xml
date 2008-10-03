@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tasks xmlns="http://composestar.sourceforge.net/schema/TASMAN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://composestar.sourceforge.net/schema/TASMAN ../../ComposestarCORE/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd ">
-	<module class="Composestar.Core.COPPER2.COPPER" />
+	<module class="Composestar.Core.COPPER3.COPPER" />
 	<module class="Composestar.Core.EMBEX.EMBEX" />
 	<module class="Composestar.Core.DUMMER.DummyManager" />
 	<module class="Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner" />
 	<module class="Composestar.Java.TYM.TypeCollector.JavaCollectorRunner" />
 	<module class="Composestar.Java.TYM.TypeCollector.AnnotationCollector" />
-	<module class="Composestar.Core.REXREF.ParumREXREF" />
+	<module class="Composestar.Core.REXREF2.RexRef" />
 	<module class="Composestar.Java.LOLA.JavaLOLA" />
-	<module class="Composestar.Core.REXREF.Main" />
+	<!-- FMP ... -->
+	<module class="Composestar.Core.REXREF2.RexRef" />
 	<module class="Composestar.Core.FITER.FITER" />
 	<parallel perprocessor="1">
 		<module class="Composestar.Core.CHKREP2.Check" />

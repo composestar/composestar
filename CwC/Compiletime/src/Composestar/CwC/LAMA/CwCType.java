@@ -99,8 +99,9 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.Type#addChildType(Composestar.Core.LAMA.ProgramElement)
+	 * @see
+	 * Composestar.Core.LAMA.Type#addChildType(Composestar.Core.LAMA.ProgramElement
+	 * )
 	 */
 	@Override
 	public void addChildType(ProgramElement childType)
@@ -110,8 +111,9 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.Type#addFieldType(Composestar.Core.LAMA.ProgramElement)
+	 * @see
+	 * Composestar.Core.LAMA.Type#addFieldType(Composestar.Core.LAMA.ProgramElement
+	 * )
 	 */
 	@Override
 	public void addFieldType(ProgramElement fieldType)
@@ -121,8 +123,8 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.Type#addImplementedBy(Composestar.Core.LAMA.ProgramElement)
+	 * @seeComposestar.Core.LAMA.Type#addImplementedBy(Composestar.Core.LAMA.
+	 * ProgramElement)
 	 */
 	@Override
 	public void addImplementedBy(ProgramElement class1)
@@ -132,8 +134,9 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.Type#addMethodReturnType(Composestar.Core.LAMA.ProgramElement)
+	 * @see
+	 * Composestar.Core.LAMA.Type#addMethodReturnType(Composestar.Core.LAMA.
+	 * ProgramElement)
 	 */
 	@Override
 	public void addMethodReturnType(ProgramElement returnType)
@@ -143,8 +146,8 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.Type#addParameterType(Composestar.Core.LAMA.ProgramElement)
+	 * @seeComposestar.Core.LAMA.Type#addParameterType(Composestar.Core.LAMA.
+	 * ProgramElement)
 	 */
 	@Override
 	public void addParameterType(ProgramElement paramType)
@@ -154,7 +157,6 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.Type#namespace()
 	 */
 	@Override
@@ -166,8 +168,8 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.Type#setParentNamespace(Composestar.Core.LAMA.ProgramElement)
+	 * @seeComposestar.Core.LAMA.Type#setParentNamespace(Composestar.Core.LAMA.
+	 * ProgramElement)
 	 */
 	@Override
 	public void setParentNamespace(ProgramElement parentNS)
@@ -177,7 +179,6 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
 	@Override
@@ -188,8 +189,8 @@ public class CwCType extends Type implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
+	 * @see
+	 * Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
 	 */
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
@@ -210,12 +211,12 @@ public class CwCType extends Type implements LocationProvider
 		{
 			return new UnitResult(new HashSet<Type>());
 		}
-		return new UnitResult(Collections.emptySet());
+		Set<ProgramElement> pe = Collections.emptySet();
+		return new UnitResult(pe);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
 	 */
 	@Override

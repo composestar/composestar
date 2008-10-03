@@ -2,7 +2,7 @@
 <tasks xmlns="http://composestar.sourceforge.net/schema/TASMAN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://composestar.sourceforge.net/schema/TASMAN ../../ComposestarCORE/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd ">
 	<module class="Composestar.DotNET2.TYM.RepositoryCollector.StarLightCollectorRunner" />
-	<module class="Composestar.Core.COPPER2.COPPER" />
+	<module class="Composestar.Core.COPPER3.COPPER" />
 	<module class="Composestar.Core.REXREF.ParumREXREF" />
 	<module class="Composestar.DotNET2.LOLA.DotNETLOLA" />
 	<module class="Composestar.Core.REXREF.Main" />

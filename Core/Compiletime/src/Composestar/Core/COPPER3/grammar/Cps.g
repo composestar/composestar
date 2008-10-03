@@ -76,6 +76,9 @@ tokens {
 	MESSAGE = 'message';
 	INNER = 'inner';
 	
+	TRUE = 'true';
+	FALSE = 'false';
+	
 	SUPERIMPOSITION = 'superimposition';
 	SELECTORS = 'selectors';
 	SELECTOR;
@@ -174,6 +177,7 @@ identifier
 	: (TARGET | SELECTOR | INNER | MESSAGE | FILTER | IN | BY | AS | CONSTRAINTS
 	| ANNOTATIONS | COR | EXTERNALS | INTERNALS | CONDITIONS | SELECTORS
 	| CONCERN | FILTER_MODULE | FILTERMODULES | JPCA_PARTIAL | JPCA_FULL
+	| TRUE | FALSE
 	)
 	-> IDENTIFIER[$start]
 	| IDENTIFIER
@@ -439,7 +443,9 @@ meCompoundExpr
 	: meCmpLhs meCmpOpr meCmpRhs 
 	-> ^(CMPSTMT[$start] ^(OPERATOR meCmpOpr) ^(OPERAND meCmpLhs) ^(OPERAND meCmpRhs))
 	| LROUND! matchingExpression RROUND!
-	| IDENTIFIER // 'true', 'false', or condition
+	| IDENTIFIER // condition
+	| (TRUE | FALSE)
+	-> IDENTIFIER[$start]
 	;
 	
 /**
@@ -660,8 +666,12 @@ matchingPattern
 			| // bar
 			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $n1.text) }))
 			)
-		| ASTERISK PERIOD n3=literalOrFmParam // *.bar
-		-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n3))
+		| ASTERISK PERIOD 
+			(n3=literalOrFmParam // *.bar
+			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n3))
+			| ASTERISK // *.*
+			-> IDENTIFIER["true"]
+			)
 		) RSQUARE)
 	| (LANGLE 
 		(s1=identifierOrFmParam 
@@ -677,8 +687,12 @@ matchingPattern
 			| // bar
 			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $s1.text) } ))
 			)
-		| ASTERISK PERIOD s3=literalOrFmParam // *.bar
-		-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s3))
+		| ASTERISK PERIOD 
+			(s3=literalOrFmParam // *.bar
+			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s3))
+			| ASTERISK // *.*
+			-> IDENTIFIER["true"]
+			)
 		) RANGLE)
 	;
 	

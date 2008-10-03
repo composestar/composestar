@@ -115,7 +115,9 @@ import java.util.ArrayList;
 					prefix = PropertyPrefix.FILTER;
 				}
 				else {
-					throw new IllegalArgumentException("Unable to convert legacy substitution structure. Please switch to the canonical notation.");
+					prefix = PropertyPrefix.FILTER;
+					logger.warn(String.format("Unable to convert legacy substitution structure for unknown filter \%s. Defaulting to filter.\%s . Switch to the canonical notation.",
+						filterType.getFilterName(), varname));
 				}
 			}
 			else {
@@ -485,7 +487,7 @@ filter [FilterModule fm] returns [Filter filter]
 				{
 					try {
 						try {
-							filter.addArgument(asgn);
+							if (asgn != null && asgn.getProperty() != null) filter.addArgument(asgn);
 						}
 						catch (IllegalArgumentException iae)
 						{
@@ -581,7 +583,7 @@ filterElement [FilterModule fm, FilterType ft] returns [FilterElement fe]
 		}
 		(asgn=canonAssign[fm,ft]
 			{
-				if (asgn != null) fe.addAssignment(asgn);
+				if (asgn != null && asgn.getProperty() != null) fe.addAssignment(asgn);
 			}
 		)*
 	)

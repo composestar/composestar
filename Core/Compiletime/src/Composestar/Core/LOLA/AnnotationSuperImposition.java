@@ -22,24 +22,27 @@
 package Composestar.Core.LOLA;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
+import Composestar.Core.CpsRepository2.SuperImposition.Selector;
+import Composestar.Core.CpsRepository2Impl.SuperImposition.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
@@ -51,11 +54,11 @@ public class AnnotationSuperImposition
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
 
-	private DataStore dataStore;
+	protected Repository repository;
 
-	private List<Selector> selectors;
+	private Map<Selector, SelectorRecord> selectorRecordMap;
 
-	private List<PredicateSelector> predSel;
+	private List<SelectorRecord> selectorRecords;
 
 	private List<AnnotationAction> annotationActions;
 
@@ -64,11 +67,11 @@ public class AnnotationSuperImposition
 	 */
 	private ComposestarBuiltins composestarBuiltins;
 
-	public AnnotationSuperImposition(DataStore ds, List<PredicateSelector> predSelectors)
+	public AnnotationSuperImposition(Repository repos)
 	{
-		dataStore = ds;
-		selectors = new ArrayList<Selector>();
-		predSel = predSelectors;
+		repository = repos;
+		selectorRecordMap = new HashMap<Selector, SelectorRecord>();
+		selectorRecords = new ArrayList<SelectorRecord>();
 		annotationActions = new ArrayList<AnnotationAction>();
 	}
 
@@ -76,7 +79,7 @@ public class AnnotationSuperImposition
 	 * @param builtins
 	 * @throws ModuleException
 	 */
-	public void run(ComposestarBuiltins builtins) throws ModuleException
+	public ModuleReturnValue run(ComposestarBuiltins builtins) throws ModuleException
 	{
 		composestarBuiltins = builtins;
 		logger.debug("Annotation superimposition dependency algorithm starts");
@@ -87,6 +90,7 @@ public class AnnotationSuperImposition
 		doDependencyAlgorithm();
 		timer.stop();
 		logger.debug("Annotation superimposition dependency algorithm finished");
+		return ModuleReturnValue.Ok;
 	}
 
 	/**
@@ -102,85 +106,56 @@ public class AnnotationSuperImposition
 	{
 		logger.debug("Gathering dependency algorithm inputs");
 
-		// Gather all predicate selectors
-		for (PredicateSelector psel : predSel)
+		for (Selector sel : repository.getAll(PredicateSelector.class))
 		{
-			SelectorDefinition sd = (SelectorDefinition) psel.getParent();
-
-			Selector s = new Selector();
-			s.name = sd.getName();
-			s.qname = sd.getQualifiedName();
-			s.predicate = psel;
-			s.posInResultVector = selectors.size();
-			selectors.add(s);
-
-			logger.debug("Predicate selector added (" + s.qname + ", " + s.predicate.getQuery().replaceAll("\\s+", " ")
-					+ ')');
+			// to make sure in the next stap all predicate selectors are
+			// calculated
+			addSelectorRecord(sel);
 		}
 
-		Iterator<AnnotationBinding> annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
-		while (annotBindingIter.hasNext())
+		for (AnnotationBinding annotBind : repository.getAll(AnnotationBinding.class))
 		{
-			AnnotationBinding annotBind = annotBindingIter.next();
-			/* Find out which predicate selector this binding belongs to */
-			SelectorDefinition selDef = annotBind.getSelector().getRef();
-			if (null == selDef) // The reference has not been resolved, i.e. the
-			// binding points to a non-existent selector
+			for (TypeReference typeRef : annotBind.getAnnotations())
 			{
-				throw new ModuleException("Annotation binding points to non-existent selector: "
-						+ annotBind.getSelector().getQualifiedName(), ModuleNames.LOLA, annotBind.getSelector());
-			}
-
-			boolean foundSelector = false;
-			for (Object selector : selectors)
-			{
-				Selector sel = (Selector) selector;
-				if (sel.qname.equals(selDef.getQualifiedName()))
+				Type type = typeRef.getReference();
+				if (type == null)
 				{
-					foundSelector = true;
-					for (Object o : annotBind.getAnnotations())
-					{
-						ConcernReference annotRef = (ConcernReference) o;
-						Concern concernRef = annotRef.getRef();
-						if (null == concernRef)
-						{
-							logger.warn("Annotation class " + annotRef.getQualifiedName()
-									+ " referenced in annotation binding does not exist; skipping", annotRef);
-							continue; // Just skip, or should this be a fatal
-							// error?
-						}
-						PlatformRepresentation annotConcern = annotRef.getRef().getPlatformRepresentation();
-						if (null == annotConcern || !(annotConcern instanceof Type))
-						{
-							logger.warn("Annotation class " + annotRef.getQualifiedName()
-									+ " referenced in annotation binding or is not a type!", annotRef);
-							continue; // Just skip, or should this be a fatal
-							// error?
-						}
-						Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
-						if (!annotation.getUnitType().equals("Annotation"))
-						{
-							logger.warn(annotRef.getQualifiedName()
-									+ " is not an annotation type! (make sure it extends System.Attribute)", annotRef);
-							continue; // Just skip, or should this be a fatal
-							// error?
-						}
-
-						AnnotationAction act = new AnnotationAction();
-						act.selector = sel;
-						act.annotation = annotation;
-						annotationActions.add(act);
-						logger.debug("Annotation binding: '" + act.annotation.getUnitName() + "' to selector '"
-								+ act.selector.qname + '\'');
-					}
+					// missing reference was already reported
+					continue;
 				}
-			}
-			if (!foundSelector)
-			{
-				throw new ModuleException("Can bind annotations only to predicate selector statements: "
-						+ selDef.getQualifiedName(), ModuleNames.LOLA, selDef);
+				if (!EUnitType.ANNOTATION.equals(type.getUnitType()))
+				{
+					logger.warn(type.getUnitName()
+							+ " is not an annotation type! (make sure it extends System.Attribute)", annotBind);
+					continue;
+					// Just skip, or should this be a fatal error?
+				}
+
+				SelectorRecord sel = selectorRecordMap.get(annotBind.getSelector());
+				if (sel == null)
+				{
+					// annotation binding to a non-predicate selector
+					sel = addSelectorRecord(annotBind.getSelector());
+				}
+
+				AnnotationAction act = new AnnotationAction();
+				act.selector = sel;
+				act.annotation = type;
+				annotationActions.add(act);
+				logger.debug("Annotation binding: '" + type.getUnitName() + "' to selector '" + sel.fqn + '\'');
 			}
 		}
+	}
+
+	protected SelectorRecord addSelectorRecord(Selector sel)
+	{
+		SelectorRecord result = new SelectorRecord();
+		result.selector = sel;
+		result.fqn = sel.getFullyQualifiedName();
+		result.resultIndex = selectorRecords.size();
+		selectorRecords.add(result);
+		selectorRecordMap.put(sel, result);
+		return result;
 	}
 
 	public void doDependencyAlgorithm() throws ModuleException
@@ -244,9 +219,9 @@ public class AnnotationSuperImposition
 					msg.append("The problem was detected while applying the following annotation superimposition:\n");
 					AnnotationAction act = annotationActions.get(action);
 					msg.append("Attaching annotation ").append(act.annotation.getUnitName()).append(
-							" to the program elements selected by ").append(act.selector.qname).append('\n');
+							" to the program elements selected by ").append(act.selector.fqn).append('\n');
 					msg.append("This action shrunk the resultset of selector ").append(
-							(selectors.get(errorLocation)).qname);
+							selectorRecords.get(errorLocation).fqn);
 					// At least one of the result sets shrunk, this is not
 					// allowed
 					throw new ModuleException(msg.toString(), ModuleNames.LOLA);
@@ -273,18 +248,8 @@ public class AnnotationSuperImposition
 			{ // None of the actions changed any of the selectorResults, so
 				// this is an endstate.
 				if (null != endState && // The first endState found is always OK
-						!equalContents(endState.selectorResults, myState.selectorResults)) // but
-				// if
-				// we
-				// find
-				// a
-				// 2nd
-				// one,
-				// it
-				// has
-				// to
-				// be
-				// equal!
+						!equalContents(endState.selectorResults, myState.selectorResults))
+				// but if we find a 2nd one, it has to be equal!
 				{ // This shouldn't happen using the current algorithm, but we
 					// didn't formally proof it so just to be sure...
 					throw new ModuleException(
@@ -312,13 +277,17 @@ public class AnnotationSuperImposition
 		}
 
 		// Give warnings when selectors (still) do not select anything
-		for (int i = 0; i < endState.selectorResults.size(); i++)
+		for (SelectorRecord selector : selectorRecords)
 		{
-			Selector selector = selectors.get(i);
-			Set<ProgramElement> resultSet = endState.selectorResults.get(i);
+			if (!(selector.selector instanceof PredicateSelector))
+			{
+				// these results didn't change anyway
+				continue;
+			}
+			Collection<ProgramElement> resultSet = endState.selectorResults.get(selector.resultIndex);
 			if (resultSet.isEmpty())
 			{
-				logger.warn("Selector " + selector.qname + " does not match any program elements", selector.predicate);
+				logger.warn("Selector " + selector.fqn + " does not match any program elements", selector.selector);
 			}
 			else
 			{
@@ -341,7 +310,9 @@ public class AnnotationSuperImposition
 						names.append("(unknown) ");
 					}
 				}
-				logger.info("Selector " + selector.qname + " matches the following program elements: " + names);
+				logger
+						.info("Selector " + selector.fqn + " matches the following program elements: "
+								+ names.toString());
 			}
 		}
 		// Do not reset annotation state here, because other modules might be
@@ -355,11 +326,12 @@ public class AnnotationSuperImposition
 	 * @param allStates
 	 * @param selectorResults
 	 */
-	public boolean isNewState(List<State> allStates, List<Set<ProgramElement>> selectorResults) throws ModuleException
+	public boolean isNewState(List<State> allStates, List<Collection<ProgramElement>> selectorResults)
+			throws ModuleException
 	{
 		for (int i = 0; i < allStates.size(); i++)
 		{
-			if (equalContents(selectorResults, (allStates.get(i)).selectorResults))
+			if (equalContents(selectorResults, allStates.get(i).selectorResults))
 			{
 				return false;
 			}
@@ -367,15 +339,16 @@ public class AnnotationSuperImposition
 		return true;
 	}
 
-	public List<Set<ProgramElement>> evaluateSelectors() throws ModuleException
+	public List<Collection<ProgramElement>> evaluateSelectors() throws ModuleException
 	{
-		List<Set<ProgramElement>> results = new ArrayList<Set<ProgramElement>>();
-		for (Selector selector : selectors)
+		List<Collection<ProgramElement>> results = new ArrayList<Collection<ProgramElement>>();
+		for (SelectorRecord state : selectorRecords)
 		{
-			composestarBuiltins.getPredicateSelectorInterpreter().interpret(selector.predicate);
-			results.add(selector.predicate.getSelectedUnits());
-			// System.out.println("Selector: " + selector.name + " selected [" +
-			// selector.predicate.getSelectedUnits() + "]");
+			if (state.selector instanceof PredicateSelector)
+			{
+				composestarBuiltins.getPredicateSelectorInterpreter().interpret((PredicateSelector) state.selector);
+			}
+			results.add(state.selector.getSelection());
 		}
 		return results;
 	}
@@ -417,7 +390,8 @@ public class AnnotationSuperImposition
 	 *         on succes
 	 * @throws ModuleException
 	 */
-	public int subsetContents(List<Set<ProgramElement>> res1, List<Set<ProgramElement>> res2) throws ModuleException
+	public int subsetContents(List<Collection<ProgramElement>> res1, List<Collection<ProgramElement>> res2)
+			throws ModuleException
 	{
 		if (res1.size() != res2.size())
 		{
@@ -449,7 +423,7 @@ public class AnnotationSuperImposition
 	 * @return A set of all the DotNETAttributes that have been added, so they
 	 *         can easily be removed later
 	 */
-	public Set<Annotation> setAnnotationState(State thisState, int thisAction)
+	protected Set<Annotation> setAnnotationState(State thisState, int thisAction)
 	{
 		Set<Annotation> removeMeLater = new HashSet<Annotation>();
 		int currAction = thisAction;
@@ -460,7 +434,7 @@ public class AnnotationSuperImposition
 			// -1
 			{
 				AnnotationAction action = annotationActions.get(currAction);
-				Set<ProgramElement> attachTo = currState.selectorResults.get(action.selector.posInResultVector);
+				Collection<ProgramElement> attachTo = currState.selectorResults.get(action.selector.resultIndex);
 
 				for (ProgramElement elem : attachTo)
 				{
@@ -468,9 +442,8 @@ public class AnnotationSuperImposition
 					// once.
 
 					boolean doubleAnnot = false;
-					for (Object o : elem.getAnnotations())
+					for (Annotation existingAnnot : elem.getAnnotations())
 					{
-						Annotation existingAnnot = (Annotation) o;
 						if (existingAnnot.getType().equals(action.annotation))
 						{
 							doubleAnnot = true;
@@ -517,36 +490,54 @@ public class AnnotationSuperImposition
 	 * Internal helper structures, just for storing algorithm data in a easily
 	 * accessible way
 	 */
-	private static class Selector
+	private static class SelectorRecord
 	{
-		public String name;
+		/**
+		 * Cache the FQN
+		 */
+		public String fqn;
 
-		public String qname; // Name of this selector
+		/**
+		 * The selector
+		 */
+		public Selector selector;
 
-		public PredicateSelector predicate; // Executable predicate
-
-		public int posInResultVector; // this selectors position in the
-		// State.selectorResult
+		/**
+		 * this selectors position in the State.selectorResult
+		 */
+		public int resultIndex;
 	}
 
 	private static class State
 	{
-		public List<Set<ProgramElement>> selectorResults; // Vector of sets -
+		/**
+		 * Vector of sets - selectorResults[selectorIndex] returns set of
+		 * selected program elements
+		 */
+		public List<Collection<ProgramElement>> selectorResults;
 
-		// selectorResults[selectorIndex]
-		// returns set of selected program
-		// elements
+		/**
+		 * points to element in annotationActions vector
+		 */
+		public int lastAction;
 
-		public int lastAction; // points to element in annotationActions vector
-
-		public State prevState; // points to previous state; executing
-		// last_action brought us into this state
+		/**
+		 * points to previous state; executing last_action brought us into this
+		 * state
+		 */
+		public State prevState;
 	}
 
 	private static class AnnotationAction
 	{
-		public Type annotation; // Attach this annotation (class) to..
+		/**
+		 * Attach this annotation (class) to..
+		 */
+		public Type annotation;
 
-		public Selector selector; // ..the elements selected by this selector!
+		/**
+		 * ..the elements selected by this selector!
+		 */
+		public SelectorRecord selector;
 	}
 }

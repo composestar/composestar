@@ -127,8 +127,7 @@ public class JavaType extends Type
 	}
 
 	/**
-	 * Returns a list of interfaces that this <code>JavaType</code>
-	 * implements.
+	 * Returns a list of interfaces that this <code>JavaType</code> implements.
 	 */
 	public List<JavaType> getImplementedInterfaces()
 	{
@@ -210,8 +209,7 @@ public class JavaType extends Type
 	 * are returned.
 	 * 
 	 * @param in - a set of <code>MethodInfo</code> or <code>FieldInfo</code>.
-	 * @return a <code>HashSet</code> containing objects declared in this
-	 *         class.
+	 * @return a <code>HashSet</code> containing objects declared in this class.
 	 */
 	private Set<ProgramElement> filterDeclaredHere(Collection<ProgramElement> in)
 	{
@@ -373,7 +371,7 @@ public class JavaType extends Type
 		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator<JavaAnnotation> i = getAnnotations().iterator();
+			Iterator<Annotation> i = getAnnotations().iterator();
 			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
@@ -421,7 +419,7 @@ public class JavaType extends Type
 		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator<JavaAnnotation> i = getAnnotations().iterator();
+			Iterator<Annotation> i = getAnnotations().iterator();
 			HashSet<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{

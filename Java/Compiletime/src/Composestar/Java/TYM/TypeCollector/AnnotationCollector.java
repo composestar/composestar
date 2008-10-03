@@ -8,13 +8,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Java.LAMA.JavaAnnotation;
 import Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner;
@@ -30,17 +29,17 @@ public class AnnotationCollector implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("AnnotationCollector");
 
-	protected DataStore ds;
+	protected UnitRegister register;
 
 	/**
 	 * Module run method.
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		ds = resources.repository();
+		register = resources.get(UnitRegister.RESOURCE_KEY);
 		try
 		{
-			Collection<Class<?>> classes = (Collection<Class<?>>) resources.get(JavaHarvestRunner.CLASS_MAP);
+			Collection<Class<?>> classes = resources.get(JavaHarvestRunner.CLASS_MAP);
 			for (Class<?> c : classes)
 			{
 				try
@@ -175,11 +174,6 @@ public class AnnotationCollector implements CTCommonModule
 	 */
 	public Type getTypeLocation(String typeName)
 	{
-		Concern c = (Concern) ds.getObjectByID(typeName);
-		if (c != null && c.getPlatformRepresentation() instanceof Type)
-		{
-			return (Type) c.getPlatformRepresentation();
-		}
-		return null;
+		return register.getType(typeName);
 	}
 }

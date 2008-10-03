@@ -2,7 +2,7 @@ package Composestar.Java.MASTER;
 
 import java.util.Arrays;
 
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
+import Composestar.Core.COPPER3.FilterFactory;
 import Composestar.Core.Master.Master;
 
 /**
@@ -20,9 +20,8 @@ public class JavaMaster extends Master
 		{
 			return false;
 		}
-		DefaultFilterFactory filterFactory = new DefaultFilterFactory(resources.repository());
-		filterFactory.addLegacyFilterTypes();
-		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+		FilterFactory filterFactory = new FilterFactory(resources.repository());
+		resources.put(FilterFactory.RESOURCE_KEY, filterFactory);
 		return true;
 	}
 

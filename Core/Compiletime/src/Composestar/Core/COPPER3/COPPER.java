@@ -33,20 +33,17 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.Tree;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsRepository2.Repository;
-import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
+import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2Impl.References.ReferenceManagerImpl;
 import Composestar.Core.EMBEX.EmbeddedSources;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataMap;
-import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.DevNullOutputStream;
 import Composestar.Utils.Logging.CPSLogger;
@@ -91,6 +88,11 @@ public class COPPER implements CTCommonModule
 	@ResourceManager
 	protected EmbeddedSources embeddedSourceManager;
 
+	/**
+	 * Reference manager
+	 */
+	protected ReferenceManager refman;
+
 	public COPPER()
 	{}
 
@@ -112,12 +114,19 @@ public class COPPER implements CTCommonModule
 		filterFactory = resources.get(FilterFactory.RESOURCE_KEY);
 		if (filterFactory == null)
 		{
-			filterFactory = new FilterFactory(null, filterTypes);
+			filterFactory = new FilterFactory(repository, filterTypes);
 			resources.put(FilterFactory.RESOURCE_KEY, filterFactory);
 		}
 		else
 		{
 			filterFactory.setTypeMapping(filterTypes);
+		}
+
+		refman = resources.get(ReferenceManager.RESOURCE_KEY);
+		if (refman == null)
+		{
+			refman = new ReferenceManagerImpl();
+			resources.put(ReferenceManager.RESOURCE_KEY, refman);
 		}
 
 		errorCnt = 0;
@@ -132,9 +141,8 @@ public class COPPER implements CTCommonModule
 
 		if (errorCnt > 0)
 		{
-			throw new ModuleException(String.format("%d error(s) detected in the concern sources.", errorCnt),
-					ModuleNames.COPPER);
-			// return ModuleReturnValue.Error;
+			logger.error(String.format("%d error(s) detected in the concern sources.", errorCnt));
+			return ModuleReturnValue.Error;
 		}
 		return ModuleReturnValue.Ok;
 	}
@@ -200,6 +208,7 @@ public class COPPER implements CTCommonModule
 			w.setFilterTypeMapping(filterTypes);
 			w.setFilterFactory(filterFactory);
 			w.setEmbeddedSourceManager(embeddedSourceManager);
+			w.setReferenceManager(refman);
 			try
 			{
 				w.concern();
@@ -223,31 +232,6 @@ public class COPPER implements CTCommonModule
 		finally
 		{
 			System.setErr(oldErr);
-		}
-	}
-
-	/**
-	 * For debugging
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-		// BasicConfigurator.configure();
-		Logger.getRootLogger().setLevel(Level.DEBUG);
-		DataMap.setDataMapClass(DataMapImpl.class);
-		COPPER c = new COPPER();
-		Repository repos = new RepositoryImpl();
-		c.filterTypes = new FilterTypeMapping(repos);
-		// c.filterFactory = new DefaultFilterFactory(c.filterTypes, ds);
-		// c.filterFactory.setAllowLegacyCustomFilters(true);
-		try
-		{
-			c.parseConcernFile(new File(args[0]));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
 		}
 	}
 }

@@ -23,7 +23,7 @@ import tarau.jinni.JavaObject;
 import tarau.jinni.Prog;
 import tarau.jinni.Source;
 import tarau.jinni.Term;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
+import Composestar.Core.CpsRepository2Impl.SuperImposition.PredicateSelector;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
@@ -221,8 +221,6 @@ public class ComposestarBuiltins extends HashDict
 					List<String> params2 = new ArrayList<String>();
 					params1.add(relation1);
 					params2.add(relation2);
-					psi.addTYMInfo(unit1, "getUnitRelation", params1);
-					psi.addTYMInfo(unit2, "getUnitRelation", params2);
 
 					// FIXME: getUnitRelation() could be null
 
@@ -250,7 +248,6 @@ public class ComposestarBuiltins extends HashDict
 					// add type information for incremental process
 					List<String> params = new ArrayList<String>();
 					params.add(relation1);
-					psi.addTYMInfo(unit1, "getUnitRelation", params);
 
 					UnitResult otherside = unit1.getUnitRelation(relation1);
 					if (null == otherside)
@@ -288,7 +285,6 @@ public class ComposestarBuiltins extends HashDict
 				// add type information for incremental process
 				List<String> params = new ArrayList<String>();
 				params.add(relation2);
-				psi.addTYMInfo(unit2, "getUnitRelation", params);
 
 				UnitResult otherside = unit2.getUnitRelation(relation2);
 				if (null == otherside)
@@ -388,9 +384,6 @@ public class ComposestarBuiltins extends HashDict
 					{
 						if (knownType)
 						{
-							// Add type information for incremental process
-							ProgramElement unit = (ProgramElement) tUnit.toObject();
-							psi.addTYMInfo(unit, "hasUnitAttribute", params);
 						}
 					}
 					return filtered.contains(tUnit.toObject()) ? 1 : 0;
@@ -401,7 +394,6 @@ public class ComposestarBuiltins extends HashDict
 					{
 						// Attribute bound, unit unbound, type bound
 						// Add type information for incremental process
-						psi.addTYMInfo(type, "hasUnitAttribute", params);
 					}
 					return putArg(0, new UnitSource(p, filtered), p);
 				}
@@ -427,7 +419,6 @@ public class ComposestarBuiltins extends HashDict
 
 				// Attribute unbound, unit bound, type bound
 				// Add type information for incremental process
-				psi.addTYMInfo(unit, "getUnitAttributes");
 				return putArg(1, new StringSource(p, unit.getUnitAttributes()), p); // we
 				// found
 				// the
@@ -498,7 +489,6 @@ public class ComposestarBuiltins extends HashDict
 				// we have found the same unit
 				{
 					// add type information for incremental process
-					psi.addTYMInfo((ProgramElement) tUnit.toObject(), "getUnitName");
 
 					if (result.isSingleValue())
 					{
@@ -516,7 +506,6 @@ public class ComposestarBuiltins extends HashDict
 					// add type information for incremental process
 					if (knownType)
 					{
-						psi.addTYMInfo(type, "getUnitName");
 					}
 
 					if (result.isSingleValue())
@@ -549,7 +538,6 @@ public class ComposestarBuiltins extends HashDict
 				}
 
 				// add type information for incremental process
-				psi.addTYMInfo(unit, "getUnitName");
 
 				return putArg(1, new Const(unit.getUnitName()), p); // we found
 				// the
@@ -587,9 +575,8 @@ public class ComposestarBuiltins extends HashDict
 			}
 			String type = ((Const) tType).name();
 			if (tUnit instanceof JavaObject) /*
-												 * Easy case: the unit is
-												 * specified
-												 */
+											 * Easy case: the unit is specified
+											 */
 			{
 				if (!(tUnit.toObject() instanceof ProgramElement))
 				{
@@ -600,7 +587,6 @@ public class ComposestarBuiltins extends HashDict
 				// false based on the result
 				ProgramElement unit = (ProgramElement) tUnit.toObject();
 				// add type information for incremental process
-				psi.addTYMInfo(unit, "getUnitName");
 				return unit.getUnitType().equals(type) ? 1 : 0;
 			}
 			else
@@ -615,7 +601,6 @@ public class ComposestarBuiltins extends HashDict
 					return 0;
 				}
 				// add type information for incremental process
-				psi.addTYMInfo(type, "getUnitName");
 				return putArg(0, new UnitSource(p, unitsOfThisType.multiValue()), p);
 			}
 		}
@@ -704,9 +689,9 @@ public class ComposestarBuiltins extends HashDict
 	 */
 	static class UnitSource extends Source
 	{
-		private Iterator<ProgramElement> i;
+		private Iterator<? extends ProgramElement> i;
 
-		UnitSource(Prog p, Collection<ProgramElement> c)
+		UnitSource(Prog p, Collection<? extends ProgramElement> c)
 		{
 			super(p);
 			i = c.iterator();

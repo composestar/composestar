@@ -9,12 +9,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Meta.FileInformation;
+import Composestar.Core.CpsRepository2.Meta.SourceInformation;
+import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.MethodInfo;
@@ -23,7 +23,6 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Java.LAMA.JavaFieldInfo;
 import Composestar.Java.LAMA.JavaMethodInfo;
@@ -97,104 +96,108 @@ public class JavaCollectorRunner implements CTCommonModule
 		}
 
 		int count = 0;
-		DataStore dataStore = resources.repository();
-		// loop through all current concerns, fetch implementation and remove
-		// from types map.
-		Iterator<Object> repIt = dataStore.getIterator();
-		while (repIt.hasNext())
-		{
-			Object next = repIt.next();
-			if (next instanceof CpsConcern)
-			{
-				CpsConcern concern = (CpsConcern) next;
-				// fetch implementation name
-				Object impl = concern.getImplementation();
-				String className = "";
-				if (impl == null)
-				{
-					className = concern.getQualifiedName();
-					if (!register.hasType(className))
-					{
-						continue;
-					}
-				}
-				else if (impl instanceof Source)
-				{
-					Source source = (Source) impl;
-					className = source.getClassName();
-				}
-				else if (impl instanceof SourceFile)
-				{
-					// TO DO: remove this?
-					SourceFile source = (SourceFile) impl;
-					String sourceFile = source.getSourceFile();
-					className = sourceFile.replaceAll("\\.\\w+", "");
-				}
-				else if (impl instanceof CompiledImplementation)
-				{
-					className = ((CompiledImplementation) impl).getClassName();
-				}
-				else
-				{
-					throw new ModuleException(
-							"Can only handle concerns with source file implementations or direct class links.",
-							ModuleNames.COLLECTOR);
-				}
+		// DataStore dataStore = resources.repository();
+		// // loop through all current concerns, fetch implementation and remove
+		// // from types map.
+		// Iterator<Object> repIt = dataStore.getIterator();
+		// while (repIt.hasNext())
+		// {
+		// Object next = repIt.next();
+		// if (next instanceof CpsConcern)
+		// {
+		// CpsConcern concern = (CpsConcern) next;
+		// // fetch implementation name
+		// Object impl = concern.getImplementation();
+		// String className = "";
+		// if (impl == null)
+		// {
+		// className = concern.getQualifiedName();
+		// if (!register.hasType(className))
+		// {
+		// continue;
+		// }
+		// }
+		// else if (impl instanceof Source)
+		// {
+		// Source source = (Source) impl;
+		// className = source.getClassName();
+		// }
+		// else if (impl instanceof SourceFile)
+		// {
+		// // TO DO: remove this?
+		// SourceFile source = (SourceFile) impl;
+		// String sourceFile = source.getSourceFile();
+		// className = sourceFile.replaceAll("\\.\\w+", "");
+		// }
+		// else if (impl instanceof CompiledImplementation)
+		// {
+		// className = ((CompiledImplementation) impl).getClassName();
+		// }
+		// else
+		// {
+		// throw new ModuleException(
+		// "Can only handle concerns with source file implementations or direct class links."
+		// ,
+		// ModuleNames.COLLECTOR);
+		// }
+		//
+		// if (!concern.getQualifiedName().equals(className))
+		// {
+		// // implementation of a different class
+		// Object otherConcern = dataStore.getObjectByID(className);
+		// if (otherConcern instanceof CpsConcern)
+		// {
+		// logger.info("Implementation of " + concern +
+		// " contains type info for " + otherConcern);
+		// JavaType type = (JavaType) register.getType(className);
+		// concern.setPlatformRepresentation(type);
+		// type.setParentConcern((CpsConcern) otherConcern);
+		// register.removeType(className);
+		// }
+		// continue;
+		// }
+		//
+		// if (!register.hasType(className))
+		// {
+		// throw new ModuleException("Implementation: " + className +
+		// " for concern: " + concern.getName()
+		// + " not found!", ModuleNames.COLLECTOR);
+		// }
+		// JavaType type = (JavaType) register.getType(className);
+		// concern.setPlatformRepresentation(type);
+		// type.setParentConcern(concern);
+		// register.removeType(className);
+		// count++;
+		// }
+		// }
 
-				if (!concern.getQualifiedName().equals(className))
-				{
-					// implementation of a different class
-					Object otherConcern = dataStore.getObjectByID(className);
-					if (otherConcern instanceof CpsConcern)
-					{
-						logger.info("Implementation of " + concern + " contains type info for " + otherConcern);
-						JavaType type = (JavaType) register.getType(className);
-						concern.setPlatformRepresentation(type);
-						type.setParentConcern((CpsConcern) otherConcern);
-						register.removeType(className);
-					}
-					continue;
-				}
-
-				if (!register.hasType(className))
-				{
-					throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
-							+ " not found!", ModuleNames.COLLECTOR);
-				}
-				JavaType type = (JavaType) register.getType(className);
-				concern.setPlatformRepresentation(type);
-				type.setParentConcern(concern);
-				register.removeType(className);
-				count++;
-			}
-		}
-
+		Repository repository = resources.repository();
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
 		for (Type type : register.getTypeMap().values())
 		{
-			if (dataStore.getObjectByID(type.getFullName()) != null)
+			if (repository.get(type.getFullName()) != null)
 			{
-				Object o = dataStore.getObjectByID(type.getFullName());
+				QualifiedRepositoryEntity o = repository.get(type.getFullName());
 				logger.error(String.format("The repository already contains an entry with the name %s with type: %s",
 						type.getFullName(), o.getClass()));
 				if (o instanceof Concern)
 				{
-					type.setParentConcern((Concern) o);
+					// type.setParentConcern((Concern) o);
 				}
 				continue;
 			}
-			PrimitiveConcern pc = new PrimitiveConcern();
+			PrimitiveConcern pc = new PrimitiveConcern(type.getFullName().split("\\."));
 			Composestar.Core.Config.Source typeSource = resources.configuration().getProject().getTypeMapping()
 					.getSource(type.getFullName());
 			if (typeSource != null)
 			{
-				pc.setDescriptionFileName(typeSource.getFile().toString());
+				SourceInformation srcInfo = new SourceInformation(new FileInformation(typeSource.getFile()));
+				pc.setSourceInformation(srcInfo);
 			}
-			pc.setName(type.getFullName());
-			pc.setPlatformRepresentation(type);
-			type.setParentConcern(pc);
-			dataStore.addObject(type.getFullName(), pc);
+			// pc.setPlatformRepresentation(type);
+			// type.setParentConcern(pc);
+			repository.add(pc);
 		}
 
 		register.resolveTypes(new JavaTypeResolver());

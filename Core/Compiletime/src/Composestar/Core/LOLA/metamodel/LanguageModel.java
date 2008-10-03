@@ -143,7 +143,8 @@ public abstract class LanguageModel
 					// So also add the link the other way round.
 					((Type) superType).addChildType(concern);
 				}
-				Collection<Type> implementedInterfaces = concern.getUnitRelation("Implements").multiValue();
+				Collection<Type> implementedInterfaces = (Collection<Type>) concern.getUnitRelation("Implements")
+						.multiValue();
 				for (Type implementedInterface : implementedInterfaces)
 				{
 					// This class implements interfaces, also add the reverse
@@ -268,7 +269,8 @@ public abstract class LanguageModel
 					// Exclude this method because it is inherited; set the
 					// parent of its child parameters
 					// so they will be noticed for removal by the 2nd loop.
-					Collection<ParameterInfo> params = method.getUnitRelation("ChildParameters").multiValue();
+					Collection<ParameterInfo> params = (Collection<ParameterInfo>) method.getUnitRelation(
+							"ChildParameters").multiValue();
 					for (Object param : params)
 					{
 						ParameterInfo paramInfo = (ParameterInfo) param;
@@ -299,7 +301,7 @@ public abstract class LanguageModel
 			else if (unit instanceof ParameterInfo)
 			{
 				ParameterInfo param = (ParameterInfo) unit;
-				if (null == param.getParent() || (param.getParent()).isDeclaredHere())
+				if (null == param.getParent() || param.getParent().isDeclaredHere())
 				{
 					// The parameter does not belong to an inherited method, so
 					// add it.
