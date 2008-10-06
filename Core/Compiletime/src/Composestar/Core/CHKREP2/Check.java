@@ -37,12 +37,11 @@ import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * CHKREP performs various checks on the repository in order to aid the
- * developer to write better code or catch certain runtime errors at compile
- * time.
+ * developer to write better code.
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER }, importancex = Importance.VALIDATION)
+@ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER }, importance = Importance.VALIDATION)
 public class Check implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CHKREP);
@@ -70,8 +69,9 @@ public class Check implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{

@@ -28,7 +28,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Arjan de Roo
  */
-@ComposestarModule(ID = ModuleNames.CORE, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH }, importancex = Importance.VALIDATION)
+@ComposestarModule(ID = ModuleNames.CORE, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH }, importance = Importance.VALIDATION)
 public class Core implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CORE);

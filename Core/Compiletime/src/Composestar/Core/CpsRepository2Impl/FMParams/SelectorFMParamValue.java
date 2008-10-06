@@ -70,6 +70,14 @@ public class SelectorFMParamValue extends AbstractRepositoryEntity implements FM
 		selector = sel;
 	}
 
+	/**
+	 * @return The used selector
+	 */
+	public Selector getSelector()
+	{
+		return selector;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see

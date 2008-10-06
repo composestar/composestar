@@ -24,29 +24,23 @@
 
 package Composestar.Core.CHKREP2;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
-import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
+import Composestar.Core.CpsRepository2.FilterElements.MECondition;
+import Composestar.Core.CpsRepository2.FilterModules.Condition;
+import Composestar.Core.CpsRepository2.FilterModules.External;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
+import Composestar.Core.CpsRepository2.FilterModules.Internal;
+import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
+import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariableCollection;
 
 /**
  * Performs checks on all filter modules. Warnings will be issued for unused
@@ -57,228 +51,104 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  */
 public class FilterModuleChecker extends AbstractChecker
 {
-	/**
-	 * Contains a list of all defined externals in the current filter module
-	 */
-	protected Map<String, External> externals;
 
 	/**
-	 * Contains a list of all defined internals in the current filter module
+	 * All known externals
 	 */
-	protected Map<String, Internal> internals;
-
-	/**
-	 * A list of all defined condition methods in the current filter module
-	 */
-	protected Map<String, Condition> conditions;
+	protected Set<FilterModuleVariable> allFmVars;
 
 	/**
 	 * A list of names of all externals used in the filter elements
 	 */
-	protected Set<String> usedExternals;
-
-	/**
-	 * A list of all names of the used internals in the filter elements of the
-	 * current filter module.
-	 */
-	protected Set<String> usedInternals;
-
-	/**
-	 * A list of the conditions that are used in the filter elements of the
-	 * current filter module.
-	 */
-	protected Set<String> usedConditions;
+	protected Set<FilterModuleVariable> usedFmVars;
 
 	public FilterModuleChecker()
 	{}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CHKREP2.AbstractChecker#performCheck(Composestar.Core.RepositoryImplementation.DataStore)
+	 * @see
+	 * Composestar.Core.CHKREP2.AbstractChecker#performCheck(Composestar.Core
+	 * .RepositoryImplementation.DataStore)
 	 */
 	@Override
-	public void performCheck(DataStore repository)
+	public void performCheck(Repository repository)
 	{
-		Iterator<FilterModule> fmi = repository.getAllInstancesOf(FilterModule.class);
-		while (fmi.hasNext())
+		allFmVars = new HashSet<FilterModuleVariable>();
+		usedFmVars = new HashSet<FilterModuleVariable>();
+		for (RepositoryEntity re : repository)
 		{
-			checkFilterModule(fmi.next());
-		}
-	}
-
-	/**
-	 * Performs internal/external/condition usage checks on the given filter
-	 * module.
-	 * 
-	 * @param fm the filter module to inspect
-	 */
-	protected void checkFilterModule(FilterModule fm)
-	{
-		logger.info("Checking filter module " + fm.getQualifiedName());
-
-		externals = new HashMap<String, External>();
-		internals = new HashMap<String, Internal>();
-		conditions = new HashMap<String, Condition>();
-		usedExternals = new HashSet<String>();
-		usedInternals = new HashSet<String>();
-		usedConditions = new HashSet<String>();
-
-		// first extract all FM elements: internals, externals, conditions
-		Iterator<External> exti = fm.getExternalIterator();
-		while (exti.hasNext())
-		{
-			External ext = exti.next();
-			externals.put(ext.getName(), ext);
-		}
-		Iterator<Internal> inti = fm.getInternalIterator();
-		while (inti.hasNext())
-		{
-			Internal inten = inti.next();
-			internals.put(inten.getName(), inten);
-		}
-		Iterator<Condition> condi = fm.getConditionIterator();
-		while (condi.hasNext())
-		{
-			Condition cond = condi.next();
-			conditions.put(cond.getName(), cond);
-
-			// directly check for internal/external usage
-			Reference ref = cond.getShortref();
-			if (ref != null)
+			if (re instanceof FilterModuleVariable)
 			{
-				checkIntExtRef(ref.getName());
+				allFmVars.add((Internal) re);
+				if (re instanceof External)
+				{
+					MethodReference mref = ((External) re).getMethodReference();
+					if (mref instanceof InstanceMethodReference)
+					{
+						CpsObject obj = ((InstanceMethodReference) mref).getCpsObject();
+						if (obj instanceof FilterModuleVariable)
+						{
+							usedFmVars.add((FilterModuleVariable) obj);
+						}
+					}
+				}
+				else if (re instanceof Condition)
+				{
+					MethodReference mref = ((Condition) re).getMethodReference();
+					if (mref instanceof InstanceMethodReference)
+					{
+						CpsObject obj = ((InstanceMethodReference) mref).getCpsObject();
+						if (obj instanceof FilterModuleVariable)
+						{
+							usedFmVars.add((FilterModuleVariable) obj);
+						}
+					}
+				}
+			}
+			else if (re instanceof MECondition)
+			{
+				usedFmVars.add(((MECondition) re).getCondition());
+			}
+			else if (re instanceof CanonAssignment)
+			{
+				CpsVariable var = ((CanonAssignment) re).getValue();
+				if (var instanceof FilterModuleVariable)
+				{
+					usedFmVars.add((FilterModuleVariable) var);
+				}
+			}
+			else if (re instanceof MECompareStatement)
+			{
+				CpsVariableCollection vars = ((MECompareStatement) re).getRHS();
+				for (CpsVariable var : vars)
+				{
+					if (var instanceof FilterModuleVariable)
+					{
+						usedFmVars.add((FilterModuleVariable) var);
+					}
+				}
 			}
 		}
-
-		// iterate through all filter elements
-		Iterator<Filter> filters = fm.getInputFilterIterator();
-		while (filters.hasNext())
+		allFmVars.removeAll(usedFmVars);
+		for (FilterModuleVariable var : allFmVars)
 		{
-			Filter filter = filters.next();
-			Iterator<FilterElement> fei = filter.getFilterElementIterator();
-			while (fei.hasNext())
+			String typeName = "filter module variable";
+			if (var instanceof Internal)
 			{
-				checkFilterElement(fei.next());
+				typeName = "internal";
 			}
-		}
-		filters = fm.getOutputFilterIterator();
-		while (filters.hasNext())
-		{
-			Filter filter = filters.next();
-			Iterator<FilterElement> fei = filter.getFilterElementIterator();
-			while (fei.hasNext())
+			else if (var instanceof External)
 			{
-				checkFilterElement(fei.next());
+				typeName = "external";
 			}
-		}
-
-		// calculate and report usage
-		externals.keySet().removeAll(usedExternals);
-		for (External unused : externals.values())
-		{
-			results.addWarning(String.format("External \"%s\" is not used", unused.getQualifiedName()), unused);
-		}
-		internals.keySet().removeAll(usedInternals);
-		for (Internal unused : internals.values())
-		{
-			results.addWarning(String.format("Internal \"%s\" is not used", unused.getQualifiedName()), unused);
-		}
-		conditions.keySet().removeAll(usedConditions);
-		for (Condition unused : conditions.values())
-		{
-			results.addWarning(String.format("Condition \"%s\" is not used", unused.getQualifiedName()), unused);
-		}
-
-	}
-
-	/**
-	 * Check if the name is an internal or external and set the usage flag
-	 * 
-	 * @param ident
-	 */
-	protected void checkIntExtRef(String ident)
-	{
-		if (externals.containsKey(ident))
-		{
-			usedExternals.add(ident);
-		}
-		else if (internals.containsKey(ident))
-		{
-			usedInternals.add(ident);
-		}
-	}
-
-	/**
-	 * Performs checks on the given filter element. This method is called from
-	 * {@link #checkFilterModule(FilterModule)}
-	 * 
-	 * @param fe the filter element to validate.
-	 */
-	protected void checkFilterElement(FilterElement fe)
-	{
-		// check for conditions
-		ConditionExpression expr = fe.getConditionPart();
-		if (expr != null && !(expr instanceof CondLiteral))
-		{
-			checkConditionExpression(expr);
-		}
-		// check for internals/externals
-		MatchingPattern mp = fe.getMatchingPattern();
-		Iterator<SubstitutionPart> spi = mp.getSubstitutionPartsIterator();
-		while (spi.hasNext())
-		{
-			SubstitutionPart sp = spi.next();
-			String name = sp.getTarget().getName();
-			if (Target.INNER.endsWith(name) || Target.SELF.endsWith(name) || "*".endsWith(name))
+			else if (var instanceof Condition)
 			{
-				continue;
+				typeName = "condition";
 			}
-			checkIntExtRef(name);
-		}
+			results.addWarning(String.format("Unused %s: %s", typeName, var.getName()), var);
 
-		Iterator<MatchingPart> matchpi = mp.getMatchingPartsIterator();
-		while (matchpi.hasNext())
-		{
-			MatchingPart matchp = matchpi.next();
-			String name = matchp.getTarget().getName();
-			if (Target.INNER.endsWith(name) || Target.SELF.endsWith(name) || "*".endsWith(name))
-			{
-				continue;
-			}
-			checkIntExtRef(name);
-		}
-	}
-
-	/**
-	 * Inspect the current condition expression for usage of registered
-	 * conditions.
-	 * 
-	 * @param expr the expression instance to inspect
-	 */
-	protected void checkConditionExpression(ConditionExpression expr)
-	{
-		if (expr instanceof ConditionVariable)
-		{
-			ConditionVariable cl = (ConditionVariable) expr;
-			String conditionName = cl.getCondition().getName();
-			if (conditions.containsKey(conditionName))
-			{
-				usedConditions.add(conditionName);
-			}
-			else
-			{
-				results.addError(String.format("There is no condition with the name \"%s\"", conditionName), expr);
-			}
-		}
-		else if (expr instanceof UnaryOperator)
-		{
-			checkConditionExpression(((UnaryOperator) expr).getOperand());
-		}
-		else if (expr instanceof BinaryOperator)
-		{
-			checkConditionExpression(((BinaryOperator) expr).getLeft());
-			checkConditionExpression(((BinaryOperator) expr).getRight());
+			// TODO: remove unused?
 		}
 	}
 }

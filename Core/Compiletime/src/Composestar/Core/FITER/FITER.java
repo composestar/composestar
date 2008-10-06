@@ -37,7 +37,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author pascal
  */
-@ComposestarModule(ID = ModuleNames.FITER, dependsOn = { ModuleNames.LOLA }, importancex = Importance.VALIDATION)
+@ComposestarModule(ID = ModuleNames.FITER, dependsOn = { ModuleNames.LOLA }, importance = Importance.VALIDATION)
 public class FITER implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FITER);
@@ -63,8 +63,9 @@ public class FITER implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
@@ -170,7 +171,8 @@ public class FITER implements CTCommonModule
 	{
 		Set<ProgramElement> total = new HashSet<ProgramElement>();
 		@SuppressWarnings("unchecked")
-		Set<ProgramElement> children = filterType.getUnitRelation(ERelationType.CHILD_CLASSES.toString()).multiValue();
+		Set<? extends ProgramElement> children = filterType.getUnitRelation(ERelationType.CHILD_CLASSES.toString())
+				.multiValue();
 		total.addAll(children);
 		for (Object aChild : children)
 		{

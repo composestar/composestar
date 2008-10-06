@@ -24,8 +24,8 @@
 
 package Composestar.Core.CHKREP2;
 
+import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -55,7 +55,7 @@ public abstract class AbstractChecker
 	 * 
 	 * @param repository
 	 */
-	public abstract void performCheck(DataStore repository);
+	public abstract void performCheck(Repository repository);
 
 	/**
 	 * Return the CheckResults instance.

@@ -68,7 +68,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * specification and performed on the resources. Then the specified patterns are
  * matches against the sequences of operations performed on the resources.
  */
-@ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE }, importancex = Importance.ADVISING)
+@ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE }, importance = Importance.ADVISING)
 public class CKRET implements CTCommonModule
 {
 	public static final String CONFIG_NAME = "SECRETConfig.xml";

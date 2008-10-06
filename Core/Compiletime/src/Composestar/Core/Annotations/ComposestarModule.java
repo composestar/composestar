@@ -101,6 +101,6 @@ public @interface ComposestarModule
 	 * 
 	 * @return
 	 */
-	Importance importancex() default Importance.REQUIRED;
+	Importance importance() default Importance.REQUIRED;
 
 }

@@ -244,7 +244,7 @@ public class Manager
 			// no annotation, can not check it, always execute
 			return true;
 		}
-		if (!importance.get(annot.importancex()))
+		if (!importance.get(annot.importance()))
 		{
 			return false || undeterministic;
 		}
