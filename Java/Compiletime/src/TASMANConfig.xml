@@ -9,13 +9,12 @@
 	<module class="Composestar.Java.TYM.TypeCollector.AnnotationCollector" />
 	<module class="Composestar.Core.REXREF2.RexRef" />
 	<module class="Composestar.Java.LOLA.JavaLOLA" />
-	<!-- FMP ... -->
-	<module class="Composestar.Core.REXREF2.RexRef" />
-	<module class="Composestar.Core.FITER.FITER" />
+	<!-- <module class="Composestar.Core.FITER.FITER" />  --><!-- disabled for now -->
 	<parallel perprocessor="1">
 		<module class="Composestar.Core.CHKREP2.Check" />
 	</parallel>
-	<module class="Composestar.Core.SANE.SANE" />
+	<module class="Composestar.Core.SANE2.Imposer" />
+	<!-- create FMPIs? -->
 	<module class="Composestar.Core.FILTH2.FILTH" />
 	<module class="Composestar.Core.FIRE2.preprocessing.Preprocessor" />
 	<module class="Composestar.Core.CORE2.Core" />

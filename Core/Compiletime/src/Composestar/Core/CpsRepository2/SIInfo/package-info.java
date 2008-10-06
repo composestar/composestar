@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: package-info.java 4385 2008-10-06 12:52:28Z elmuerte $
+ * $Id$
  */
 
 /**
