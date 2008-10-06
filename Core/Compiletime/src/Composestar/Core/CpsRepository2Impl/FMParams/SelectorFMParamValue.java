@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
-import Composestar.Core.CpsRepository2.SuperImposition.Selector;
+import Composestar.Core.CpsRepository2.SISpec.Selector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsProgramElementImpl;

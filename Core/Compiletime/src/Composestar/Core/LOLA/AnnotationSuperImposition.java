@@ -32,9 +32,9 @@ import java.util.Set;
 
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.Selector;
-import Composestar.Core.CpsRepository2Impl.SuperImposition.PredicateSelector;
+import Composestar.Core.CpsRepository2.SISpec.AnnotationBinding;
+import Composestar.Core.CpsRepository2.SISpec.Selector;
+import Composestar.Core.CpsRepository2Impl.SISpec.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ProgramElement;

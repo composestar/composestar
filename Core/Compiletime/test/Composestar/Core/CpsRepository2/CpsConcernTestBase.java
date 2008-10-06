@@ -35,12 +35,12 @@ import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
 import Composestar.Core.CpsRepository2.FilterModules.Internal;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
-import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint;
-import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
-import Composestar.Core.CpsRepository2.SuperImposition.Selector;
-import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
+import Composestar.Core.CpsRepository2.SISpec.AnnotationBinding;
+import Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding;
+import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
+import Composestar.Core.CpsRepository2.SISpec.SICondition;
+import Composestar.Core.CpsRepository2.SISpec.SISpecification;
+import Composestar.Core.CpsRepository2.SISpec.Selector;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 
 /**
@@ -184,7 +184,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.CpsConcernImpl#setSISpecification(Composestar.Core.CpsRepository2.SuperImposition.SISpecification)}
+	 * {@link Composestar.Core.CpsRepository2Impl.CpsConcernImpl#setSISpecification(Composestar.Core.CpsRepository2.SISpec.SISpecification)}
 	 * .
 	 */
 	public void testSetSuperImposition()
@@ -543,7 +543,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * addAnnotationBinding
-		 * (Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)
+		 * (Composestar.Core.CpsRepository2.SISpec.AnnotationBinding)
 		 */
 		public void addAnnotationBinding(AnnotationBinding ab) throws NullPointerException
 		{}
@@ -552,7 +552,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * addCondition
-		 * (Composestar.Core.CpsRepository2.SuperImposition.Condition)
+		 * (Composestar.Core.CpsRepository2.SISpec.Condition)
 		 */
 		public boolean addCondition(SICondition cond) throws NullPointerException
 		{
@@ -563,7 +563,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * addFilterModuleBinding
-		 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)
+		 * (Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding)
 		 */
 		public void addFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
 		{}
@@ -572,7 +572,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * addFilterModuleConstraint
-		 * (Composestar.Core.CpsRepository2.SuperImposition
+		 * (Composestar.Core.CpsRepository2.SISpec
 		 * .FilterModuleConstraint)
 		 */
 		public void addFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
@@ -581,7 +581,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		/*
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
-		 * addSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)
+		 * addSelector(Composestar.Core.CpsRepository2.SISpec.Selector)
 		 */
 		public boolean addSelector(Selector newSel) throws NullPointerException
 		{
@@ -652,7 +652,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * removeAnnotationBinding
-		 * (Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)
+		 * (Composestar.Core.CpsRepository2.SISpec.AnnotationBinding)
 		 */
 		public AnnotationBinding removeAnnotationBinding(AnnotationBinding ab) throws NullPointerException
 		{
@@ -663,7 +663,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * removeCondition
-		 * (Composestar.Core.CpsRepository2.SuperImposition.Condition)
+		 * (Composestar.Core.CpsRepository2.SISpec.Condition)
 		 */
 		public SICondition removeCondition(SICondition cond) throws NullPointerException
 		{
@@ -684,7 +684,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * removeFilterModuleBinding
-		 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)
+		 * (Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding)
 		 */
 		public FilterModuleBinding removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
 		{
@@ -695,7 +695,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * removeFilterModuleConstraint
-		 * (Composestar.Core.CpsRepository2.SuperImposition
+		 * (Composestar.Core.CpsRepository2.SISpec
 		 * .FilterModuleConstraint)
 		 */
 		public FilterModuleConstraint removeFilterModuleConstraint(FilterModuleConstraint fmc)
@@ -708,7 +708,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * removeSelector
-		 * (Composestar.Core.CpsRepository2.SuperImposition.Selector)
+		 * (Composestar.Core.CpsRepository2.SISpec.Selector)
 		 */
 		public Selector removeSelector(Selector sel) throws NullPointerException
 		{

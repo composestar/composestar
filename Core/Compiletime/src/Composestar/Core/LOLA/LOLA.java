@@ -19,7 +19,7 @@ import tarau.jinni.DataBase;
 import tarau.jinni.IO;
 import tarau.jinni.Init;
 import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.CpsRepository2Impl.SuperImposition.LegacySelector;
+import Composestar.Core.CpsRepository2Impl.SISpec.LegacySelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;

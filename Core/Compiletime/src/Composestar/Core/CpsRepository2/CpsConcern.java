@@ -27,7 +27,7 @@ package Composestar.Core.CpsRepository2;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
-import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
+import Composestar.Core.CpsRepository2.SISpec.SISpecification;
 
 /**
  * A concern which originates from a Compose* concern definition (.cps file).

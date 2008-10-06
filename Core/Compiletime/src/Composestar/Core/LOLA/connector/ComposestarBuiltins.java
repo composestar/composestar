@@ -23,7 +23,7 @@ import tarau.jinni.JavaObject;
 import tarau.jinni.Prog;
 import tarau.jinni.Source;
 import tarau.jinni.Term;
-import Composestar.Core.CpsRepository2Impl.SuperImposition.PredicateSelector;
+import Composestar.Core.CpsRepository2Impl.SISpec.PredicateSelector;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;

@@ -32,7 +32,7 @@ import java.util.Map;
 
 import Composestar.Core.CpsRepository2.CpsConcern;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
-import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
+import Composestar.Core.CpsRepository2.SISpec.SISpecification;
 
 /**
  * An implementation of a CpsConcern

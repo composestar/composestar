@@ -36,7 +36,7 @@ import tarau.jinni.JavaObject;
 import tarau.jinni.Prog;
 import tarau.jinni.PrologErrorState;
 import tarau.jinni.Term;
-import Composestar.Core.CpsRepository2Impl.SuperImposition.PredicateSelector;
+import Composestar.Core.CpsRepository2Impl.SISpec.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitRegister;

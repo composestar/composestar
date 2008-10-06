@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
-import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
+import Composestar.Core.CpsRepository2.SISpec.SISpecification;
 
 /**
  * Base test case of repository implementation

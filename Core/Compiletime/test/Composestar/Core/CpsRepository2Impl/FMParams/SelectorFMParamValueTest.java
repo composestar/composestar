@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValueTestBase;
-import Composestar.Core.CpsRepository2.SuperImposition.Selector;
+import Composestar.Core.CpsRepository2.SISpec.Selector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
@@ -62,7 +62,7 @@ public class SelectorFMParamValueTest extends FMParameterValueTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.FMParams.SelectorFMParamValue#SelectorFMParamValue(Composestar.Core.CpsRepository2.SuperImposition.Selector)}
+	 * {@link Composestar.Core.CpsRepository2Impl.FMParams.SelectorFMParamValue#SelectorFMParamValue(Composestar.Core.CpsRepository2.SISpec.Selector)}
 	 * .
 	 */
 	public void testSelectorFMParamValue()
@@ -124,7 +124,7 @@ public class SelectorFMParamValueTest extends FMParameterValueTestBase
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * Composestar.Core.CpsRepository2.SuperImposition.Selector#getSelection
+		 * Composestar.Core.CpsRepository2.SISpec.Selector#getSelection
 		 * ()
 		 */
 		public Collection<ProgramElement> getSelection()

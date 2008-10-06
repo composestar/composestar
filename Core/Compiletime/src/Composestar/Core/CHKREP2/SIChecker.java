@@ -29,10 +29,10 @@ import java.util.Set;
 
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
-import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
-import Composestar.Core.CpsRepository2.SuperImposition.Selector;
+import Composestar.Core.CpsRepository2.SISpec.AnnotationBinding;
+import Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding;
+import Composestar.Core.CpsRepository2.SISpec.SICondition;
+import Composestar.Core.CpsRepository2.SISpec.Selector;
 import Composestar.Core.CpsRepository2Impl.FMParams.SelectorFMParamValue;
 
 /**
