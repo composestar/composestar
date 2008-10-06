@@ -27,7 +27,7 @@ package Composestar.Core.CpsRepository2;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
-import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
+import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
 
 /**
  * A concern which originates from a Compose* concern definition (.cps file).
@@ -95,9 +95,9 @@ public interface CpsConcern extends Concern
 	/**
 	 * @return The superimposition information defined in this concern. When the
 	 *         concern does not have any superimposition null will be returned.
-	 * @see #setSuperImposition(SuperImposition)
+	 * @see #setSISpecification(SISpecification)
 	 */
-	SuperImposition getSuperImposition();
+	SISpecification getSISpecification();
 
 	/**
 	 * Set the superimposition for this concern. Previously associated
@@ -110,7 +110,7 @@ public interface CpsConcern extends Concern
 	 *             overwrite the previous value it first has to be set to null.
 	 *             This exception is not thrown when the current value and new
 	 *             value are the same.
-	 * @see #getSuperImposition()
+	 * @see #getSISpecification()
 	 */
-	void setSuperImposition(SuperImposition si) throws IllegalStateException;
+	void setSISpecification(SISpecification si) throws IllegalStateException;
 }

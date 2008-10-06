@@ -40,7 +40,7 @@ import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint;
 import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
-import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
+import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 
 /**
@@ -52,7 +52,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 
 	protected FilterModule fm1, fm2;
 
-	protected SuperImposition si1, si2;
+	protected SISpecification si1, si2;
 
 	/*
 	 * (non-Javadoc)
@@ -136,14 +136,14 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.CpsConcernImpl#getSuperImposition()}
+	 * {@link Composestar.Core.CpsRepository2Impl.CpsConcernImpl#getSISpecification()}
 	 * .
 	 */
 	public void testGetSuperImposition()
 	{
-		assertNull(cpsconcern.getSuperImposition());
-		cpsconcern.setSuperImposition(si1);
-		assertSame(si1, cpsconcern.getSuperImposition());
+		assertNull(cpsconcern.getSISpecification());
+		cpsconcern.setSISpecification(si1);
+		assertSame(si1, cpsconcern.getSISpecification());
 	}
 
 	/**
@@ -184,22 +184,22 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.CpsConcernImpl#setSuperImposition(Composestar.Core.CpsRepository2.SuperImposition.SuperImposition)}
+	 * {@link Composestar.Core.CpsRepository2Impl.CpsConcernImpl#setSISpecification(Composestar.Core.CpsRepository2.SuperImposition.SISpecification)}
 	 * .
 	 */
 	public void testSetSuperImposition()
 	{
-		assertNull(cpsconcern.getSuperImposition());
-		cpsconcern.setSuperImposition(si1);
-		assertSame(si1, cpsconcern.getSuperImposition());
-		assertEquals(exampleFQN + "." + SuperImposition.NAME, si1.getFullyQualifiedName());
-		cpsconcern.setSuperImposition(si1);
-		cpsconcern.setSuperImposition(null);
-		cpsconcern.setSuperImposition(si2);
-		assertSame(si2, cpsconcern.getSuperImposition());
+		assertNull(cpsconcern.getSISpecification());
+		cpsconcern.setSISpecification(si1);
+		assertSame(si1, cpsconcern.getSISpecification());
+		assertEquals(exampleFQN + "." + SISpecification.NAME, si1.getFullyQualifiedName());
+		cpsconcern.setSISpecification(si1);
+		cpsconcern.setSISpecification(null);
+		cpsconcern.setSISpecification(si2);
+		assertSame(si2, cpsconcern.getSISpecification());
 		try
 		{
-			cpsconcern.setSuperImposition(si1);
+			cpsconcern.setSISpecification(si1);
 		}
 		catch (IllegalStateException e)
 		{
@@ -530,7 +530,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 	/**
 	 * @author Michiel Hendriks
 	 */
-	static class DummySI extends AbstractQualifiedRepositoryEntity implements SuperImposition
+	static class DummySI extends AbstractQualifiedRepositoryEntity implements SISpecification
 	{
 		private static final long serialVersionUID = 1L;
 

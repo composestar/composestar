@@ -36,7 +36,7 @@ import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint;
 import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
-import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
+import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 
 /**
@@ -44,7 +44,7 @@ import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
  * 
  * @author Michiel Hendriks
  */
-public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity implements SuperImposition
+public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity implements SISpecification
 {
 	private static final long serialVersionUID = -5676161237343003047L;
 
@@ -77,7 +77,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	/**
 	 * Create a new instance
 	 */
-	public SuperImpositionImpl()
+	public SISpecificationImpl()
 	{
 		super(NAME);
 		annotationBindings = new HashSet<AnnotationBinding>();
@@ -106,7 +106,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addCondition
+	 * Composestar.Core.CpsRepository2.SuperImposition.SISpecification#addCondition
 	 * (Composestar.Core.CpsRepository2.SuperImposition.Condition)
 	 */
 	public boolean addCondition(SICondition cond) throws NullPointerException
@@ -159,7 +159,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addSelector
+	 * Composestar.Core.CpsRepository2.SuperImposition.SISpecification#addSelector
 	 * (Composestar.Core.CpsRepository2.SuperImposition.Selector)
 	 */
 	public boolean addSelector(Selector newSel) throws NullPointerException
@@ -190,7 +190,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getCondition
+	 * Composestar.Core.CpsRepository2.SuperImposition.SISpecification#getCondition
 	 * (java.lang.String)
 	 */
 	public SICondition getCondition(String name)
@@ -205,7 +205,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getConditions
+	 * Composestar.Core.CpsRepository2.SuperImposition.SISpecification#getConditions
 	 * ()
 	 */
 	public Collection<SICondition> getConditions()
@@ -236,7 +236,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getSelector
+	 * Composestar.Core.CpsRepository2.SuperImposition.SISpecification#getSelector
 	 * (java.lang.String)
 	 */
 	public Selector getSelector(String name)
@@ -251,7 +251,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getSelectors
+	 * Composestar.Core.CpsRepository2.SuperImposition.SISpecification#getSelectors
 	 * ()
 	 */
 	public Collection<Selector> getSelectors()

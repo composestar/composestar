@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
-import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
+import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
 
 /**
  * Base test case of repository implementation
@@ -182,7 +182,7 @@ public abstract class RepositoryTestBase extends TestCase
 	{
 		repos.add(qitem1);
 		assertNotNull(repos.get(qitem1.getFullyQualifiedName(), qitem1.getClass()));
-		assertNull(repos.get(qitem1.getFullyQualifiedName(), SuperImposition.class));
+		assertNull(repos.get(qitem1.getFullyQualifiedName(), SISpecification.class));
 	}
 
 	/**

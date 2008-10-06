@@ -939,9 +939,9 @@ superimposition [CpsConcern c]
 // throws CpsSemanticException
 	: ^(strt=SUPERIMPOSITION 
 		{
-			SuperImposition si = new SuperImpositionImpl();
+			SISpecification si = new SISpecificationImpl();
 			setLocInfo(si, $strt);
-			c.setSuperImposition(si);
+			c.setSISpecification(si);
 			repository.add(si);
 			
 			// default selector
@@ -953,7 +953,7 @@ superimposition [CpsConcern c]
 		)
 	;
 
-conditionalSi [SuperImposition si]
+conditionalSi [SISpecification si]
 // throws CpsSemanticException
 @init {
 	JoinPointContextArgument jpca = JoinPointContextArgument.PARTIAL;
@@ -1006,7 +1006,7 @@ conditionalSi [SuperImposition si]
 		)
 	;
 	
-selectorSi [SuperImposition si]
+selectorSi [SISpecification si]
 // throws CpsSemanticException
 	: ^(SELECTOR nm1=IDENTIFIER ^(LEGACY_SELECTOR (eq=EQUALS | co=COLON) expr1=fqn)
 		{
@@ -1046,7 +1046,7 @@ selectorSi [SuperImposition si]
 		)
 	;
 	
-filtermoduleSi [SuperImposition si]
+filtermoduleSi [SISpecification si]
 // throws CpsSemanticException
 @init {
 	Selector sel = null;
@@ -1096,7 +1096,7 @@ filtermoduleSi [SuperImposition si]
 		)+)
 	;
 	
-fmBinding [SuperImposition si] returns [FilterModuleBinding fmb = new FilterModuleBindingImpl()]
+fmBinding [SISpecification si] returns [FilterModuleBinding fmb = new FilterModuleBindingImpl()]
 // throws CpsSemanticException
 @init {
 	if (si.getOwner() == null || !(si.getOwner() instanceof CpsConcern)) 
@@ -1132,7 +1132,7 @@ fmBinding [SuperImposition si] returns [FilterModuleBinding fmb = new FilterModu
 		)?)
 	;	
 	
-param [SuperImposition si] returns [FMParameterValue fmp]
+param [SISpecification si] returns [FMParameterValue fmp]
 	: ^(strt=LIST 
 		{
 			CompositeFMParamValue cfmpv = new CompositeFMParamValue();
@@ -1149,7 +1149,7 @@ param [SuperImposition si] returns [FMParameterValue fmp]
 	| sv=paramValue[si] {fmp = sv;}
 	;
 	
-paramValue [SuperImposition si] returns [FMParameterValue fmp]
+paramValue [SISpecification si] returns [FMParameterValue fmp]
 	: ^(strt=PARAM 
 		(sp=fqn 	
 			{
@@ -1184,7 +1184,7 @@ paramValue [SuperImposition si] returns [FMParameterValue fmp]
 	)
 	;
 
-annotationSi [SuperImposition si]
+annotationSi [SISpecification si]
 	: ^(strt=ANNOTATION_BINDINGS sel=IDENTIFIER
 		{
 			AnnotationBinding ab = new AnnotationBindingImpl();
@@ -1215,7 +1215,7 @@ annotationSi [SuperImposition si]
 	;
 	
 
-concernFmRef [SuperImposition si] returns [FilterModuleReference res]
+concernFmRef [SISpecification si] returns [FilterModuleReference res]
 // throws CpsSemanticException	
 	: {Tree errTok = (Tree) input.LT(1);}
 		fr=fqn
@@ -1244,7 +1244,7 @@ concernFmRef [SuperImposition si] returns [FilterModuleReference res]
 		}
 	;				
 
-constraint [SuperImposition si]
+constraint [SISpecification si]
 // throws CpsSemanticException
 	: ^(CONSTRAINT opr=IDENTIFIER 
 		{

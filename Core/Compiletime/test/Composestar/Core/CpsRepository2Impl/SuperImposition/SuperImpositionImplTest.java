@@ -42,14 +42,14 @@ public class SuperImpositionImplTest extends SuperImpositionTestBase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		si = new SuperImpositionImpl();
+		si = new SISpecificationImpl();
 		qre = si;
 		re = si;
 	}
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#isUniqueName(java.lang.String)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#isUniqueName(java.lang.String)}
 	 * .
 	 */
 	public void testIsUniqueName()

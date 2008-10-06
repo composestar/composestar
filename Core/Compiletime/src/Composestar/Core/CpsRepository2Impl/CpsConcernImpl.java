@@ -32,7 +32,7 @@ import java.util.Map;
 
 import Composestar.Core.CpsRepository2.CpsConcern;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
-import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
+import Composestar.Core.CpsRepository2.SuperImposition.SISpecification;
 
 /**
  * An implementation of a CpsConcern
@@ -51,7 +51,7 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	/**
 	 * The optional superimposition construction
 	 */
-	protected SuperImposition superImposition;
+	protected SISpecification sISpecification;
 
 	/**
 	 * Create a new namespace instance
@@ -116,9 +116,9 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	 * (non-Javadoc)
 	 * @see Composestar.Core.CpsRepository2.CpsConcern#getSuperImposition()
 	 */
-	public SuperImposition getSuperImposition()
+	public SISpecification getSISpecification()
 	{
-		return superImposition;
+		return sISpecification;
 	}
 
 	/*
@@ -157,16 +157,16 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	 * Composestar.Core.CpsRepository2.CpsConcern#setSuperImposition(Composestar
 	 * .Core.CpsRepository2.SuperImposition.SuperImposition)
 	 */
-	public void setSuperImposition(SuperImposition si) throws IllegalStateException
+	public void setSISpecification(SISpecification si) throws IllegalStateException
 	{
-		if (superImposition != null && superImposition != si && si != null)
+		if (sISpecification != null && sISpecification != si && si != null)
 		{
-			throw new IllegalStateException("SuperImposition has already been set. Unset it first by passing null.");
+			throw new IllegalStateException("SISpecification has already been set. Unset it first by passing null.");
 		}
-		superImposition = si;
-		if (superImposition != null)
+		sISpecification = si;
+		if (sISpecification != null)
 		{
-			superImposition.setOwner(this);
+			sISpecification.setOwner(this);
 		}
 	}
 }

@@ -34,13 +34,13 @@ import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
  * CPS language. A CpsConcern can have a superimposition instance assigned.
  * 
  * @author Michiel Hendriks
- * @see CpsConcern#getSuperImposition()
- * @see CpsConcern#setSuperImposition(SuperImposition)
+ * @see CpsConcern#getSISpecification()
+ * @see CpsConcern#setSISpecification(SISpecification)
  */
-public interface SuperImposition extends QualifiedRepositoryEntity
+public interface SISpecification extends QualifiedRepositoryEntity
 {
 	/**
-	 * The name of all SuperImposition instances. This entity does not really
+	 * The name of all SISpecification instances. This entity does not really
 	 * have a name, but an identifier is required so that named elements within
 	 * the superimposition section can have a fully qualified name which does
 	 * not obstruct the names of other concern elements.

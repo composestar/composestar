@@ -40,7 +40,7 @@ import Composestar.Core.LAMA.ProgramElement;
  */
 public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityTestBase
 {
-	protected SuperImposition si;
+	protected SISpecification si;
 
 	protected AnnotationBinding ab1, ab2;
 
@@ -70,7 +70,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#addAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)}
 	 * .
 	 */
 	public void testAddAnnotationBinding()
@@ -91,7 +91,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#addCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}
 	 * .
 	 */
 	public void testAddCondition()
@@ -112,7 +112,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#addFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)}
 	 * .
 	 */
 	public void testAddFilterModuleBinding()
@@ -133,7 +133,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#addFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)}
 	 * .
 	 */
 	public void testAddFilterModuleConstraint()
@@ -154,7 +154,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#addSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)}
 	 * .
 	 */
 	public void testAddSelector()
@@ -175,7 +175,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getAnnotationBindings()}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#getAnnotationBindings()}
 	 * .
 	 */
 	public void testGetAnnotationBindings()
@@ -199,7 +199,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getCondition(java.lang.String)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#getCondition(java.lang.String)}
 	 * .
 	 */
 	public void testGetCondition()
@@ -213,7 +213,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getConditions()}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#getConditions()}
 	 * .
 	 */
 	public void testGetConditions()
@@ -237,7 +237,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getFilterModuleBindings()}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#getFilterModuleBindings()}
 	 * .
 	 */
 	public void testGetFilterModuleBindings()
@@ -261,7 +261,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getFilterModuleConstraints()}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#getFilterModuleConstraints()}
 	 * .
 	 */
 	public void testGetFilterModuleConstraints()
@@ -285,7 +285,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getSelector(java.lang.String)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#getSelector(java.lang.String)}
 	 * .
 	 */
 	public void testGetSelector()
@@ -299,7 +299,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getSelectors()}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#getSelectors()}
 	 * .
 	 */
 	public void testGetSelectors()
@@ -323,7 +323,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#removeAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)}
 	 * .
 	 */
 	public void testRemoveAnnotationBinding()
@@ -343,7 +343,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}
 	 * .
 	 */
 	public void testRemoveConditionCondition()
@@ -365,7 +365,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeCondition(java.lang.String)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#removeCondition(java.lang.String)}
 	 * .
 	 */
 	public void testRemoveConditionString()
@@ -380,7 +380,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#removeFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)}
 	 * .
 	 */
 	public void testRemoveFilterModuleBinding()
@@ -400,7 +400,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#removeFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)}
 	 * .
 	 */
 	public void testRemoveFilterModuleConstraint()
@@ -420,7 +420,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#removeSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)}
 	 * .
 	 */
 	public void testRemoveSelectorSelector()
@@ -442,7 +442,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeSelector(java.lang.String)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SISpecificationImpl#removeSelector(java.lang.String)}
 	 * .
 	 */
 	public void testRemoveSelectorString()
