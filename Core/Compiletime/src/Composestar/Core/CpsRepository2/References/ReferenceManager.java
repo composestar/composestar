@@ -3,6 +3,7 @@ package Composestar.Core.CpsRepository2.References;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
 /**
@@ -103,4 +104,21 @@ public interface ReferenceManager
 	 */
 	Collection<FilterModuleReference> getFilterModuleReferences();
 
+	/**
+	 * Register a user for a given repository entity
+	 * 
+	 * @param ref
+	 * @param entity
+	 * @throws NullPointerException Thrown when the reference or entity are null
+	 */
+	void addReferenceUser(Reference<?> ref, RepositoryEntity entity, boolean isRequired) throws NullPointerException;
+
+	/**
+	 * Get all usage information for a given reference
+	 * 
+	 * @param ref
+	 * @return A collection of reference usage classes. Returns an empty
+	 *         collection when the reference is not known to be used.
+	 */
+	Collection<ReferenceUsage> getReferenceUsage(Reference<?> ref);
 }

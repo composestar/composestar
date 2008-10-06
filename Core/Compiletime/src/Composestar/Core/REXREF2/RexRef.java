@@ -24,13 +24,19 @@
 
 package Composestar.Core.REXREF2;
 
+import java.util.Collection;
+
+import org.apache.log4j.Level;
+
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.References.Reference;
 import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2.References.ReferenceUsage;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.Type;
@@ -51,6 +57,8 @@ public class RexRef implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.REXREF);
 
+	protected static final String PASSES_KEY = ModuleNames.REXREF + ".passes";
+
 	/**
 	 * The reference manager
 	 */
@@ -59,6 +67,11 @@ public class RexRef implements CTCommonModule
 	protected Repository repository;
 
 	protected UnitRegister register;
+
+	/**
+	 * Number of times this module has been executed
+	 */
+	protected int passes;
 
 	public RexRef()
 	{}
@@ -71,6 +84,16 @@ public class RexRef implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
+		Integer ipass = resources.get(PASSES_KEY);
+		if (ipass == null)
+		{
+			passes = 1;
+		}
+		else
+		{
+			passes = ipass + 1;
+		}
+		resources.put(PASSES_KEY, passes);
 		refman = resources.get(ReferenceManager.RESOURCE_KEY);
 		if (refman == null)
 		{
@@ -80,7 +103,7 @@ public class RexRef implements CTCommonModule
 		repository = resources.repository();
 		register = resources.get(UnitRegister.RESOURCE_KEY);
 		CPSTimer timer = CPSTimer.getTimer(ModuleNames.REXREF);
-		timer.start("Resolving type references");
+		timer.start("Resolving type references (pass #" + passes + ")");
 		for (TypeReference ref : refman.getTypeReferences())
 		{
 			if (!ref.isResolved() && !ref.isSelfReference())
@@ -89,7 +112,7 @@ public class RexRef implements CTCommonModule
 			}
 		}
 		timer.stop();
-		timer.start("Resolving filter module references");
+		timer.start("Resolving filter module references (pass #" + passes + ")");
 		for (FilterModuleReference ref : refman.getFilterModuleReferences())
 		{
 			if (!ref.isResolved() && !ref.isSelfReference())
@@ -98,7 +121,7 @@ public class RexRef implements CTCommonModule
 			}
 		}
 		timer.stop();
-		timer.start("Resolving method references");
+		timer.start("Resolving method references (pass #" + passes + ")");
 		for (MethodReference ref : refman.getMethodReferences())
 		{
 			if (!ref.isResolved() && !ref.isSelfReference())
@@ -107,7 +130,7 @@ public class RexRef implements CTCommonModule
 			}
 		}
 		timer.stop();
-		timer.start("Resolving instance method references");
+		timer.start("Resolving instance method references (pass #" + passes + ")");
 		for (InstanceMethodReference ref : refman.getInstanceMethodReferences())
 		{
 			if (!ref.isResolved() && !ref.isSelfReference())
@@ -117,6 +140,29 @@ public class RexRef implements CTCommonModule
 		}
 		timer.stop();
 		return ModuleReturnValue.Ok;
+	}
+
+	protected void notifyMissingRef(Reference<?> ref, String refName)
+	{
+		Collection<ReferenceUsage> usage = refman.getReferenceUsage(ref);
+		for (ReferenceUsage use : usage)
+		{
+			if (use.getUser() == null)
+			{
+				continue;
+			}
+			Level loglev = Level.WARN;
+			if (use.isRequired())
+			{
+				loglev = Level.ERROR;
+			}
+			logger.log(loglev, String.format("Unresolved %s reference: %s", refName, ref.getReferenceId()), use
+					.getUser());
+		}
+		if (usage.size() == 0)
+		{
+			logger.warn(String.format("Unresolved %s reference: %s", refName, ref.getReferenceId()));
+		}
 	}
 
 	protected void resolveInstanceMethodReference(InstanceMethodReference ref)
@@ -137,8 +183,7 @@ public class RexRef implements CTCommonModule
 		ref.setReference(fm);
 		if (fm == null)
 		{
-			// TODO notify
-			logger.warn(String.format("Unresolved reference [%s]: %s", ref.getClass().getName(), ref.getReferenceId()));
+			notifyMissingRef(ref, "filter module");
 		}
 	}
 
@@ -148,8 +193,7 @@ public class RexRef implements CTCommonModule
 		ref.setReference(type);
 		if (type == null)
 		{
-			// TODO notify
-			logger.warn(String.format("Unresolved reference [%s]: %s", ref.getClass().getName(), ref.getReferenceId()));
+			notifyMissingRef(ref, "type");
 		}
 	}
 }

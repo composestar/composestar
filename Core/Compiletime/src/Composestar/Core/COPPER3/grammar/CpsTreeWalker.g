@@ -251,7 +251,8 @@ internal [FilterModule fm]
 				TypeReference tr = null;
 				if (ref != null)
 				{
-					tr = references.getTypeReference(ref);			
+					tr = references.getTypeReference(ref);
+					references.addReferenceUser(tr, internal, true);
 				}
 				else if (prm != null)
 				{
@@ -358,7 +359,8 @@ external [FilterModule fm]
 				TypeReference tr = null;
 				if (ref != null)
 				{
-					tr = references.getTypeReference(ref);			
+					tr = references.getTypeReference(ref);
+					references.addReferenceUser(tr, external, true);
 				}
 				else if (prm != null)
 				{
@@ -377,6 +379,10 @@ external [FilterModule fm]
 				if (init != null)
 				{
 					external.setMethodReference(init);
+					if (!(init instanceof Parameterized))
+					{
+						references.addReferenceUser(init, external, false);
+					}
 				}
 				setLocInfo(external, $name);
 				if (!fm.addVariable(external))
@@ -400,7 +406,14 @@ condition [FilterModule fm]
 		{
 			try {
 				Condition cond = new ConditionImpl($name.text);
-				if (mref != null) cond.setMethodReference(mref);
+				if (mref != null) 
+				{
+					cond.setMethodReference(mref);
+					if (!(mref instanceof Parameterized))
+					{
+						references.addReferenceUser(mref, cond, true);
+					}
+				}
 				setLocInfo(cond, $name);
 				if (!fm.addVariable(cond))
 				{
@@ -847,7 +860,9 @@ cpsVariableFqn [FilterModule fm] returns [CpsVariable entity]
 						}
 						sb.append(s);
 					}
-					entity = new CpsTypeProgramElementImpl(references.getTypeReference(sb.toString()));
+					TypeReference tr = references.getTypeReference(sb.toString());
+					entity = new CpsTypeProgramElementImpl(tr);
+					references.addReferenceUser(tr, entity, true);
 				}
 			}
 			catch (RecognitionException re) {
@@ -974,12 +989,13 @@ conditionalSi [SuperImposition si]
 					sb.append(s);
 				}
 				MethodReference mref = references.getMethodReference(expr.get(expr.size()-1), sb.toString(), jpca);
-				cond.setMethodReference(mref);			
+				cond.setMethodReference(mref);
 				if (!si.addCondition(cond))
 				{
 					throw new CpsSemanticException(String.format("Condition name \"\%s\" is not unqiue within superimposition for: \%s",
 						cond.getName(), si.getFullyQualifiedName()), input, $strt);
 				}
+				references.addReferenceUser(mref, cond, true);
 				repository.add(cond);
 			}
 			catch (RecognitionException re) {
@@ -1091,7 +1107,14 @@ fmBinding [SuperImposition si] returns [FilterModuleBinding fmb = new FilterModu
 	: ^(strt=BINDING fmr=concernFmRef[si] 
 		{
 			setLocInfo(fmb, $strt);
-			if (fmr != null) fmb.setFilterModuleReference(fmr);
+			if (fmr != null) 
+			{
+				fmb.setFilterModuleReference(fmr);
+				if (!fmr.isSelfReference())
+				{
+					references.addReferenceUser(fmr, fmb, true);
+				}
+			}
 		}
 		(^(PARAMS
 			{
@@ -1136,7 +1159,9 @@ paramValue [SuperImposition si] returns [FMParameterValue fmp]
 					fmp = new SelectorFMParamValue(sel);
 				}
 				else {
-					fmp = new SimpleFMParamValue(new CpsTypeProgramElementImpl(references.getTypeReference(sp)));
+					TypeReference tr = references.getTypeReference(sp);
+					fmp = new SimpleFMParamValue(new CpsTypeProgramElementImpl(tr));
+					references.addReferenceUser(tr, fmp, false);
 				}
 			}
 		|lt=LITERAL	
@@ -1182,7 +1207,9 @@ annotationSi [SuperImposition si]
 		}
 		(at=fqn
 		{
-			ab.addAnnotation(references.getTypeReference(at));		
+			TypeReference tr = references.getTypeReference(at);
+			ab.addAnnotation(references.getTypeReference(at));
+			references.addReferenceUser(tr, ab, true);	
 		}
 		)+)
 	;
@@ -1254,7 +1281,9 @@ constraint [SuperImposition si]
 				}
 				else if (arg.indexOf('.') > 0)
 				{
-					FilterModuleConstraintValue fmcv = new FilterModuleConstraintValueImpl(references.getFilterModuleReference(arg));
+					FilterModuleReference fmr = references.getFilterModuleReference(arg);
+					FilterModuleConstraintValue fmcv = new FilterModuleConstraintValueImpl(fmr);
+					references.addReferenceUser(fmr, fmcv, false);
 					setLocInfo(fmcv, tok);
 					repository.add(fmcv);
 					args.add(fmcv);

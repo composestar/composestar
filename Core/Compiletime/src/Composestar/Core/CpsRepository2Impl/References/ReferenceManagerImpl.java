@@ -28,13 +28,19 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
-import Composestar.Core.CpsRepository2.References.ReferenceManager;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.References.Reference;
+import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2.References.ReferenceUsage;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
@@ -68,12 +74,18 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 	 */
 	protected Map<String, FilterModuleReference> fmRefs;
 
+	/**
+	 * Usage information for references
+	 */
+	protected Map<Reference<?>, Set<ReferenceUsage>> usage;
+
 	public ReferenceManagerImpl()
 	{
 		typeRefs = new HashMap<String, TypeReference>();
 		methodRefs = new HashMap<String, MethodReference>();
 		instMethodRefs = new HashMap<String, InstanceMethodReference>();
 		fmRefs = new HashMap<String, FilterModuleReference>();
+		usage = new HashMap<Reference<?>, Set<ReferenceUsage>>();
 	}
 
 	/*
@@ -253,5 +265,61 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 	public Collection<FilterModuleReference> getFilterModuleReferences()
 	{
 		return Collections.unmodifiableCollection(fmRefs.values());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.References.ReferenceManager#addReferenceUser
+	 * (Composestar.Core.CpsRepository2.References.Reference,
+	 * Composestar.Core.CpsRepository2.RepositoryEntity, boolean)
+	 */
+	public void addReferenceUser(Reference<?> ref, RepositoryEntity entity, boolean isRequired)
+			throws NullPointerException
+	{
+		if (ref == null)
+		{
+			throw new NullPointerException("Reference can not be null");
+		}
+		if (entity == null)
+		{
+			throw new NullPointerException("RepositoryEntity can not be null");
+		}
+		ReferenceUsage refu = new ReferenceUsageImpl(ref, entity, isRequired);
+		Set<ReferenceUsage> usageSet = usage.get(ref);
+		if (usageSet == null)
+		{
+			usageSet = new HashSet<ReferenceUsage>();
+			usage.put(ref, usageSet);
+		}
+		usageSet.add(refu);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.References.ReferenceManager#getReferenceUsage
+	 * (Composestar.Core.CpsRepository2.References.Reference)
+	 */
+	public Collection<ReferenceUsage> getReferenceUsage(Reference<?> ref)
+	{
+		if (ref == null)
+		{
+			return Collections.emptyList();
+		}
+		Collection<ReferenceUsage> res = usage.get(ref);
+		if (res == null)
+		{
+			return Collections.emptyList();
+		}
+		Iterator<ReferenceUsage> it = res.iterator();
+		while (it.hasNext())
+		{
+			if (it.next().getUser() == null)
+			{
+				it.remove();
+			}
+		}
+		return res;
 	}
 }
