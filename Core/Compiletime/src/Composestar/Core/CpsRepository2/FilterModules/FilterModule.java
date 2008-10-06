@@ -56,7 +56,8 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 
 	/**
 	 * @return True if this filter module has filter module parameters. This is
-	 *         always
+	 *         always true when the {{@link #getParameter(String)} list is not
+	 *         empty.
 	 */
 	boolean hasParameters();
 

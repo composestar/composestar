@@ -26,6 +26,8 @@ package Composestar.Core.CpsRepository2;
 
 import java.util.List;
 
+import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
+
 /**
  * The base interface for all concern types. A concern is a root element in the
  * repository.
@@ -50,4 +52,24 @@ public interface Concern extends QualifiedRepositoryEntity
 	 * @see #getNamespace()
 	 */
 	List<String> getNamespaceAsList();
+
+	/**
+	 * @return The information about the superimposed filter modules, etc.
+	 *         Returns null when nothing is superimposed.
+	 * @see #setSuperimposed(Superimposed)
+	 */
+	Superimposed getSuperimposed();
+
+	/**
+	 * Set the information for superimposed elements. After setting
+	 * setOwner(this) is called on the added superimposed instance.
+	 * 
+	 * @param si the superimposed instance to set
+	 * @throws IllegalStateException when the concern already has a superimposed
+	 *             set and the new value is not null. To overwrite the previous
+	 *             value it first has to be set to null. This exception is not
+	 *             thrown when the current value and new value are the same.
+	 * @see #getSuperimposed()
+	 */
+	void setSuperimposed(Superimposed si) throws IllegalStateException;
 }

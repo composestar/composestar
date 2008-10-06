@@ -104,7 +104,7 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	}
 
 	/**
-	 * @param repository
+	 * @param repositoryEntities
 	 */
 	public void setRepository(Repository val)
 	{

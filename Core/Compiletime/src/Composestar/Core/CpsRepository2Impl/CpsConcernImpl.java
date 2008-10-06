@@ -51,7 +51,7 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	/**
 	 * The optional superimposition construction
 	 */
-	protected SISpecification sISpecification;
+	protected SISpecification siSpecification;
 
 	/**
 	 * Create a new namespace instance
@@ -118,7 +118,7 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	 */
 	public SISpecification getSISpecification()
 	{
-		return sISpecification;
+		return siSpecification;
 	}
 
 	/*
@@ -159,14 +159,14 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	 */
 	public void setSISpecification(SISpecification si) throws IllegalStateException
 	{
-		if (sISpecification != null && sISpecification != si && si != null)
+		if (siSpecification != null && siSpecification != si && si != null)
 		{
 			throw new IllegalStateException("SISpecification has already been set. Unset it first by passing null.");
 		}
-		sISpecification = si;
-		if (sISpecification != null)
+		siSpecification = si;
+		if (siSpecification != null)
 		{
-			sISpecification.setOwner(this);
+			siSpecification.setOwner(this);
 		}
 	}
 }

@@ -531,4 +531,23 @@ public class FilterModuleImpl extends AbstractQualifiedRepositoryEntity implemen
 		}
 		return null;
 	}
+
+	/**
+	 * Set the name of this filter module. DO NOT USE THIS METHOD, unless you
+	 * really know what you are doing.
+	 * 
+	 * @param value
+	 */
+	public void setName(String value)
+	{
+		name = value;
+	}
+
+	/**
+	 * DO NOT USE THIS METHOD, unless you really know what you are doing.
+	 */
+	public void removeParameters()
+	{
+		parameters.clear();
+	}
 }

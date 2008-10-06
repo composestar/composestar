@@ -85,7 +85,8 @@ public interface Repository extends Serializable, Set<RepositoryEntity>
 	 * Returns an immutable subset that only contains elements of the given
 	 * type. This method is much slower than getAll(Class) because this
 	 * constructs a new set with all elements where getAll(Class) iterates the
-	 * current set.
+	 * current set. However, this does result in concurrency exception, so it is
+	 * suitable as base for an iteratation when new elements are being added.
 	 * 
 	 * @param <T>
 	 * @param type The filter type

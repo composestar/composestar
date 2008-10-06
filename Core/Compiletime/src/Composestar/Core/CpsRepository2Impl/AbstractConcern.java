@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
 
 /**
  * Abstract implementation for the Concern interface
@@ -43,6 +44,11 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 	 * Contains the namespace with each segment as a separate entry
 	 */
 	protected List<String> namespace;
+
+	/**
+	 * Handle to the superimposed information.
+	 */
+	protected Superimposed superimposed;
 
 	/**
 	 * Create a new concern concern
@@ -104,5 +110,33 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 	public List<String> getNamespaceAsList()
 	{
 		return Collections.unmodifiableList(namespace);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.Concern#getSuperimposed()
+	 */
+	public Superimposed getSuperimposed()
+	{
+		return superimposed;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.Concern#setSuperimposed(Composestar.Core
+	 * .CpsRepository2.SIInfo.Superimposed)
+	 */
+	public void setSuperimposed(Superimposed si) throws IllegalStateException
+	{
+		if (superimposed != null && superimposed != si && si != null)
+		{
+			throw new IllegalStateException("Superimposed has already been set. Unset it first by passing null.");
+		}
+		superimposed = si;
+		if (superimposed != null)
+		{
+			superimposed.setOwner(this);
+		}
 	}
 }
