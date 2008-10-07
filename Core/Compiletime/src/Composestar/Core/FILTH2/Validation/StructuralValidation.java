@@ -33,7 +33,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import Composestar.Core.FILTH2.ConstraintDefinition;
+import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.ExcludeConstraint;
@@ -60,9 +60,9 @@ public final class StructuralValidation
 	 * @param constraints
 	 * @return
 	 */
-	public static boolean isValid(Map<Constraint, ConstraintDefinition> constraints)
+	public static boolean isValid(Map<Constraint, FilterModuleConstraint> constraints)
 	{
-		for (Entry<Constraint, ConstraintDefinition> entry : constraints.entrySet())
+		for (Entry<Constraint, FilterModuleConstraint> entry : constraints.entrySet())
 		{
 			if (!(entry.getKey() instanceof ExcludeConstraint))
 			{

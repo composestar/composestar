@@ -243,6 +243,7 @@ public class RexRef implements CTCommonModule
 					.format("Missing type: '%s'", ref.getTypeReference().getReferenceId()));
 			return;
 		}
+		// TODO: account for JPCA
 		for (MethodInfo mi : (List<MethodInfo>) type.getMethods())
 		{
 			if (ref.getReferenceId().equals(mi.getName()))

@@ -27,6 +27,7 @@ package Composestar.Core.CpsRepository2Impl.SIInfo;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -35,6 +36,11 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 public class ImposedFilterModuleImpl extends AbstractRepositoryEntity implements ImposedFilterModule
 {
 	private static final long serialVersionUID = 6810664520502514731L;
+
+	/**
+	 * The imposing filter module binding
+	 */
+	protected FilterModuleBinding imposedBy;
 
 	/**
 	 * The optional condition
@@ -49,15 +55,19 @@ public class ImposedFilterModuleImpl extends AbstractRepositoryEntity implements
 	/**
 	 * Create a new imposed filter module instance
 	 * 
-	 * @param fm
-	 * @param mr
-	 * @throws NullPointerException Thrown when the filter module is null
+	 * @param imposer
+	 * @throws NullPointerException Thrown when the filter module binding is
+	 *             null
 	 */
-	public ImposedFilterModuleImpl(FilterModule fm, MethodReference mr) throws NullPointerException
+	public ImposedFilterModuleImpl(FilterModuleBinding imposer) throws NullPointerException
 	{
 		super();
-		filterModule = fm;
-		methodReference = mr;
+		imposedBy = imposer;
+		filterModule = imposedBy.getFilterModuleReference().getReference();
+		if (imposedBy.getCondition() != null)
+		{
+			methodReference = imposedBy.getCondition().getMethodReference();
+		}
 	}
 
 	/*
@@ -79,6 +89,31 @@ public class ImposedFilterModuleImpl extends AbstractRepositoryEntity implements
 	public FilterModule getFilterModule()
 	{
 		return filterModule;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule#setFilterModule
+	 * (Composestar.Core.CpsRepository2.FilterModules.FilterModule)
+	 */
+	public void setFilterModule(FilterModule fm) throws NullPointerException
+	{
+		if (fm == null)
+		{
+			throw new NullPointerException("Filter module can not be null");
+		}
+		filterModule = fm;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule#getImposedBy()
+	 */
+	public FilterModuleBinding getImposedBy()
+	{
+		return imposedBy;
 	}
 
 }

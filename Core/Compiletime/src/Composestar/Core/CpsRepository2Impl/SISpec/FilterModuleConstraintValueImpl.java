@@ -59,8 +59,7 @@ public class FilterModuleConstraintValueImpl extends AbstractRepositoryEntity im
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraintValue
+	 * @see Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraintValue
 	 * #getFilterModuleReference()
 	 */
 	public FilterModuleReference getFilterModuleReference()
@@ -68,4 +67,13 @@ public class FilterModuleConstraintValueImpl extends AbstractRepositoryEntity im
 		return filterModuleReference;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.SISpec.ConstraintValue#getStringValue()
+	 */
+	public String getStringValue()
+	{
+		return filterModuleReference.getReferenceId();
+	}
 }

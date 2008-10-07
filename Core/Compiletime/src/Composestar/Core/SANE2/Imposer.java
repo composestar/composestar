@@ -24,22 +24,9 @@
 
 package Composestar.Core.SANE2;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsRepository2.Concern;
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.Repository;
-import Composestar.Core.CpsRepository2.RepositoryEntity;
-import Composestar.Core.CpsRepository2.FMParams.FMParameter;
-import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
-import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
-import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.ReferenceManager;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
@@ -100,17 +87,6 @@ public class Imposer implements CTCommonModule
 
 	protected boolean superImpose(FilterModuleBinding fmb)
 	{
-		FilterModule fm = fmb.getFilterModuleReference().getReference();
-		if (fm.hasParameters())
-		{
-			timer.start("Resolve FMPs for: %s", fmb.getFilterModuleReference().getReferenceId());
-			fm = resolveFilterModuleParameters(fmb);
-			timer.stop();
-			if (fm == null)
-			{
-				return false;
-			}
-		}
 		int cnt = 0;
 		for (ProgramElement pr : fmb.getSelector().getSelection())
 		{
@@ -127,12 +103,7 @@ public class Imposer implements CTCommonModule
 						concern.setSuperimposed(si);
 						repository.add(si);
 					}
-					MethodReference mr = null;
-					if (fmb.getCondition() != null)
-					{
-						mr = fmb.getCondition().getMethodReference();
-					}
-					ImposedFilterModule ifm = new ImposedFilterModuleImpl(fm, mr);
+					ImposedFilterModule ifm = new ImposedFilterModuleImpl(fmb);
 					ifm.setSourceInformation(fmb.getSourceInformation());
 					si.addFilterModule(ifm);
 					repository.add(ifm);
@@ -151,82 +122,5 @@ public class Imposer implements CTCommonModule
 					.getFullyQualifiedName()), fmb.getSelector());
 		}
 		return true;
-	}
-
-	protected FilterModule resolveFilterModuleParameters(FilterModuleBinding fmb)
-	{
-		FilterModule fm = fmb.getFilterModuleReference().getReference();
-		logger.info(String.format("Resolving filter module paramaters for %s", fm.getFullyQualifiedName()), fm);
-		List<FMParameterValue> values = fmb.getParameterValues();
-		Map<String, FMParameterValue> context = new HashMap<String, FMParameterValue>();
-		if (values.size() < fm.getParameters().size())
-		{
-			logger.error(String.format("Filter module '%s' requires %d parameters, only received %d", fm
-					.getFullyQualifiedName(), fm.getParameters().size(), values.size()), fmb);
-			return null;
-		}
-		else if (values.size() > fm.getParameters().size())
-		{
-			logger.warn(String.format("Filter module '%s' only requires %d parameters, received %d", fm
-					.getFullyQualifiedName(), fm.getParameters().size(), values.size()), fmb);
-		}
-		int idx = 0;
-		for (FMParameter par : fm.getParameters())
-		{
-			FMParameterValue val = values.get(idx);
-			int valCnt = val.getValues().size();
-			if (!par.isParameterList())
-			{
-				if (valCnt == 0)
-				{
-					logger.error(String.format("Parameter %s requires a value", par.getFullyQualifiedName()), val);
-				}
-				else if (valCnt > 1)
-				{
-					logger.warn(String.format("Only the first value will be used by parameter %s", par
-							.getFullyQualifiedName()), val);
-				}
-			}
-			context.put(par.getFullyQualifiedName(), val);
-			++idx;
-		}
-
-		try
-		{
-			// TODO how to handle filter module references in the filter module
-			// as filter type?
-
-			RepositoryEntity realOwner = fm.getOwner();
-			FakeOwner fakeOwner;
-			if (realOwner instanceof QualifiedRepositoryEntity)
-			{
-				fakeOwner = new FakeOwner(((QualifiedRepositoryEntity) realOwner).getFullyQualifiedName());
-			}
-			else
-			{
-				fakeOwner = new FakeOwner("<invalid>");
-			}
-			fm.setOwner(fakeOwner);
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new UnreferencedOOS(os);
-			oos.writeObject(fm);
-			fm.setOwner(realOwner);
-			String newName = fm.getName() + "`" + fmb.getSelector().getFullyQualifiedName().hashCode();
-
-			ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-			ParameterResolver pm = new ParameterResolver(is, context, refman, newName);
-			fm = (FilterModule) pm.readObject();
-			fm.setOwner(realOwner);
-
-			List<RepositoryEntity> newEnt = pm.getRepositoryEntities();
-			newEnt.remove(fakeOwner);
-			repository.addAll(newEnt);
-			return fm;
-		}
-		catch (Exception e)
-		{
-			logger.error(e);
-			return null;
-		}
 	}
 }

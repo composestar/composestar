@@ -26,7 +26,6 @@ package Composestar.Core.FILTH2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,13 +33,19 @@ import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
-import Composestar.Core.COPPER2.FilterTypeMapping;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.COPPER3.FilterTypeMapping;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
+import Composestar.Core.CpsRepository2.SISpec.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding;
+import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
+import Composestar.Core.CpsRepository2Impl.SIInfo.ImposedFilterModuleImpl;
+import Composestar.Core.CpsRepository2Impl.SISpec.FilterModuleBindingImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.ConstraintFactory;
@@ -52,9 +57,7 @@ import Composestar.Core.FILTH2.Validation.StructuralValidation;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
-import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
@@ -66,7 +69,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = ModuleNames.FILTH, dependsOn = { ModuleNames.COPPER })
+@ComposestarModule(ID = ModuleNames.FILTH, dependsOn = { ModuleNames.LOLA })
 public class FILTH implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);
@@ -75,12 +78,9 @@ public class FILTH implements CTCommonModule
 	 * The default inner dispatch filter module. Will be appended to all
 	 * generated order
 	 */
-	protected FilterModuleReference defaultInnerDispatch;
+	protected FilterModule defaultInnerDispatch;
 
-	/**
-	 * The constraint specification, created by COPPER
-	 */
-	protected ConstraintSpecification constraintSpec;
+	protected FilterModuleBinding defaultFMBinding;
 
 	protected CPSTimer timer;
 
@@ -100,49 +100,51 @@ public class FILTH implements CTCommonModule
 	 * Mapping from constraint to its definition, used for error reporting on
 	 * the constraints.
 	 */
-	protected Map<Constraint, ConstraintDefinition> constraints;
+	protected Map<Constraint, FilterModuleConstraint> constraints;
+
+	protected Repository repository;
 
 	public FILTH()
 	{}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		timer = CPSTimer.getTimer(ModuleNames.FILTH);
+		repository = resources.repository();
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
-		defaultInnerDispatch = InnerDispatcher.createInnerDispatchReference(resources.repository(), filterTypes);
-		constraintSpec = resources.get(ConstraintSpecification.RESOURCE_KEY);
+		defaultInnerDispatch = InnerDispatcher.createInnerDispatcher(repository, filterTypes);
+		defaultFMBinding = new FilterModuleBindingImpl();
+		defaultFMBinding.setFilterModuleReference(defaultInnerDispatch);
 
 		timer.start("Creating actions");
-		Iterator<FilterModuleAST> fmIter = resources.repository().getAllInstancesOf(FilterModuleAST.class);
 		actions = new HashMap<String, Action>();
-		while (fmIter.hasNext())
+		for (FilterModule fm : repository.getAll(FilterModule.class))
 		{
-			FilterModuleAST fm = fmIter.next();
-			actions.put(fm.getQualifiedName(), new Action(fm.getQualifiedName()));
+			actions.put(fm.getFullyQualifiedName(), new Action(fm.getFullyQualifiedName()));
 		}
 		timer.stop();
 		timer.start("Loading constraint specification");
-		constraints = new HashMap<Constraint, ConstraintDefinition>();
+		constraints = new HashMap<Constraint, FilterModuleConstraint>();
 		loadConstraintSpecification();
 		timer.stop();
 
 		boolean allOK = true;
-		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
-		while (conIter.hasNext())
+		for (Superimposed si : repository.getAllSet(Superimposed.class))
 		{
-			Concern c = conIter.next();
-			SIinfo si = (SIinfo) c.getDynObject(SIinfo.DATAMAP_KEY);
-			if (si != null)
+			if (!(si.getOwner() instanceof Concern))
 			{
-				timer.start(c.getQualifiedName());
-				allOK &= generateFilterModuleOrder(c, si);
-				timer.stop();
+				continue;
 			}
+			Concern c = (Concern) si.getOwner();
+			timer.start(c.getFullyQualifiedName());
+			allOK &= generateFilterModuleOrder(c, si);
+			timer.stop();
 		}
 		if (!allOK)
 		{
@@ -161,15 +163,13 @@ public class FILTH implements CTCommonModule
 	 * @param si
 	 * @return true when a valid filter module order was selected
 	 */
-	protected boolean generateFilterModuleOrder(Concern concern, SIinfo sinfo)
+	protected boolean generateFilterModuleOrder(Concern concern, Superimposed sinfo)
 	{
-		Map<Action, FilterModuleSuperImposition> concernActions = new HashMap<Action, FilterModuleSuperImposition>();
+		Map<Action, ImposedFilterModule> concernActions = new HashMap<Action, ImposedFilterModule>();
 		// Add filter modules as actions
-		List<FilterModSIinfo> msalts = sinfo.getFilterModSIAlts();
-		FilterModSIinfo fmsi = msalts.get(0);
-		for (FilterModuleSuperImposition fms : (List<FilterModuleSuperImposition>) fmsi.getAll())
+		for (ImposedFilterModule fms : sinfo.getFilterModules())
 		{
-			Action act = actions.get(fms.getFilterModule().getQualifiedName());
+			Action act = actions.get(fms.getFilterModule().getFullyQualifiedName());
 			if (act != null)
 			{
 				concernActions.put(act, fms);
@@ -177,23 +177,23 @@ public class FILTH implements CTCommonModule
 			else
 			{
 				logger.error(String.format("Unknown filter module %s in the order for %s", fms.getFilterModule()
-						.getQualifiedName(), concern.getQualifiedName()));
+						.getFullyQualifiedName(), concern.getFullyQualifiedName()));
 				return false;
 			}
 		}
 
-		List<List<FilterModuleSuperImposition>> fmorders = new LinkedList<List<FilterModuleSuperImposition>>();
+		List<List<ImposedFilterModule>> fmorders = new LinkedList<List<ImposedFilterModule>>();
 
-		timer.start("Creating orders for %s", concern.getQualifiedName());
+		timer.start("Creating orders for %s", concern.getFullyQualifiedName());
 		Set<List<Action>> orders = OrderGenerator.generate(concernActions.keySet(), maxOrders);
 		timer.stop();
 
 		// convert the ordered action lists to filter module ordering lists and
 		// validate the generated list to conform to the constraints
-		timer.start("Convert orders for %s", concern.getQualifiedName());
+		timer.start("Convert orders for %s", concern.getFullyQualifiedName());
 		for (List<Action> order : orders)
 		{
-			List<FilterModuleSuperImposition> fmorder = new ArrayList<FilterModuleSuperImposition>();
+			List<ImposedFilterModule> fmorder = new ArrayList<ImposedFilterModule>();
 			boolean isValidOrder = true;
 			for (Action action : order)
 			{
@@ -202,7 +202,7 @@ public class FILTH implements CTCommonModule
 				{
 					if (!constraint.isValidOrder(order, null))
 					{
-						ConstraintDefinition def = constraints.get(constraint);
+						FilterModuleConstraint def = constraints.get(constraint);
 						logger.warn(String.format("Constraint %s is not met in this selected order: %s",
 								def.toString(), order), def);
 						isValidOrder = false;
@@ -213,7 +213,7 @@ public class FILTH implements CTCommonModule
 				{
 					break;
 				}
-				FilterModuleSuperImposition fms = concernActions.get(action);
+				ImposedFilterModule fms = concernActions.get(action);
 				if (fms != null)
 				{
 					fmorder.add(fms);
@@ -221,7 +221,7 @@ public class FILTH implements CTCommonModule
 				else
 				{
 					logger.error(String.format("Unknown action %s in the order for %s", action.getName(), concern
-							.getQualifiedName()));
+							.getFullyQualifiedName()));
 					return false;
 				}
 			}
@@ -229,7 +229,8 @@ public class FILTH implements CTCommonModule
 			if (isValidOrder)
 			{
 				// add the default dispatch filter
-				fmorder.add(new FilterModuleSuperImposition(defaultInnerDispatch));
+				ImposedFilterModule difm = new ImposedFilterModuleImpl(defaultFMBinding);
+				fmorder.add(difm);
 				fmorders.add(fmorder);
 			}
 		}
@@ -244,12 +245,12 @@ public class FILTH implements CTCommonModule
 			if (fmorders.size() > 1)
 			{
 				logger.warn(String.format("Multiple Filter Module orderings possible for concern %s", concern
-						.getQualifiedName()), concern);
+						.getFullyQualifiedName()), concern);
 			}
 
 			if (fmorders.get(0).size() > 2) // because of the default dispatch
 			{
-				logger.info("Encountered shared join point: " + concern.getQualifiedName(), concern);
+				logger.info("Encountered shared join point: " + concern.getFullyQualifiedName(), concern);
 
 				StringBuffer sb = new StringBuffer();
 				for (FilterModuleSuperImposition fms : fmorders.get(0))
@@ -265,7 +266,9 @@ public class FILTH implements CTCommonModule
 		}
 		else
 		{
-			logger.error(String.format("No valid filter module order for %s", concern.getQualifiedName()), concern);
+			logger
+					.error(String.format("No valid filter module order for %s", concern.getFullyQualifiedName()),
+							concern);
 			return false;
 		}
 		return true;
@@ -278,29 +281,27 @@ public class FILTH implements CTCommonModule
 	 */
 	protected void loadConstraintSpecification()
 	{
-		List<Action> acts = new ArrayList<Action>();
-		for (ConstraintDefinition def : constraintSpec.getDefinitions())
+		for (FilterModuleConstraint fmc : repository.getAll(FilterModuleConstraint.class))
 		{
-			String[] args = def.getArguments();
-			acts.clear();
-			for (String element : args)
+			List<ConstraintValue> args = fmc.getArguments();
+			List<Action> acts = new ArrayList<Action>();
+			for (ConstraintValue element : args)
 			{
-				Action act = actions.get(element);
+				Action act = actions.get(element.getStringValue());
 				if (act == null)
 				{
-					act = new PhantomAction(element);
-					actions.put(element, act);
+					act = new PhantomAction(element.getStringValue());
+					actions.put(element.getStringValue(), act);
 				}
 				acts.add(act);
-
 			}
 			try
 			{
-				constraints.put(ConstraintFactory.createConstraint(def.getType(), acts), def);
+				constraints.put(ConstraintFactory.createConstraint(fmc.getConstraintType(), acts), fmc);
 			}
 			catch (ConstraintCreationException e)
 			{
-				logger.error(e.getMessage(), def);
+				logger.error(e.getMessage(), fmc);
 			}
 		}
 	}

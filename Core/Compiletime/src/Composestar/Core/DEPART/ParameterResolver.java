@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.SANE2;
+package Composestar.Core.DEPART;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
+	<moduleinfo id="DEPART" class="Composestar.Core.DEPART.Departure">
+		<name>Filter Module Deparameterization</name>
+		<description>
+			Replaces parameterized filter modules with resolved filter modules.
+		</description>
+	</moduleinfo>
+</modules>

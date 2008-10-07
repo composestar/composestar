@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
-import Composestar.Core.CpsRepository2.SISpec.ConstraintValue;
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -98,5 +96,10 @@ public abstract class FilterModuleConstraintTestBase extends RepositoryEntityTes
 	protected class DummyCV extends AbstractRepositoryEntity implements ConstraintValue
 	{
 		private static final long serialVersionUID = 1L;
+
+		public String getStringValue()
+		{
+			return null;
+		}
 	}
 }

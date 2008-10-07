@@ -21,7 +21,7 @@
  *
  * $Id$
  */
-package Composestar.Core.SANE2;
+package Composestar.Core.DEPART;
 
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 

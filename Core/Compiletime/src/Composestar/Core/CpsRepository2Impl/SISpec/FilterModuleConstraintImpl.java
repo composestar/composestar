@@ -75,8 +75,7 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint
+	 * @see Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint
 	 * #getConstraintType()
 	 */
 	public String getConstraintType()
@@ -87,8 +86,7 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint
+	 * @see Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint
 	 * #getArguments()
 	 */
 	public List<ConstraintValue> getArguments()
@@ -98,8 +96,7 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint
+	 * @see Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint
 	 * #setArguments(java.util.List)
 	 */
 	public void setArguments(List<ConstraintValue> args) throws NullPointerException, IllegalArgumentException
@@ -116,5 +113,29 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 		}
 		arguments.clear();
 		arguments.addAll(args);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(constraintType);
+		sb.append('(');
+		int i = 0;
+		for (ConstraintValue val : arguments)
+		{
+			if (i > 0)
+			{
+				sb.append(',');
+			}
+			++i;
+			sb.append(val.getStringValue());
+		}
+		sb.append(')');
+		return sb.toString();
 	}
 }

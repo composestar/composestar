@@ -58,8 +58,7 @@ public class ConditionConstraintValueImpl extends AbstractRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.ConditionConstraintValue
+	 * @see Composestar.Core.CpsRepository2.SISpec.ConditionConstraintValue
 	 * #getCondition()
 	 */
 	public SICondition getCondition()
@@ -67,4 +66,13 @@ public class ConditionConstraintValueImpl extends AbstractRepositoryEntity imple
 		return condition;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.SISpec.ConstraintValue#getStringValue()
+	 */
+	public String getStringValue()
+	{
+		return condition.getFullyQualifiedName();
+	}
 }

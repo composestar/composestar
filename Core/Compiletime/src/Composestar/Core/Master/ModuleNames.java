@@ -145,4 +145,9 @@ public final class ModuleNames
 	 * Inline model builder
 	 */
 	public static final String INLINE = "INLINE";
+
+	/**
+	 * Filter module deparameterization
+	 */
+	public static final String DEPART = "DEPART";
 }

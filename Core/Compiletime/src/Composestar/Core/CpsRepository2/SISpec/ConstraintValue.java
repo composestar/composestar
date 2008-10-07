@@ -34,4 +34,9 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
  */
 public interface ConstraintValue extends RepositoryEntity
 {
+	/**
+	 * @return The the value as string. This would be in most cases the fully
+	 *         qualified names.
+	 */
+	String getStringValue();
 }
