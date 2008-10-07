@@ -114,6 +114,7 @@ public class RexRef implements CTCommonModule
 			// no reference manager means nothing has to be resolved
 			return ModuleReturnValue.Ok;
 		}
+		int cnt = 0;
 		repository = resources.repository();
 		register = resources.get(UnitRegister.RESOURCE_KEY);
 		CPSTimer timer = CPSTimer.getTimer(ModuleNames.REXREF);
@@ -123,9 +124,12 @@ public class RexRef implements CTCommonModule
 			if (doResolve(ref))
 			{
 				resolveType(ref);
+				++cnt;
 			}
 		}
 		timer.stop();
+		logger.debug(String.format("Resolved %d type references", cnt));
+		cnt = 0;
 		timer.start("Resolving filter module references (pass #" + passes + ")");
 		for (FilterModuleReference ref : refman.getFilterModuleReferences())
 		{
@@ -135,24 +139,31 @@ public class RexRef implements CTCommonModule
 			}
 		}
 		timer.stop();
+		logger.debug(String.format("Resolved %d filter module references", cnt));
+		cnt = 0;
 		timer.start("Resolving method references (pass #" + passes + ")");
 		for (MethodReference ref : refman.getMethodReferences())
 		{
 			if (doResolve(ref))
 			{
 				resolveMethodReference(ref);
+				++cnt;
 			}
 		}
 		timer.stop();
+		logger.debug(String.format("Resolved %d method references", cnt));
+		cnt = 0;
 		timer.start("Resolving instance method references (pass #" + passes + ")");
 		for (InstanceMethodReference ref : refman.getInstanceMethodReferences())
 		{
 			if (doResolve(ref))
 			{
 				resolveInstanceMethodReference(ref);
+				++cnt;
 			}
 		}
 		timer.stop();
+		logger.debug(String.format("Resolved %d instance method references", cnt));
 		return ModuleReturnValue.Ok;
 	}
 

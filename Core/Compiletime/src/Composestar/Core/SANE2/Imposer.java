@@ -53,6 +53,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 /**
  * Performs the superimposition of the filter modules and resolves the
@@ -69,6 +70,8 @@ public class Imposer implements CTCommonModule
 
 	protected ReferenceManager refman;
 
+	protected CPSTimer timer;
+
 	public Imposer()
 	{}
 
@@ -81,6 +84,7 @@ public class Imposer implements CTCommonModule
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		boolean res = true;
+		timer = CPSTimer.getTimer(ModuleNames.SANE);
 		repository = resources.repository();
 		refman = resources.get(ReferenceManager.RESOURCE_KEY);
 		for (FilterModuleBinding fmb : repository.getAllSet(FilterModuleBinding.class))
@@ -99,7 +103,9 @@ public class Imposer implements CTCommonModule
 		FilterModule fm = fmb.getFilterModuleReference().getReference();
 		if (fm.hasParameters())
 		{
+			timer.start("Resolve FMPs for: %s", fmb.getFilterModuleReference().getReferenceId());
 			fm = resolveFilterModuleParameters(fmb);
+			timer.stop();
 			if (fm == null)
 			{
 				return false;
@@ -130,6 +136,7 @@ public class Imposer implements CTCommonModule
 					ifm.setSourceInformation(fmb.getSourceInformation());
 					si.addFilterModule(ifm);
 					repository.add(ifm);
+					cnt++;
 				}
 				else
 				{
@@ -149,6 +156,7 @@ public class Imposer implements CTCommonModule
 	protected FilterModule resolveFilterModuleParameters(FilterModuleBinding fmb)
 	{
 		FilterModule fm = fmb.getFilterModuleReference().getReference();
+		logger.info(String.format("Resolving filter module paramaters for %s", fm.getFullyQualifiedName()), fm);
 		List<FMParameterValue> values = fmb.getParameterValues();
 		Map<String, FMParameterValue> context = new HashMap<String, FMParameterValue>();
 		if (values.size() < fm.getParameters().size())
@@ -179,14 +187,15 @@ public class Imposer implements CTCommonModule
 							.getFullyQualifiedName()), val);
 				}
 			}
-			context.put(par.getRawName(), val);
+			context.put(par.getFullyQualifiedName(), val);
 			++idx;
 		}
 
 		try
 		{
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(os);
+			// TODO how to handle filter module references in the filter module
+			// as filter type?
+
 			RepositoryEntity realOwner = fm.getOwner();
 			FakeOwner fakeOwner;
 			if (realOwner instanceof QualifiedRepositoryEntity)
@@ -198,11 +207,14 @@ public class Imposer implements CTCommonModule
 				fakeOwner = new FakeOwner("<invalid>");
 			}
 			fm.setOwner(fakeOwner);
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new UnreferencedOOS(os);
 			oos.writeObject(fm);
 			fm.setOwner(realOwner);
+			String newName = fm.getName() + "`" + fmb.getSelector().getFullyQualifiedName().hashCode();
 
 			ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-			ParameterResolver pm = new ParameterResolver(is, context, refman);
+			ParameterResolver pm = new ParameterResolver(is, context, refman, newName);
 			fm = (FilterModule) pm.readObject();
 			fm.setOwner(realOwner);
 

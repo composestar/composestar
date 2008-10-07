@@ -41,6 +41,8 @@ import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.Reference;
 import Composestar.Core.CpsRepository2.References.ReferenceManager;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariableCollection;
 import Composestar.Core.CpsRepository2Impl.FMParams.ParameterizedCpsVariable;
@@ -49,10 +51,17 @@ import Composestar.Core.CpsRepository2Impl.FMParams.ParameterizedMethodReference
 import Composestar.Core.CpsRepository2Impl.FMParams.ParameterizedTypeReference;
 import Composestar.Core.CpsRepository2Impl.FilterModules.FilterModuleImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsVariableCollectionImpl;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
+ * Deserializes a stream and replaces all parameterized classes with non
+ * parameterized classes, also replaces the reference classes with entries from
+ * the reference manager.
+ * 
  * @author Michiel Hendriks
  */
 public class ParameterResolver extends ObjectInputStream
@@ -64,20 +73,30 @@ public class ParameterResolver extends ObjectInputStream
 	 */
 	protected Map<String, FMParameterValue> context;
 
+	/**
+	 * The reference manager, used to reattach the references
+	 */
 	protected ReferenceManager refman;
 
-	protected int counter;
-
+	/**
+	 * List of new repository entities
+	 */
 	protected List<RepositoryEntity> repositoryEntities;
 
-	public ParameterResolver(InputStream in, Map<String, FMParameterValue> ctx, ReferenceManager referenceManager)
-			throws IOException, SecurityException
+	/**
+	 * The new name for the filter module
+	 */
+	protected String newName;
+
+	public ParameterResolver(InputStream in, Map<String, FMParameterValue> ctx, ReferenceManager referenceManager,
+			String newFMName) throws IOException, SecurityException
 	{
 		super(in);
 		enableResolveObject(true);
 		repositoryEntities = new ArrayList<RepositoryEntity>();
 		context = ctx;
 		refman = referenceManager;
+		newName = newFMName;
 	}
 
 	/**
@@ -97,8 +116,18 @@ public class ParameterResolver extends ObjectInputStream
 	{
 		if (obj instanceof FilterModuleImpl)
 		{
-			((FilterModuleImpl) obj).setName(((FilterModuleImpl) obj).getName() + "`" + (++counter));
-			((FilterModuleImpl) obj).removeParameters();
+			// update the filter module
+			if (newName != null)
+			{
+				((FilterModuleImpl) obj).setName(newName);
+				((FilterModuleImpl) obj).removeParameters();
+				newName = null;
+			}
+			else
+			{
+				logger.error("Input stream contained multiple filter modules. Found: "
+						+ ((FilterModuleImpl) obj).getFullyQualifiedName());
+			}
 		}
 		else if (obj instanceof Parameterized)
 		{
@@ -114,6 +143,10 @@ public class ParameterResolver extends ObjectInputStream
 
 		if (obj instanceof RepositoryEntity)
 		{
+			if (logger.isTraceEnabled())
+			{
+				logger.trace(String.format("Deserialized: %s", obj.toString()));
+			}
 			repositoryEntities.add((RepositoryEntity) obj);
 		}
 		return obj;
@@ -137,35 +170,31 @@ public class ParameterResolver extends ObjectInputStream
 		}
 		else if (obj instanceof MethodReference)
 		{
-			obj = refman.getMethodReference(obj.getReferenceId(), ((MethodReference) obj).getTypeReference(),
-					((MethodReference) obj).getJoinPointContextArgument());
+			obj = refman.getMethodReference(obj.getReferenceId(), ((MethodReference) obj).getTypeReference()
+					.getReferenceId(), ((MethodReference) obj).getJoinPointContextArgument());
 		}
 		else if (obj instanceof InstanceMethodReference)
 		{
-			obj = refman.getFilterModuleReference(obj.getReferenceId());
+			obj = refman.getInstanceMethodReference(obj.getReferenceId(), ((InstanceMethodReference) obj)
+					.getCpsObject(), ((InstanceMethodReference) obj).getJoinPointContextArgument());
 		}
 		else
 		{
-			logger.error(String.format("Unknown reference type encountered '%s' with id ''", obj.getClass().getName(),
-					obj.getReferenceId()));
+			logger.error(String.format("Unknown reference type encountered '%s' with id '%s'",
+					obj.getClass().getName(), obj.getReferenceId()));
 		}
 		return obj;
 	}
 
 	protected Object resolveParameterized(Parameterized obj)
 	{
-		FMParameterValue parval = context.get(obj.getFMParameter().getRawName());
+		FMParameterValue parval = context.get(obj.getFMParameter().getFullyQualifiedName());
 		if (parval == null)
 		{
 			throw new NullPointerException(String.format("No value for filter module parameters %s", obj
 					.getFMParameter().getFullyQualifiedName()));
 		}
 		Collection<CpsVariable> values = parval.getValues();
-		CpsVariable value = null;
-		if (!values.isEmpty())
-		{
-			value = values.iterator().next();
-		}
 		if (obj instanceof ParameterizedCpsVariableCollection)
 		{
 			CpsVariableCollection col = new CpsVariableCollectionImpl();
@@ -174,16 +203,61 @@ public class ParameterResolver extends ObjectInputStream
 		}
 		else if (obj instanceof ParameterizedTypeReference)
 		{
-
+			for (CpsVariable value : values)
+			{
+				if (value instanceof CpsTypeProgramElement)
+				{
+					return ((CpsTypeProgramElement) value).getTypeReference();
+				}
+				else if (value instanceof CpsProgramElement)
+				{
+					ProgramElement pe = ((CpsProgramElement) value).getProgramElement();
+					if (pe instanceof Type)
+					{
+						TypeReference tr = refman.getTypeReference(((Type) pe).getFullName());
+						if (tr.getReference() == null)
+						{
+							tr.setReference((Type) pe);
+						}
+						return tr;
+					}
+				}
+			}
+			logger.error(String.format("No valid value found, expected a type reference"), parval);
+			return null;
 		}
 		else if (obj instanceof ParameterizedMethodReference)
 		{
-
+			for (CpsVariable value : values)
+			{
+				if (value instanceof CpsProgramElement)
+				{
+					ProgramElement pe = ((CpsProgramElement) value).getProgramElement();
+					if (pe instanceof MethodInfo)
+					{
+						MethodReference tr = refman.getMethodReference(((MethodInfo) pe).getName(), ((MethodInfo) pe)
+								.parent().getFullName(), ((ParameterizedMethodReference) obj)
+								.getJoinPointContextArgument());
+						if (tr.getReference() == null)
+						{
+							tr.setReference((MethodInfo) pe);
+						}
+						return tr;
+					}
+				}
+			}
+			logger.error(String.format("No valid value found, expected a method reference"), parval);
+			return null;
 		}
 		else if (obj instanceof ParameterizedCpsVariable)
 		{
-
+			if (!values.isEmpty())
+			{
+				return values.iterator().next();
+			}
+			return null;
 		}
+		logger.error(String.format("Unknown parameterized entity encountered '%s'", obj.getClass().getName()));
 		return obj;
 	}
 }
