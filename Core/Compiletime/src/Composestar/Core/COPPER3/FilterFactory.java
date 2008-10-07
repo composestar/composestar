@@ -26,6 +26,7 @@ package Composestar.Core.COPPER3;
 
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.Filters.FilterType;
+import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;
 import Composestar.Core.CpsRepository2Impl.Filters.PrimitiveFilterTypeImpl;
 
 /**
@@ -58,7 +59,10 @@ public class FilterFactory
 			return null;
 		}
 		FilterType res = new PrimitiveFilterTypeImpl(name);
-		mapping.registerFilterType(res);
+		if (mapping != null)
+		{
+			mapping.registerFilterType(res);
+		}
 		repository.add(res);
 		return res;
 	}
@@ -66,5 +70,9 @@ public class FilterFactory
 	public void setTypeMapping(FilterTypeMapping filterTypes)
 	{
 		mapping = filterTypes;
+		for (PrimitiveFilterType ft : repository.getAll(PrimitiveFilterType.class))
+		{
+			mapping.registerFilterType(ft);
+		}
 	}
 }

@@ -21,6 +21,9 @@ public class JavaMaster extends Master
 			return false;
 		}
 		FilterFactory filterFactory = new FilterFactory(resources.repository());
+		// FIXME: 1!!
+		filterFactory.createFilter("Dispatch");
+		filterFactory.createFilter("Send");
 		resources.put(FilterFactory.RESOURCE_KEY, filterFactory);
 		return true;
 	}

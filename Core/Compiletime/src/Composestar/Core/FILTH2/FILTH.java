@@ -45,7 +45,6 @@ import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
 import Composestar.Core.CpsRepository2Impl.SIInfo.ImposedFilterModuleImpl;
 import Composestar.Core.CpsRepository2Impl.SISpec.FilterModuleBindingImpl;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.ConstraintFactory;
@@ -57,7 +56,6 @@ import Composestar.Core.FILTH2.Validation.StructuralValidation;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
@@ -188,6 +186,9 @@ public class FILTH implements CTCommonModule
 		Set<List<Action>> orders = OrderGenerator.generate(concernActions.keySet(), maxOrders);
 		timer.stop();
 
+		ImposedFilterModule difm = new ImposedFilterModuleImpl(defaultFMBinding);
+		sinfo.addFilterModule(difm);
+
 		// convert the ordered action lists to filter module ordering lists and
 		// validate the generated list to conform to the constraints
 		timer.start("Convert orders for %s", concern.getFullyQualifiedName());
@@ -229,37 +230,35 @@ public class FILTH implements CTCommonModule
 			if (isValidOrder)
 			{
 				// add the default dispatch filter
-				ImposedFilterModule difm = new ImposedFilterModuleImpl(defaultFMBinding);
 				fmorder.add(difm);
 				fmorders.add(fmorder);
+				sinfo.addFilterModuleOrder(fmorder);
 			}
 		}
 		timer.stop();
 
 		// add the filter module orders
-		concern.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY, fmorders);
 		if (fmorders.size() > 0)
 		{
-			concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, new FilterModuleOrder(fmorders.get(0)));
-
 			if (fmorders.size() > 1)
 			{
 				logger.warn(String.format("Multiple Filter Module orderings possible for concern %s", concern
 						.getFullyQualifiedName()), concern);
 			}
 
-			if (fmorders.get(0).size() > 2) // because of the default dispatch
+			List<ImposedFilterModule> selorder = sinfo.getFilterModuleOrder();
+			if (selorder.size() > 2) // because of the default dispatch
 			{
 				logger.info("Encountered shared join point: " + concern.getFullyQualifiedName(), concern);
 
 				StringBuffer sb = new StringBuffer();
-				for (FilterModuleSuperImposition fms : fmorders.get(0))
+				for (ImposedFilterModule fms : selorder)
 				{
 					if (sb.length() > 0)
 					{
 						sb.append(" --> ");
 					}
-					sb.append(fms.getFilterModule().getRef().getOriginalQualifiedName());
+					sb.append(fms.getFilterModule().getFullyQualifiedName());
 				}
 				logger.debug("Selecting filter module order: " + sb.toString());
 			}

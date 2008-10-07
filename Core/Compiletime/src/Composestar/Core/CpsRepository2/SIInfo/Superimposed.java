@@ -24,6 +24,7 @@
 
 package Composestar.Core.CpsRepository2.SIInfo;
 
+import java.util.Collection;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.RepositoryEntity;
@@ -49,4 +50,39 @@ public interface Superimposed extends RepositoryEntity
 	 *             null.
 	 */
 	void addFilterModule(ImposedFilterModule ifm) throws NullPointerException;
+
+	/**
+	 * Add a filter module order. The first order added will automatically
+	 * because the selected filter module order.
+	 * 
+	 * @param order The order to add
+	 * @throws NullPointerException Thrown when the order is null
+	 * @throws IllegalArgumentException Thrown when the order does not have the
+	 *             same content as the filter module list
+	 */
+	void addFilterModuleOrder(List<ImposedFilterModule> order) throws NullPointerException, IllegalArgumentException;
+
+	/**
+	 * @return The selected filter module order. Returns null when no order has
+	 *         been set. The returned list can not be modified.
+	 */
+	List<ImposedFilterModule> getFilterModuleOrder();
+
+	/**
+	 * Set the current filter module order. If this order is not in the
+	 * currently registered list it will be added.
+	 * 
+	 * @param order The active filter module order to set.
+	 * @throws NullPointerException Thrown when the order is null
+	 * @throws IllegalArgumentException Thrown when the order does not have the
+	 *             same content as the filter module list
+	 */
+	void setFilterModuleOrder(List<ImposedFilterModule> order) throws NullPointerException, IllegalArgumentException;
+
+	/**
+	 * @return All filter module orders registered. This list does not have to
+	 *         be complete (depends on FILTH). When no orders where registered
+	 *         an empty collection is returned.
+	 */
+	Collection<List<ImposedFilterModule>> getAllOrders();
 }
