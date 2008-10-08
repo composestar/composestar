@@ -231,7 +231,7 @@ public class CoreConflictDetector
 		}
 		else if (unreachableNode.containsName(FlowNode.ACTION_NODE))
 		{
-			// TODO implement unreachable action conflicts
+			unreachableActionNodes.add(unreachableNode);
 		}
 
 		return conflicts;
