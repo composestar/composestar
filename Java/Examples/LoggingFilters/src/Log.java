@@ -3,15 +3,17 @@ import java.util.Dictionary;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
 import Composestar.RuntimeCore.FLIRT.Actions.MetaAction;
+import Composestar.RuntimeCore.FLIRT.Annotations.FilterActionAcceptCall;
 import Composestar.RuntimeCore.FLIRT.Annotations.FilterActionAcceptReturn;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
 /**
- * The "invalidate" filter type.
+ * The log filter type
  */
-@FilterActionAcceptReturn(operations = "target.read;selector.read;arg.read;cache.clear")
-public class Invalidate extends CustomFilter {
+@FilterActionAcceptCall(operations = "target.read;selector.read;arg.read")
+@FilterActionAcceptReturn(operations = "target.read;selector.read;arg.read;return.read")
+public class Log extends CustomFilter {
 
 	/*
 	 * (non-Javadoc)
@@ -25,8 +27,8 @@ public class Invalidate extends CustomFilter {
 			Dictionary arg2) {
 		replaceInner(arg0, arg1);
 		replaceWildcards(arg0, arg1);
-		return new MetaAction(arg0, arg0.reify(), CachingObject.getInstance(),
-				"invalidate", true);
+		return new MetaAction(arg0, arg0.reify(), Logger.getInstance(),
+				"logAround", true);
 	}
 
 	/*
@@ -39,7 +41,7 @@ public class Invalidate extends CustomFilter {
 	@Override
 	public ComposeStarAction rejectAction(MessageList arg0, MessageList arg1,
 			Dictionary arg2) {
-		// does not do anything on reject actions.
+		// do nothing when the message is rejected
 		return new ContinueToNextFilterAction(arg0, false);
 	}
 
@@ -60,7 +62,7 @@ public class Invalidate extends CustomFilter {
 	 */
 	@Override
 	public String getName() {
-		return "Invalidate";
+		return "Log";
 	}
 
 }

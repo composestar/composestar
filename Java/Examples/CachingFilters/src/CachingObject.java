@@ -1,52 +1,95 @@
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
 
+/**
+ * The cache handler. Keeps a cache for each object that passes. This
+ * implementation has the following limitations:
+ * <ul>
+ * <li>The value of the first argument is used as the key for caching. Caching
+ * methods with more than one argument is therefor not reliable.</li>
+ * </ul>
+ */
 public class CachingObject {
-	boolean debug = false; // set to "true" to see what is going on inside
+	/**
+	 * set to "true" to see what is going on inside
+	 */
+	private static boolean debug = false;
 
-	// Maps (method argument => return value)
-	Map<Object, Map<Object, Object>> objectCache;
-
-	// Singleton cache instance
+	/**
+	 * Singleton cache instance
+	 */
 	private static CachingObject cacheInstance;
 
-	public CachingObject() {
-		objectCache = new HashMap<Object, Map<Object, Object>>();
+	/**
+	 * Maps (method argument => return value) for each object
+	 */
+	private Map<Object, Map<CacheRecord, Object>> objectCache;
+
+	/**
+	 * @return The caching instance.
+	 */
+	public static CachingObject getInstance() {
+		if (cacheInstance == null) {
+			cacheInstance = new CachingObject();
+		}
+		return cacheInstance;
 	}
 
-	// This is where the actual caching takes place. A "Meta-filter" can
-	// forward "Reified (*) messages" to this method.
-	// (*) To regard or treat (an abstraction) as if it had concrete or material
-	// existence.
+	/**
+	 * enable/disable debug output
+	 * 
+	 * @param doDebug
+	 */
+	public static void setDebug(boolean doDebug) {
+		debug = doDebug;
+	}
 
+	private CachingObject() {
+		// use a weak hashmap so that object references are not kept in memory
+		// for ever
+		objectCache = new WeakHashMap<Object, Map<CacheRecord, Object>>();
+	}
+
+	/**
+	 * This is where the actual caching takes place. A "Meta-filter" can forward
+	 * "Reified (*) messages" to this method. (*) To regard or treat (an
+	 * abstraction) as if it had concrete or material existence.
+	 * 
+	 * @param message
+	 */
 	public void storeValue(ReifiedMessage message) {
 		// Obtain message argument values. To keep things simple, this version
 		// only supports methods that have 0 or 1 arguments (otherwise, you need
 		// nested hashtables, etc.)
-		Object arg;
-		if (message.getArgs().length > 0)
-			arg = message.getArg(0);
-		else
-			arg = "(no argument)";
 
-		debugPrint("Method " + message.getSelector()
-				+ " called with argument value: " + arg);
-		
-		Map<Object, Object> cache = objectCache.get(message.getTarget());
-		if (cache == null)
-		{
-			cache = new HashMap<Object, Object>();
+		CacheRecord rec = new CacheRecord(message.getSelector(), message
+				.getArgs());
+
+		if (debug) {
+			debugPrint("Method " + message.getSelector()
+					+ " called with argument value: "
+					+ Arrays.toString(rec.args));
+		}
+
+		Map<CacheRecord, Object> cache = objectCache.get(message.getTarget());
+		if (cache == null) {
+			cache = new HashMap<CacheRecord, Object>();
 			objectCache.put(message.getTarget(), cache);
 		}
 
 		// Did we already calculate the return value, given this argument value?
-		if (cache.containsKey(arg)) { // Yes....
-			debugPrint("Cached result for argument value: " + arg + ": "
-					+ cache.get(arg));
+		if (cache.containsKey(rec)) { // Yes....
+			Object result = cache.get(rec);
+			if (debug) {
+				debugPrint("Cached result for argument value: "
+						+ Arrays.toString(rec.args) + ": " + result);
+			}
 
-			message.reply(cache.get(arg));
+			message.reply(result);
 			return; // do not proceed! Skip normal execution.
 		}
 
@@ -57,27 +100,102 @@ public class CachingObject {
 		if (res != null) // don't crash if accidentally used on void methods
 		// (which have no result obviously)
 		{
-			cache.put(arg, res);
-			debugPrint("Calculated result for " + arg + ": " + res);
+			cache.put(rec, res);
+			if (debug) {
+				debugPrint("Calculated result for " + rec + ": " + res);
+			}
 		}
 	}
-	
+
+	/**
+	 * Clear the cache for the target object
+	 * 
+	 * @param message
+	 */
 	public void invalidate(ReifiedMessage message) {
-		Map<Object, Object> cache = objectCache.get(message.getTarget());
-		if (cache != null)
-		{
+		Map<CacheRecord, Object> cache = objectCache.get(message.getTarget());
+		if (cache != null) {
 			cache.clear();
 		}
 	}
 
+	/**
+	 * Print debug output
+	 * 
+	 * @param str
+	 */
 	public void debugPrint(String str) {
-		if (debug)
+		if (debug) {
 			System.err.println(str);
+		}
 	}
 
-	public static CachingObject getInstance() {
-		if (cacheInstance == null)
-			cacheInstance = new CachingObject();
-		return cacheInstance;
+	/**
+	 * A cache record
+	 */
+	public static class CacheRecord {
+		public String method;
+		public Object[] args;
+
+		public CacheRecord(String m, Object[] a) {
+			method = m;
+			args = a;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + Arrays.hashCode(args);
+			result = prime * result
+					+ ((method == null) ? 0 : method.hashCode());
+			return result;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			final CacheRecord other = (CacheRecord) obj;
+			if (!Arrays.equals(args, other.args))
+				return false;
+			if (method == null) {
+				if (other.method != null)
+					return false;
+			} else if (!method.equals(other.method))
+				return false;
+			return true;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(method);
+			sb.append('(');
+			if (args != null) {
+				sb.append(Arrays.toString(args));
+			}
+			sb.append(')');
+			return sb.toString();
+		}
 	}
 }

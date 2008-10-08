@@ -8,10 +8,20 @@ import Composestar.RuntimeCore.FLIRT.Annotations.FilterActionAcceptReturn;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
+/**
+ * The cache filter type
+ */
 @FilterActionAcceptCall(operations = "target.read;selector.read;arg.read;cache.read;return.write")
 @FilterActionAcceptReturn(operations = "target.read;selector.read;arg.read;cache.write")
 public class Cache extends CustomFilter {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime#acceptAction(Composestar.RuntimeCore.FLIRT.Message.MessageList,
+	 *      Composestar.RuntimeCore.FLIRT.Message.MessageList,
+	 *      java.util.Dictionary)
+	 */
 	@Override
 	public ComposeStarAction acceptAction(MessageList arg0, MessageList arg1,
 			Dictionary arg2) {
@@ -21,17 +31,35 @@ public class Cache extends CustomFilter {
 				"storeValue", true);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime#rejectAction(Composestar.RuntimeCore.FLIRT.Message.MessageList,
+	 *      Composestar.RuntimeCore.FLIRT.Message.MessageList,
+	 *      java.util.Dictionary)
+	 */
 	@Override
 	public ComposeStarAction rejectAction(MessageList arg0, MessageList arg1,
 			Dictionary arg2) {
+		// do nothing when the message is rejected
 		return new ContinueToNextFilterAction(arg0, false);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime#shouldContinueAfterAccepting()
+	 */
 	@Override
 	public boolean shouldContinueAfterAccepting() {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter#getName()
+	 */
 	@Override
 	public String getName() {
 		return "Cache";
