@@ -104,7 +104,7 @@ public class SuperimposedImpl extends AbstractRepositoryEntity implements Superi
 		{
 			throw new NullPointerException("Order can not be null");
 		}
-		if (!imposedFilterModules.containsAll(order) || !order.contains(imposedFilterModules))
+		if (!imposedFilterModules.containsAll(order) || !order.containsAll(imposedFilterModules))
 		{
 			throw new IllegalArgumentException("Order does not contain the same set of imposed filter modules");
 		}

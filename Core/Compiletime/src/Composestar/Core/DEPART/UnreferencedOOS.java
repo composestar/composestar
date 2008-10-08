@@ -47,7 +47,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class UnreferencedOOS extends ObjectOutputStream
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SANE + ".ParameterResolver");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DEPART + ".ParameterResolver");
 
 	/**
 	 * @param out

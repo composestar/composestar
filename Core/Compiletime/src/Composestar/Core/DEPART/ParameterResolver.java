@@ -66,7 +66,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class ParameterResolver extends ObjectInputStream
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SANE + ".ParameterResolver");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DEPART + ".ParameterResolver");
 
 	/**
 	 * Contains the values for the parameters
