@@ -72,11 +72,11 @@ public class Preprocessor implements CTCommonModule
 
 	private static final boolean GROOVE_DEBUG = false;
 
-	private static final File AST_OUT = new File("./ast.gst");
+	private File debugOutAst;
 
-	private static final File FLOW_OUT = new File("./flow.gst");
+	private File debugOutFlow;
 
-	private static final File EXECUTION_OUT = new File("./execution.gst");
+	private File debugOutExec;
 
 	// public static final String RESULT_ID = "FirePreprocessingResult";
 
@@ -142,6 +142,13 @@ public class Preprocessor implements CTCommonModule
 	private void preprocessModule(FilterModule module)
 	{
 		logger.debug("Preprocessing Filter Module: " + module.getQualifiedName());
+
+		if (GROOVE_DEBUG)
+		{
+			debugOutAst = new File("./ast_" + module.getQualifiedName() + ".gst");
+			debugOutFlow = new File("./flow_" + module.getQualifiedName() + ".gst");
+			debugOutExec = new File("./exec_" + module.getQualifiedName() + ".gst");
+		}
 
 		// build AST:
 		GrooveASTBuilder astBuilder = new GrooveASTBuilder();
@@ -227,7 +234,7 @@ public class Preprocessor implements CTCommonModule
 			// output ast:
 			try
 			{
-				graphLoader.marshal(grooveAst, AST_OUT);
+				graphLoader.marshal(grooveAst, debugOutAst);
 			}
 			catch (XmlException e)
 			{
@@ -276,7 +283,7 @@ public class Preprocessor implements CTCommonModule
 				// output flowgraph:
 				try
 				{
-					graphLoader.marshal(graph, FLOW_OUT);
+					graphLoader.marshal(graph, debugOutFlow);
 				}
 				catch (XmlException e)
 				{
@@ -318,7 +325,7 @@ public class Preprocessor implements CTCommonModule
 			// output execution-statespace:
 			try
 			{
-				graphLoader.marshal(gts, EXECUTION_OUT);
+				graphLoader.marshal(gts, debugOutExec);
 			}
 			catch (XmlException e)
 			{
