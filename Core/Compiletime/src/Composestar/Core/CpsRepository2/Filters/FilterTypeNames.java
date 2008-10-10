@@ -24,23 +24,52 @@
 
 package Composestar.Core.CpsRepository2.Filters;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
-
 /**
- * Generic interface for all filter types, which includes the primitive filter
- * types and the filter modules which can be used as filter type.
+ * The names for the default filter types.
  * 
  * @author Michiel Hendriks
  */
-public interface FilterType extends RepositoryEntity
+public final class FilterTypeNames
 {
-	/**
-	 * @return The full name of this filter type. For FilterModuleFilterTypes
-	 *         this name would be equal to the fully qualified name of the
-	 *         filter module. For primitive filters this is simply their name
-	 *         (not the implementing class name).
-	 */
-	String getFilterName();
+	public static final String AFTER = "After";
 
-	// TODO: void isValidArgument(CanonAssignment arg) throws something;
+	/**
+	 * @deprecated use {@link #AFTER}
+	 */
+	@Deprecated
+	public static final String APPEND = "Append";
+
+	public static final String BEFORE = "Before";
+
+	public static final String DISPATCH = "Dispatch";
+
+	/**
+	 * Like {@link #ERROR} except that it throws an exception when accepted
+	 */
+	public static final String EXCEPTION = "Exception";
+
+	public static final String ERROR = "Error";
+
+	public static final String META = "Meta";
+
+	/**
+	 * @deprecated use {@link #BEFORE}
+	 */
+	@Deprecated
+	public static final String PREPEND = "Prepend";
+
+	public static final String SEND = "Send";
+
+	/**
+	 * Only performs message substitution.
+	 * 
+	 * @deprecated use {@link #VOID}
+	 */
+	@Deprecated
+	public static final String SUBSTITUTION = "Substitution";
+
+	/**
+	 * This filter type does nothing when accepted
+	 */
+	public static final String VOID = "Void";
 }

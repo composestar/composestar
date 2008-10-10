@@ -45,19 +45,19 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 	/**
 	 * The flow behavior
 	 */
-	protected FlowBehavior flowBehavior;
+	protected FlowBehavior flowBehavior = FlowBehavior.CONTINUE;
 
 	/**
 	 * The resource operations
 	 */
-	protected String resourceOperations;
+	protected String resourceOperations = "";
 
 	/**
 	 * The join point context this filter action needs. In case of
 	 * {@link JoinPointContextArgument#NONE} and
 	 * {@link JoinPointContextArgument#UNUSED} no joint point context is needed.
 	 */
-	protected JoinPointContextArgument joinPointContextArgument;
+	protected JoinPointContextArgument joinPointContextArgument = JoinPointContextArgument.UNUSED;
 
 	/**
 	 * @param actionName
@@ -88,6 +88,16 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 		return flowBehavior;
 	}
 
+	/**
+	 * Set the flow behavior
+	 * 
+	 * @param value
+	 */
+	public void setFlowBehavior(FlowBehavior value)
+	{
+		flowBehavior = value;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see Composestar.Core.CpsRepository2.Filters.FilterAction#getName()
@@ -108,6 +118,20 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 		return resourceOperations;
 	}
 
+	/**
+	 * Set the resource operation sequence
+	 * 
+	 * @param value
+	 */
+	public void setResourceOperations(String value)
+	{
+		if (value == null)
+		{
+			value = "";
+		}
+		resourceOperations = value;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -119,4 +143,13 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 		return joinPointContextArgument;
 	}
 
+	/**
+	 * Set the join point context value
+	 * 
+	 * @param value
+	 */
+	public void setJoinPointContextArgument(JoinPointContextArgument value)
+	{
+		joinPointContextArgument = value;
+	}
 }

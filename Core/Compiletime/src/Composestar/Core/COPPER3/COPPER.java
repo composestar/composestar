@@ -77,7 +77,7 @@ public class COPPER implements CTCommonModule
 	/**
 	 * The filter factory to use
 	 */
-	protected FilterFactory filterFactory;
+	protected FilterTypeFactory filterTypeFactory;
 
 	/**
 	 * If true export the antlr tree to a .dot file. Useful for debugging.
@@ -111,16 +111,13 @@ public class COPPER implements CTCommonModule
 			resources.put(FilterTypeMapping.RESOURCE_KEY, filterTypes);
 		}
 
-		filterFactory = resources.get(FilterFactory.RESOURCE_KEY);
-		if (filterFactory == null)
+		filterTypeFactory = resources.get(FilterTypeFactory.RESOURCE_KEY);
+		if (filterTypeFactory == null)
 		{
-			filterFactory = new FilterFactory(repository, filterTypes);
-			resources.put(FilterFactory.RESOURCE_KEY, filterFactory);
+			filterTypeFactory = new FilterTypeFactory(repository);
+			resources.put(FilterTypeFactory.RESOURCE_KEY, filterTypeFactory);
 		}
-		else
-		{
-			filterFactory.setTypeMapping(filterTypes);
-		}
+		filterTypeFactory.setTypeMapping(filterTypes);
 
 		refman = resources.get(ReferenceManager.RESOURCE_KEY);
 		if (refman == null)
@@ -206,7 +203,7 @@ public class COPPER implements CTCommonModule
 			w.setSourceFile(file);
 			w.setRepository(repository);
 			w.setFilterTypeMapping(filterTypes);
-			w.setFilterFactory(filterFactory);
+			w.setFilterFactory(filterTypeFactory);
 			w.setEmbeddedSourceManager(embeddedSourceManager);
 			w.setReferenceManager(refman);
 			try

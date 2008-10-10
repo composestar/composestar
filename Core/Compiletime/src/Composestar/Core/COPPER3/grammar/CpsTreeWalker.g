@@ -58,7 +58,7 @@ import Composestar.Core.CpsRepository2.Filters.*;
 import Composestar.Core.CpsRepository2.FMParams.*;
 import Composestar.Core.CpsRepository2.Meta.*;
 import Composestar.Core.CpsRepository2.References.*;
-import Composestar.Core.CpsRepository2.SuperImposition.*;
+import Composestar.Core.CpsRepository2.SISpec.*;
 import Composestar.Core.CpsRepository2.TypeSystem.*;
 
 import Composestar.Core.CpsRepository2Impl.*;
@@ -67,7 +67,7 @@ import Composestar.Core.CpsRepository2Impl.FilterModules.*;
 import Composestar.Core.CpsRepository2Impl.Filters.*;
 import Composestar.Core.CpsRepository2Impl.FMParams.*;
 import Composestar.Core.CpsRepository2Impl.References.*;
-import Composestar.Core.CpsRepository2Impl.SuperImposition.*;
+import Composestar.Core.CpsRepository2Impl.SISpec.*;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.*;
 
 import Composestar.Core.EMBEX.EmbeddedSource;
@@ -101,15 +101,16 @@ import java.util.ArrayList;
 				{
 					throw new IllegalArgumentException("Cannot process 'legacy' prefix without a filter type");
 				}
-				if ("dispatch".equalsIgnoreCase(filterType.getFilterName())
-					|| "send".equalsIgnoreCase(filterType.getFilterName()))
+				if (FilterTypeNames.DISPATCH.equalsIgnoreCase(filterType.getFilterName())
+					|| FilterTypeNames.SEND.equalsIgnoreCase(filterType.getFilterName())
+					|| FilterTypeNames.SUBSTITUTION.equalsIgnoreCase(filterType.getFilterName()))
 				{
 					prefix = PropertyPrefix.MESSAGE;
 				}
-				else if ("before".equalsIgnoreCase(filterType.getFilterName())
-					|| "after".equalsIgnoreCase(filterType.getFilterName())
-					|| "meta".equalsIgnoreCase(filterType.getFilterName())
-					|| "error".equalsIgnoreCase(filterType.getFilterName()) // actually doesn't use it
+				else if (FilterTypeNames.BEFORE.equalsIgnoreCase(filterType.getFilterName())
+					|| FilterTypeNames.AFTER.equalsIgnoreCase(filterType.getFilterName())
+					|| FilterTypeNames.META.equalsIgnoreCase(filterType.getFilterName())
+					|| FilterTypeNames.ERROR.equalsIgnoreCase(filterType.getFilterName()) // actually doesn't use it
 				)
 				{
 					prefix = PropertyPrefix.FILTER;
@@ -531,9 +532,10 @@ filterType returns [FilterType ft]
 			try {
 				// TODO: handle filter module as filter type
 				ft = filterTypes.getFilterType(ftName);
-				if ((ft == null) && (filterFactory != null))
+				if ((ft == null) && (filterTypeFactory != null))
 				{
-					ft = filterFactory.createFilter(ftName);
+					// lazy custom filter type creation
+					ft = filterTypeFactory.createCustomFilterType(ftName);
 					// TODO: do something with custom filters
 					/*
 					logger.info(String.format("Creating legacy custom filter with name: \%s", ftName));

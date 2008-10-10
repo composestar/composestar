@@ -22,25 +22,48 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.Filters;
-
-import Composestar.Core.CpsRepository2.RepositoryEntity;
+package Composestar.Core.CpsRepository2Impl.Filters;
 
 /**
- * Generic interface for all filter types, which includes the primitive filter
- * types and the filter modules which can be used as filter type.
+ * A custom filter/user defined type.
  * 
  * @author Michiel Hendriks
  */
-public interface FilterType extends RepositoryEntity
+public class CustomFilterType extends PrimitiveFilterTypeImpl
 {
-	/**
-	 * @return The full name of this filter type. For FilterModuleFilterTypes
-	 *         this name would be equal to the fully qualified name of the
-	 *         filter module. For primitive filters this is simply their name
-	 *         (not the implementing class name).
-	 */
-	String getFilterName();
+	private static final long serialVersionUID = 1229759453255832944L;
 
-	// TODO: void isValidArgument(CanonAssignment arg) throws something;
+	/**
+	 * The "location" of the custom filter. The meaning and use is platform
+	 * specific
+	 */
+	protected String location;
+
+	/**
+	 * @param name
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
+	 */
+	public CustomFilterType(String name) throws NullPointerException, IllegalArgumentException
+	{
+		super(name);
+	}
+
+	/**
+	 * @return the location
+	 */
+	public String getLocation()
+	{
+		return location;
+	}
+
+	/**
+	 * Set the location
+	 * 
+	 * @param value
+	 */
+	public void setLocation(String value)
+	{
+		location = value;
+	}
 }

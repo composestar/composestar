@@ -37,6 +37,7 @@ import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.Filters.FilterType;
+import Composestar.Core.CpsRepository2.Filters.FilterTypeNames;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariableCollection;
 import Composestar.Core.CpsRepository2Impl.CpsConcernImpl;
 import Composestar.Core.CpsRepository2Impl.FilterElements.CanonAssignmentImpl;
@@ -62,9 +63,9 @@ public final class InnerDispatcher
 		concern.addFilterModule(fm);
 		repository.add(fm);
 		fm.setInputFilterExpression(createFilter(repository, fm, DefaultInnerDispatchNames.INPUT_FILTER, filterTypes
-				.getFilterType("Dispatch")));
+				.getFilterType(FilterTypeNames.DISPATCH)));
 		fm.setOutputFilterExpression(createFilter(repository, fm, DefaultInnerDispatchNames.OUTPUT_FILTER, filterTypes
-				.getFilterType("Send")));
+				.getFilterType(FilterTypeNames.DISPATCH)));
 		return fm;
 	}
 

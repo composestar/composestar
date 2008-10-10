@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.ExcludeConstraint;
@@ -45,11 +46,10 @@ public class StructuralValidationTest extends TestCase
 {
 	protected List<Action> actions;
 
-	protected Map<Constraint, ConstraintDefinition> constraints;
+	protected Map<Constraint, FilterModuleConstraint> constraints;
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
@@ -61,12 +61,11 @@ public class StructuralValidationTest extends TestCase
 		actions.add(new Action("B"));
 		actions.add(new Action("C"));
 		actions.add(new Action("D"));
-		constraints = new HashMap<Constraint, ConstraintDefinition>();
+		constraints = new HashMap<Constraint, FilterModuleConstraint>();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override

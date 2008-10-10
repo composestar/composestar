@@ -53,7 +53,7 @@ public class FilterTypeMapping
 	 */
 	private Map<String, FilterType> mapping;
 
-	public FilterTypeMapping()
+	protected FilterTypeMapping()
 	{
 		mapping = new HashMap<String, FilterType>();
 	}

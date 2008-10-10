@@ -2,7 +2,7 @@ package Composestar.Java.MASTER;
 
 import java.util.Arrays;
 
-import Composestar.Core.COPPER3.FilterFactory;
+import Composestar.Core.COPPER3.FilterTypeFactory;
 import Composestar.Core.Master.Master;
 
 /**
@@ -20,11 +20,10 @@ public class JavaMaster extends Master
 		{
 			return false;
 		}
-		FilterFactory filterFactory = new FilterFactory(resources.repository());
-		// FIXME: 1!!
-		filterFactory.createFilter("Dispatch");
-		filterFactory.createFilter("Send");
-		resources.put(FilterFactory.RESOURCE_KEY, filterFactory);
+		FilterTypeFactory filterTypeFactory = new FilterTypeFactory(resources.repository());
+		filterTypeFactory.createDefaultFilterTypes(FilterTypeFactory.DEFAULT_FILTER_TYPES);
+		filterTypeFactory.setAllowCustomFilterTypeCreation(true);
+		resources.put(FilterTypeFactory.RESOURCE_KEY, filterTypeFactory);
 		return true;
 	}
 

@@ -65,7 +65,7 @@ public class PrimitiveFilterTypeImpl extends AbstractRepositoryEntity implements
 	/**
 	 * @param name The name of this filter
 	 * @throws NullPointerException Thrown when the name is null
-	 * @throws IllegalArgumentException TODO
+	 * @throws IllegalArgumentException Thrown when the name is empty
 	 */
 	public PrimitiveFilterTypeImpl(String name) throws NullPointerException, IllegalArgumentException
 	{

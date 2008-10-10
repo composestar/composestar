@@ -140,8 +140,10 @@ public class CpsParserTest extends TestCase
 		w.setRepository(repos);
 		w.setReferenceManager(new ReferenceManagerImpl());
 		w.setSourceFile(file);
-		w.setFilterTypeMapping(new FilterTypeMapping());
-		FilterFactory fact = new FilterFactory(repos, w.filterTypes);
+		w.setFilterTypeMapping(new FilterTypeMapping(repos));
+		FilterTypeFactory fact = new FilterTypeFactory(repos);
+		fact.setTypeMapping(w.filterTypes);
+		fact.setAllowCustomFilterTypeCreation(true);
 		w.setFilterFactory(fact);
 		try
 		{

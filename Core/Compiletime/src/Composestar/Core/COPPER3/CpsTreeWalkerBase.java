@@ -81,7 +81,7 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	/**
 	 * ...
 	 */
-	protected FilterFactory filterFactory;
+	protected FilterTypeFactory filterTypeFactory;
 
 	/**
 	 * 
@@ -134,9 +134,9 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	 * 
 	 * @param lft
 	 */
-	public void setFilterFactory(FilterFactory lft)
+	public void setFilterFactory(FilterTypeFactory lft)
 	{
-		filterFactory = lft;
+		filterTypeFactory = lft;
 	}
 
 	/**
