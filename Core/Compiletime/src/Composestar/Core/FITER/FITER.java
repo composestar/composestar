@@ -9,17 +9,15 @@
  */
 package Composestar.Core.FITER;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ComposestarModule.Importance;
-import Composestar.Core.COPPER2.FilterTypeMapping;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
+import Composestar.Core.CpsRepository2.Filters.FilterAction.FlowBehavior;
+import Composestar.Core.CpsRepository2Impl.Filters.CustomFilterType;
+import Composestar.Core.CpsRepository2Impl.Filters.FilterActionImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ProgramElement;
@@ -72,34 +70,14 @@ public class FITER implements CTCommonModule
 		logger.info("Verifying Filter Types...");
 		resc = resources;
 		unitDict = (UnitDictionary) resources.get(UnitDictionary.REPOSITORY_KEY);
-		List<LegacyCustomFilterType> customfilters = getCustomFilterTypes(resources);
+		Set<CustomFilterType> customfilters = resources.repository().getAllSet(CustomFilterType.class);
 		if (customfilters.size() > 0)
 		{
-			resolveCustomFilterTypes(customfilters);
+			return resolveCustomFilterTypes(customfilters);
 		}
 		// Return error when filters could not be resolved (instead of
 		// exception)
 		return ModuleReturnValue.Ok;
-	}
-
-	/**
-	 * Retrieves the list of custom legacy filter types
-	 * 
-	 * @param resources
-	 * @return
-	 */
-	private List<LegacyCustomFilterType> getCustomFilterTypes(CommonResources resources)
-	{
-		List<LegacyCustomFilterType> customfilters = new ArrayList<LegacyCustomFilterType>();
-		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
-		for (FilterType ft : filterTypes.getFilterTypes())
-		{
-			if (ft instanceof LegacyCustomFilterType)
-			{
-				customfilters.add((LegacyCustomFilterType) ft);
-			}
-		}
-		return customfilters;
 	}
 
 	/**
@@ -109,10 +87,9 @@ public class FITER implements CTCommonModule
 	 * @param customfilters
 	 * @throws ModuleException
 	 */
-	private void resolveCustomFilterTypes(List<LegacyCustomFilterType> customfilters) throws ModuleException
+	private ModuleReturnValue resolveCustomFilterTypes(Set<CustomFilterType> customfilters) throws ModuleException
 	{
-		List<LegacyCustomFilterType> working = new ArrayList<LegacyCustomFilterType>(customfilters);
-		List<LegacyCustomFilterType> result = new ArrayList<LegacyCustomFilterType>(customfilters);
+		Set<CustomFilterType> leftOvers = new HashSet<CustomFilterType>(customfilters);
 		if (unitDict != null)
 		{
 			UnitResult ur = unitDict.getByName(CUSTOM_FILER_CLASS, EUnitType.CLASS.toString());
@@ -122,27 +99,27 @@ public class FITER implements CTCommonModule
 				Set<ProgramElement> allFilterTypes = getChildsofClass(filterType);
 				for (ProgramElement customFilterType : allFilterTypes)
 				{
-					for (LegacyCustomFilterType ftype : working)
+					for (CustomFilterType ftype : customfilters)
 					{
 						if (customFilterType.getUnitName().indexOf('.') < 0)
 						{
-							if (customFilterType.getUnitName().endsWith(ftype.getName()))
+							if (customFilterType.getUnitName().endsWith(ftype.getFilterName()))
 							{
-								logger.info("Resolved filter type: " + ftype.getName() + " to "
+								logger.info("Resolved filter type: " + ftype.getFilterName() + " to "
 										+ customFilterType.getUnitName());
-								ftype.setClassName(customFilterType.getUnitName());
-								result.remove(ftype);
+								ftype.setLocation(customFilterType.getUnitName());
+								leftOvers.remove(ftype);
 								harvestFilterActions(ftype, customFilterType);
 							}
 						}
 						else
 						{
-							if (customFilterType.getUnitName().endsWith("." + ftype.getName()))
+							if (customFilterType.getUnitName().endsWith("." + ftype.getFilterName()))
 							{
-								logger.info("Resolved filter type: " + ftype.getName() + " to "
+								logger.info("Resolved filter type: " + ftype.getFilterName() + " to "
 										+ customFilterType.getUnitName());
-								ftype.setClassName(customFilterType.getUnitName());
-								result.remove(ftype);
+								ftype.setLocation(customFilterType.getUnitName());
+								leftOvers.remove(ftype);
 								harvestFilterActions(ftype, customFilterType);
 							}
 						}
@@ -150,15 +127,19 @@ public class FITER implements CTCommonModule
 				}
 			}
 		}
-		for (LegacyCustomFilterType ftype : result)
+		for (CustomFilterType ftype : leftOvers)
 		{
-			logger.error("Unable to resolve filter type: " + ftype.getName());
+			logger.error("Unable to resolve filter type: " + ftype.getFilterName());
 		}
 
-		if (!result.isEmpty())
+		if (!leftOvers.isEmpty())
 		{
-			throw new ModuleException("Unable to resolve custom filter types", ModuleNames.FITER);
+			// throw new
+			// ModuleException("Unable to resolve custom filter types",
+			// ModuleNames.FITER);
+			return ModuleReturnValue.Error;
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	/**
@@ -170,7 +151,6 @@ public class FITER implements CTCommonModule
 	private Set<ProgramElement> getChildsofClass(ProgramElement filterType)
 	{
 		Set<ProgramElement> total = new HashSet<ProgramElement>();
-		@SuppressWarnings("unchecked")
 		Set<? extends ProgramElement> children = filterType.getUnitRelation(ERelationType.CHILD_CLASSES.toString())
 				.multiValue();
 		total.addAll(children);
@@ -188,7 +168,7 @@ public class FITER implements CTCommonModule
 	 * @param ft
 	 * @param type
 	 */
-	private void harvestFilterActions(LegacyCustomFilterType ft, ProgramElement type)
+	private void harvestFilterActions(CustomFilterType ft, ProgramElement type)
 	{
 		List<Annotation> annots = (List<Annotation>) type.getAnnotations();
 		for (Annotation annot : annots)
@@ -211,36 +191,36 @@ public class FITER implements CTCommonModule
 				continue;
 			}
 
-			FilterAction fa = new FilterAction();
-			fa.setName(ft.getName() + annot.getType().getName());
-			fa.setFullName(fa.getName());
+			FilterActionImpl fa = new FilterActionImpl(ft.getFilterName() + annot.getType().getName());
+
+			// TODO: JPC argument
 
 			String val = annot.getValue("mcb");
-			if ("Substituted".equalsIgnoreCase(val))
-			{
-				fa.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
-			}
-			else if ("Any".equalsIgnoreCase(val))
-			{
-				fa.setMessageChangeBehaviour(FilterAction.MESSAGE_ANY);
-			}
-			else
-			{
-				fa.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
-			}
+			// if ("Substituted".equalsIgnoreCase(val))
+			// {
+			// fa.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
+			// }
+			// else if ("Any".equalsIgnoreCase(val))
+			// {
+			// fa.setMessageChangeBehaviour(FilterAction.MESSAGE_ANY);
+			// }
+			// else
+			// {
+			// fa.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+			// }
 
 			val = annot.getValue("flow");
 			if ("Return".equalsIgnoreCase(val))
 			{
-				fa.setFlowBehaviour(FilterAction.FLOW_RETURN);
+				fa.setFlowBehavior(FlowBehavior.RETURN);
 			}
 			else if ("Exit".equalsIgnoreCase(val))
 			{
-				fa.setFlowBehaviour(FilterAction.FLOW_EXIT);
+				fa.setFlowBehavior(FlowBehavior.EXIT);
 			}
 			else
 			{
-				fa.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
+				fa.setFlowBehavior(FlowBehavior.CONTINUE);
 			}
 
 			val = annot.getValue("operations");
@@ -265,7 +245,7 @@ public class FITER implements CTCommonModule
 			{
 				ft.setRejectReturnAction(fa);
 			}
-			resc.repository().addObject(fa);
+			resc.repository().add(fa);
 		}
 	}
 }
