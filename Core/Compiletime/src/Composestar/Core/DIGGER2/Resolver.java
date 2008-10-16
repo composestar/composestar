@@ -187,7 +187,7 @@ public class Resolver
 			}
 			if (idx == 0)
 			{
-				if (!flowNode.containsName(FlowNode.STOP_NODE) && !flowNode.containsName(FlowNode.RETURN_NODE))
+				if (!flowNode.containsName(FlowNode.EXIT_NODE) && !flowNode.containsName(FlowNode.RETURN_NODE))
 				{
 					StringBuffer sb = new StringBuffer();
 					for (String name : flowNode.getNamesEx())

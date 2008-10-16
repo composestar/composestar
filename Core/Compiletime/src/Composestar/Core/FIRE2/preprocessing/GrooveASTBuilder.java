@@ -185,7 +185,7 @@ public class GrooveASTBuilder
 		stopNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filterModule);
 		graph.addNode(stopNode);
 
-		edge = new AnnotatedEdge(stopNode, FlowNode.STOP_NODE, stopNode);
+		edge = new AnnotatedEdge(stopNode, FlowNode.EXIT_NODE, stopNode);
 		graph.addEdge(edge);
 
 		edge = new AnnotatedEdge(stopNode, FlowNode.FLOW_ELEMENT_NODE, stopNode);

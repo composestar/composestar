@@ -21,72 +21,165 @@ public interface FlowNode extends Serializable
 	/*
 	 * Names (labels) a FlowNode can have
 	 */
+
+	/**
+	 * Label that every node that participates in the flow contains
+	 */
+	public static final String FLOW_NODE = "FlowNode";
+
+	@Deprecated
 	public static final String FLOW_ELEMENT_NODE = "FlowElement";
 
+	/**
+	 * Filter modules
+	 */
 	public static final String FILTER_MODULE_NODE = "FilterModule";
 
+	/**
+	 * Used for all filter expression nodes
+	 */
+	public static final String FILTER_EXPRESSION_NODE = "FilterExpression";
+
+	/**
+	 * Used for the sequential filter operator (';' in the language)
+	 */
+	public static final String SEQUENTIAL_FILTER_OPER_NODE = "SequentialFilterOper";
+
+	/**
+	 * A filter node (this is not a filter type)
+	 */
 	public static final String FILTER_NODE = "Filter";
+
+	/**
+	 * All filter element expressions (cor-operator, filter element, ...)
+	 */
+	public static final String FILTER_ELEMENT_EXPRESSION_NODE = "FilterElementExpression";
+
+	/**
+	 * The conditional OR operator for filter elements
+	 */
+	public static final String COR_NODE = "COR";
 
 	public static final String FILTER_ELEMENT_NODE = "FilterElement";
 
+	public static final String MATCHING_EXPRESSION_NODE = "Expression";
+
+	public static final String MATCH_AND_NODE = "And";
+
+	public static final String MATCH_OR_NODE = "Or";
+
+	public static final String MATCH_NOT_NODE = "Not";
+
+	/**
+	 * Used for all compare statements
+	 */
+	public static final String COMPARE_STATEMENT_NODE = "CompareStatement";
+
+	public static final String INSTANCE_MATCHING = "CmpInstance";
+
+	public static final String SIGNATURE_MATCHING = "CmpSignature";
+
+	public static final String COMPATIBILITY_MATCHING = "CmpCompatible";
+
+	public static final String ANNOTATION_MATCHING = "CmpAnnotation";
+
+	/**
+	 * Used for matching expression nodes that link to a condition
+	 */
+	public static final String CONDITION_NODE = "Condition";
+
+	@Deprecated
 	public static final String MATCHING_PATTERN_NODE = "MatchingPattern";
 
+	@Deprecated
 	public static final String MATCHING_PART_NODE = "MatchingPart";
 
+	@Deprecated
 	public static final String SUBSTITUTION_PART_NODE = "SubstitutionPart";
 
+	@Deprecated
 	public static final String CONDITION_OPERATOR_NODE = "ConditionOperator";
 
+	@Deprecated
 	public static final String DISABLE_OPERATOR_NODE = "DisableOperator";
 
+	@Deprecated
 	public static final String ENABLE_OPERATOR_NODE = "EnableOperator";
 
+	@Deprecated
 	public static final String CONDITION_EXPRESSION_NODE = "ConditionExpression";
 
+	/**
+	 * Used for a literal True in the matching expression
+	 */
 	public static final String TRUE_NODE = "True";
 
+	/**
+	 * Used for a literal False in the matching expression
+	 */
 	public static final String FALSE_NODE = "False";
 
+	@Deprecated
 	public static final String ACTION_NODE = "FilterAction";
 
+	@Deprecated
 	public static final String FILTER_ACTION_NODE = "FilterAction";
 
+	@Deprecated
 	public static final String CONTINUE_ACTION_NODE = "ContinueFlowAction";
 
+	@Deprecated
 	public static final String EXIT_ACTION_NODE = "ExitFlowAction";
 
+	@Deprecated
 	public static final String RETURN_ACTION_NODE = "ReturnFlowAction";
 
+	@Deprecated
 	public static final String ORIGINAL_MESSAGE_ACTION_NODE = "OriginalMessageAction";
 
+	@Deprecated
 	public static final String SUBSTITUTED_MESSAGE_ACTION_NODE = "SubstitutedMessageAction";
 
+	@Deprecated
 	public static final String ANY_MESSAGE_ACTION_NODE = "AnyMessageAction";
 
+	@Deprecated
 	public static final String REJECT_CALL_ACTION_NODE = "RejectCallAction";
 
+	@Deprecated
 	public static final String ACCEPT_CALL_ACTION_NODE = "AcceptCallAction";
 
+	@Deprecated
 	public static final String REJECT_RETURN_ACTION_NODE = "RejectReturnAction";
 
+	@Deprecated
 	public static final String ACCEPT_RETURN_ACTION_NODE = "AcceptReturnAction";
 
+	@Deprecated
 	public static final String SIGNATURE_MATCHING_NODE = "SignatureMatchingPart";
 
+	@Deprecated
 	public static final String NAME_MATCHING_NODE = "NameMatchingPart";
 
+	@Deprecated
 	public static final String FILTER_COMP_OPER_NODE = "FilterCompOper";
 
+	@Deprecated
 	public static final String SEQ_FILTER_COMP_OPER_NODE = "SEQFilterCompOper";
 
+	@Deprecated
 	public static final String VOID_FILTER_COMP_OPER_NODE = "VoidFilterCompOper";
 
+	@Deprecated
 	public static final String FE_COMP_OPER_NODE = "CompOper";
 
+	@Deprecated
 	public static final String FE_COR_COMP_OPER_NODE = "CORCompOper";
 
+	@Deprecated
 	public static final String FE_VOID_COMP_OPER_NODE = "VoidCompOper";
 
+	@Deprecated
 	public static final String FM_CONDITION_NODE = "FilterModuleCondition";
 
 	/**
@@ -116,7 +209,7 @@ public interface FlowNode extends Serializable
 	 * Continue action. Examples of actions that return the flow are the
 	 * Dispatch action and the Skip action.
 	 */
-	public static final String STOP_NODE = "Exit";
+	public static final String EXIT_NODE = "Exit";
 
 	/**
 	 * The return node marks the return through the filterset. Examples of
@@ -124,13 +217,13 @@ public interface FlowNode extends Serializable
 	 */
 	public static final String RETURN_NODE = "Return";
 
-	/*
-	 * Some labels that indicate a class of nodes
-	 */
+	@Deprecated
 	public static final String CONTEXT_NODE = "ContextNode";
 
+	@Deprecated
 	public static final String PROCEDURE_NODE = "ProcedureNode";
 
+	@Deprecated
 	public static final String PREDICATE_NODE = "PredicateNode";
 
 	/**

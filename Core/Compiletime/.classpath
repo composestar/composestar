@@ -7,12 +7,11 @@
 	<classpathentry kind="lib" path="lib/prolog/prolog.jar" sourcepath="lib/prolog/prolog-src.jar"/>
 	<classpathentry kind="lib" path="lib/antlr/stringtemplate-3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/groove/castor-0_9_5_2-xml.jar"/>
-	<classpathentry kind="lib" path="lib/groove/groove-1_2_0.jar"/>
-	<classpathentry kind="lib" path="lib/groove/jgraph.jar"/>
-	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xercesImpl.jar"/>
-	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="lib/antlr/antlr-runtime-3.jar" sourcepath="lib/antlr/antlr-3.0.1/src"/>
+	<classpathentry kind="lib" path="lib/groove3/groove-3_0_1.jar" sourcepath="lib/groove3/groove-3_0_1-src.zip"/>
+	<classpathentry kind="lib" path="lib/groove3/groove-gxl-1_0.jar"/>
+	<classpathentry kind="lib" path="lib/groove3/jgraph-5_10_1.jar"/>
+	<classpathentry kind="lib" path="lib/groove3/xerces-2_6_0-xercesImpl.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
