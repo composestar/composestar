@@ -640,11 +640,8 @@ identifierOrFmParam
  * Converts an identifier to a literal
  */
 literalOrFmParam
-@init {
-	String strVal;
-}
 	: v=legacyIdentifier
-	-> { adaptorCreate(adaptor, LITERAL, $v.text) } 
+	-> { adaptorCreate(adaptor, LITERAL, "'"+ $v.text + "'") } 
 	| singleFmParam | fmParamList
 	;
 
@@ -664,7 +661,7 @@ matchingPattern
 				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $n1.text) }))
+			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'") }))
 			)
 		| ASTERISK PERIOD 
 			(n3=literalOrFmParam // *.bar
@@ -685,7 +682,7 @@ matchingPattern
 				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $s1.text) } ))
+			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $s1.text +"'") } ))
 			)
 		| ASTERISK PERIOD 
 			(s3=literalOrFmParam // *.bar
@@ -712,7 +709,7 @@ substitutionPart
 				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND ^(FQN IDENTIFIER["selector"])))
 			)
 		| // bar
-		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, $n1.text) }))
+		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'") }))
 			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
 		)
 	| ASTERISK PERIOD n3=literalOrFmParam // *.bar

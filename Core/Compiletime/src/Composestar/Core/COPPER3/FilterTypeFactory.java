@@ -354,7 +354,7 @@ public class FilterTypeFactory
 	{
 		for (String typeName : typeNames)
 		{
-			createCustomFilterType(typeName);
+			createDefaultFilterType(typeName);
 		}
 	}
 }
