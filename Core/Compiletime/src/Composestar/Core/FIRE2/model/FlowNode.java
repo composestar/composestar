@@ -88,6 +88,8 @@ public interface FlowNode extends Serializable
 	 */
 	public static final String CONDITION_NODE = "Condition";
 
+	public static final String ASSIGNMENT_NODE = "Assignment";
+
 	@Deprecated
 	public static final String MATCHING_PATTERN_NODE = "MatchingPattern";
 
@@ -122,16 +124,12 @@ public interface FlowNode extends Serializable
 	@Deprecated
 	public static final String ACTION_NODE = "FilterAction";
 
-	@Deprecated
 	public static final String FILTER_ACTION_NODE = "FilterAction";
 
-	@Deprecated
 	public static final String CONTINUE_ACTION_NODE = "ContinueFlowAction";
 
-	@Deprecated
 	public static final String EXIT_ACTION_NODE = "ExitFlowAction";
 
-	@Deprecated
 	public static final String RETURN_ACTION_NODE = "ReturnFlowAction";
 
 	@Deprecated
@@ -143,16 +141,12 @@ public interface FlowNode extends Serializable
 	@Deprecated
 	public static final String ANY_MESSAGE_ACTION_NODE = "AnyMessageAction";
 
-	@Deprecated
 	public static final String REJECT_CALL_ACTION_NODE = "RejectCallAction";
 
-	@Deprecated
 	public static final String ACCEPT_CALL_ACTION_NODE = "AcceptCallAction";
 
-	@Deprecated
 	public static final String REJECT_RETURN_ACTION_NODE = "RejectReturnAction";
 
-	@Deprecated
 	public static final String ACCEPT_RETURN_ACTION_NODE = "AcceptReturnAction";
 
 	@Deprecated

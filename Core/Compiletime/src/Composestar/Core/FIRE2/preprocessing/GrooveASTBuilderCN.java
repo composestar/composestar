@@ -30,10 +30,14 @@ import groove.graph.Graph;
 import groove.graph.Label;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
 import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
@@ -44,6 +48,14 @@ import Composestar.Core.CpsRepository2.FilterElements.UnaryMEOperator;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2.Filters.FilterType;
+import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.AndMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.AnnotationMatching;
 import Composestar.Core.CpsRepository2Impl.FilterElements.CORFilterElmOper;
@@ -55,6 +67,8 @@ import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
 import Composestar.Core.CpsRepository2Impl.FilterModules.SequentialFilterOper;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.Master.ModuleNames;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Builds the AST graph to be used by Groove to create the FlowModel. This class
@@ -64,6 +78,8 @@ import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
  */
 public class GrooveASTBuilderCN
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);
+
 	public static final String ACCEPT_CALL_EDGE = "acceptCall";
 
 	public static final String ACCEPT_RETURN_EDGE = "acceptReturn";
@@ -106,6 +122,26 @@ public class GrooveASTBuilderCN
 	public static final String RHS_EDGE = "rhs";
 
 	/**
+	 * Label value prefix for selectors
+	 */
+	public static final String VP_SELECTOR = "sel=";
+
+	/**
+	 * Label value prefix for objects
+	 */
+	public static final String VP_OBJECT = "obj=";
+
+	/**
+	 * Label value prefix for literals
+	 */
+	public static final String VP_LITERAL = "lit=";
+
+	/**
+	 * Label value prefix for program elements
+	 */
+	public static final String VP_PROGRAM_ELEMENT = "pe=";
+
+	/**
 	 * The filter expression to be explored
 	 */
 	protected FilterExpression fex;
@@ -119,6 +155,8 @@ public class GrooveASTBuilderCN
 	 * The graph under construction
 	 */
 	protected Graph graph;
+
+	protected Map<String, AnnotatedNode> cachedValueNodes;
 
 	/**
 	 * Constructs a Groove graph for a giver filter module and filter direction
@@ -152,6 +190,7 @@ public class GrooveASTBuilderCN
 	 */
 	protected GrooveASTBuilderCN(FilterModule fm, FilterDirection dir)
 	{
+		cachedValueNodes = new HashMap<String, AnnotatedNode>();
 		if (fm == null)
 		{
 			throw new NullPointerException("Filter module can not be null");
@@ -220,16 +259,169 @@ public class GrooveASTBuilderCN
 					.getName()));
 		}
 
-		// TODO lhs
-		// TODO rhs
+		if (PropertyPrefix.MESSAGE != cmp.getLHS().getPrefix())
+		{
+			logger.error(String.format("Compared property is not a message property: %s", cmp.getLHS().getName()), cmp
+					.getLHS());
+			throw new IllegalStateException(String.format("Compared property is not a message property: %s", cmp
+					.getLHS().getName()));
+		}
+
+		AnnotatedNode node = new AnnotatedNode();
+		node.addAnnotation(ANNOT_REPOSITORY_ENTITY, cmp.getLHS());
+		graph.addNode(node);
+
+		edge = new AnnotatedEdge(node, createLabel(cmp.getLHS().getBaseName()), node);
+		graph.addEdge(edge);
+		edge = new AnnotatedEdge(cmpNode, createLabel(LHS_EDGE), node);
+		graph.addEdge(edge);
+
+		for (CpsVariable var : cmp.getRHS())
+		{
+			node = createCpsVariableNode(var);
+			edge = new AnnotatedEdge(cmpNode, createLabel(RHS_EDGE), node);
+			// because the node does not always link to this particular variable
+			edge.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
+			graph.addEdge(edge);
+		}
 
 		return cmpNode;
 	}
 
-	protected AnnotatedNode createAssignmentNode(CanonAssignment asgn)
+	/**
+	 * Create a CpsVariable node, for each unique value there is a single node.
+	 * The repository entity linked to is the first occurrence of said value.
+	 * The values on the nodes do not reflect the actual value, just an encoded
+	 * string to make groove processing easier. Check the annotation for the
+	 * real value. Reusing the value nodes is an important optimization in the
+	 * initialization of the execution flow graphs within groove.
+	 * 
+	 * @param var
+	 * @return
+	 * @throws IllegalStateException Thrown when an unknown CpsVariable was
+	 *             encountered
+	 */
+	protected AnnotatedNode createCpsVariableNode(CpsVariable var) throws IllegalStateException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String valueEdge = null;
+		// note: the used prefixes are only there for convenience
+		if (var instanceof CpsSelector)
+		{
+			valueEdge = VP_SELECTOR + ((CpsSelector) var).getName();
+		}
+		else if (var instanceof CanonProperty)
+		{
+			CanonProperty prop = (CanonProperty) var;
+			if (prop.getPrefix() == PropertyPrefix.NONE && PropertyNames.INNER.equals(prop.getBaseName()))
+			{
+				valueEdge = VP_OBJECT + PropertyNames.INNER.toString();
+			}
+			else if (prop.getPrefix() == PropertyPrefix.MESSAGE)
+			{
+				// always return unique nodes for deferred values
+				AnnotatedNode node = new AnnotatedNode();
+				node.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
+				graph.addNode(node);
+
+				AnnotatedNode deferredNode = new AnnotatedNode();
+				deferredNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
+				graph.addNode(deferredNode);
+
+				AnnotatedEdge edge = new AnnotatedEdge(node, createLabel(DEFERRED_EDGE), deferredNode);
+				graph.addEdge(edge);
+
+				edge = new AnnotatedEdge(deferredNode, createLabel(prop.getBaseName()), deferredNode);
+				graph.addEdge(edge);
+
+				return node;
+			}
+			else
+			{
+				logger
+						.error(String
+								.format("Only message properties can be used assigned to other message properties."),
+								var);
+				throw new IllegalStateException(String
+						.format("Only message properties can be used assigned to other message properties."));
+			}
+		}
+		else if (var instanceof CpsObject)
+		{
+			// the object is always the same instance, hence the hash code
+			// should be safe
+			valueEdge = VP_OBJECT + System.identityHashCode(var);
+		}
+		else if (var instanceof CpsLiteral)
+		{
+			// this could result in very large labels
+			valueEdge = VP_LITERAL + ((CpsLiteral) var).getLiteralValue();
+		}
+		else if (var instanceof CpsProgramElement)
+		{
+			// different program elements should produce different hashes...
+			valueEdge = VP_PROGRAM_ELEMENT + System.identityHashCode(((CpsProgramElement) var).getProgramElement());
+		}
+		else
+		{
+			throw new IllegalStateException(String.format("Unknown CpsVariable type: %s", var.getClass().getName()));
+		}
+
+		if (cachedValueNodes.containsKey(valueEdge))
+		{
+			return cachedValueNodes.get(valueEdge);
+		}
+
+		AnnotatedNode node = new AnnotatedNode();
+		node.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
+		graph.addNode(node);
+
+		AnnotatedEdge edge = new AnnotatedEdge(node, createLabel(valueEdge), node);
+		graph.addEdge(edge);
+
+		cachedValueNodes.put(valueEdge, node);
+
+		return node;
+	}
+
+	/**
+	 * @param asgn
+	 * @return
+	 * @throws IllegalStateException
+	 */
+	protected AnnotatedNode createAssignmentNode(CanonAssignment asgn) throws IllegalStateException
+	{
+		AnnotatedNode cmpNode = new AnnotatedNode();
+		cmpNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, asgn);
+		graph.addNode(cmpNode);
+
+		AnnotatedEdge edge = new AnnotatedEdge(cmpNode, createLabel(FlowNode.ASSIGNMENT_NODE), cmpNode);
+		graph.addEdge(edge);
+
+		if (PropertyPrefix.MESSAGE != asgn.getProperty().getPrefix())
+		{
+			logger.error(
+					String.format("Assigned property is not a message property: %s", asgn.getProperty().getName()),
+					asgn.getProperty());
+			throw new IllegalStateException(String.format("Assigned property is not a message property: %s", asgn
+					.getProperty().getName()));
+		}
+
+		AnnotatedNode node = new AnnotatedNode();
+		node.addAnnotation(ANNOT_REPOSITORY_ENTITY, asgn.getProperty());
+		graph.addNode(node);
+
+		edge = new AnnotatedEdge(node, createLabel(asgn.getProperty().getBaseName()), node);
+		graph.addEdge(edge);
+		edge = new AnnotatedEdge(cmpNode, createLabel(LHS_EDGE), node);
+		graph.addEdge(edge);
+
+		node = createCpsVariableNode(asgn.getValue());
+		edge = new AnnotatedEdge(cmpNode, createLabel(RHS_EDGE), node);
+		// because the node does not always link to this particular variable
+		edge.addAnnotation(ANNOT_REPOSITORY_ENTITY, asgn.getValue());
+		graph.addEdge(edge);
+
+		return cmpNode;
 	}
 
 	/**
@@ -301,31 +493,34 @@ public class GrooveASTBuilderCN
 		// create a linked list of assignments
 		AnnotatedNode lastNode = elmNode;
 		Collection<CanonAssignment> asgns = elm.getAssignments();
-		if (asgns.size() == 0)
+		int asgnsNodes = 0;
+		for (CanonAssignment asgn : asgns)
+		{
+			if (PropertyPrefix.MESSAGE != asgn.getProperty().getPrefix())
+			{
+				continue;
+			}
+			AnnotatedNode assignNode = createAssignmentNode(asgn);
+			edge = new AnnotatedEdge(lastNode, createLabel(ASSIGNMENT_EDGE), assignNode);
+			graph.addEdge(edge);
+			lastNode = assignNode;
+			asgnsNodes++;
+		}
+
+		if (asgnsNodes == 0)
 		{
 			// add a dummy assignment node
 			AnnotatedNode dummy = new AnnotatedNode();
 			graph.addNode(dummy);
 
+			edge = new AnnotatedEdge(dummy, createLabel(FlowNode.ASSIGNMENT_NODE), dummy);
+			graph.addEdge(edge);
+
 			edge = new AnnotatedEdge(elmNode, createLabel(ASSIGNMENT_EDGE), dummy);
 			graph.addEdge(edge);
 		}
-		else
-		{
-			for (CanonAssignment asgn : asgns)
-			{
-				if (PropertyPrefix.MESSAGE != asgn.getProperty().getPrefix())
-				{
-					continue;
-				}
-				AnnotatedNode assignNode = createAssignmentNode(asgn);
-				edge = new AnnotatedEdge(lastNode, createLabel(ASSIGNMENT_EDGE), assignNode);
-				graph.addEdge(edge);
-				lastNode = assignNode;
-			}
-		}
 
-		return null;
+		return elmNode;
 	}
 
 	/**
@@ -395,14 +590,84 @@ public class GrooveASTBuilderCN
 				.getElementExpression()));
 		graph.addEdge(edge);
 
-		// TODO: actions
+		FilterType ft = filter.getType();
+		if (ft instanceof PrimitiveFilterType)
+		{
+			AnnotatedNode node = createFilterActionNode(((PrimitiveFilterType) ft).getAcceptReturnAction());
+			edge = new AnnotatedEdge(node, createLabel(FlowNode.ACCEPT_RETURN_ACTION_NODE), node);
+			graph.addEdge(edge);
+
+			edge = new AnnotatedEdge(filterNode, createLabel(ACCEPT_RETURN_EDGE), node);
+			graph.addEdge(edge);
+
+			node = createFilterActionNode(((PrimitiveFilterType) ft).getAcceptCallAction());
+			edge = new AnnotatedEdge(node, createLabel(FlowNode.ACCEPT_CALL_ACTION_NODE), node);
+			graph.addEdge(edge);
+
+			edge = new AnnotatedEdge(filterNode, createLabel(ACCEPT_CALL_EDGE), node);
+			graph.addEdge(edge);
+
+			node = createFilterActionNode(((PrimitiveFilterType) ft).getRejectReturnAction());
+			edge = new AnnotatedEdge(node, createLabel(FlowNode.REJECT_RETURN_ACTION_NODE), node);
+			graph.addEdge(edge);
+
+			edge = new AnnotatedEdge(filterNode, createLabel(REJECT_RETURN_EDGE), node);
+			graph.addEdge(edge);
+
+			node = createFilterActionNode(((PrimitiveFilterType) ft).getRejectCallAction());
+			edge = new AnnotatedEdge(node, createLabel(FlowNode.REJECT_CALL_ACTION_NODE), node);
+			graph.addEdge(edge);
+
+			edge = new AnnotatedEdge(filterNode, createLabel(REJECT_CALL_EDGE), node);
+			graph.addEdge(edge);
+		}
+		else
+		{
+			throw new IllegalStateException(String.format("Unsupported filter type class: %s", ft.getClass().getName()));
+		}
 
 		return filterNode;
 	}
 
 	/**
+	 * Create the filter action node
+	 * 
+	 * @param action
+	 * @return
+	 */
+	protected AnnotatedNode createFilterActionNode(FilterAction action)
+	{
+		AnnotatedNode actionNode = new AnnotatedNode();
+		actionNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, action);
+		graph.addNode(actionNode);
+
+		AnnotatedEdge edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.FILTER_ACTION_NODE), actionNode);
+		graph.addEdge(edge);
+
+		switch (action.getFlowBehavior())
+		{
+			case EXIT:
+				edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.EXIT_ACTION_NODE), actionNode);
+				graph.addEdge(edge);
+				break;
+			case RETURN:
+				edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.RETURN_ACTION_NODE), actionNode);
+				graph.addEdge(edge);
+				break;
+			case CONTINUE:
+			default:
+				edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.CONTINUE_ACTION_NODE), actionNode);
+				graph.addEdge(edge);
+				break;
+		}
+
+		return actionNode;
+	}
+
+	/**
 	 * @return The graph for the filter module
-	 * @throws IllegalStateException TODO
+	 * @throws IllegalStateException Thrown in case of unknown entities in the
+	 *             AST
 	 */
 	protected void createFMGraph() throws IllegalStateException
 	{
