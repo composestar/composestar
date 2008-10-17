@@ -92,7 +92,7 @@ public class Departure implements CTCommonModule
 				}
 			}
 		}
-		return null;
+		return ModuleReturnValue.Ok;
 	}
 
 	protected FilterModule resolveFilterModuleParameters(FilterModuleBinding fmb)
