@@ -271,11 +271,14 @@ public class GrooveASTBuilderCN
 		node.addAnnotation(ANNOT_REPOSITORY_ENTITY, cmp.getLHS());
 		graph.addNode(node);
 
+		// TODO: how to handle checking for non-instance/non-selector
+		// properties?
 		edge = new AnnotatedEdge(node, createLabel(cmp.getLHS().getBaseName()), node);
 		graph.addEdge(edge);
 		edge = new AnnotatedEdge(cmpNode, createLabel(LHS_EDGE), node);
 		graph.addEdge(edge);
 
+		// TODO: how to handle type conversion in case of selectors
 		for (CpsVariable var : cmp.getRHS())
 		{
 			node = createCpsVariableNode(var);

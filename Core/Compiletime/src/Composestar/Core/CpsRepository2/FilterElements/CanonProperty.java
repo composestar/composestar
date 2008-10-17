@@ -50,9 +50,9 @@ public interface CanonProperty extends CpsVariable
 	String getBaseName();
 
 	/**
-	 * @return The prefix of the variable name. This is either {
-	 *         {@link #MESSAGE_PREFIX}, {@link #FILTER_PREFIX} or null (in case
-	 *         the name is {@link #INNER})
+	 * @return The prefix of the variable name. This is either
+	 *         {@link PropertyPrefix#FILTER}, {@link PropertyPrefix#MESSAGE} or
+	 *         {@link PropertyPrefix#NONE}
 	 */
 	PropertyPrefix getPrefix();
 }
