@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
-	<moduleinfo id="SANE" class="Composestar.Core.SANE2.SANE">
+	<moduleinfo id="SANE" class="Composestar.Core.SANE2.Imposer">
 		<name>Superimposition Analysis Engine</name>
 		<description>
 			Performs the filter module superimposition. It will also resolve the filter module parameters in the
