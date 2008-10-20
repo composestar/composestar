@@ -30,10 +30,12 @@ import groove.view.aspect.AspectGraph;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FlowModel;
@@ -68,9 +70,6 @@ public class Preprocessor implements CTCommonModule
 
 	private static final AbstractStrategy LINEAR_STRATEGY = new LinearStrategy();
 
-	// private static final ExploreStrategy BARBED_STRATEGY = new
-	// BarbedStrategy();
-
 	private static final AbstractStrategy FULL_STRATEGY = new BranchingStrategy();
 
 	private static final String GRAMMAR_FLOW = "groovegrammars2/flowmodel.gps";
@@ -94,20 +93,25 @@ public class Preprocessor implements CTCommonModule
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		fire2Resources = resources.getResourceManager(FIRE2Resources.class, true);
-		preprocess(resources.repository());
-		// preprocessMP(resources);
+		// only process superimposed filter module instances, ignore the rest
+		Set<FilterModule> filterModules = new HashSet<FilterModule>();
+		for (ImposedFilterModule ifm : resources.repository().getAll(ImposedFilterModule.class))
+		{
+			filterModules.add(ifm.getFilterModule());
+		}
+		preprocess(filterModules);
+		// preprocessMP(resources, filterModules);
 		// TODO return error if something failed
 		return ModuleReturnValue.Ok;
 	}
 
-	public void preprocess(Repository repository)
+	public void preprocess(Set<FilterModule> filterModules)
 	{
 		logger.debug("Starting FIRE Preprocessing");
 
 		CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
 
-		// FIXME: only use the superimposed filter modules
-		for (FilterModule fm : repository.getAll(FilterModule.class))
+		for (FilterModule fm : filterModules)
 		{
 			timer.start(fm.getFullyQualifiedName());
 			preprocessModule(fm);
@@ -121,13 +125,13 @@ public class Preprocessor implements CTCommonModule
 	}
 
 	// FIXME: fire is not complete MP safe yet
-	public void preprocessMP(CommonResources resources) throws ModuleException
+	public void preprocessMP(CommonResources resources, Set<FilterModule> filterModules) throws ModuleException
 	{
 		logger.debug("Starting FIRE Preprocessing");
 
 		ParallelTask ptask = new ParallelTask();
 		ptask.setPerProcessor(1);
-		for (FilterModule fm : resources.repository().getAll(FilterModule.class))
+		for (FilterModule fm : filterModules)
 		{
 			ptask.addTask(new FirePreprocessTask(fm));
 		}
@@ -158,7 +162,7 @@ public class Preprocessor implements CTCommonModule
 					+ module.getFullyQualifiedName() + ".gst"));
 		}
 
-		// // generate flow model:
+		// generate flow model:
 		timer.start("Create input flow %s", module.getFullyQualifiedName());
 		Graph grooveFlowModelIF = generateFlow(grooveAstIF);
 		timer.stop();
@@ -174,11 +178,13 @@ public class Preprocessor implements CTCommonModule
 					+ module.getFullyQualifiedName() + ".gst"));
 		}
 
-		// TODO: implement
-
 		// // extract flowmodel:
-		// FlowModel flowModelIF = extractFlowModel(grooveFlowModelIF);
-		// FlowModel flowModelOF = extractFlowModel(grooveFlowModelOF);
+		timer.start("Extract input flow model %s", module.getFullyQualifiedName());
+		FlowModel flowModelIF = extractFlowModel(grooveFlowModelIF);
+		timer.stop();
+		timer.start("Extract output flow model %s", module.getFullyQualifiedName());
+		FlowModel flowModelOF = extractFlowModel(grooveFlowModelOF);
+		timer.stop();
 
 		// Simulate execution:
 		timer.start("Create input execution %s", module.getFullyQualifiedName());
@@ -187,14 +193,22 @@ public class Preprocessor implements CTCommonModule
 		timer.start("Create output execution %s", module.getFullyQualifiedName());
 		GTS stateSpaceOF = execute(grooveFlowModelOF);
 		timer.stop();
-		//
-		// // extract statespace:
+
+		// extract statespace:
 		// ExecutionModelExtractor executionModelExtractor = new
 		// ExecutionModelExtractor();
+		//
+		// timer.start("Extract input execution model %s",
+		// module.getFullyQualifiedName());
 		// ExecutionModel executionModelIF =
 		// executionModelExtractor.extract(stateSpaceIF, flowModelIF);
+		// timer.stop();
+		//
+		// timer.start("Extract output execution model %s",
+		// module.getFullyQualifiedName());
 		// ExecutionModel executionModelOF =
 		// executionModelExtractor.extract(stateSpaceOF, flowModelOF);
+		// timer.stop();
 		//
 		// // store result:
 		// FirePreprocessingResult result = new

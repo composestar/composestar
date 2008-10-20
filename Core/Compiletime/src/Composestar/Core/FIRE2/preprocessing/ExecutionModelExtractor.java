@@ -6,14 +6,13 @@
  */
 package Composestar.Core.FIRE2.preprocessing;
 
-import groove.graph.DefaultLabel;
 import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.Label;
 import groove.graph.Node;
-import groove.lts.DefaultGraphState;
-import groove.lts.DefaultGraphTransition;
 import groove.lts.GTS;
+import groove.lts.GraphState;
+import groove.lts.GraphTransition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -40,36 +38,38 @@ import Composestar.Core.FIRE2.model.Message;
  */
 public class ExecutionModelExtractor
 {
-	private Map<DefaultGraphState, BasicExecutionState> stateTable;
+	private Map<GraphState, BasicExecutionState> stateTable;
 
-	private static final Label PC_LABEL = new DefaultLabel("pc");
+	private static final Label PC_LABEL = GrooveASTBuilderCN.createLabel("pc");
 
-	private static final Label SELECTOR_LABEL = new DefaultLabel("selector");
+	/**
+	 * Label from the Frame to the Message object
+	 */
+	private static final Label MSG_LABEL = GrooveASTBuilderCN.createLabel("msg");
 
-	private static final Label TARGET_LABEL = new DefaultLabel("target");
-
-	private static final Label SUBSTITUTIONSELECTOR_LABEL = new DefaultLabel("substitutionSelector");
-
-	private static final Label SUBSTITUTIONTARGET_LABEL = new DefaultLabel("substitutionTarget");
+	/**
+	 * Label of the Message object
+	 */
+	private static final Label MESSAGE_LABEL = GrooveASTBuilderCN.createLabel("Message");
 
 	public ExecutionModelExtractor()
 	{}
 
 	public ExecutionModel extract(GTS gts, FlowModel flowModel)
 	{
-		stateTable = new HashMap<DefaultGraphState, BasicExecutionState>();
+		stateTable = new HashMap<GraphState, BasicExecutionState>();
 
 		BasicExecutionModel executionModel = new BasicExecutionModel();
 
-		DefaultGraphState startState = (DefaultGraphState) gts.startState();
-		Iterator<DefaultGraphTransition> iter = startState.getOutTransitionIter();
-		DefaultGraphTransition transition;
-		DefaultGraphState nextState;
+		GraphState startState = gts.startState();
+		Iterator<GraphTransition> iter = startState.getTransitionIter();
+		GraphTransition transition;
+		GraphState nextState;
 
 		while (iter.hasNext())
 		{
 			transition = iter.next();
-			nextState = (DefaultGraphState) transition.target();
+			nextState = transition.target();
 
 			if (!stateTable.containsKey(nextState))
 			{
@@ -86,18 +86,18 @@ public class ExecutionModelExtractor
 		return executionModel;
 	}
 
-	private void analyseState(DefaultGraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
+	private void analyseState(GraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
 	{
-		Iterator<DefaultGraphTransition> iter = state.getOutTransitionIter();
+		Iterator<GraphTransition> iter = state.getTransitionIter();
 
-		DefaultGraphTransition transition;
-		DefaultGraphState nextState;
+		GraphTransition transition;
+		GraphState nextState;
 		BasicExecutionState startState, endState;
 
 		while (iter.hasNext())
 		{
 			transition = iter.next();
-			nextState = (DefaultGraphState) transition.target();
+			nextState = transition.target();
 			if (!stateTable.containsKey(nextState))
 			{
 				addState(nextState, executionModel, flowModel);
@@ -112,7 +112,7 @@ public class ExecutionModelExtractor
 	}
 
 	private void addTransition(BasicExecutionState startState, BasicExecutionState endState,
-			DefaultGraphTransition transition, BasicExecutionModel executionModel)
+			GraphTransition transition, BasicExecutionModel executionModel)
 	{
 		FlowTransition flowTransition = startState.getFlowNode().getTransition(endState.getFlowNode());
 
@@ -122,19 +122,16 @@ public class ExecutionModelExtractor
 		executionModel.addTransition(exeTrans);
 	}
 
-	private void addState(DefaultGraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
+	private void addState(GraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
 	{
 		Node selectorNode = null;
 		Node targetNode = null;
 		Node substitutionSelectorNode = null;
 		Node substitutionTargetNode = null;
 
-		String selector, substitutionSelector;
-		Target target, substitutionTarget;
-
 		Graph graph = state.getGraph();
-		Collection<Edge> pcEdges = graph.labelEdgeSet(2, PC_LABEL);
-		Iterator<Edge> iter = pcEdges.iterator();
+		Collection<? extends Edge> pcEdges = graph.labelEdgeSet(2, PC_LABEL);
+		Iterator<? extends Edge> iter = pcEdges.iterator();
 		if (!iter.hasNext())
 		{
 			// should never happen.
@@ -145,7 +142,7 @@ public class ExecutionModelExtractor
 
 		// FlowNode:
 		AnnotatedNode targetFlowNode = (AnnotatedNode) edge.opposite();
-		FlowNode flowNode = (FlowNode) targetFlowNode.getAnnotation(FlowModelExtractor.FLOW_NODE_ANNOTATION);
+		FlowNode flowNode = (FlowNode) targetFlowNode.getAnnotation(FlowModelExtractor.ANNOT_FLOW_NODE);
 		if (flowNode == null)
 		{
 			// should never happen.

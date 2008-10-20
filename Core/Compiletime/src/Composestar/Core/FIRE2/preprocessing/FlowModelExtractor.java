@@ -6,7 +6,6 @@
  */
 package Composestar.Core.FIRE2.preprocessing;
 
-import groove.graph.DefaultLabel;
 import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.Label;
@@ -19,10 +18,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * This class extracts the flowmodel from the groove representation of the
@@ -32,31 +31,30 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class FlowModelExtractor
 {
-	public static final String FLOW_NODE_ANNOTATION = "FlowNode";
+	/**
+	 * Annotation used to store the FlowNode instance in Groove graph
+	 */
+	public static final String ANNOT_FLOW_NODE = "FireFlowNode";
 
-	private static final Label FILTERMODULE_LABEL = new DefaultLabel(FlowNode.FILTER_MODULE_NODE);
+	private static final Label FILTERMODULE_LABEL = GrooveASTBuilderCN.createLabel(FlowNode.FILTER_MODULE_NODE);
 
-	private static final Label END_LABEL = new DefaultLabel(FlowNode.END_NODE);
+	private static final Label END_LABEL = GrooveASTBuilderCN.createLabel(FlowNode.END_NODE);
 
 	private static final String FLOW_TRUE_LABEL = "flowTrue";
 
 	private static final String FLOW_FALSE_LABEL = "flowFalse";
 
-	private static final String FLOW_NEXT_LABEL = "flowNext";
+	private static final String FLOW_NEXT_LABEL = "flow";
 
 	public static FlowModel extract(Graph graph)
 	{
 		BasicFlowModel model = new BasicFlowModel();
 
-		Iterator<Edge> iter = graph.edgeIterator();
-		Edge edge;
 		AnnotatedNode startNode, endNode, filterModuleNode;
 		BasicFlowNode startFlowNode, endFlowNode;
 		FlowTransition transition;
-		while (iter.hasNext())
+		for (Edge edge : graph.edgeSet())
 		{
-			edge = iter.next();
-
 			String label = edge.label().text();
 			int type;
 			if (label.equals(FLOW_NEXT_LABEL))
@@ -87,17 +85,17 @@ public class FlowModelExtractor
 		}
 
 		// startnode:
-		Collection<Edge> col = graph.labelEdgeSet(2, FILTERMODULE_LABEL);
-		iter = col.iterator();
+		Collection<? extends Edge> col = graph.labelEdgeSet(2, FILTERMODULE_LABEL);
+		Iterator<? extends Edge> iter = col.iterator();
 		if (!iter.hasNext())
 		{
 			// should never happen.
 			throw new RuntimeException("FilterModule-edge not found!");
 		}
 
-		edge = iter.next();
+		Edge edge = iter.next();
 		filterModuleNode = (AnnotatedNode) edge.source();
-		model.setStartNode((FlowNode) filterModuleNode.getAnnotation(FLOW_NODE_ANNOTATION));
+		model.setStartNode((FlowNode) filterModuleNode.getAnnotation(ANNOT_FLOW_NODE));
 
 		// endnode:
 		col = graph.labelEdgeSet(2, END_LABEL);
@@ -110,29 +108,29 @@ public class FlowModelExtractor
 
 		edge = iter.next();
 		endNode = (AnnotatedNode) edge.source();
-		model.setEndNode((FlowNode) endNode.getAnnotation(FLOW_NODE_ANNOTATION));
+		model.setEndNode((FlowNode) endNode.getAnnotation(ANNOT_FLOW_NODE));
 
 		return model;
 	}
 
 	private static BasicFlowNode createFlowNode(Graph graph, AnnotatedNode graphNode, BasicFlowModel model)
 	{
-		BasicFlowNode node = (BasicFlowNode) graphNode.getAnnotation(FLOW_NODE_ANNOTATION);
+		BasicFlowNode node = (BasicFlowNode) graphNode.getAnnotation(ANNOT_FLOW_NODE);
 
 		if (node != null)
 		{
+			// node already has been created
 			return node;
 		}
 
-		RepositoryEntity entity = (RepositoryEntity) graphNode.getAnnotation("repositoryLink");
+		RepositoryEntity entity = (RepositoryEntity) graphNode
+				.getAnnotation(GrooveASTBuilderCN.ANNOT_REPOSITORY_ENTITY);
 
-		Collection<Edge> col = graph.edgeSet(graphNode);
-		Iterator<Edge> iter = col.iterator();
+		Collection<? extends Edge> col = graph.edgeSet(graphNode);
 		Set<String> names = new HashSet<String>();
 		String label;
-		while (iter.hasNext())
+		for (Edge edge : col)
 		{
-			Edge edge = iter.next();
 			if (edge.source().equals(graphNode) && edge.opposite().equals(graphNode))
 			{
 				label = edge.label().text();
@@ -142,7 +140,7 @@ public class FlowModelExtractor
 
 		node = new BasicFlowNode(names, entity);
 
-		graphNode.addAnnotation(FLOW_NODE_ANNOTATION, node);
+		graphNode.addAnnotation(ANNOT_FLOW_NODE, node);
 
 		model.addNode(node);
 

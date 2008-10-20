@@ -24,13 +24,14 @@
 
 package Composestar.Core.FIRE2.model;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
-import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.ModuleResourceManager;
@@ -50,16 +51,15 @@ public class FIRE2Resources implements ModuleResourceManager
 	/**
 	 * Mapping from filter module (fully qualified name) to preprocessing result
 	 */
-	protected Map<String, FirePreprocessingResult> ppResults;
+	protected Map<FilterModule, FirePreprocessingResult> ppResults;
 
 	public FIRE2Resources()
 	{
-		ppResults = new HashMap<String, FirePreprocessingResult>();
+		ppResults = new WeakHashMap<FilterModule, FirePreprocessingResult>();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Resources.ModuleResourceManager#getModuleName()
 	 */
 	public String getModuleName()
@@ -74,21 +74,9 @@ public class FIRE2Resources implements ModuleResourceManager
 	 * @param concern The concern for which the fire model needs to be created.
 	 * @param order The FilterModuleOrder to be used.
 	 */
-	public FireModel getFireModel(Concern concern, FilterModuleOrder order)
+	public FireModel getFireModel(Concern concern, List<ImposedFilterModule> order)
 	{
 		return new FireModel(this, concern, order);
-	}
-
-	/**
-	 * Creates a FireModel for a given concern and a given filter set, specified
-	 * by the FilterModule array.
-	 * 
-	 * @param concern
-	 * @param modules
-	 */
-	public FireModel getFireModel(Concern concern, FilterModule[] modules)
-	{
-		return new FireModel(this, concern, modules);
 	}
 
 	/**
@@ -110,7 +98,7 @@ public class FIRE2Resources implements ModuleResourceManager
 	 */
 	public FirePreprocessingResult getPreprocessingResult(FilterModule fm)
 	{
-		return getPreprocessingResult(fm.getQualifiedName());
+		return ppResults.get(fm);
 	}
 
 	/**
@@ -121,29 +109,7 @@ public class FIRE2Resources implements ModuleResourceManager
 	 */
 	public FirePreprocessingResult getPreprocessingResult(FilterModuleReference fmref)
 	{
-		return getPreprocessingResult(fmref.getRef());
-	}
-
-	/**
-	 * Add a preprocessing result to the resources
-	 * 
-	 * @param fmName
-	 * @param result
-	 */
-	public synchronized void addPreprocessingResult(String fmName, FirePreprocessingResult result)
-	{
-		if (fmName == null || fmName.trim().length() == 0)
-		{
-			throw new IllegalArgumentException("Filter module name can not be null or empty");
-		}
-		if (result == null)
-		{
-			throw new IllegalArgumentException("Preprocessing result can not be null");
-		}
-		if (ppResults.put(fmName, result) != null)
-		{
-			logger.warn(String.format("Previous result for %s lost", fmName));
-		}
+		return getPreprocessingResult(fmref.getReference());
 	}
 
 	/**
@@ -158,7 +124,14 @@ public class FIRE2Resources implements ModuleResourceManager
 		{
 			throw new IllegalArgumentException("Filter module can not be null");
 		}
-		addPreprocessingResult(fm.getQualifiedName(), result);
+		if (result == null)
+		{
+			throw new IllegalArgumentException("Preprocessing result can not be null");
+		}
+		if (ppResults.put(fm, result) != null)
+		{
+			logger.warn(String.format("Previous result for %s lost", fm.getFullyQualifiedName()));
+		}
 	}
 
 	/**
@@ -173,7 +146,7 @@ public class FIRE2Resources implements ModuleResourceManager
 		{
 			throw new IllegalArgumentException("Filter module reference can not be null");
 		}
-		addPreprocessingResult(fmref.getRef(), result);
+		addPreprocessingResult(fmref, result);
 	}
 
 }

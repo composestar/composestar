@@ -188,6 +188,7 @@ public class FILTH implements CTCommonModule
 
 		ImposedFilterModule difm = new ImposedFilterModuleImpl(defaultFMBinding);
 		sinfo.addFilterModule(difm);
+		repository.add(difm);
 
 		// convert the ordered action lists to filter module ordering lists and
 		// validate the generated list to conform to the constraints

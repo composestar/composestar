@@ -14,18 +14,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
-import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SIGN2.Sign;
 
 /**
@@ -127,7 +123,7 @@ public class FireModel
 	/**
 	 * The filter module superimpositions in the filter set.
 	 */
-	private FilterModuleSuperImposition[] filterModules;
+	private ImposedFilterModule[] filterModules;
 
 	/**
 	 * The extend FlowModels of both input and output filters.
@@ -152,42 +148,10 @@ public class FireModel
 	 * @param concern The concern for which the fire model needs to be created.
 	 * @param order The FilterModuleOrder to be used.
 	 */
-	protected FireModel(FIRE2Resources resources, Concern concern, FilterModuleOrder order)
+	protected FireModel(FIRE2Resources resources, Concern concern, List<ImposedFilterModule> order)
 	{
 		this.concern = concern;
-
-		// List v = order.orderAsList();
-		List<FilterModuleSuperImposition> v = order.filterModuleSIList();
-
-		FilterModuleSuperImposition[] modules = new FilterModuleSuperImposition[v.size()];
-		for (int i = 0; i < v.size(); i++)
-		{
-			modules[i] = v.get(i);
-		}
-
-		initialize(modules, resources);
-	}
-
-	/**
-	 * Creates a FireModel for a given concern and a given filter set, specified
-	 * by the FilterModule array.
-	 * 
-	 * @param concern
-	 * @param modules
-	 */
-	protected FireModel(FIRE2Resources resources, Concern concern, FilterModule[] modules)
-	{
-		this.concern = concern;
-
-		FilterModuleSuperImposition[] fmsi = new FilterModuleSuperImposition[modules.length];
-		for (int i = 0; i < modules.length; i++)
-		{
-			FilterModuleReference ref = new FilterModuleReference();
-			ref.setRef(modules[i]);
-			fmsi[i] = new FilterModuleSuperImposition(ref);
-		}
-
-		initialize(fmsi, resources);
+		initialize(order.toArray(new ImposedFilterModule[order.size()]), resources);
 	}
 
 	/**
@@ -209,7 +173,7 @@ public class FireModel
 	 * @param modules
 	 * @param fire2Resources
 	 */
-	private void initialize(FilterModuleSuperImposition[] modules, FIRE2Resources fire2Resources)
+	private void initialize(ImposedFilterModule[] modules, FIRE2Resources fire2Resources)
 	{
 		filterModules = modules;
 
@@ -790,8 +754,8 @@ public class FireModel
 	 * @param exampleMessage
 	 * @param generalizedMessage
 	 * @return The degeneralization of the generalizedMessage with the
-	 *         exampleMessage, or <code>null</code> if the generalizedMessage
-	 *         or exampleMessage is <code>null</code>.
+	 *         exampleMessage, or <code>null</code> if the generalizedMessage or
+	 *         exampleMessage is <code>null</code>.
 	 */
 	private Message deriveMessage(Message exampleMessage, Message generalizedMessage)
 	{
@@ -865,8 +829,9 @@ public class FireModel
 	 * Returns the ExecutionModel for a given entranceselector.
 	 * 
 	 * @param filterPosition Indicates for which filters the executionmodel
-	 *            should be returned, for the input filters (<code>INPUT_FILTERS</code>)
-	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 *            should be returned, for the input filters (
+	 *            <code>INPUT_FILTERS</code>) or for the output filters (
+	 *            <code>OUTPUT_FILTERS</code>).
 	 * @param selector
 	 * @return
 	 */
@@ -880,8 +845,9 @@ public class FireModel
 	 * checking.
 	 * 
 	 * @param filterPosition Indicates for which filters the executionmodel
-	 *            should be returned, for the input filters (<code>INPUT_FILTERS</code>)
-	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 *            should be returned, for the input filters (
+	 *            <code>INPUT_FILTERS</code>) or for the output filters (
+	 *            <code>OUTPUT_FILTERS</code>).
 	 * @param methodInfo The methodinfo
 	 * @return
 	 */
@@ -894,8 +860,9 @@ public class FireModel
 	 * Returns the ExecutionModel for a given methodInfo.
 	 * 
 	 * @param filterPosition Indicates for which filters the executionmodel
-	 *            should be returned, for the input filters (<code>INPUT_FILTERS</code>)
-	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 *            should be returned, for the input filters (
+	 *            <code>INPUT_FILTERS</code>) or for the output filters (
+	 *            <code>OUTPUT_FILTERS</code>).
 	 * @param methodInfo The methodinfo
 	 * @param signatureCheck Indicates whether a signatureCheck needs to be
 	 *            done.
@@ -910,8 +877,9 @@ public class FireModel
 	 * Returns the ExecutionModel for a given target and methodinfo.
 	 * 
 	 * @param filterPosition Indicates for which filters the executionmodel
-	 *            should be returned, for the input filters (<code>INPUT_FILTERS</code>)
-	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 *            should be returned, for the input filters (
+	 *            <code>INPUT_FILTERS</code>) or for the output filters (
+	 *            <code>OUTPUT_FILTERS</code>).
 	 * @param target The entrance target
 	 * @param methodInfo The entrance method
 	 * @param signatureCheck Indicates whether a signatureCheck needs to be
@@ -941,8 +909,9 @@ public class FireModel
 	 * Returns the complete execution model.
 	 * 
 	 * @param filterPosition Indicates for which filters the execution model
-	 *            should be returned, for the input filters (<code>INPUT_FILTERS</code>)
-	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 *            should be returned, for the input filters (
+	 *            <code>INPUT_FILTERS</code>) or for the output filters (
+	 *            <code>OUTPUT_FILTERS</code>).
 	 * @return
 	 */
 	public ExecutionModel getExecutionModel(FilterDirection filterPosition)
@@ -954,8 +923,9 @@ public class FireModel
 	 * Returns the distinguishable selectors.
 	 * 
 	 * @param filterPosition Indicates for which filters the distinguishable
-	 *            selectors should be returned, for the input filters (<code>INPUT_FILTERS</code>)
-	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 *            selectors should be returned, for the input filters (
+	 *            <code>INPUT_FILTERS</code>) or for the output filters (
+	 *            <code>OUTPUT_FILTERS</code>).
 	 * @return The distinguishable selectors.
 	 */
 	private Set<String> getDistinguishableSelectors(int filterPosition)
@@ -979,8 +949,9 @@ public class FireModel
 	 * Returns the distinguishable selectors.
 	 * 
 	 * @param filterPosition Indicates for which filters the distinguishable
-	 *            selectors should be returned, for the input filters (<code>INPUT_FILTERS</code>)
-	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 *            selectors should be returned, for the input filters (
+	 *            <code>INPUT_FILTERS</code>) or for the output filters (
+	 *            <code>OUTPUT_FILTERS</code>).
 	 * @return The distinguishable selectors.
 	 */
 	public Set<String> getDistinguishableSelectors(FilterDirection filterPosition)
@@ -1121,8 +1092,8 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.FIRE2.model.ExecutionModel#getEntranceMessages()
+		 * @see
+		 * Composestar.Core.FIRE2.model.ExecutionModel#getEntranceMessages()
 		 */
 		public Set<Message> getEntranceMessages()
 		{
@@ -1131,8 +1102,9 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.FIRE2.model.ExecutionModel#getEntranceState(Composestar.Core.FIRE2.model.Message)
+		 * @see
+		 * Composestar.Core.FIRE2.model.ExecutionModel#getEntranceState(Composestar
+		 * .Core.FIRE2.model.Message)
 		 */
 		public ExecutionState getEntranceState(Message message)
 		{
@@ -1170,8 +1142,9 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.FIRE2.model.ExecutionModel#isEntranceMessage(Composestar.Core.FIRE2.model.Message)
+		 * @see
+		 * Composestar.Core.FIRE2.model.ExecutionModel#isEntranceMessage(Composestar
+		 * .Core.FIRE2.model.Message)
 		 */
 		public boolean isEntranceMessage(Message message)
 		{
@@ -1280,8 +1253,8 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.FIRE2.model.ExecutionState#getOutTransitionsEx()
+		 * @see
+		 * Composestar.Core.FIRE2.model.ExecutionState#getOutTransitionsEx()
 		 */
 		@Override
 		public List<ExecutionTransition> getOutTransitionsEx()
@@ -1337,7 +1310,6 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.FIRE2.model.ExecutionTransition#getStartState()
 		 */
 		@Override
@@ -1348,7 +1320,6 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.FIRE2.model.ExecutionTransition#getEndState()
 		 */
 		@Override
@@ -1419,7 +1390,6 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.FIRE2.model.FlowModel#getNodesEx()
 		 */
 		public List<FlowNode> getNodesEx()
@@ -1439,7 +1409,6 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.FIRE2.model.FlowModel#getTransitionsEx()
 		 */
 		public List<FlowTransition> getTransitionsEx()
@@ -1529,7 +1498,6 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.FIRE2.model.FlowNode#getNamesEx()
 		 */
 		public Set<String> getNamesEx()
@@ -1593,7 +1561,6 @@ public class FireModel
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.FIRE2.model.FlowNode#getTransitionsEx()
 		 */
 		public List<FlowTransition> getTransitionsEx()

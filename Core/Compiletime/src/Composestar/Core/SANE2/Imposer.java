@@ -40,7 +40,6 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
-import Composestar.Utils.Perf.CPSTimer;
 
 /**
  * Performs the superimposition of the filter modules and resolves the
@@ -57,8 +56,6 @@ public class Imposer implements CTCommonModule
 
 	protected ReferenceManager refman;
 
-	protected CPSTimer timer;
-
 	public Imposer()
 	{}
 
@@ -71,7 +68,6 @@ public class Imposer implements CTCommonModule
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		boolean res = true;
-		timer = CPSTimer.getTimer(ModuleNames.SANE);
 		repository = resources.repository();
 		refman = resources.get(ReferenceManager.RESOURCE_KEY);
 		for (FilterModuleBinding fmb : repository.getAllSet(FilterModuleBinding.class))
