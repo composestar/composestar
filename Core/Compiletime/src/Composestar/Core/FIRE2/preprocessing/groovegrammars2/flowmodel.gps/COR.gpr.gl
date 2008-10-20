@@ -1,4 +1,4 @@
-# Layout information for C:\local\mhendrik\_groove3\fire2cn\fire2cn.gps\COR.gpr
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\flowmodel.gps\COR.gpr
 # Each line contains layout information about a node or edge
 # Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
 #     v 1: label position = (x-permillage, y-permillage)
@@ -6,9 +6,10 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n28723 35 233 134 15 
-n n28721 197 95 134 30 
-n n28724 239 416 56 15 
-n n28722 425 212 134 15 
-n n28720 26 23 56 15 
-n n28719 503 11 56 15 
+n n43592 503 11 56 15 
+n n43591 35 233 134 15 
+n n43593 26 23 56 15 
+n n43595 425 212 134 15 
+n n43594 197 95 134 45 
+n n43596 239 416 56 15 
+e n43593 n43594 "del:?f[flow,flowTrue,flowFalse]" 645 0 84 44 207 95 11
