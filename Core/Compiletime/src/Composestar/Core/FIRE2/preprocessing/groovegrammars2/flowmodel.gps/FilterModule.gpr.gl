@@ -1,0 +1,12 @@
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\flowmodel.gps\FilterModule.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n42783 505 89 22 15 
+n n42785 106 89 69 15 
+n n42784 313 89 88 15 
+e n42785 n42784 "new:flow" 500 0 145 99 245 52 362 99 12

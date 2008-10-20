@@ -272,13 +272,15 @@ public class GrooveASTBuilderCN
 		graph.addNode(node);
 
 		// TODO: how to handle checking for non-instance/non-selector
-		// properties?
+		// properties? (i.e. message.bla = this.is.my.class)
 		edge = new AnnotatedEdge(node, createLabel(cmp.getLHS().getBaseName()), node);
 		graph.addEdge(edge);
 		edge = new AnnotatedEdge(cmpNode, createLabel(LHS_EDGE), node);
 		graph.addEdge(edge);
 
-		// TODO: how to handle type conversion in case of selectors
+		// TODO: how to handle type conversion in case of selectors, in most
+		// cases selectors are used as literals, but they could also be method
+		// references
 		for (CpsVariable var : cmp.getRHS())
 		{
 			node = createCpsVariableNode(var);

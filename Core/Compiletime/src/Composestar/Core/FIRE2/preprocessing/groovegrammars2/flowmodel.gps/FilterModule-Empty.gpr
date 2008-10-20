@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="FilterModule-Empty" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>50</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n42789"/>
+        <node id="n42786"/>
+        <node id="n42788"/>
+        <node id="n42787"/>
+        <edge from="n42788" to="n42788">
+            <attr name="label">
+                <string>FilterModule</string>
+            </attr>
+        </edge>
+        <edge from="n42786" to="n42786">
+            <attr name="label">
+                <string>End</string>
+            </attr>
+        </edge>
+        <edge from="n42787" to="n42787">
+            <attr name="label">
+                <string>FilterExpression</string>
+            </attr>
+        </edge>
+        <edge from="n42787" to="n42787">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n42788" to="n42787">
+            <attr name="label">
+                <string>not:expression</string>
+            </attr>
+        </edge>
+        <edge from="n42789" to="n42789">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42789" to="n42789">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n42788" to="n42789">
+            <attr name="label">
+                <string>not:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42788" to="n42786">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42788" to="n42786">
+            <attr name="label">
+                <string>not:flow</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

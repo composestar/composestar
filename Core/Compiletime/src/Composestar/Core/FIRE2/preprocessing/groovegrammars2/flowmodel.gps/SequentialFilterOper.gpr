@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="SequentialFilterOper" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>50</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <attr name="remark">
+            <string>This rule must have a higher priority than the filter rule because the filter rule will produce two incoming flow edges to the SEQ oper instead of the expected one</string>
+        </attr>
+        <node id="n42799"/>
+        <node id="n42798"/>
+        <node id="n42797"/>
+        <node id="n42801"/>
+        <node id="n42800"/>
+        <edge from="n42801" to="n42801">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42797" to="n42800">
+            <attr name="label">
+                <string>del:rhs</string>
+            </attr>
+        </edge>
+        <edge from="n42797" to="n42797">
+            <attr name="label">
+                <string>SequentialFilterOper</string>
+            </attr>
+        </edge>
+        <edge from="n42799" to="n42799">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42797" to="n42798">
+            <attr name="label">
+                <string>del:lhs</string>
+            </attr>
+        </edge>
+        <edge from="n42800" to="n42800">
+            <attr name="label">
+                <string>FilterExpression</string>
+            </attr>
+        </edge>
+        <edge from="n42797" to="n42797">
+            <attr name="label">
+                <string>del:</string>
+            </attr>
+        </edge>
+        <edge from="n42798" to="n42800">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42799" to="n42797">
+            <attr name="label">
+                <string>del:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42800" to="n42801">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42797" to="n42801">
+            <attr name="label">
+                <string>del:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42798" to="n42798">
+            <attr name="label">
+                <string>FilterExpression</string>
+            </attr>
+        </edge>
+        <edge from="n42799" to="n42798">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

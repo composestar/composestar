@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="Assignment" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>10</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n41195"/>
+        <node id="n41194"/>
+        <node id="n41198"/>
+        <node id="n41193"/>
+        <node id="n41197"/>
+        <node id="n41192"/>
+        <node id="n41196"/>
+        <edge from="n41196" to="n41196">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n41195" to="n41193">
+            <attr name="label">
+                <string>new:?key</string>
+            </attr>
+        </edge>
+        <edge from="n41192" to="n41197">
+            <attr name="label">
+                <string>flow</string>
+            </attr>
+        </edge>
+        <edge from="n41195" to="n41194">
+            <attr name="label">
+                <string>del:?key</string>
+            </attr>
+        </edge>
+        <edge from="n41196" to="n41195">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n41196" to="n41192">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n41192" to="n41198">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n41192" to="n41193">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n41198" to="n41198">
+            <attr name="label">
+                <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n41196" to="n41197">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n41195" to="n41195">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n41192" to="n41192">
+            <attr name="label">
+                <string>Assignment</string>
+            </attr>
+        </edge>
+        <edge from="n41197" to="n41197">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

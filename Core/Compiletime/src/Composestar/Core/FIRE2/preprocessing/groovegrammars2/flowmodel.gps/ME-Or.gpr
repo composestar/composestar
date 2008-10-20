@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="ME-Or" role="rule" edgeids="false" edgemode="directed">
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n42421"/>
+        <node id="n42417"/>
+        <node id="n42420"/>
+        <node id="n42422"/>
+        <node id="n42419"/>
+        <node id="n42418"/>
+        <edge from="n42418" to="n42418">
+            <attr name="label">
+                <string>Expression</string>
+            </attr>
+        </edge>
+        <edge from="n42417" to="n42417">
+            <attr name="label">
+                <string>Or</string>
+            </attr>
+        </edge>
+        <edge from="n42420" to="n42418">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n42418" to="n42421">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n42418" to="n42422">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n42417" to="n42421">
+            <attr name="label">
+                <string>del:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n42419" to="n42417">
+            <attr name="label">
+                <string>del:{?x[flow,flowTrue,flowFalse]}</string>
+            </attr>
+        </edge>
+        <edge from="n42417" to="n42417">
+            <attr name="label">
+                <string>del:</string>
+            </attr>
+        </edge>
+        <edge from="n42420" to="n42420">
+            <attr name="label">
+                <string>Expression</string>
+            </attr>
+        </edge>
+        <edge from="n42421" to="n42421">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42417" to="n42422">
+            <attr name="label">
+                <string>del:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n42417" to="n42420">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n42422" to="n42422">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42417" to="n42418">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n42419" to="n42420">
+            <attr name="label">
+                <string>new:?x</string>
+            </attr>
+        </edge>
+        <edge from="n42419" to="n42419">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42420" to="n42422">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

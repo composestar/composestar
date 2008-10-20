@@ -1,0 +1,15 @@
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\execmodel.gps\CmpInstance-False2.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n41414 218 341 25 15 
+n n41413 224 257 72 15 
+n n41412 83 95 51 15 
+n n41410 419 305 56 15 
+n n41409 425 224 56 15 
+n n41408 239 95 36 15 
+n n41411 89 233 20 15 

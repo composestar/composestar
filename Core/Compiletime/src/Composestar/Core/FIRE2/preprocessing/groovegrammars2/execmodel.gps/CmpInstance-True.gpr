@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="CmpInstance-True" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>10</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n41482"/>
+        <node id="n41480"/>
+        <node id="n41481"/>
+        <node id="n41478"/>
+        <node id="n41483"/>
+        <node id="n41484"/>
+        <node id="n41479"/>
+        <edge from="n41483" to="n41481">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n41481" to="n41484">
+            <attr name="label">
+                <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n41483" to="n41480">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n41480" to="n41478">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n41480" to="n41480">
+            <attr name="label">
+                <string>CmpInstance</string>
+            </attr>
+        </edge>
+        <edge from="n41482" to="n41482">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n41480" to="n41479">
+            <attr name="label">
+                <string>flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n41483" to="n41479">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n41483" to="n41483">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n41479" to="n41479">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n41481" to="n41481">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n41478" to="n41478">
+            <attr name="label">
+                <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n41480" to="n41484">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n41480" to="n41482">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

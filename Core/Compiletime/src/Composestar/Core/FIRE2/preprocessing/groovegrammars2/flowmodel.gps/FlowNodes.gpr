@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="FlowNodes" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>100</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n28911"/>
+        <edge from="n28911" to="n28911">
+            <attr name="label">
+                <string>not:FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28911" to="n28911">
+            <attr name="label">
+                <string>{FilterModule|FilterExpression|Filter|FilterAction|FilterElementExpression|Expression|Assignment|End|Return|Exit}</string>
+            </attr>
+        </edge>
+        <edge from="n28911" to="n28911">
+            <attr name="label">
+                <string>new:FlowNode</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

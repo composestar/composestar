@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="ME-And" role="rule" edgeids="false" edgemode="directed">
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n42541"/>
+        <node id="n42536"/>
+        <node id="n42537"/>
+        <node id="n42538"/>
+        <node id="n42540"/>
+        <node id="n42539"/>
+        <edge from="n42539" to="n42539">
+            <attr name="label">
+                <string>Expression</string>
+            </attr>
+        </edge>
+        <edge from="n42538" to="n42537">
+            <attr name="label">
+                <string>del:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n42537" to="n42537">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42541" to="n42541">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42540" to="n42540">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42538" to="n42539">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n42541" to="n42538">
+            <attr name="label">
+                <string>del:{?x[flow,flowTrue,flowFalse]}</string>
+            </attr>
+        </edge>
+        <edge from="n42538" to="n42540">
+            <attr name="label">
+                <string>del:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n42539" to="n42536">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n42539" to="n42537">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n42541" to="n42539">
+            <attr name="label">
+                <string>new:?x</string>
+            </attr>
+        </edge>
+        <edge from="n42538" to="n42538">
+            <attr name="label">
+                <string>del:</string>
+            </attr>
+        </edge>
+        <edge from="n42536" to="n42536">
+            <attr name="label">
+                <string>Expression</string>
+            </attr>
+        </edge>
+        <edge from="n42536" to="n42537">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n42536" to="n42540">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n42538" to="n42536">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n42538" to="n42538">
+            <attr name="label">
+                <string>And</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

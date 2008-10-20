@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="InitMessage-End" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>100</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n5630"/>
+        <node id="n5631"/>
+        <edge from="n5630" to="n5630">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n5630" to="n5630">
+            <attr name="label">
+                <string>del:init</string>
+            </attr>
+        </edge>
+        <edge from="n5631" to="n5631">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n5630" to="n5631">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

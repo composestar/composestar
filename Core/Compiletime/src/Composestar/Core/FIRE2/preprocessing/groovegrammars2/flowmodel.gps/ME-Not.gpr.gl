@@ -1,0 +1,18 @@
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\flowmodel.gps\ME-Not.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n42472 227 306 61 15 
+n n42475 266 115 20 30 
+n n42473 47 36 56 15 
+n n42476 52 302 56 15 
+n n42474 444 300 56 15 
+e n42472 n42476 "new:flowTrue" 500 0 262 316 55 249 12
+e n42475 n42474 "del:flowTrue" 500 0 281 133 477 310 12
+e n42472 n42474 "new:flowFalse" 500 0 298 310 444 310 12
+e n42473 n42475 "del:{?x[flow,flowTrue,flowFalse]}" 618 0 104 57 266 126 11
+e n42475 n42476 "del:flowFalse" 533 0 95 193 305 290 11

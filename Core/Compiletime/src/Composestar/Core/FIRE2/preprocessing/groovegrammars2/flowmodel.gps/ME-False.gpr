@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="ME-False" role="rule" edgeids="false" edgemode="directed">
+        <attr name="enabled">
+            <string>false</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <attr name="remark">
+            <string>Disabled because it results in optimization of the flowgraph, which results in nodes without incoming edges</string>
+        </attr>
+        <node id="n28755"/>
+        <node id="n28754"/>
+        <node id="n28753"/>
+        <node id="n28756"/>
+        <edge from="n28756" to="n28753">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n28753" to="n28753">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28754" to="n28754">
+            <attr name="label">
+                <string>del:</string>
+            </attr>
+        </edge>
+        <edge from="n28755" to="n28755">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28754" to="n28755">
+            <attr name="label">
+                <string>del:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n28756" to="n28754">
+            <attr name="label">
+                <string>{?x[flowTrue,flowFalse]}</string>
+            </attr>
+        </edge>
+        <edge from="n28756" to="n28756">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28754" to="n28754">
+            <attr name="label">
+                <string>False</string>
+            </attr>
+        </edge>
+        <edge from="n28754" to="n28753">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

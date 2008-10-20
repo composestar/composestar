@@ -1,0 +1,13 @@
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\flowmodel.gps\SequentialFilterOper.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n42799 31 32 56 15 
+n n42798 139 224 88 15 
+n n42797 220 80 113 15 
+n n42801 448 38 56 15 
+n n42800 355 227 88 15 

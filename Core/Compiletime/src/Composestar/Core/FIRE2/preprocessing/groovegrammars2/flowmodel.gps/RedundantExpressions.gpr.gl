@@ -1,0 +1,13 @@
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\fire2cn.gps\RedundantExpressions.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n28774 272 89 61 15 
+n n28772 419 137 56 15 
+n n28773 416 53 56 15 
+n n28775 74 95 15 15 
+e n28775 n28774 "{flow|flowTrue|flowFalse}" 527 0 65 119 209 119 11

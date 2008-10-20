@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="FilterElement" role="rule" edgeids="false" edgemode="directed">
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <attr name="remark">
+            <string>not finished</string>
+        </attr>
+        <node id="n42592"/>
+        <node id="n42596"/>
+        <node id="n42595"/>
+        <node id="n42594"/>
+        <node id="n42593"/>
+        <edge from="n42596" to="n42596">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42595" to="n42593">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n42592" to="n42594">
+            <attr name="label">
+                <string>del:reject</string>
+            </attr>
+        </edge>
+        <edge from="n42592" to="n42595">
+            <attr name="label">
+                <string>del:expression</string>
+            </attr>
+        </edge>
+        <edge from="n42594" to="n42594">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42592" to="n42592">
+            <attr name="label">
+                <string>FilterElement</string>
+            </attr>
+        </edge>
+        <edge from="n42595" to="n42595">
+            <attr name="label">
+                <string>Expression</string>
+            </attr>
+        </edge>
+        <edge from="n42592" to="n42595">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42593" to="n42593">
+            <attr name="label">
+                <string>Assignment</string>
+            </attr>
+        </edge>
+        <edge from="n42595" to="n42594">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n42592" to="n42593">
+            <attr name="label">
+                <string>del:assignment</string>
+            </attr>
+        </edge>
+        <edge from="n42592" to="n42596">
+            <attr name="label">
+                <string>del:accept</string>
+            </attr>
+        </edge>
+        <edge from="n42593" to="n42596">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

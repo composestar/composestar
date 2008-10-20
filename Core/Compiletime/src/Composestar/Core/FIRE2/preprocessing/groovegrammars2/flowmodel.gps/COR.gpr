@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="COR" role="rule" edgeids="false" edgemode="directed">
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n28723"/>
+        <node id="n28721"/>
+        <node id="n28724"/>
+        <node id="n28720"/>
+        <node id="n28722"/>
+        <node id="n28719"/>
+        <edge from="n28720" to="n28720">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28723" to="n28722">
+            <attr name="label">
+                <string>new:reject</string>
+            </attr>
+        </edge>
+        <edge from="n28721" to="n28723">
+            <attr name="label">
+                <string>del:lhs</string>
+            </attr>
+        </edge>
+        <edge from="n28721" to="n28721">
+            <attr name="label">
+                <string>del:</string>
+            </attr>
+        </edge>
+        <edge from="n28720" to="n28723">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n28721" to="n28719">
+            <attr name="label">
+                <string>del:reject</string>
+            </attr>
+        </edge>
+        <edge from="n28721" to="n28721">
+            <attr name="label">
+                <string>FilterElementExpression</string>
+            </attr>
+        </edge>
+        <edge from="n28723" to="n28724">
+            <attr name="label">
+                <string>new:accept</string>
+            </attr>
+        </edge>
+        <edge from="n28721" to="n28724">
+            <attr name="label">
+                <string>del:accept</string>
+            </attr>
+        </edge>
+        <edge from="n28721" to="n28722">
+            <attr name="label">
+                <string>del:rhs</string>
+            </attr>
+        </edge>
+        <edge from="n28719" to="n28719">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28724" to="n28724">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28720" to="n28721">
+            <attr name="label">
+                <string>del:flow</string>
+            </attr>
+        </edge>
+        <edge from="n28722" to="n28724">
+            <attr name="label">
+                <string>new:accept</string>
+            </attr>
+        </edge>
+        <edge from="n28721" to="n28721">
+            <attr name="label">
+                <string>COR</string>
+            </attr>
+        </edge>
+        <edge from="n28722" to="n28722">
+            <attr name="label">
+                <string>FilterElementExpression</string>
+            </attr>
+        </edge>
+        <edge from="n28722" to="n28719">
+            <attr name="label">
+                <string>new:reject</string>
+            </attr>
+        </edge>
+        <edge from="n28723" to="n28723">
+            <attr name="label">
+                <string>FilterElementExpression</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

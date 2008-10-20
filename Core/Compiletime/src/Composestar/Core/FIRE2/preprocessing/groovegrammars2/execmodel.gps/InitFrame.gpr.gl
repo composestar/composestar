@@ -1,0 +1,14 @@
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\execmodel.gps\InitFrame.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n5620 206 118 36 15 
+n n5621 38 73 15 15 
+n n5622 188 247 69 15 
+n n5623 344 124 51 15 
+e n5621 n5621 "not:Frame" 500 0 53 83 108 89 83 34 53 83 12
+e n5620 n5620 "new:init" 500 0 229 136 256 63 211 60 229 136 12

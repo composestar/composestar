@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="FilterModule" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>50</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n42783"/>
+        <node id="n42784"/>
+        <node id="n42785"/>
+        <edge from="n42783" to="n42783">
+            <attr name="label">
+                <string>End</string>
+            </attr>
+        </edge>
+        <edge from="n42785" to="n42785">
+            <attr name="label">
+                <string>FilterModule</string>
+            </attr>
+        </edge>
+        <edge from="n42785" to="n42784">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42784" to="n42783">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42784" to="n42784">
+            <attr name="label">
+                <string>FilterExpression</string>
+            </attr>
+        </edge>
+        <edge from="n42785" to="n42784">
+            <attr name="label">
+                <string>del:expression</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

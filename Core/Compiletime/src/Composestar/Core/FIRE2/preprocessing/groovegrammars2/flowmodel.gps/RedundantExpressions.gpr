@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="RedundantExpressions" role="rule" edgeids="false" edgemode="directed">
+        <attr name="enabled">
+            <string>false</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <attr name="remark">
+            <string>The Ture and False optimizations can leave expression nodes without incoming edges</string>
+        </attr>
+        <node id="n28772"/>
+        <node id="n28774"/>
+        <node id="n28773"/>
+        <node id="n28775"/>
+        <edge from="n28774" to="n28774">
+            <attr name="label">
+                <string>del:</string>
+            </attr>
+        </edge>
+        <edge from="n28774" to="n28774">
+            <attr name="label">
+                <string>Expression</string>
+            </attr>
+        </edge>
+        <edge from="n28774" to="n28772">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n28774" to="n28773">
+            <attr name="label">
+                <string>flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n28773" to="n28773">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28772" to="n28772">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28775" to="n28775">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n28775" to="n28774">
+            <attr name="label">
+                <string>{flow|flowTrue|flowFalse}</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

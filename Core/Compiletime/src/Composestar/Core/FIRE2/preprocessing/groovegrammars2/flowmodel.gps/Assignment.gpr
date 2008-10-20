@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="Assignment" role="rule" edgeids="false" edgemode="directed">
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <attr name="remark">
+            <string>In case of multiple assignments make the flow sequential</string>
+        </attr>
+        <node id="n42356"/>
+        <node id="n42357"/>
+        <node id="n42355"/>
+        <node id="n42354"/>
+        <edge from="n42354" to="n42356">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42354" to="n42354">
+            <attr name="label">
+                <string>Assignment</string>
+            </attr>
+        </edge>
+        <edge from="n42356" to="n42355">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42356" to="n42356">
+            <attr name="label">
+                <string>Assignment</string>
+            </attr>
+        </edge>
+        <edge from="n42354" to="n42356">
+            <attr name="label">
+                <string>del:assignment</string>
+            </attr>
+        </edge>
+        <edge from="n42357" to="n42357">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42354" to="n42355">
+            <attr name="label">
+                <string>del:flow</string>
+            </attr>
+        </edge>
+        <edge from="n42355" to="n42355">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n42357" to="n42354">
+            <attr name="label">
+                <string>?if[flow,flowTrue,flowFalse]</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

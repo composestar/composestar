@@ -1,0 +1,18 @@
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\fire2cn.gps\Filter.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n28726 437 362 60 15 
+n n28728 185 344 60 15 
+n n28731 332 443 60 15 
+n n28729 209 29 56 15 
+n n28725 62 242 134 15 
+n n28727 350 107 27 15 
+n n28732 554 260 60 15 
+n n28730 689 146 56 15 
+e n28727 n28725 "new:flow" 500 0 368 117 216 123 134 252 12
+e n28731 n28730 "new:flow" 500 0 401 443 648 369 725 167 13

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="FilterAction-Exit" role="rule" edgeids="false" edgemode="directed">
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n28845"/>
+        <node id="n28844"/>
+        <node id="n28843"/>
+        <edge from="n28845" to="n28845">
+            <attr name="label">
+                <string>Exit</string>
+            </attr>
+        </edge>
+        <edge from="n28844" to="n28844">
+            <attr name="label">
+                <string>ExitFlowAction</string>
+            </attr>
+        </edge>
+        <edge from="n28843" to="n28843">
+            <attr name="label">
+                <string>not:Exit</string>
+            </attr>
+        </edge>
+        <edge from="n28844" to="n28843">
+            <attr name="label">
+                <string>del:flow</string>
+            </attr>
+        </edge>
+        <edge from="n28843" to="n28843">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28844" to="n28845">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="FilterAction-Return" role="rule" edgeids="false" edgemode="directed">
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n28893"/>
+        <node id="n28894"/>
+        <node id="n28895"/>
+        <edge from="n28894" to="n28894">
+            <attr name="label">
+                <string>Return</string>
+            </attr>
+        </edge>
+        <edge from="n28893" to="n28894">
+            <attr name="label">
+                <string>new:flow</string>
+            </attr>
+        </edge>
+        <edge from="n28893" to="n28895">
+            <attr name="label">
+                <string>del:flow</string>
+            </attr>
+        </edge>
+        <edge from="n28895" to="n28895">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n28893" to="n28893">
+            <attr name="label">
+                <string>ReturnFlowAction</string>
+            </attr>
+        </edge>
+        <edge from="n28895" to="n28895">
+            <attr name="label">
+                <string>not:Return</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>
