@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="InitMessage-CmpSignature" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>100</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <attr name="remark">
+            <string>Signature compare against of an object against a selector is only interesting in case of a target</string>
+        </attr>
+        <node id="n45246"/>
+        <node id="n45249"/>
+        <node id="n45248"/>
+        <node id="n45247"/>
+        <node id="n45245"/>
+        <node id="n45243"/>
+        <node id="n45244"/>
+        <edge from="n45247" to="n45243">
+            <attr name="label">
+                <string>not:target</string>
+            </attr>
+        </edge>
+        <edge from="n45243" to="n45243">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n45245" to="n45245">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n45244" to="n45244">
+            <attr name="label">
+                <string>CmpSignature</string>
+            </attr>
+        </edge>
+        <edge from="n45246" to="n45247">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n45247" to="n45247">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n45246" to="n45246">
+            <attr name="label">
+                <string>init</string>
+            </attr>
+        </edge>
+        <edge from="n45244" to="n45248">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n45244" to="n45249">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n45249" to="n45245">
+            <attr name="label">
+                <string>not:deferred</string>
+            </attr>
+        </edge>
+        <edge from="n45246" to="n45246">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n45247" to="n45249">
+            <attr name="label">
+                <string>new:target</string>
+            </attr>
+        </edge>
+        <edge from="n45248" to="n45248">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>
