@@ -1,7 +1,0 @@
-# Layout information for C:\files\work\ComposeGraph\runtime.gps\ConditionOperator.gpr
-# Each line contains layout information about a node or edge
-# Node Format: n <node id> <bounds>
-# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n1827 381 61 18 18 
-n n1825 383 225 18 18 
-n n1826 161 157 18 18 

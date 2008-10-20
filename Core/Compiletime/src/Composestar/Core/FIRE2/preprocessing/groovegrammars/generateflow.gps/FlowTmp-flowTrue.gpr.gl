@@ -1,9 +1,0 @@
-# Layout information for C:\local\ComposeGraph\generateflow.gps\FlowTmp-flowTrue.gpr
-# Each line contains layout information about a node or edge
-# Node Format: n <node id> <bounds>
-# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-e n1323 n1325 "new:flowTrue" 883 557 360 88 250 187 356 262 13
-n n1324 330 161 18 18 
-n n1323 320 79 18 18 
-n n1325 316 253 18 18 
-e n1324 n1325 "flowNext" 500 500 359 170 357 197 356 262 11

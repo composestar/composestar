@@ -63,12 +63,8 @@
 		<copy file="lib/prolog/prolog.jar" todir="${out.dist}/lib" />
 
 		<copy todir="${out.dist}/lib">
-			<fileset dir="lib/groove">
-				<include name="groove-1_2_0.jar" />
-				<include name="castor-0_9_5_2-xml.jar" />
-				<include name="jgraph.jar" />
-				<include name="xerces-2_6_0-xercesImpl.jar" />
-				<include name="xerces-2_6_0-xml-apis.jar" />
+			<fileset dir="lib/groove3">
+				<include name="*.jar" />
 			</fileset>
 		</copy>
 

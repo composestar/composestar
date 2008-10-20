@@ -1,9 +1,0 @@
-# Layout information for D:\composestar\Core\Compiletime\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\runtime.gps\SignatureMatchingPart-true-true.gpr
-# Each line contains layout information about a node or edge
-# Node Format: n <node id> <bounds>
-# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n604 51 261 18 18 
-n n602 424 58 18 18 
-e n603 n603 "not:'*'" 500 500 401 207 420 267 481 282 481 282 12
-n n601 583 377 18 18 
-n n603 392 199 18 18 

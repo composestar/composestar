@@ -1,8 +1,0 @@
-# Layout information for C:\local\ComposeGraph\generateflow.gps\ConditionExpression.gpr
-# Each line contains layout information about a node or edge
-# Node Format: n <node id> <bounds>
-# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-e n1238 n1237 "new:flowNext" 306 867 92 179 150 287 339 285 13
-n n1237 277 276 18 18 
-n n1238 52 170 18 18 
-e n1238 n1237 "del:flowIn" 410 31 92 179 217 159 339 285 13

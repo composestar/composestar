@@ -1,7 +1,0 @@
-# Layout information for D:\composestar\Core\Compiletime\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\runtime.gps\MatchingPattern.gpr
-# Each line contains layout information about a node or edge
-# Node Format: n <node id> <bounds>
-# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n13695 395 232 18 18 
-n n13693 381 61 18 18 
-n n13694 161 157 18 18 

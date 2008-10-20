@@ -1,9 +1,0 @@
-# Layout information for D:\composestar\Core\Compiletime\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\FilterAction-Return.gpr
-# Each line contains layout information about a node or edge
-# Node Format: n <node id> <bounds>
-# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-e n5883 n5883 "not:Return" 500 500 337 134 367 88 344 38 337 134 12
-n n5882 233 343 18 18 
-n n5885 469 238 18 18 
-n n5884 254 238 18 18 
-n n5883 297 125 18 18 

@@ -6,6 +6,13 @@
  */
 package Composestar.Core.FIRE2.preprocessing;
 
+import groove.explore.DefaultScenario;
+import groove.explore.result.Acceptor;
+import groove.explore.result.EmptyAcceptor;
+import groove.explore.result.EmptyResult;
+import groove.explore.result.FinalStateAcceptor;
+import groove.explore.result.Result;
+import groove.explore.result.SizedResult;
 import groove.explore.strategy.AbstractStrategy;
 import groove.explore.strategy.BranchingStrategy;
 import groove.explore.strategy.LinearStrategy;
@@ -14,13 +21,15 @@ import groove.io.AspectGxl;
 import groove.io.AspectualViewGps;
 import groove.io.LayedOutXml;
 import groove.lts.GTS;
+import groove.lts.GraphState;
+import groove.view.AspectualGraphView;
 import groove.view.DefaultGrammarView;
+import groove.view.FormatException;
 import groove.view.aspect.AspectGraph;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsRepository2.Repository;
@@ -53,11 +62,6 @@ public class Preprocessor implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);
 
-	/**
-	 * USed to save the generated graphs to a .gst file
-	 */
-	private AspectGxl graphSaver;
-
 	private DefaultGrammarView generateFlowGrammar;
 
 	private DefaultGrammarView runtimeGrammar;
@@ -69,17 +73,11 @@ public class Preprocessor implements CTCommonModule
 
 	private static final AbstractStrategy FULL_STRATEGY = new BranchingStrategy();
 
-	private static final String GENERATE_FLOW_GRAMMAR_PATH = "groovegrammars/generateflow.gps";
+	private static final String GRAMMAR_FLOW = "groovegrammars2/flowmodel.gps";
 
-	private static final String RUNTIME_GRAMMAR_PATH = "groovegrammars/runtime.gps";
+	private static final String GRAMMAR_EXEC = "groovegrammars2/execmodel.gps";
 
 	private static final boolean GROOVE_DEBUG = Boolean.getBoolean("composestar.fire2.groovedebug");
-
-	private File debugOutFlow;
-
-	private File debugOutExec;
-
-	// public static final String RESULT_ID = "FirePreprocessingResult";
 
 	protected FIRE2Resources fire2Resources;
 
@@ -90,9 +88,7 @@ public class Preprocessor implements CTCommonModule
 
 	private void initialize()
 	{
-		graphSaver = new AspectGxl(new LayedOutXml());
-		// FIXME: uncomment me
-		// loadGrammars();
+		loadGrammars();
 	}
 
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
@@ -144,30 +140,53 @@ public class Preprocessor implements CTCommonModule
 	{
 		logger.debug("Preprocessing Filter Module: " + module.getFullyQualifiedName());
 
+		// build AST:
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
+
+		timer.start("Create input AST %s", module.getFullyQualifiedName());
+		Graph grooveAstIF = buildAst(module, FilterDirection.Input);
+		timer.stop();
+		timer.start("Create output AST %s", module.getFullyQualifiedName());
+		Graph grooveAstOF = buildAst(module, FilterDirection.Output);
+		timer.stop();
+
 		if (GROOVE_DEBUG)
 		{
-
-			debugOutFlow = new File("./flow_" + module.getFullyQualifiedName() + ".gst");
-			debugOutExec = new File("./exec_" + module.getFullyQualifiedName() + ".gst");
+			dumpGraphToFile(grooveAstIF, new File("./ast-" + FilterDirection.Input + "_"
+					+ module.getFullyQualifiedName() + ".gst"));
+			dumpGraphToFile(grooveAstOF, new File("./ast-" + FilterDirection.Output + "_"
+					+ module.getFullyQualifiedName() + ".gst"));
 		}
 
-		// build AST:
-		Graph grooveAstIF = buildAst(module, FilterDirection.Input);
-		Graph grooveAstOF = buildAst(module, FilterDirection.Output);
+		// // generate flow model:
+		timer.start("Create input flow %s", module.getFullyQualifiedName());
+		Graph grooveFlowModelIF = generateFlow(grooveAstIF);
+		timer.stop();
+		timer.start("Create output flow %s", module.getFullyQualifiedName());
+		Graph grooveFlowModelOF = generateFlow(grooveAstOF);
+		timer.stop();
+
+		if (GROOVE_DEBUG)
+		{
+			dumpGraphToFile(grooveFlowModelIF, new File("./flow-" + FilterDirection.Input + "_"
+					+ module.getFullyQualifiedName() + ".gst"));
+			dumpGraphToFile(grooveFlowModelOF, new File("./flow-" + FilterDirection.Output + "_"
+					+ module.getFullyQualifiedName() + ".gst"));
+		}
 
 		// TODO: implement
 
-		// // generate flow model:
-		// Graph grooveFlowModelIF = generateFlow(grooveAstIF);
-		// Graph grooveFlowModelOF = generateFlow(grooveAstOF);
-		//
 		// // extract flowmodel:
 		// FlowModel flowModelIF = extractFlowModel(grooveFlowModelIF);
 		// FlowModel flowModelOF = extractFlowModel(grooveFlowModelOF);
-		//
-		// // Simulate execution:
-		// GTS stateSpaceIF = execute(grooveFlowModelIF);
-		// GTS stateSpaceOF = execute(grooveFlowModelOF);
+
+		// Simulate execution:
+		timer.start("Create input execution %s", module.getFullyQualifiedName());
+		GTS stateSpaceIF = execute(grooveFlowModelIF);
+		timer.stop();
+		timer.start("Create output execution %s", module.getFullyQualifiedName());
+		GTS stateSpaceOF = execute(grooveFlowModelOF);
+		timer.stop();
 		//
 		// // extract statespace:
 		// ExecutionModelExtractor executionModelExtractor = new
@@ -190,18 +209,20 @@ public class Preprocessor implements CTCommonModule
 		try
 		{
 			CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
-			URL genUrl = Preprocessor.class.getResource(GENERATE_FLOW_GRAMMAR_PATH);
+			URL genUrl = Preprocessor.class.getResource(GRAMMAR_FLOW);
 			String fileName = genUrl.getFile().replaceAll("%20", " ");
 			logger.debug("Loading grammar: " + fileName);
 			if (fileName.indexOf('!') >= 0)
 			{
-				timer.start("Loading grammars from jar");
-				// load from jar:
-				JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
-
-				generateFlowGrammar = (DefaultGrammarView) jarGpsLoader.unmarshal(GENERATE_FLOW_GRAMMAR_PATH);
-				runtimeGrammar = (DefaultGrammarView) jarGpsLoader.unmarshal(RUNTIME_GRAMMAR_PATH);
-				timer.stop();
+				// timer.start("Loading grammars from jar");
+				// // load from jar:
+				// JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
+				//
+				// generateFlowGrammar = (DefaultGrammarView)
+				// jarGpsLoader.unmarshal(GRAMMAR_FLOW);
+				// runtimeGrammar = (DefaultGrammarView)
+				// jarGpsLoader.unmarshal(GRAMMAR_EXEC);
+				// timer.stop();
 			}
 			else
 			{
@@ -213,7 +234,7 @@ public class Preprocessor implements CTCommonModule
 
 				generateFlowGrammar = gpsLoader.unmarshal(f);
 
-				URL runUrl = Preprocessor.class.getResource(RUNTIME_GRAMMAR_PATH);
+				URL runUrl = Preprocessor.class.getResource(GRAMMAR_EXEC);
 				runtimeGrammar = gpsLoader.unmarshal(new File(runUrl.getFile().replaceAll("%20", " ")));
 
 				timer.stop();
@@ -226,75 +247,68 @@ public class Preprocessor implements CTCommonModule
 		}
 	}
 
+	private void dumpGraphToFile(Graph graph, File toFile)
+	{
+		try
+		{
+			AspectGxl graphSaver = new AspectGxl(new LayedOutXml());
+			AspectGraph saveGraph = AspectGraph.getFactory().fromPlainGraph(graph);
+			graphSaver.marshalGraph(saveGraph, toFile);
+		}
+		catch (IOException e)
+		{
+			logger.error(e);
+		}
+	}
+
 	private Graph buildAst(FilterModule module, FilterDirection dir)
 	{
 		Graph grooveAst = GrooveASTBuilderCN.createAST(module, dir);
-
-		if (GROOVE_DEBUG)
-		{
-			// output ast:
-			try
-			{
-				AspectGraph saveGraph = AspectGraph.getFactory().fromPlainGraph(grooveAst);
-				graphSaver.marshalGraph(saveGraph, new File("./ast-" + dir + "_" + module.getFullyQualifiedName()
-						+ ".gst"));
-			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
 		return grooveAst;
 	}
 
 	private Graph generateFlow(Graph ast)
 	{
-		generateFlowGrammar.setStartGraph(ast);
-		GTS gts = generateFlowGrammar.gts();
-		gts.setExploreStrategy(LINEAR_STRATEGY);
+		DefaultScenario<GraphState> scenario = new DefaultScenario<GraphState>();
+		scenario.setStrategy(LINEAR_STRATEGY);
+		Result<GraphState> result = new SizedResult<GraphState>(1);
+		scenario.setResult(result);
+		FinalStateAcceptor acceptor = new FinalStateAcceptor();
+		scenario.setAcceptor(acceptor);
+
+		generateFlowGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(ast)));
+		GTS gts;
 		try
 		{
-			gts.explore();
+			gts = new GTS(generateFlowGrammar.toGrammar());
 		}
-		catch (InterruptedException exc)
+		catch (FormatException e)
 		{
-			// TODO nice exception handling
-			exc.printStackTrace();
+			logger.error(e);
+			return null;
 		}
-		Iterator<DefaultGraphState> finalStates = gts.getFinalStates().iterator();
+		scenario.setGTS(gts);
+		scenario.setState(gts.startState());
 
-		if (!finalStates.hasNext())
+		try
 		{
-			// should never happen
+			result = scenario.play();
+		}
+		catch (InterruptedException e)
+		{
+			logger.error(e);
+			return null;
+		}
+
+		if (result.getResult().isEmpty())
+		{
+			// TODO nice error
 			throw new RuntimeException("FlowGraph could not be generated!");
 		}
 		else
 		{
-			DefaultGraphState state = finalStates.next();
-
-			Graph graph = state.getGraph();
-
-			if (GROOVE_DEBUG)
-			{
-				// output flowgraph:
-				try
-				{
-					graphSaver.marshal(graph, debugOutFlow);
-				}
-				catch (XmlException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			return graph;
+			GraphState state = result.getResult().iterator().next();
+			return state.getGraph();
 		}
 	}
 
@@ -305,41 +319,44 @@ public class Preprocessor implements CTCommonModule
 
 	private GTS execute(Graph flowGraph)
 	{
-		runtimeGrammar.setStartGraph(flowGraph);
-		GTS gts = runtimeGrammar.gts();
-		gts.setExploreStrategy(FULL_STRATEGY);
+		DefaultScenario<Object> scenario = new DefaultScenario<Object>();
+		scenario.setStrategy(FULL_STRATEGY);
+		Result<Object> result = new EmptyResult<Object>();
+		scenario.setResult(result);
+		Acceptor<Object> acceptor = new EmptyAcceptor();
+		scenario.setAcceptor(acceptor);
+
+		runtimeGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(flowGraph)));
+		GTS gts;
 		try
 		{
-			gts.explore();
+			gts = new GTS(runtimeGrammar.toGrammar());
 		}
-		catch (InterruptedException exc)
+		catch (FormatException e)
 		{
-			// TODO nice exception handling
-			exc.printStackTrace();
+			logger.error(e);
+			return null;
 		}
+		scenario.setGTS(gts);
+		scenario.setState(gts.startState());
 
-		if (GROOVE_DEBUG)
+		try
 		{
-			// output execution-statespace:
-			try
-			{
-				graphSaver.marshal(gts, debugOutExec);
-			}
-			catch (XmlException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			result = scenario.play();
 		}
-
+		catch (InterruptedException e)
+		{
+			logger.error(e);
+			return null;
+		}
 		return gts;
 	}
 
+	/**
+	 * Task for FIRE2 in multi-threading mode
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	class FirePreprocessTask extends Task
 	{
 		protected FilterModule module;
@@ -353,7 +370,7 @@ public class Preprocessor implements CTCommonModule
 		public void execute(Manager manager, CommonResources resources) throws ModuleException
 		{
 			CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
-			timer.start(module.getOriginalQualifiedName());
+			timer.start(module.getFullyQualifiedName());
 			preprocessModule(module);
 			timer.stop();
 		}

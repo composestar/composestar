@@ -1,9 +1,0 @@
-# Layout information for C:\files\work\ComposeGraph\generateflow.gps\2.ContextNode.gpr
-# Each line contains layout information about a node or edge
-# Node Format: n <node id> <bounds>
-# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n254 112 168 18 18 
-e n254 n254 "not:ContextNode" 500 500 202 177 240 98 172 92 202 177 12
-e n254 n254 "new:FlowElement" 500 500 208 177 238 258 176 253 208 177 12
-e n254 n254 "new:ContextNode" 500 500 208 177 238 258 176 253 208 177 12
-e n254 n254 "not:FlowElement" 500 500 202 177 240 98 172 92 202 177 12
