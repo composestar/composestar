@@ -80,7 +80,7 @@ public class FilterModuleChecker extends AbstractChecker
 		{
 			if (re instanceof FilterModuleVariable)
 			{
-				allFmVars.add((Internal) re);
+				allFmVars.add((FilterModuleVariable) re);
 				if (re instanceof External)
 				{
 					MethodReference mref = ((External) re).getMethodReference();

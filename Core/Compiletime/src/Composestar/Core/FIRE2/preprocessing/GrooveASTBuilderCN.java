@@ -218,13 +218,24 @@ public class GrooveASTBuilderCN
 	}
 
 	/**
+	 * Make this node a flow node. This reduces some actions needed by groove
+	 * 
+	 * @param node
+	 */
+	protected void makeFlowNode(AnnotatedNode node)
+	{
+		AnnotatedEdge edge = new AnnotatedEdge(node, createLabel(FlowNode.FLOW_NODE), node);
+		graph.addEdge(edge);
+	}
+
+	/**
 	 * Create a compare statement node
 	 * 
 	 * @param expr
 	 * @return
 	 * @throws IllegalStateException
 	 */
-	private AnnotatedNode createCompareStatementNode(MECompareStatement cmp) throws IllegalStateException
+	protected AnnotatedNode createCompareStatementNode(MECompareStatement cmp) throws IllegalStateException
 	{
 		AnnotatedNode cmpNode = new AnnotatedNode();
 		cmpNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, cmp);
@@ -402,6 +413,8 @@ public class GrooveASTBuilderCN
 		AnnotatedEdge edge = new AnnotatedEdge(cmpNode, createLabel(FlowNode.ASSIGNMENT_NODE), cmpNode);
 		graph.addEdge(edge);
 
+		makeFlowNode(cmpNode);
+
 		if (PropertyPrefix.MESSAGE != asgn.getProperty().getPrefix())
 		{
 			logger.error(
@@ -472,6 +485,8 @@ public class GrooveASTBuilderCN
 			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.FILTER_ELEMENT_EXPRESSION_NODE),
 					exprNode);
 			graph.addEdge(edge);
+
+			makeFlowNode(exprNode);
 		}
 		return exprNode;
 	}
@@ -520,6 +535,7 @@ public class GrooveASTBuilderCN
 
 			edge = new AnnotatedEdge(dummy, createLabel(FlowNode.ASSIGNMENT_NODE), dummy);
 			graph.addEdge(edge);
+			makeFlowNode(dummy);
 
 			edge = new AnnotatedEdge(elmNode, createLabel(ASSIGNMENT_EDGE), dummy);
 			graph.addEdge(edge);
@@ -571,6 +587,8 @@ public class GrooveASTBuilderCN
 		{
 			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.FILTER_EXPRESSION_NODE), exprNode);
 			graph.addEdge(edge);
+
+			makeFlowNode(exprNode);
 		}
 		return exprNode;
 	}
@@ -649,6 +667,8 @@ public class GrooveASTBuilderCN
 		AnnotatedEdge edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.FILTER_ACTION_NODE), actionNode);
 		graph.addEdge(edge);
 
+		makeFlowNode(actionNode);
+
 		switch (action.getFlowBehavior())
 		{
 			case EXIT:
@@ -683,6 +703,8 @@ public class GrooveASTBuilderCN
 		AnnotatedEdge edge = new AnnotatedEdge(fmNode, createLabel(FlowNode.FILTER_MODULE_NODE), fmNode);
 		graph.addEdge(edge);
 
+		makeFlowNode(fmNode);
+
 		if (fex != null)
 		{
 			AnnotatedNode feNode = createFilterExpressionNode(fex);
@@ -697,6 +719,7 @@ public class GrooveASTBuilderCN
 
 		edge = new AnnotatedEdge(endNode, createLabel(FlowNode.END_NODE), endNode);
 		graph.addEdge(edge);
+		makeFlowNode(endNode);
 
 		// exit node
 		AnnotatedNode exitNode = new AnnotatedNode();
@@ -705,6 +728,7 @@ public class GrooveASTBuilderCN
 
 		edge = new AnnotatedEdge(exitNode, createLabel(FlowNode.EXIT_NODE), exitNode);
 		graph.addEdge(edge);
+		makeFlowNode(exitNode);
 
 		// return node
 		AnnotatedNode returnNode = new AnnotatedNode();
@@ -713,6 +737,7 @@ public class GrooveASTBuilderCN
 
 		edge = new AnnotatedEdge(returnNode, createLabel(FlowNode.RETURN_NODE), returnNode);
 		graph.addEdge(edge);
+		makeFlowNode(returnNode);
 
 		graph.setFixed();
 	}
@@ -824,6 +849,7 @@ public class GrooveASTBuilderCN
 		{
 			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.MATCHING_EXPRESSION_NODE), exprNode);
 			graph.addEdge(edge);
+			makeFlowNode(exprNode);
 		}
 		return exprNode;
 	}
