@@ -28,6 +28,7 @@ import groove.graph.DefaultGraph;
 import groove.graph.DefaultLabel;
 import groove.graph.Graph;
 import groove.graph.Label;
+import groove.graph.Node;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import java.util.Map;
 
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.PropertyPrefix;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
 import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
@@ -85,9 +87,8 @@ public class GrooveASTBuilderCN
 	public static final String ACCEPT_RETURN_EDGE = "acceptReturn";
 
 	/**
-	 * A key for the annotations in {@link AnnotatedEdge} and
-	 * {@link AnnotatedNode} to the repository entity related to the edge or
-	 * node.
+	 * A key for the annotations in {@link AnnotatedEdge} and {@link Node} to
+	 * the repository entity related to the edge or node.
 	 */
 	public static final String ANNOT_REPOSITORY_ENTITY = "RepositoryEntity";
 
@@ -156,7 +157,9 @@ public class GrooveASTBuilderCN
 	 */
 	protected Graph graph;
 
-	protected Map<String, AnnotatedNode> cachedValueNodes;
+	protected Map<String, Node> cachedValueNodes;
+
+	protected GraphMetaData metaData;
 
 	/**
 	 * Constructs a Groove graph for a giver filter module and filter direction
@@ -169,10 +172,10 @@ public class GrooveASTBuilderCN
 	 *             during the graph creation. This exception should never occure
 	 *             unless an unknown entity was found.
 	 */
-	public static Graph createAST(FilterModule fm, FilterDirection dir) throws NullPointerException,
-			IllegalStateException
+	public static Graph createAST(FilterModule fm, FilterDirection dir, GraphMetaData meta)
+			throws NullPointerException, IllegalStateException
 	{
-		GrooveASTBuilderCN builder = new GrooveASTBuilderCN(fm, dir);
+		GrooveASTBuilderCN builder = new GrooveASTBuilderCN(fm, dir, meta);
 		builder.createFMGraph();
 		return builder.getGraph();
 	}
@@ -188,13 +191,15 @@ public class GrooveASTBuilderCN
 	 * @param fm
 	 * @param dir
 	 */
-	protected GrooveASTBuilderCN(FilterModule fm, FilterDirection dir)
+	protected GrooveASTBuilderCN(FilterModule fm, FilterDirection dir, GraphMetaData meta)
 	{
-		cachedValueNodes = new HashMap<String, AnnotatedNode>();
+		metaData = meta;
+		cachedValueNodes = new HashMap<String, Node>();
 		if (fm == null)
 		{
 			throw new NullPointerException("Filter module can not be null");
 		}
+		filterModule = fm;
 		fex = null;
 		switch (dir)
 		{
@@ -222,10 +227,20 @@ public class GrooveASTBuilderCN
 	 * 
 	 * @param node
 	 */
-	protected void makeFlowNode(AnnotatedNode node)
+	protected void makeFlowNode(Node node)
 	{
-		AnnotatedEdge edge = new AnnotatedEdge(node, createLabel(FlowNode.FLOW_NODE), node);
-		graph.addEdge(edge);
+		graph.addEdge(node, createLabel(FlowNode.FLOW_NODE), node);
+	}
+
+	/**
+	 * Associate the repository entity with the given node
+	 * 
+	 * @param node
+	 * @param re
+	 */
+	protected void addRepositoryEntity(Node node, RepositoryEntity re)
+	{
+		metaData.addRepositoryLink(graph, node, re);
 	}
 
 	/**
@@ -235,34 +250,28 @@ public class GrooveASTBuilderCN
 	 * @return
 	 * @throws IllegalStateException
 	 */
-	protected AnnotatedNode createCompareStatementNode(MECompareStatement cmp) throws IllegalStateException
+	protected Node createCompareStatementNode(MECompareStatement cmp) throws IllegalStateException
 	{
-		AnnotatedNode cmpNode = new AnnotatedNode();
-		cmpNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, cmp);
-		graph.addNode(cmpNode);
+		Node cmpNode = graph.addNode();
+		addRepositoryEntity(cmpNode, cmp);
 
-		AnnotatedEdge edge = new AnnotatedEdge(cmpNode, createLabel(FlowNode.COMPARE_STATEMENT_NODE), cmpNode);
-		graph.addEdge(edge);
+		graph.addEdge(cmpNode, createLabel(FlowNode.COMPARE_STATEMENT_NODE), cmpNode);
 
 		if (cmp instanceof InstanceMatching)
 		{
-			edge = new AnnotatedEdge(cmpNode, createLabel(FlowNode.INSTANCE_MATCHING), cmpNode);
-			graph.addEdge(edge);
+			graph.addEdge(cmpNode, createLabel(FlowNode.INSTANCE_MATCHING), cmpNode);
 		}
 		else if (cmp instanceof SignatureMatching)
 		{
-			edge = new AnnotatedEdge(cmpNode, createLabel(FlowNode.SIGNATURE_MATCHING), cmpNode);
-			graph.addEdge(edge);
+			graph.addEdge(cmpNode, createLabel(FlowNode.SIGNATURE_MATCHING), cmpNode);
 		}
 		else if (cmp instanceof CompatibilityMatching)
 		{
-			edge = new AnnotatedEdge(cmpNode, createLabel(FlowNode.COMPATIBILITY_MATCHING), cmpNode);
-			graph.addEdge(edge);
+			graph.addEdge(cmpNode, createLabel(FlowNode.COMPATIBILITY_MATCHING), cmpNode);
 		}
 		else if (cmp instanceof AnnotationMatching)
 		{
-			edge = new AnnotatedEdge(cmpNode, createLabel(FlowNode.ANNOTATION_MATCHING), cmpNode);
-			graph.addEdge(edge);
+			graph.addEdge(cmpNode, createLabel(FlowNode.ANNOTATION_MATCHING), cmpNode);
 		}
 		else
 		{
@@ -278,16 +287,13 @@ public class GrooveASTBuilderCN
 					.getLHS().getName()));
 		}
 
-		AnnotatedNode node = new AnnotatedNode();
-		node.addAnnotation(ANNOT_REPOSITORY_ENTITY, cmp.getLHS());
-		graph.addNode(node);
+		Node node = graph.addNode();
+		addRepositoryEntity(node, cmp.getLHS());
 
 		// TODO: how to handle checking for non-instance/non-selector
 		// properties? (i.e. message.bla = this.is.my.class)
-		edge = new AnnotatedEdge(node, createLabel(cmp.getLHS().getBaseName()), node);
-		graph.addEdge(edge);
-		edge = new AnnotatedEdge(cmpNode, createLabel(LHS_EDGE), node);
-		graph.addEdge(edge);
+		graph.addEdge(node, createLabel(cmp.getLHS().getBaseName()), node);
+		graph.addEdge(cmpNode, createLabel(LHS_EDGE), node);
 
 		// TODO: how to handle type conversion in case of selectors, in most
 		// cases selectors are used as literals, but they could also be method
@@ -295,10 +301,10 @@ public class GrooveASTBuilderCN
 		for (CpsVariable var : cmp.getRHS())
 		{
 			node = createCpsVariableNode(var);
-			edge = new AnnotatedEdge(cmpNode, createLabel(RHS_EDGE), node);
+			graph.addEdge(cmpNode, createLabel(RHS_EDGE), node);
 			// because the node does not always link to this particular variable
-			edge.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
-			graph.addEdge(edge);
+			// edge.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
+			// TODO: ...
 		}
 
 		return cmpNode;
@@ -317,7 +323,7 @@ public class GrooveASTBuilderCN
 	 * @throws IllegalStateException Thrown when an unknown CpsVariable was
 	 *             encountered
 	 */
-	protected AnnotatedNode createCpsVariableNode(CpsVariable var) throws IllegalStateException
+	protected Node createCpsVariableNode(CpsVariable var) throws IllegalStateException
 	{
 		String valueEdge = null;
 		// note: the used prefixes are only there for convenience
@@ -335,19 +341,15 @@ public class GrooveASTBuilderCN
 			else if (prop.getPrefix() == PropertyPrefix.MESSAGE)
 			{
 				// always return unique nodes for deferred values
-				AnnotatedNode node = new AnnotatedNode();
-				node.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
-				graph.addNode(node);
+				Node node = graph.addNode();
+				addRepositoryEntity(node, var);
 
-				AnnotatedNode deferredNode = new AnnotatedNode();
-				deferredNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
-				graph.addNode(deferredNode);
+				Node deferredNode = graph.addNode();
+				addRepositoryEntity(deferredNode, var);
 
-				AnnotatedEdge edge = new AnnotatedEdge(node, createLabel(DEFERRED_EDGE), deferredNode);
-				graph.addEdge(edge);
+				graph.addEdge(node, createLabel(DEFERRED_EDGE), deferredNode);
 
-				edge = new AnnotatedEdge(deferredNode, createLabel(prop.getBaseName()), deferredNode);
-				graph.addEdge(edge);
+				graph.addEdge(deferredNode, createLabel(prop.getBaseName()), deferredNode);
 
 				return node;
 			}
@@ -387,12 +389,10 @@ public class GrooveASTBuilderCN
 			return cachedValueNodes.get(valueEdge);
 		}
 
-		AnnotatedNode node = new AnnotatedNode();
-		node.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
-		graph.addNode(node);
+		Node node = graph.addNode();
+		addRepositoryEntity(node, var);
 
-		AnnotatedEdge edge = new AnnotatedEdge(node, createLabel(valueEdge), node);
-		graph.addEdge(edge);
+		graph.addEdge(node, createLabel(valueEdge), node);
 
 		cachedValueNodes.put(valueEdge, node);
 
@@ -404,14 +404,12 @@ public class GrooveASTBuilderCN
 	 * @return
 	 * @throws IllegalStateException
 	 */
-	protected AnnotatedNode createAssignmentNode(CanonAssignment asgn) throws IllegalStateException
+	protected Node createAssignmentNode(CanonAssignment asgn) throws IllegalStateException
 	{
-		AnnotatedNode cmpNode = new AnnotatedNode();
-		cmpNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, asgn);
-		graph.addNode(cmpNode);
+		Node cmpNode = graph.addNode();
+		addRepositoryEntity(cmpNode, asgn);
 
-		AnnotatedEdge edge = new AnnotatedEdge(cmpNode, createLabel(FlowNode.ASSIGNMENT_NODE), cmpNode);
-		graph.addEdge(edge);
+		graph.addEdge(cmpNode, createLabel(FlowNode.ASSIGNMENT_NODE), cmpNode);
 
 		makeFlowNode(cmpNode);
 
@@ -424,20 +422,17 @@ public class GrooveASTBuilderCN
 					.getProperty().getName()));
 		}
 
-		AnnotatedNode node = new AnnotatedNode();
-		node.addAnnotation(ANNOT_REPOSITORY_ENTITY, asgn.getProperty());
-		graph.addNode(node);
+		Node node = graph.addNode();
+		addRepositoryEntity(node, asgn.getProperty());
 
-		edge = new AnnotatedEdge(node, createLabel(asgn.getProperty().getBaseName()), node);
-		graph.addEdge(edge);
-		edge = new AnnotatedEdge(cmpNode, createLabel(LHS_EDGE), node);
-		graph.addEdge(edge);
+		graph.addEdge(node, createLabel(asgn.getProperty().getBaseName()), node);
+		graph.addEdge(cmpNode, createLabel(LHS_EDGE), node);
 
 		node = createCpsVariableNode(asgn.getValue());
-		edge = new AnnotatedEdge(cmpNode, createLabel(RHS_EDGE), node);
+		graph.addEdge(cmpNode, createLabel(RHS_EDGE), node);
 		// because the node does not always link to this particular variable
-		edge.addAnnotation(ANNOT_REPOSITORY_ENTITY, asgn.getValue());
-		graph.addEdge(edge);
+		// edge.addAnnotation(ANNOT_REPOSITORY_ENTITY, asgn.getValue());
+		// TODO: ...
 
 		return cmpNode;
 	}
@@ -448,31 +443,27 @@ public class GrooveASTBuilderCN
 	 * @throws IllegalStateException Thrown in case of an unknown filter element
 	 *             expression class
 	 */
-	protected AnnotatedNode createFilterElementExpressionNode(FilterElementExpression expr)
-			throws IllegalStateException
+	protected Node createFilterElementExpressionNode(FilterElementExpression expr) throws IllegalStateException
 	{
-		AnnotatedNode exprNode = null;
+		Node exprNode = null;
 		if (expr instanceof FilterElement)
 		{
 			exprNode = createFilterElementNode((FilterElement) expr);
 		}
 		else if (expr instanceof CORFilterElmOper)
 		{
-			exprNode = new AnnotatedNode();
-			exprNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, expr);
+			exprNode = graph.addNode();
+			addRepositoryEntity(exprNode, expr);
 
-			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.COR_NODE), exprNode);
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(FlowNode.COR_NODE), exprNode);
 
 			// the left hand side
-			edge = new AnnotatedEdge(exprNode, createLabel(LHS_EDGE),
-					createFilterElementExpressionNode(((CORFilterElmOper) expr).getLHS()));
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(LHS_EDGE), createFilterElementExpressionNode(((CORFilterElmOper) expr)
+					.getLHS()));
 
 			// the right hand side
-			edge = new AnnotatedEdge(exprNode, createLabel(RHS_EDGE),
-					createFilterElementExpressionNode(((CORFilterElmOper) expr).getRHS()));
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(RHS_EDGE), createFilterElementExpressionNode(((CORFilterElmOper) expr)
+					.getRHS()));
 		}
 		else
 		{
@@ -482,10 +473,7 @@ public class GrooveASTBuilderCN
 
 		if (exprNode != null)
 		{
-			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.FILTER_ELEMENT_EXPRESSION_NODE),
-					exprNode);
-			graph.addEdge(edge);
-
+			graph.addEdge(exprNode, createLabel(FlowNode.FILTER_ELEMENT_EXPRESSION_NODE), exprNode);
 			makeFlowNode(exprNode);
 		}
 		return exprNode;
@@ -497,21 +485,18 @@ public class GrooveASTBuilderCN
 	 * @param elm
 	 * @return
 	 */
-	protected AnnotatedNode createFilterElementNode(FilterElement elm)
+	protected Node createFilterElementNode(FilterElement elm)
 	{
-		AnnotatedNode elmNode = new AnnotatedNode();
-		elmNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, elm);
-		graph.addNode(elmNode);
+		Node elmNode = graph.addNode();
+		addRepositoryEntity(elmNode, elm);
 
-		AnnotatedEdge edge = new AnnotatedEdge(elmNode, createLabel(FlowNode.FILTER_ELEMENT_NODE), elmNode);
-		graph.addEdge(edge);
+		graph.addEdge(elmNode, createLabel(FlowNode.FILTER_ELEMENT_NODE), elmNode);
 
-		AnnotatedNode matchExprNode = createMatchingExpressionNode(elm.getMatchingExpression());
-		edge = new AnnotatedEdge(elmNode, createLabel(EXPRESSION_EDGE), matchExprNode);
-		graph.addEdge(edge);
+		Node matchExprNode = createMatchingExpressionNode(elm.getMatchingExpression());
+		graph.addEdge(elmNode, createLabel(EXPRESSION_EDGE), matchExprNode);
 
 		// create a linked list of assignments
-		AnnotatedNode lastNode = elmNode;
+		Node lastNode = elmNode;
 		Collection<CanonAssignment> asgns = elm.getAssignments();
 		int asgnsNodes = 0;
 		for (CanonAssignment asgn : asgns)
@@ -520,9 +505,8 @@ public class GrooveASTBuilderCN
 			{
 				continue;
 			}
-			AnnotatedNode assignNode = createAssignmentNode(asgn);
-			edge = new AnnotatedEdge(lastNode, createLabel(ASSIGNMENT_EDGE), assignNode);
-			graph.addEdge(edge);
+			Node assignNode = createAssignmentNode(asgn);
+			graph.addEdge(lastNode, createLabel(ASSIGNMENT_EDGE), assignNode);
 			lastNode = assignNode;
 			asgnsNodes++;
 		}
@@ -530,15 +514,14 @@ public class GrooveASTBuilderCN
 		if (asgnsNodes == 0)
 		{
 			// add a dummy assignment node
-			AnnotatedNode dummy = new AnnotatedNode();
-			graph.addNode(dummy);
+			Node dummy = graph.addNode();
+			// force the creation of a meta data id
+			metaData.getNodeLinkID(graph, dummy, true);
 
-			edge = new AnnotatedEdge(dummy, createLabel(FlowNode.ASSIGNMENT_NODE), dummy);
-			graph.addEdge(edge);
+			graph.addEdge(dummy, createLabel(FlowNode.ASSIGNMENT_NODE), dummy);
 			makeFlowNode(dummy);
 
-			edge = new AnnotatedEdge(elmNode, createLabel(ASSIGNMENT_EDGE), dummy);
-			graph.addEdge(edge);
+			graph.addEdge(elmNode, createLabel(ASSIGNMENT_EDGE), dummy);
 		}
 
 		return elmNode;
@@ -552,31 +535,27 @@ public class GrooveASTBuilderCN
 	 * @throws IllegalStateException thrown when an unknown FilterExpression
 	 *             implementation was encounters
 	 */
-	protected AnnotatedNode createFilterExpressionNode(FilterExpression expr) throws IllegalStateException
+	protected Node createFilterExpressionNode(FilterExpression expr) throws IllegalStateException
 	{
-		AnnotatedNode exprNode = null;
+		Node exprNode = null;
 		if (expr instanceof Filter)
 		{
 			exprNode = createFilterNode((Filter) expr);
 		}
 		else if (expr instanceof SequentialFilterOper)
 		{
-			exprNode = new AnnotatedNode();
-			exprNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, expr);
+			exprNode = graph.addNode();
+			addRepositoryEntity(exprNode, expr);
 
-			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.SEQUENTIAL_FILTER_OPER_NODE),
-					exprNode);
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(FlowNode.SEQUENTIAL_FILTER_OPER_NODE), exprNode);
 
 			// the left hand side
-			edge = new AnnotatedEdge(exprNode, createLabel(LHS_EDGE),
-					createFilterExpressionNode(((SequentialFilterOper) expr).getLHS()));
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(LHS_EDGE), createFilterExpressionNode(((SequentialFilterOper) expr)
+					.getLHS()));
 
 			// the right hand side
-			edge = new AnnotatedEdge(exprNode, createLabel(RHS_EDGE),
-					createFilterExpressionNode(((SequentialFilterOper) expr).getRHS()));
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(RHS_EDGE), createFilterExpressionNode(((SequentialFilterOper) expr)
+					.getRHS()));
 		}
 		else
 		{
@@ -585,9 +564,7 @@ public class GrooveASTBuilderCN
 		}
 		if (expr != null)
 		{
-			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.FILTER_EXPRESSION_NODE), exprNode);
-			graph.addEdge(edge);
-
+			graph.addEdge(exprNode, createLabel(FlowNode.FILTER_EXPRESSION_NODE), exprNode);
 			makeFlowNode(exprNode);
 		}
 		return exprNode;
@@ -600,49 +577,34 @@ public class GrooveASTBuilderCN
 	 * @return
 	 * @throws IllegalStateException
 	 */
-	protected AnnotatedNode createFilterNode(Filter filter) throws IllegalStateException
+	protected Node createFilterNode(Filter filter) throws IllegalStateException
 	{
-		AnnotatedNode filterNode = new AnnotatedNode();
-		filterNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, filter);
-		graph.addNode(filterNode);
+		Node filterNode = graph.addNode();
+		addRepositoryEntity(filterNode, filter);
 
-		AnnotatedEdge edge = new AnnotatedEdge(filterNode, createLabel(FlowNode.FILTER_NODE), filterNode);
-		graph.addEdge(edge);
+		graph.addEdge(filterNode, createLabel(FlowNode.FILTER_NODE), filterNode);
 
-		edge = new AnnotatedEdge(filterNode, createLabel(EXPRESSION_EDGE), createFilterElementExpressionNode(filter
+		graph.addEdge(filterNode, createLabel(EXPRESSION_EDGE), createFilterElementExpressionNode(filter
 				.getElementExpression()));
-		graph.addEdge(edge);
 
 		FilterType ft = filter.getType();
 		if (ft instanceof PrimitiveFilterType)
 		{
-			AnnotatedNode node = createFilterActionNode(((PrimitiveFilterType) ft).getAcceptReturnAction());
-			edge = new AnnotatedEdge(node, createLabel(FlowNode.ACCEPT_RETURN_ACTION_NODE), node);
-			graph.addEdge(edge);
-
-			edge = new AnnotatedEdge(filterNode, createLabel(ACCEPT_RETURN_EDGE), node);
-			graph.addEdge(edge);
+			Node node = createFilterActionNode(((PrimitiveFilterType) ft).getAcceptReturnAction());
+			graph.addEdge(node, createLabel(FlowNode.ACCEPT_RETURN_ACTION_NODE), node);
+			graph.addEdge(filterNode, createLabel(ACCEPT_RETURN_EDGE), node);
 
 			node = createFilterActionNode(((PrimitiveFilterType) ft).getAcceptCallAction());
-			edge = new AnnotatedEdge(node, createLabel(FlowNode.ACCEPT_CALL_ACTION_NODE), node);
-			graph.addEdge(edge);
-
-			edge = new AnnotatedEdge(filterNode, createLabel(ACCEPT_CALL_EDGE), node);
-			graph.addEdge(edge);
+			graph.addEdge(node, createLabel(FlowNode.ACCEPT_CALL_ACTION_NODE), node);
+			graph.addEdge(filterNode, createLabel(ACCEPT_CALL_EDGE), node);
 
 			node = createFilterActionNode(((PrimitiveFilterType) ft).getRejectReturnAction());
-			edge = new AnnotatedEdge(node, createLabel(FlowNode.REJECT_RETURN_ACTION_NODE), node);
-			graph.addEdge(edge);
-
-			edge = new AnnotatedEdge(filterNode, createLabel(REJECT_RETURN_EDGE), node);
-			graph.addEdge(edge);
+			graph.addEdge(node, createLabel(FlowNode.REJECT_RETURN_ACTION_NODE), node);
+			graph.addEdge(filterNode, createLabel(REJECT_RETURN_EDGE), node);
 
 			node = createFilterActionNode(((PrimitiveFilterType) ft).getRejectCallAction());
-			edge = new AnnotatedEdge(node, createLabel(FlowNode.REJECT_CALL_ACTION_NODE), node);
-			graph.addEdge(edge);
-
-			edge = new AnnotatedEdge(filterNode, createLabel(REJECT_CALL_EDGE), node);
-			graph.addEdge(edge);
+			graph.addEdge(node, createLabel(FlowNode.REJECT_CALL_ACTION_NODE), node);
+			graph.addEdge(filterNode, createLabel(REJECT_CALL_EDGE), node);
 		}
 		else
 		{
@@ -658,31 +620,25 @@ public class GrooveASTBuilderCN
 	 * @param action
 	 * @return
 	 */
-	protected AnnotatedNode createFilterActionNode(FilterAction action)
+	protected Node createFilterActionNode(FilterAction action)
 	{
-		AnnotatedNode actionNode = new AnnotatedNode();
-		actionNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, action);
-		graph.addNode(actionNode);
+		Node actionNode = graph.addNode();
+		addRepositoryEntity(actionNode, action);
 
-		AnnotatedEdge edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.FILTER_ACTION_NODE), actionNode);
-		graph.addEdge(edge);
-
+		graph.addEdge(actionNode, createLabel(FlowNode.FILTER_ACTION_NODE), actionNode);
 		makeFlowNode(actionNode);
 
 		switch (action.getFlowBehavior())
 		{
 			case EXIT:
-				edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.EXIT_ACTION_NODE), actionNode);
-				graph.addEdge(edge);
+				graph.addEdge(actionNode, createLabel(FlowNode.EXIT_ACTION_NODE), actionNode);
 				break;
 			case RETURN:
-				edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.RETURN_ACTION_NODE), actionNode);
-				graph.addEdge(edge);
+				graph.addEdge(actionNode, createLabel(FlowNode.RETURN_ACTION_NODE), actionNode);
 				break;
 			case CONTINUE:
 			default:
-				edge = new AnnotatedEdge(actionNode, createLabel(FlowNode.CONTINUE_ACTION_NODE), actionNode);
-				graph.addEdge(edge);
+				graph.addEdge(actionNode, createLabel(FlowNode.CONTINUE_ACTION_NODE), actionNode);
 				break;
 		}
 
@@ -696,47 +652,38 @@ public class GrooveASTBuilderCN
 	 */
 	protected void createFMGraph() throws IllegalStateException
 	{
-		AnnotatedNode fmNode = new AnnotatedNode();
-		fmNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, filterModule);
-		graph.addNode(fmNode);
+		Node fmNode = graph.addNode();
+		addRepositoryEntity(fmNode, filterModule);
 
-		AnnotatedEdge edge = new AnnotatedEdge(fmNode, createLabel(FlowNode.FILTER_MODULE_NODE), fmNode);
-		graph.addEdge(edge);
+		graph.addEdge(fmNode, createLabel(FlowNode.FILTER_MODULE_NODE), fmNode);
 
 		makeFlowNode(fmNode);
 
 		if (fex != null)
 		{
-			AnnotatedNode feNode = createFilterExpressionNode(fex);
-			edge = new AnnotatedEdge(fmNode, createLabel(EXPRESSION_EDGE), feNode);
-			graph.addEdge(edge);
+			Node feNode = createFilterExpressionNode(fex);
+			graph.addEdge(fmNode, createLabel(EXPRESSION_EDGE), feNode);
 		}
 
 		// end node
-		AnnotatedNode endNode = new AnnotatedNode();
-		endNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, filterModule);
-		graph.addNode(endNode);
+		Node endNode = graph.addNode();
+		addRepositoryEntity(endNode, filterModule);
 
-		edge = new AnnotatedEdge(endNode, createLabel(FlowNode.END_NODE), endNode);
-		graph.addEdge(edge);
+		graph.addEdge(endNode, createLabel(FlowNode.END_NODE), endNode);
 		makeFlowNode(endNode);
 
 		// exit node
-		AnnotatedNode exitNode = new AnnotatedNode();
-		exitNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, filterModule);
-		graph.addNode(exitNode);
+		Node exitNode = graph.addNode();
+		addRepositoryEntity(exitNode, filterModule);
 
-		edge = new AnnotatedEdge(exitNode, createLabel(FlowNode.EXIT_NODE), exitNode);
-		graph.addEdge(edge);
+		graph.addEdge(exitNode, createLabel(FlowNode.EXIT_NODE), exitNode);
 		makeFlowNode(exitNode);
 
 		// return node
-		AnnotatedNode returnNode = new AnnotatedNode();
-		returnNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, filterModule);
-		graph.addNode(returnNode);
+		Node returnNode = graph.addNode();
+		addRepositoryEntity(returnNode, filterModule);
 
-		edge = new AnnotatedEdge(returnNode, createLabel(FlowNode.RETURN_NODE), returnNode);
-		graph.addEdge(edge);
+		graph.addEdge(returnNode, createLabel(FlowNode.RETURN_NODE), returnNode);
 		makeFlowNode(returnNode);
 
 		graph.setFixed();
@@ -749,26 +696,22 @@ public class GrooveASTBuilderCN
 	 * @return
 	 * @throws IllegalStateException
 	 */
-	protected AnnotatedNode createMatchingExpressionNode(MatchingExpression expr) throws IllegalStateException
+	protected Node createMatchingExpressionNode(MatchingExpression expr) throws IllegalStateException
 	{
-		AnnotatedNode exprNode = null;
+		Node exprNode = null;
 
 		if (expr instanceof BinaryMEOperator)
 		{
-			exprNode = new AnnotatedNode();
-			exprNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, expr);
-			graph.addNode(exprNode);
+			exprNode = graph.addNode();
+			addRepositoryEntity(exprNode, expr);
 
-			AnnotatedEdge edge;
 			if (expr instanceof AndMEOper)
 			{
-				edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.MATCH_AND_NODE), exprNode);
-				graph.addEdge(edge);
+				graph.addEdge(exprNode, createLabel(FlowNode.MATCH_AND_NODE), exprNode);
 			}
 			else if (expr instanceof OrMEOper)
 			{
-				edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.MATCH_OR_NODE), exprNode);
-				graph.addEdge(edge);
+				graph.addEdge(exprNode, createLabel(FlowNode.MATCH_OR_NODE), exprNode);
 			}
 			else
 			{
@@ -777,26 +720,21 @@ public class GrooveASTBuilderCN
 			}
 
 			// the left hand side
-			edge = new AnnotatedEdge(exprNode, createLabel(LHS_EDGE),
-					createMatchingExpressionNode(((BinaryMEOperator) expr).getLHS()));
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(LHS_EDGE), createMatchingExpressionNode(((BinaryMEOperator) expr)
+					.getLHS()));
 
 			// the right hand side
-			edge = new AnnotatedEdge(exprNode, createLabel(RHS_EDGE),
-					createMatchingExpressionNode(((BinaryMEOperator) expr).getRHS()));
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(RHS_EDGE), createMatchingExpressionNode(((BinaryMEOperator) expr)
+					.getRHS()));
 		}
 		else if (expr instanceof UnaryMEOperator)
 		{
-			exprNode = new AnnotatedNode();
-			exprNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, expr);
-			graph.addNode(exprNode);
+			exprNode = graph.addNode();
+			addRepositoryEntity(exprNode, expr);
 
-			AnnotatedEdge edge;
 			if (expr instanceof NotMEOper)
 			{
-				edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.MATCH_NOT_NODE), exprNode);
-				graph.addEdge(edge);
+				graph.addEdge(exprNode, createLabel(FlowNode.MATCH_NOT_NODE), exprNode);
 			}
 			else
 			{
@@ -805,9 +743,8 @@ public class GrooveASTBuilderCN
 			}
 
 			// the right hand side
-			edge = new AnnotatedEdge(exprNode, createLabel(OPERAND_EDGE),
-					createMatchingExpressionNode(((UnaryMEOperator) expr).getOperand()));
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(OPERAND_EDGE), createMatchingExpressionNode(((UnaryMEOperator) expr)
+					.getOperand()));
 		}
 		else if (expr instanceof MECompareStatement)
 		{
@@ -815,28 +752,23 @@ public class GrooveASTBuilderCN
 		}
 		else if (expr instanceof MECondition)
 		{
-			exprNode = new AnnotatedNode();
-			exprNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, expr);
-			graph.addNode(exprNode);
+			exprNode = graph.addNode();
+			addRepositoryEntity(exprNode, expr);
 
-			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.CONDITION_NODE), exprNode);
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(FlowNode.CONDITION_NODE), exprNode);
 		}
 		else if (expr instanceof MELiteral)
 		{
-			exprNode = new AnnotatedNode();
-			exprNode.addAnnotation(ANNOT_REPOSITORY_ENTITY, expr);
-			graph.addNode(exprNode);
+			exprNode = graph.addNode();
+			addRepositoryEntity(exprNode, expr);
 
 			if (((MELiteral) expr).getLiteralValue())
 			{
-				AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.TRUE_NODE), exprNode);
-				graph.addEdge(edge);
+				graph.addEdge(exprNode, createLabel(FlowNode.TRUE_NODE), exprNode);
 			}
 			else
 			{
-				AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.FALSE_NODE), exprNode);
-				graph.addEdge(edge);
+				graph.addEdge(exprNode, createLabel(FlowNode.FALSE_NODE), exprNode);
 			}
 		}
 		else
@@ -847,8 +779,7 @@ public class GrooveASTBuilderCN
 
 		if (exprNode != null)
 		{
-			AnnotatedEdge edge = new AnnotatedEdge(exprNode, createLabel(FlowNode.MATCHING_EXPRESSION_NODE), exprNode);
-			graph.addEdge(edge);
+			graph.addEdge(exprNode, createLabel(FlowNode.MATCHING_EXPRESSION_NODE), exprNode);
 			makeFlowNode(exprNode);
 		}
 		return exprNode;

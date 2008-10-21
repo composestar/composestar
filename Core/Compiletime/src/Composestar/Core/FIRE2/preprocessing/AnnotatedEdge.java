@@ -33,7 +33,10 @@ import java.util.Map;
 
 /**
  * @author Arjan de Roo
+ * @deprecated this construction is completely and utterly useless in the newer
+ *             groove
  */
+@Deprecated
 public class AnnotatedEdge extends AbstractBinaryEdge<Node, Label, Node>
 {
 	private static final long serialVersionUID = 2512401433673944080L;

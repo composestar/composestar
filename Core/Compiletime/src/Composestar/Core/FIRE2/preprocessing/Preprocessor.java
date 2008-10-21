@@ -22,6 +22,7 @@ import groove.io.AspectualViewGps;
 import groove.io.LayedOutXml;
 import groove.lts.GTS;
 import groove.lts.GraphState;
+import groove.trans.GraphGrammar;
 import groove.view.AspectualGraphView;
 import groove.view.DefaultGrammarView;
 import groove.view.FormatException;
@@ -147,11 +148,14 @@ public class Preprocessor implements CTCommonModule
 		// build AST:
 		CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
 
+		GraphMetaData inputMeta = new GraphMetaData();
+		GraphMetaData outputMeta = new GraphMetaData();
+
 		timer.start("Create input AST %s", module.getFullyQualifiedName());
-		Graph grooveAstIF = buildAst(module, FilterDirection.Input);
+		Graph grooveAstIF = buildAst(module, FilterDirection.Input, inputMeta);
 		timer.stop();
 		timer.start("Create output AST %s", module.getFullyQualifiedName());
-		Graph grooveAstOF = buildAst(module, FilterDirection.Output);
+		Graph grooveAstOF = buildAst(module, FilterDirection.Output, outputMeta);
 		timer.stop();
 
 		if (GROOVE_DEBUG)
@@ -178,12 +182,12 @@ public class Preprocessor implements CTCommonModule
 					+ module.getFullyQualifiedName() + ".gst"));
 		}
 
-		// // extract flowmodel:
+		// // // extract flowmodel:
 		timer.start("Extract input flow model %s", module.getFullyQualifiedName());
-		FlowModel flowModelIF = extractFlowModel(grooveFlowModelIF);
+		FlowModel flowModelIF = extractFlowModel(grooveFlowModelIF, inputMeta);
 		timer.stop();
 		timer.start("Extract output flow model %s", module.getFullyQualifiedName());
-		FlowModel flowModelOF = extractFlowModel(grooveFlowModelOF);
+		FlowModel flowModelOF = extractFlowModel(grooveFlowModelOF, outputMeta);
 		timer.stop();
 
 		// Simulate execution:
@@ -275,9 +279,9 @@ public class Preprocessor implements CTCommonModule
 		}
 	}
 
-	private Graph buildAst(FilterModule module, FilterDirection dir)
+	private Graph buildAst(FilterModule module, FilterDirection dir, GraphMetaData meta)
 	{
-		Graph grooveAst = GrooveASTBuilderCN.createAST(module, dir);
+		Graph grooveAst = GrooveASTBuilderCN.createAST(module, dir, meta);
 		return grooveAst;
 	}
 
@@ -291,10 +295,12 @@ public class Preprocessor implements CTCommonModule
 		scenario.setAcceptor(acceptor);
 
 		generateFlowGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(ast)));
+
 		GTS gts;
 		try
 		{
-			gts = new GTS(generateFlowGrammar.toGrammar());
+			GraphGrammar gram = generateFlowGrammar.toGrammar();
+			gts = new GTS(gram);
 		}
 		catch (FormatException e)
 		{
@@ -326,9 +332,9 @@ public class Preprocessor implements CTCommonModule
 		}
 	}
 
-	private FlowModel extractFlowModel(Graph flowGraph)
+	private FlowModel extractFlowModel(Graph flowGraph, GraphMetaData meta)
 	{
-		return FlowModelExtractor.extract(flowGraph);
+		return FlowModelExtractor.extract(flowGraph, meta);
 	}
 
 	private GTS execute(Graph flowGraph)
@@ -341,10 +347,12 @@ public class Preprocessor implements CTCommonModule
 		scenario.setAcceptor(acceptor);
 
 		runtimeGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(flowGraph)));
+
 		GTS gts;
 		try
 		{
-			gts = new GTS(runtimeGrammar.toGrammar());
+			GraphGrammar gram = runtimeGrammar.toGrammar();
+			gts = new GTS(gram);
 		}
 		catch (FormatException e)
 		{

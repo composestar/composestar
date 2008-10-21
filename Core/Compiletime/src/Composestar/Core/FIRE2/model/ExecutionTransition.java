@@ -15,6 +15,8 @@ import java.io.Serializable;
  */
 public abstract class ExecutionTransition implements Serializable
 {
+	private static final long serialVersionUID = -4306096984983387723L;
+
 	/*
 	 * Transition labels
 	 */

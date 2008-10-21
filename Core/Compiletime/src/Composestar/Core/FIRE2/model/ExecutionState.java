@@ -17,6 +17,8 @@ import java.util.List;
  */
 public abstract class ExecutionState implements Serializable
 {
+	private static final long serialVersionUID = -3753027823745667845L;
+
 	/**
 	 * The associated flow node
 	 * 
@@ -118,7 +120,6 @@ public abstract class ExecutionState implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -130,7 +131,6 @@ public abstract class ExecutionState implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
