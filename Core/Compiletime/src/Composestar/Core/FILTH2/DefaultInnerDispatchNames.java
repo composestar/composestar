@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DefaultInnerDispatchNames.java 4188 2008-05-07 12:44:26Z elmuerte $
+ * $Id$
  */
 
 package Composestar.Core.FILTH2;
