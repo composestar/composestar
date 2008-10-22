@@ -19,6 +19,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPa
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.LAMA.MethodInfo;
@@ -978,7 +979,7 @@ public class FireModel
 		/**
 		 * Mapping from entrance message to states
 		 */
-		private Map<Message, ExecutionState> entranceTable = new HashMap<Message, ExecutionState>();
+		private Map<CpsMessage, ExecutionState> entranceTable = new HashMap<CpsMessage, ExecutionState>();
 
 		private Map<ExtendedExecutionState, ExtendedExecutionState> stateCache = new HashMap<ExtendedExecutionState, ExtendedExecutionState>();
 
@@ -992,7 +993,7 @@ public class FireModel
 		{
 			filterPosition = filterDirection.getIndex();
 
-			Message message;
+			CpsMessage message;
 			// ExecutionState state;
 			ExtendedExecutionState extendedState;
 
@@ -1033,7 +1034,7 @@ public class FireModel
 		{
 			filterPosition = filterDirection.getIndex();
 
-			Message message = getEntranceMessage(selector);
+			CpsMessage message = getEntranceMessage(selector);
 
 			// ExecutionState state =
 			// executionModels[filterPosition][0].getEntranceState(message);
@@ -1054,7 +1055,7 @@ public class FireModel
 		{
 			filterPosition = filterDirection.getIndex();
 
-			Message message = getEntranceMessage(methodInfo.getName());
+			CpsMessage message = getEntranceMessage(methodInfo.getName());
 
 			// ExecutionState state =
 			// executionModels[filterPosition][0].getEntranceState(message);
@@ -1095,7 +1096,7 @@ public class FireModel
 		 * @see
 		 * Composestar.Core.FIRE2.model.ExecutionModel#getEntranceMessages()
 		 */
-		public Set<Message> getEntranceMessages()
+		public Set<CpsMessage> getEntranceMessages()
 		{
 			return Collections.unmodifiableSet(entranceTable.keySet());
 		}
@@ -1106,7 +1107,7 @@ public class FireModel
 		 * Composestar.Core.FIRE2.model.ExecutionModel#getEntranceState(Composestar
 		 * .Core.FIRE2.model.Message)
 		 */
-		public ExecutionState getEntranceState(Message message)
+		public ExecutionState getEntranceState(CpsMessage message)
 		{
 			if (!fullModel || entranceTable.containsKey(message))
 			{
@@ -1146,7 +1147,7 @@ public class FireModel
 		 * Composestar.Core.FIRE2.model.ExecutionModel#isEntranceMessage(Composestar
 		 * .Core.FIRE2.model.Message)
 		 */
-		public boolean isEntranceMessage(Message message)
+		public boolean isEntranceMessage(CpsMessage message)
 		{
 			return entranceTable.containsKey(message);
 		}

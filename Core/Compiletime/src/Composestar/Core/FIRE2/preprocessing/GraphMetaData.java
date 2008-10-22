@@ -79,11 +79,11 @@ public class GraphMetaData
 				Node idNode = e.opposite();
 				if (idNode != null)
 				{
-					Collection<? extends Edge> edges = graph.edgeSet(idNode);
+					Collection<? extends Edge> edges = graph.outEdgeSet(idNode);
 					for (Edge idEdge : edges)
 					{
 						// find self edge
-						if (idEdge.source().equals(idEdge.opposite()))
+						if (idEdge.opposite().equals(idEdge.opposite()))
 						{
 							return idEdge.label().text();
 						}

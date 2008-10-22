@@ -104,7 +104,7 @@ public class FlowModelExtractor
 		if (!iter.hasNext())
 		{
 			// should never happen.
-			throw new RuntimeException("FilterModule-edge not found!");
+			throw new IllegalStateException("FilterModule node not found!");
 		}
 
 		Edge edge = iter.next();
@@ -116,7 +116,7 @@ public class FlowModelExtractor
 		if (!iter.hasNext())
 		{
 			// should never happen.
-			throw new RuntimeException("Exit-edge not found!");
+			throw new IllegalStateException("End node not found!");
 		}
 
 		edge = iter.next();

@@ -38,6 +38,7 @@ import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
@@ -199,27 +200,21 @@ public class Preprocessor implements CTCommonModule
 		timer.stop();
 
 		// extract statespace:
-		// ExecutionModelExtractor executionModelExtractor = new
-		// ExecutionModelExtractor();
-		//
-		// timer.start("Extract input execution model %s",
-		// module.getFullyQualifiedName());
-		// ExecutionModel executionModelIF =
-		// executionModelExtractor.extract(stateSpaceIF, flowModelIF);
-		// timer.stop();
-		//
-		// timer.start("Extract output execution model %s",
-		// module.getFullyQualifiedName());
-		// ExecutionModel executionModelOF =
-		// executionModelExtractor.extract(stateSpaceOF, flowModelOF);
-		// timer.stop();
-		//
-		// // store result:
-		// FirePreprocessingResult result = new
-		// FirePreprocessingResult(flowModelIF, executionModelIF, flowModelOF,
-		// executionModelOF);
-		//
-		// fire2Resources.addPreprocessingResult(module, result);
+		ExecutionModelExtractor executionModelExtractor = new ExecutionModelExtractor();
+
+		timer.start("Extract input execution model %s", module.getFullyQualifiedName());
+		ExecutionModel executionModelIF = executionModelExtractor.extract(stateSpaceIF, flowModelIF, inputMeta);
+		timer.stop();
+
+		timer.start("Extract output execution model %s", module.getFullyQualifiedName());
+		ExecutionModel executionModelOF = executionModelExtractor.extract(stateSpaceOF, flowModelOF, outputMeta);
+		timer.stop();
+
+		// store result:
+		FirePreprocessingResult result = new FirePreprocessingResult(flowModelIF, executionModelIF, flowModelOF,
+				executionModelOF);
+
+		fire2Resources.addPreprocessingResult(module, result);
 	}
 
 	private void loadGrammars()

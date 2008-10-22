@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+
 /**
  * A state in the filter execution model
  * 
@@ -29,13 +31,7 @@ public abstract class ExecutionState implements Serializable
 	/**
 	 * The incoming message
 	 */
-	private Message message;
-
-	/**
-	 * The substitution message. Depending on the filter this might become the
-	 * new message
-	 */
-	private Message substitutionMessage;
+	private CpsMessage message;
 
 	/**
 	 * The type of state: entrance, exit or normal
@@ -61,13 +57,12 @@ public abstract class ExecutionState implements Serializable
 	 */
 	public static final int NORMAL_STATE = 3;
 
-	public ExecutionState(FlowNode inFlowNode, Message inMessage, Message inSubstitutionMessage, int inStateType)
+	public ExecutionState(FlowNode inFlowNode, CpsMessage inMessage, int inStateType)
 	{
 		super();
 
 		flowNode = inFlowNode;
 		message = inMessage;
-		substitutionMessage = inSubstitutionMessage;
 		stateType = inStateType;
 	}
 
@@ -82,17 +77,9 @@ public abstract class ExecutionState implements Serializable
 	/**
 	 * @return Returns the message.
 	 */
-	public Message getMessage()
+	public CpsMessage getMessage()
 	{
 		return message;
-	}
-
-	/**
-	 * @return the substitutionMessage
-	 */
-	public Message getSubstitutionMessage()
-	{
-		return substitutionMessage;
 	}
 
 	/**
@@ -148,11 +135,6 @@ public abstract class ExecutionState implements Serializable
 		}
 
 		if (!message.equals(state.message))
-		{
-			return false;
-		}
-
-		if (!substitutionMessage.equals(state.substitutionMessage))
 		{
 			return false;
 		}

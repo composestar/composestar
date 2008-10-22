@@ -24,7 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsRepository2.PropertyNames;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -32,14 +36,26 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.Master.ModuleNames;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * @author Arjan de Roo
  */
 public class ExecutionModelExtractor
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);
+
 	private Map<GraphState, BasicExecutionState> stateTable;
 
+	/**
+	 * The label on the Frame node
+	 */
+	private static final Label FRAME_LABEL = GrooveASTBuilderCN.createLabel("Frame");
+
+	/**
+	 * The program counter edge pointing to the active flow node
+	 */
 	private static final Label PC_LABEL = GrooveASTBuilderCN.createLabel("pc");
 
 	/**
@@ -52,11 +68,14 @@ public class ExecutionModelExtractor
 	 */
 	private static final Label MESSAGE_LABEL = GrooveASTBuilderCN.createLabel("Message");
 
+	private GraphMetaData meta;
+
 	public ExecutionModelExtractor()
 	{}
 
-	public ExecutionModel extract(GTS gts, FlowModel flowModel)
+	public ExecutionModel extract(GTS gts, FlowModel flowModel, GraphMetaData metaData)
 	{
+		meta = metaData;
 		stateTable = new HashMap<GraphState, BasicExecutionState>();
 
 		BasicExecutionModel executionModel = new BasicExecutionModel();
@@ -124,130 +143,150 @@ public class ExecutionModelExtractor
 
 	private void addState(GraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
 	{
-		Node selectorNode = null;
-		Node targetNode = null;
-		Node substitutionSelectorNode = null;
-		Node substitutionTargetNode = null;
-
 		Graph graph = state.getGraph();
-		Collection<? extends Edge> pcEdges = graph.labelEdgeSet(2, PC_LABEL);
-		Iterator<? extends Edge> iter = pcEdges.iterator();
-		if (!iter.hasNext())
+
+		Collection<? extends Edge> frames = graph.labelEdgeSet(2, FRAME_LABEL);
+		if (frames.isEmpty())
 		{
-			// should never happen.
-			throw new RuntimeException("pc-edge not found!");
+			throw new IllegalStateException("Frame node was not found in the execution model.");
+		}
+		Node pcTarget = null;
+		Node messageNode = null;
+		for (Edge edge : frames)
+		{
+			Node frameNode = edge.opposite();
+			pcTarget = null;
+			messageNode = null;
+			Collection<? extends Edge> frameEdges = graph.outEdgeSet(frameNode);
+			for (Edge fedfe : frameEdges)
+			{
+				if (edge.label().equals(PC_LABEL))
+				{
+					pcTarget = edge.opposite();
+				}
+				else if (edge.label().equals(MSG_LABEL))
+				{
+					messageNode = edge.opposite();
+				}
+				else if (edge.opposite().equals(edge.source()))
+				{
+					continue;
+				}
+				else
+				{
+					logger.warn(String.format("Unrecognized edge on a Frame node: %s", edge.label().text()));
+				}
+			}
+			if (pcTarget != null && messageNode != null)
+			{
+				break;
+			}
+		}
+		if (pcTarget == null || messageNode == null)
+		{
+			logger.error("Unable to find a usable Frame node");
+			throw new IllegalStateException("Frame node was not found in the execution model.");
 		}
 
-		Edge edge = iter.next();
-
 		// FlowNode:
-		AnnotatedNode targetFlowNode = (AnnotatedNode) edge.opposite();
-		FlowNode flowNode = (FlowNode) targetFlowNode.getAnnotation(FlowModelExtractor.ANNOT_FLOW_NODE);
+		FlowNode flowNode = meta.getFlowNode(graph, pcTarget);
 		if (flowNode == null)
 		{
 			// should never happen.
-			throw new RuntimeException("FlowNode not found!");
+			logger.error("Target of the pc edge does not have a FIRE FlowNode");
+			throw new IllegalStateException("FlowNode not found");
 		}
 
-		// selector, target, substitutionSelector and substitutionTarget:
-		iter = graph.outEdgeSet(edge.source()).iterator();
-		while (iter.hasNext())
+		CpsMessage message;
+
+		boolean hasMessageLabel = false;
+		for (Edge edge : graph.outEdgeSet(messageNode))
 		{
-			edge = iter.next();
-			if (edge.label().equals(SELECTOR_LABEL))
+			if (edge.opposite().equals(edge.source()))
 			{
-				selectorNode = edge.opposite();
+				// self edge, would only be the Message label
+				if (!edge.label().equals(MESSAGE_LABEL))
+				{
+					logger.warn(String.format("Encountered an unexpected self edge on the Message node: %s", edge
+							.label().text()));
+				}
+				else
+				{
+					hasMessageLabel = false;
+				}
+				continue;
 			}
-			else if (edge.label().equals(TARGET_LABEL))
+			else
 			{
-				targetNode = edge.opposite();
+				Node value = edge.opposite();
+				String propName = edge.label().text();
+				RepositoryEntity re = meta.getRepositoryLink(graph, value);
+				if (re == null)
+				{
+					logger.error(String.format("Message value %s did not point to a repository entity", propName));
+					continue;
+				}
+				if (!(re instanceof CpsVariable))
+				{
+					logger.error(String.format("Message property %s does not link to a CpsValue instance: %s",
+							propName, re.getClass().getName()));
+					continue;
+				}
+				CpsVariable val = (CpsVariable) re;
+				if (PropertyNames.TARGET.equals(propName))
+				{
+					// TODO conver
+					CpsObject objVal = ...edge;
+					message.setTarget(objVal);
+				}
+				else if (PropertyNames.SELECTOR.equals(propName))
+				{
+					CpsSelector selVal = ...edge;
+					message.setSelector(selVal);
+				}
+				else if (PropertyNames.SELF.equals(propName))
+				{
+					CpsObject objVal = ...edge;
+					message.setSelf(objVal);
+				}
+				else if (PropertyNames.SENDER.equals(propName))
+				{
+					CpsObject objVal = ...edge;
+					//message.setSender(objVal);
+				}
+				else if (PropertyNames.SERVER.equals(propName))
+				{
+					CpsObject objVal = ...edge;
+					message.setServer(objVal);
+				}
+				else
+				{
+					message.setProperty(propName, val);
+				}
 			}
-			else if (edge.label().equals(SUBSTITUTIONSELECTOR_LABEL))
-			{
-				substitutionSelectorNode = edge.opposite();
-			}
-			else if (edge.label().equals(SUBSTITUTIONTARGET_LABEL))
-			{
-				substitutionTargetNode = edge.opposite();
-			}
 		}
-
-		if (selectorNode == null)
+		if (!hasMessageLabel)
 		{
-			// should never happen
-			throw new RuntimeException("No selector!");
+			logger.warn("The message node did not contain a Message self edge");
 		}
-		if (targetNode == null)
-		{
-			// should never happen
-			throw new RuntimeException("No target!");
-		}
-
-		if (selectorNode instanceof AnnotatedNode)
-		{
-			MessageSelector msgSelector = (MessageSelector) ((AnnotatedNode) selectorNode)
-					.getAnnotation(GrooveASTBuilder.REPOSITORY_LINK_ANNOTATION);
-			selector = msgSelector.getName();
-		}
-		else
-		{
-			selector = Message.UNDISTINGUISHABLE_SELECTOR;
-		}
-
-		if (targetNode instanceof AnnotatedNode)
-		{
-			target = (Target) ((AnnotatedNode) targetNode).getAnnotation(GrooveASTBuilder.REPOSITORY_LINK_ANNOTATION);
-		}
-		else
-		{
-			target = Message.UNDISTINGUISHABLE_TARGET;
-		}
-
-		Message message = new Message(target, selector);
-
-		if (substitutionSelectorNode != null && substitutionSelectorNode instanceof AnnotatedNode)
-		{
-			AnnotatedNode node = (AnnotatedNode) substitutionSelectorNode;
-			MessageSelector msgSelector = (MessageSelector) node
-					.getAnnotation(GrooveASTBuilder.REPOSITORY_LINK_ANNOTATION);
-			substitutionSelector = msgSelector.getName();
-		}
-		else
-		{
-			substitutionSelector = Message.UNDISTINGUISHABLE_SELECTOR;
-		}
-
-		if (substitutionTargetNode != null && substitutionTargetNode instanceof AnnotatedNode)
-		{
-			substitutionTarget = (Target) ((AnnotatedNode) substitutionTargetNode)
-					.getAnnotation(GrooveASTBuilder.REPOSITORY_LINK_ANNOTATION);
-		}
-		else
-		{
-			substitutionTarget = Message.UNDISTINGUISHABLE_TARGET;
-		}
-
-		Message substitutionMessage = new Message(substitutionTarget, substitutionSelector);
 
 		BasicExecutionState executionState;
 
 		// check for start- or endnode:
 		if (flowNode.equals(flowModel.getStartNode()))
 		{
-			executionState = new BasicExecutionState(flowNode, message, substitutionMessage,
-					ExecutionState.ENTRANCE_STATE);
+			executionState = new BasicExecutionState(flowNode, message, ExecutionState.ENTRANCE_STATE);
 			executionModel.addState(executionState);
 			executionModel.addEntranceState(executionState);
 		}
 		else if (flowNode.equals(flowModel.getEndNode()))
 		{
-			executionState = new BasicExecutionState(flowNode, message, substitutionMessage, ExecutionState.EXIT_STATE);
+			executionState = new BasicExecutionState(flowNode, message, ExecutionState.EXIT_STATE);
 			executionModel.addState(executionState);
 		}
 		else
 		{
-			executionState = new BasicExecutionState(flowNode, message, substitutionMessage,
-					ExecutionState.NORMAL_STATE);
+			executionState = new BasicExecutionState(flowNode, message, ExecutionState.NORMAL_STATE);
 			executionModel.addState(executionState);
 		}
 
@@ -258,7 +297,7 @@ public class ExecutionModelExtractor
 	{
 		private static final long serialVersionUID = 5744523627232722542L;
 
-		private Map<Message, ExecutionState> entranceStates;
+		private Map<CpsMessage, ExecutionState> entranceStates;
 
 		private Set<ExecutionState> states;
 
@@ -268,7 +307,7 @@ public class ExecutionModelExtractor
 		{
 			super();
 
-			entranceStates = new HashMap<Message, ExecutionState>();
+			entranceStates = new HashMap<CpsMessage, ExecutionState>();
 			states = new HashSet<ExecutionState>();
 			transitions = new HashSet<ExecutionTransition>();
 		}
@@ -302,14 +341,12 @@ public class ExecutionModelExtractor
 		 * @param message
 		 * @return
 		 */
-		public ExecutionState getEntranceState(Message message)
+		public ExecutionState getEntranceState(CpsMessage message)
 		{
 			ExecutionState state = entranceStates.get(message);
 
 			if (state == null)
 			{
-				// FIXME Undistinguishable target/selector instead of star
-				// target/selector
 				state = entranceStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message.getSelector()));
 			}
 			if (state == null)
@@ -358,14 +395,12 @@ public class ExecutionModelExtractor
 		 * 
 		 * @return
 		 */
-		public Set<Message> getEntranceMessages()
+		public Set<CpsMessage> getEntranceMessages()
 		{
-			// return (String[]) entranceStates.keySet().toArray( new String[0]
-			// );
 			return Collections.unmodifiableSet(entranceStates.keySet());
 		}
 
-		public boolean isEntranceMessage(Message message)
+		public boolean isEntranceMessage(CpsMessage message)
 		{
 			return entranceStates.containsKey(message);
 		}
@@ -379,9 +414,9 @@ public class ExecutionModelExtractor
 
 		private List<ExecutionTransition> inTransitions;
 
-		public BasicExecutionState(FlowNode flowNode, Message message, Message substitutionMessage, int stateType)
+		public BasicExecutionState(FlowNode flowNode, CpsMessage message, int stateType)
 		{
-			super(flowNode, message, substitutionMessage, stateType);
+			super(flowNode, message, stateType);
 
 			outTransitions = new ArrayList<ExecutionTransition>();
 			inTransitions = new ArrayList<ExecutionTransition>();

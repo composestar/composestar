@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+
 /**
  * Interface for execution models of filter sets of a concern.
  * 
@@ -31,18 +33,18 @@ public interface ExecutionModel extends Serializable
 	 * @param message
 	 * @return
 	 */
-	ExecutionState getEntranceState(Message message);
+	ExecutionState getEntranceState(CpsMessage message);
 
 	/**
 	 * Returns all the messages for which there are different entrance states.
 	 * 
 	 * @return
 	 */
-	Set<Message> getEntranceMessages();
+	Set<CpsMessage> getEntranceMessages();
 
 	/**
 	 * @param message
 	 * @return true if the message is an entrance message.
 	 */
-	boolean isEntranceMessage(Message message);
+	boolean isEntranceMessage(CpsMessage message);
 }
