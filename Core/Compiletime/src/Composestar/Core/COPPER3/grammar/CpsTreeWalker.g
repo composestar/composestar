@@ -657,6 +657,8 @@ assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
 						fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 				}
 				val = new ParameterizedCpsVariable(fmp);
+				setLocInfo(val, $prm.start);
+				repository.add(val);
 			}
 			catch (RecognitionException re) {
 				reportError(re);
@@ -674,6 +676,8 @@ assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
 				lvalue = "";
 			}
 			val = new CpsLiteralImpl(lvalue);
+			setLocInfo(val, $l);
+			repository.add(val);
 		}
 	;
 
@@ -866,6 +870,11 @@ cpsVariableFqn [FilterModule fm] returns [CpsVariable entity]
 					entity = new CpsTypeProgramElementImpl(tr);
 					references.addReferenceUser(tr, entity, true);
 				}
+				if (entity != null)
+				{
+					setLocInfo(entity, errTok);
+					repository.add(entity);
+				}
 			}
 			catch (RecognitionException re) {
 				reportError(re);
@@ -887,14 +896,24 @@ cmpRhs [FilterModule fm] returns [CpsVariableCollection res]
 					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 				}
 				res = new ParameterizedCpsVariableCollection(fmp);
+				setLocInfo(fmp, $prm.start);
+				repository.add(fmp);
 			}
 			catch (RecognitionException re) {
 				reportError(re);
 				//recover(input,re);
 			}
 		}
-	| ^(LIST { res = new CpsVariableCollectionImpl(); } meCmpRhsSingle[fm, res]+)
-	| { res = new CpsVariableCollectionImpl(); } meCmpRhsSingle[fm, res]
+	| ^(lst=LIST { 
+		res = new CpsVariableCollectionImpl();
+		setLocInfo(res, $lst);
+		repository.add(res); 
+	} meCmpRhsSingle[fm, res]+)
+	| { 
+		res = new CpsVariableCollectionImpl();
+		setLocInfo(res, errTok);
+		repository.add(res); 
+	} meCmpRhsSingle[fm, res]
 	;
 	
 meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
@@ -908,6 +927,8 @@ meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
 					fm.getFullyQualifiedName(), $prm.text), input, $prm.start);
 				}
 				res.add(new ParameterizedCpsVariable(fmp));
+				setLocInfo(fmp, $prm.start);
+				repository.add(fmp);
 			}
 			catch (RecognitionException re) {
 				reportError(re);
@@ -924,7 +945,10 @@ meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
 			else {
 				lvalue = "";
 			}
-			res.add(new CpsLiteralImpl(lvalue)); 
+			CpsLiteral lit = new CpsLiteralImpl(lvalue);
+			res.add(lit); 
+			setLocInfo(lit, $l);
+			repository.add(lit);
 		}
 	;
 

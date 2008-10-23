@@ -152,6 +152,20 @@ public abstract class CpsParserBase extends Parser
 	}
 
 	/**
+	 * Another hack to create a target neutral grammar
+	 * 
+	 * @param ta
+	 * @param token
+	 * @param text
+	 * @param base
+	 * @return
+	 */
+	protected Object adaptorCreate(TreeAdaptor ta, int token, String text, Token base)
+	{
+		return ta.create(token, base, text);
+	}
+
+	/**
 	 * Issue a warning
 	 * 
 	 * @param msg

@@ -641,7 +641,7 @@ identifierOrFmParam
  */
 literalOrFmParam
 	: v=legacyIdentifier
-	-> { adaptorCreate(adaptor, LITERAL, "'"+ $v.text + "'") } 
+	-> { adaptorCreate(adaptor, LITERAL, "'"+ $v.text + "'", $v.start) } 
 	| singleFmParam | fmParamList
 	;
 
@@ -650,7 +650,8 @@ literalOrFmParam
  * statement (Legacy notation).
  */
 matchingPattern
-	: (LSQUARE (n1=identifierOrFmParam 
+	: (LSQUARE // name compare
+		(n1=identifierOrFmParam 
 			(PERIOD 
 				(n2=literalOrFmParam // foo.bar
 				-> ^(AND
@@ -661,7 +662,7 @@ matchingPattern
 				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
 				)
 			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'") }))
+			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'", $n1.start) }))
 			)
 		| ASTERISK PERIOD 
 			(n3=literalOrFmParam // *.bar
@@ -670,22 +671,22 @@ matchingPattern
 			-> IDENTIFIER["true"]
 			)
 		) RSQUARE)
-	| (LANGLE 
+	| (LANGLE // signature compare
 		(s1=identifierOrFmParam 
 			(PERIOD 
-				(s2=literalOrFmParam // foo.bar
+				(s2=literalOrFmParam // foo.bar -> selector $= foo /\ selector $= bar (where bar is a "selector") -> warn?
 				-> ^(AND
-						^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
+						^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s1))
 						^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s2))
 					)
-				| ASTERISK // foo.*
-				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $s1))
+				| ASTERISK // foo.* -> selector $= foo
+				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s1))
 				)
-			| // bar
-			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $s1.text +"'") } ))
+			| // bar -> selector $= bar (where bar is a "selector") -> warn?
+			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $s1.text +"'", $n1.start) } ))
 			)
 		| ASTERISK PERIOD 
-			(s3=literalOrFmParam // *.bar
+			(s3=literalOrFmParam // *.bar -> selector $= bar (where bar is a "selector") -> warn?
 			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s3))
 			| ASTERISK // *.*
 			-> IDENTIFIER["true"]
@@ -709,7 +710,7 @@ substitutionPart
 				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND ^(FQN IDENTIFIER["selector"])))
 			)
 		| // bar
-		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'") }))
+		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'", $n1.start) }))
 			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
 		)
 	| ASTERISK PERIOD n3=literalOrFmParam // *.bar
