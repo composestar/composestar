@@ -26,33 +26,26 @@ package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
+import Composestar.Core.LAMA.MethodInfo;
 
 /**
- * Basic implementation of the CpsSelector type
+ * CpsSelector implementation used a correct CpsProgramElement is converted
  * 
  * @author Michiel Hendriks
  */
-public class CpsSelectorImpl extends AbstractRepositoryEntity implements CpsSelector
+public class CpsSelectorMethodInfo extends AbstractRepositoryEntity implements CpsSelector
 {
-	private static final long serialVersionUID = -3596448898251200434L;
+	private static final long serialVersionUID = 8530247021951450601L;
 
 	/**
-	 * The name part of the selector
+	 * The associated method info
 	 */
-	protected String name;
+	protected MethodInfo mi;
 
-	/**
-	 * @param selectorName the name of the selector
-	 * @throws NullPointerException Thrown when the selector name is null
-	 */
-	public CpsSelectorImpl(String selectorName) throws NullPointerException
+	public CpsSelectorMethodInfo(MethodInfo methodInfo) throws NullPointerException
 	{
 		super();
-		if (selectorName == null)
-		{
-			throw new NullPointerException("name can not be null");
-		}
-		name = selectorName;
+		mi = methodInfo;
 	}
 
 	/*
@@ -61,7 +54,15 @@ public class CpsSelectorImpl extends AbstractRepositoryEntity implements CpsSele
 	 */
 	public String getName()
 	{
-		return name;
+		return mi.getName();
+	}
+
+	/**
+	 * @return The associated method info
+	 */
+	public MethodInfo getMethodInfo()
+	{
+		return mi;
 	}
 
 	/*
@@ -71,7 +72,6 @@ public class CpsSelectorImpl extends AbstractRepositoryEntity implements CpsSele
 	@Override
 	public String toString()
 	{
-		return getName();
+		return mi.toString();
 	}
-
 }

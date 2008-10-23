@@ -17,13 +17,13 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
-import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 
 public class ViewPanel extends JPanel
 {
@@ -344,9 +344,9 @@ public class ViewPanel extends JPanel
 		g.drawString(label, node.xPos - width / 2, node.yPos);
 
 		// paint name of rep entity
-		if (node.flowNode != null && node.flowNode.getRepositoryLink() instanceof DeclaredRepositoryEntity)
+		if (node.flowNode != null && node.flowNode.getRepositoryLink() instanceof QualifiedRepositoryEntity)
 		{
-			label = ((DeclaredRepositoryEntity) node.flowNode.getRepositoryLink()).getName();
+			label = ((QualifiedRepositoryEntity) node.flowNode.getRepositoryLink()).getName();
 			width = metrics.stringWidth(label);
 			if (width > 2 * RADIUS)
 			{
@@ -358,8 +358,9 @@ public class ViewPanel extends JPanel
 		{
 			g.drawString(node.state.getMessage().toString(), node.xPos - width / 2, node.yPos + 2
 					* (int) (metrics.getHeight() * 1.25));
-			g.drawString(node.state.getSubstitutionMessage().toString(), node.xPos - width / 2, node.yPos + 3
-					* (int) (metrics.getHeight() * 1.25));
+			// g.drawString(node.state.getSubstitutionMessage().toString(),
+			// node.xPos - width / 2, node.yPos + 3
+			// * (int) (metrics.getHeight() * 1.25));
 		}
 
 		// paint edges:

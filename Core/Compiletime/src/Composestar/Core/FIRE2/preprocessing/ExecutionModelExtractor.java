@@ -23,19 +23,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.FIRE2.model.FireMessage;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
-import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -67,6 +76,8 @@ public class ExecutionModelExtractor
 	 * Label of the Message object
 	 */
 	private static final Label MESSAGE_LABEL = GrooveASTBuilderCN.createLabel("Message");
+
+	private static final Label INIT_LABEL = GrooveASTBuilderCN.createLabel("init");
 
 	private GraphMetaData meta;
 
@@ -100,7 +111,9 @@ public class ExecutionModelExtractor
 		// ExecutionState state = new ExecutionState( null, "" );
 		// stateTable.put( startState, state );
 		// analyseNextStates( startState, model );
-		//        
+		//
+
+		// new Viewer(executionModel);
 
 		return executionModel;
 	}
@@ -126,7 +139,10 @@ public class ExecutionModelExtractor
 			startState = stateTable.get(state);
 			endState = stateTable.get(nextState);
 
-			addTransition(startState, endState, transition, executionModel);
+			if (startState != null && endState != null)
+			{
+				addTransition(startState, endState, transition, executionModel);
+			}
 		}
 	}
 
@@ -141,7 +157,7 @@ public class ExecutionModelExtractor
 		executionModel.addTransition(exeTrans);
 	}
 
-	private void addState(GraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
+	private boolean addState(GraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
 	{
 		Graph graph = state.getGraph();
 
@@ -160,21 +176,26 @@ public class ExecutionModelExtractor
 			Collection<? extends Edge> frameEdges = graph.outEdgeSet(frameNode);
 			for (Edge fedfe : frameEdges)
 			{
-				if (edge.label().equals(PC_LABEL))
+				if (fedfe.label().equals(PC_LABEL))
 				{
-					pcTarget = edge.opposite();
+					pcTarget = fedfe.opposite();
 				}
-				else if (edge.label().equals(MSG_LABEL))
+				else if (fedfe.label().equals(MSG_LABEL))
 				{
-					messageNode = edge.opposite();
+					messageNode = fedfe.opposite();
 				}
-				else if (edge.opposite().equals(edge.source()))
+				else if (fedfe.label().equals(INIT_LABEL) && fedfe.opposite().equals(fedfe.source()))
+				{
+					// still being initialized
+					return false;
+				}
+				else if (fedfe.label().equals(FRAME_LABEL) && fedfe.opposite().equals(fedfe.source()))
 				{
 					continue;
 				}
 				else
 				{
-					logger.warn(String.format("Unrecognized edge on a Frame node: %s", edge.label().text()));
+					logger.warn(String.format("Unrecognized edge on a Frame node: %s", fedfe.label().text()));
 				}
 			}
 			if (pcTarget != null && messageNode != null)
@@ -197,7 +218,7 @@ public class ExecutionModelExtractor
 			throw new IllegalStateException("FlowNode not found");
 		}
 
-		CpsMessage message;
+		FireMessage message = new FireMessage();
 
 		boolean hasMessageLabel = false;
 		for (Edge edge : graph.outEdgeSet(messageNode))
@@ -212,7 +233,7 @@ public class ExecutionModelExtractor
 				}
 				else
 				{
-					hasMessageLabel = false;
+					hasMessageLabel = true;
 				}
 				continue;
 			}
@@ -221,6 +242,8 @@ public class ExecutionModelExtractor
 				Node value = edge.opposite();
 				String propName = edge.label().text();
 				RepositoryEntity re = meta.getRepositoryLink(graph, value);
+				// logger.trace(String.format("Message.%s <= %s", propName, re),
+				// re);
 				if (re == null)
 				{
 					logger.error(String.format("Message value %s did not point to a repository entity", propName));
@@ -232,32 +255,50 @@ public class ExecutionModelExtractor
 							propName, re.getClass().getName()));
 					continue;
 				}
+
 				CpsVariable val = (CpsVariable) re;
-				if (PropertyNames.TARGET.equals(propName))
+				if (PropertyNames.TARGET.equals(propName) || PropertyNames.SELF.equals(propName)
+						|| PropertyNames.SENDER.equals(propName) || PropertyNames.SERVER.equals(propName))
 				{
-					// TODO conver
-					CpsObject objVal = ...edge;
-					message.setTarget(objVal);
+					if ((val instanceof CanonProperty) || (val instanceof CpsObject))
+					{
+						message.specialSetProperty(propName, val);
+					}
+					else
+					{
+						logger.error(String.format("Message property %s expects an object instance", propName), val);
+					}
 				}
 				else if (PropertyNames.SELECTOR.equals(propName))
 				{
-					CpsSelector selVal = ...edge;
-					message.setSelector(selVal);
-				}
-				else if (PropertyNames.SELF.equals(propName))
-				{
-					CpsObject objVal = ...edge;
-					message.setSelf(objVal);
-				}
-				else if (PropertyNames.SENDER.equals(propName))
-				{
-					CpsObject objVal = ...edge;
-					//message.setSender(objVal);
-				}
-				else if (PropertyNames.SERVER.equals(propName))
-				{
-					CpsObject objVal = ...edge;
-					message.setServer(objVal);
+					if ((val instanceof CanonProperty) || (val instanceof CpsSelector))
+					{
+						message.specialSetProperty(propName, val);
+					}
+					else if (val instanceof CpsLiteral)
+					{
+						CpsSelector sel = new CpsSelectorImpl(((CpsLiteral) val).getLiteralValue());
+						sel.setSourceInformation(val.getSourceInformation());
+						message.setProperty(propName, sel);
+					}
+					else if (val instanceof CpsProgramElement)
+					{
+						ProgramElement pe = ((CpsProgramElement) val).getProgramElement();
+						if (pe instanceof MethodInfo)
+						{
+							CpsSelector sel = new CpsSelectorMethodInfo((MethodInfo) pe);
+							sel.setSourceInformation(val.getSourceInformation());
+							message.setProperty(propName, sel);
+						}
+						else
+						{
+							logger.error(String.format("Message property %s expects an selector value", propName), val);
+						}
+					}
+					else
+					{
+						logger.error(String.format("Message property %s expects an selector value", propName), val);
+					}
 				}
 				else
 				{
@@ -291,6 +332,8 @@ public class ExecutionModelExtractor
 		}
 
 		stateTable.put(state, executionState);
+
+		return true;
 	}
 
 	private static class BasicExecutionModel implements ExecutionModel
@@ -344,20 +387,26 @@ public class ExecutionModelExtractor
 		public ExecutionState getEntranceState(CpsMessage message)
 		{
 			ExecutionState state = entranceStates.get(message);
-
-			if (state == null)
+			if (state != null)
 			{
-				state = entranceStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message.getSelector()));
-			}
-			if (state == null)
-			{
-				state = entranceStates.get(new Message(message.getTarget(), Message.UNDISTINGUISHABLE_SELECTOR));
-			}
-			if (state == null)
-			{
-				state = entranceStates.get(Message.UNDISTINGUISHABLE_MESSAGE);
+				return state;
 			}
 
+			int bestScore = Integer.MAX_VALUE;
+			state = null;
+			for (Entry<CpsMessage, ExecutionState> entry : entranceStates.entrySet())
+			{
+				int curScore = entry.getKey().matchTo(message);
+				if (curScore < 0)
+				{
+					continue;
+				}
+				if (curScore < bestScore)
+				{
+					bestScore = curScore;
+					state = entry.getValue();
+				}
+			}
 			return state;
 		}
 

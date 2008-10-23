@@ -14,6 +14,7 @@ import Composestar.Core.LAMA.MethodInfo;
  * 
  * @author Arjan de Roo
  */
+@Deprecated
 public class Message implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -168,7 +169,6 @@ public class Message implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -185,7 +185,6 @@ public class Message implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -221,7 +220,6 @@ public class Message implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
