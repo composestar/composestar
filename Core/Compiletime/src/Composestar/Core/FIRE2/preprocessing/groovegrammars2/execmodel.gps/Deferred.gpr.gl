@@ -6,10 +6,12 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n34526 74 181 182 15 
-n n34524 155 253 15 15 
-n n34527 323 61 51 15 
-n n34525 192 56 36 15 
-n n34523 150 332 25 15 
-n n34522 365 179 15 15 
-e n34527 n34522 "?key" 500 0 296 68 299 186 12
+n n49882 347 58 51 15 
+n n49885 155 253 20 15 
+n n49881 147 329 25 15 
+n n49883 74 181 182 15 
+n n49886 192 56 36 15 
+n n49884 365 179 15 15 
+e n49884 n49881 "new:referred" 500 0 369 196 320 309 182 342 13
+e n49882 n49884 "?key" 500 0 296 68 299 186 12
+e n49883 n49884 "not:rhs" 500 0 170 191 272 243 373 187 12

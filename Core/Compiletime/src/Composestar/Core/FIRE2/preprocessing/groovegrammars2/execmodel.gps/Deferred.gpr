@@ -10,65 +10,75 @@
         <attr name="remark">
             <string>Resolve deferred values</string>
         </attr>
-        <node id="n34524"/>
-        <node id="n34526"/>
-        <node id="n34527"/>
-        <node id="n34523"/>
-        <node id="n34525"/>
-        <node id="n34522"/>
-        <edge from="n34524" to="n34523">
+        <node id="n49882"/>
+        <node id="n49881"/>
+        <node id="n49885"/>
+        <node id="n49883"/>
+        <node id="n49884"/>
+        <node id="n49886"/>
+        <edge from="n49882" to="n49884">
             <attr name="label">
-                <string>deferred</string>
+                <string>?key</string>
             </attr>
         </edge>
-        <edge from="n34524" to="n34524">
+        <edge from="n49885" to="n49881">
             <attr name="label">
-                <string>del:</string>
+                <string>del:deferred</string>
             </attr>
         </edge>
-        <edge from="n34526" to="n34522">
-            <attr name="label">
-                <string>new:rhs</string>
-            </attr>
-        </edge>
-        <edge from="n34525" to="n34526">
-            <attr name="label">
-                <string>pc</string>
-            </attr>
-        </edge>
-        <edge from="n34527" to="n34527">
-            <attr name="label">
-                <string>Message</string>
-            </attr>
-        </edge>
-        <edge from="n34525" to="n34527">
+        <edge from="n49886" to="n49882">
             <attr name="label">
                 <string>msg</string>
             </attr>
         </edge>
-        <edge from="n34523" to="n34523">
+        <edge from="n49883" to="n49884">
+            <attr name="label">
+                <string>not:rhs</string>
+            </attr>
+        </edge>
+        <edge from="n49883" to="n49883">
+            <attr name="label">
+                <string>{CompareStatement|Assignment}</string>
+            </attr>
+        </edge>
+        <edge from="n49882" to="n49882">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n49885" to="n49885">
+            <attr name="label">
+                <string>del:</string>
+            </attr>
+        </edge>
+        <edge from="n49886" to="n49883">
+            <attr name="label">
+                <string>pc</string>
+            </attr>
+        </edge>
+        <edge from="n49881" to="n49881">
             <attr name="label">
                 <string>?key</string>
             </attr>
         </edge>
-        <edge from="n34525" to="n34525">
+        <edge from="n49886" to="n49886">
             <attr name="label">
                 <string>Frame</string>
             </attr>
         </edge>
-        <edge from="n34526" to="n34524">
+        <edge from="n49883" to="n49885">
             <attr name="label">
                 <string>rhs</string>
             </attr>
         </edge>
-        <edge from="n34527" to="n34522">
+        <edge from="n49884" to="n49881">
             <attr name="label">
-                <string>?key</string>
+                <string>new:referred</string>
             </attr>
         </edge>
-        <edge from="n34526" to="n34526">
+        <edge from="n49883" to="n49884">
             <attr name="label">
-                <string>{CompareStatement|Assignment}</string>
+                <string>new:rhs</string>
             </attr>
         </edge>
     </graph>

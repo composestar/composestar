@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="InitMessage-Defered" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>100</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n49975"/>
+        <node id="n49976"/>
+        <node id="n49977"/>
+        <node id="n49972"/>
+        <node id="n49973"/>
+        <node id="n49978"/>
+        <node id="n49974"/>
+        <edge from="n49978" to="n49974">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n49978" to="n49975">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n49977" to="n49977">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n49972" to="n49972">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n49975" to="n49973">
+            <attr name="label">
+                <string>new:referred</string>
+            </attr>
+        </edge>
+        <edge from="n49975" to="n49973">
+            <attr name="label">
+                <string>del:deferred</string>
+            </attr>
+        </edge>
+        <edge from="n49972" to="n49977">
+            <attr name="label">
+                <string>not:?key</string>
+            </attr>
+        </edge>
+        <edge from="n49978" to="n49978">
+            <attr name="label">
+                <string>CompareStatement</string>
+            </attr>
+        </edge>
+        <edge from="n49974" to="n49974">
+            <attr name="label">
+                <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n49972" to="n49975">
+            <attr name="label">
+                <string>new:?key</string>
+            </attr>
+        </edge>
+        <edge from="n49976" to="n49976">
+            <attr name="label">
+                <string>init</string>
+            </attr>
+        </edge>
+        <edge from="n49976" to="n49972">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n49976" to="n49976">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

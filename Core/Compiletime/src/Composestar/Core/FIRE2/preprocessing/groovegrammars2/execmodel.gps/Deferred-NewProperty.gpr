@@ -4,87 +4,76 @@
         <attr name="priority">
             <string>50</string>
         </attr>
+        <attr name="remark">
+            <string>Add a dummy value to the message, this message property could have been set by a previous filter module. At inspection in CORE this should lead to an error when this dummy value is encountered</string>
+        </attr>
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <attr name="remark">
-            <string>Resolve deferred values</string>
-        </attr>
-        <node id="n35106"/>
-        <node id="n35110"/>
-        <node id="n35105"/>
-        <node id="n35109"/>
-        <node id="n35107"/>
-        <node id="n35108"/>
-        <node id="n35111"/>
-        <edge from="n35105" to="n35110">
-            <attr name="label">
-                <string>new:rhs</string>
-            </attr>
-        </edge>
-        <edge from="n35108" to="n35110">
-            <attr name="label">
-                <string>new:?key</string>
-            </attr>
-        </edge>
-        <edge from="n35109" to="n35109">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n35107" to="n35107">
+        <node id="n49780"/>
+        <node id="n49782"/>
+        <node id="n49778"/>
+        <node id="n49777"/>
+        <node id="n49779"/>
+        <node id="n49781"/>
+        <edge from="n49781" to="n49781">
             <attr name="label">
                 <string>Frame</string>
             </attr>
         </edge>
-        <edge from="n35108" to="n35109">
+        <edge from="n49777" to="n49778">
+            <attr name="label">
+                <string>new:referred</string>
+            </attr>
+        </edge>
+        <edge from="n49777" to="n49778">
+            <attr name="label">
+                <string>del:deferred</string>
+            </attr>
+        </edge>
+        <edge from="n49779" to="n49782">
             <attr name="label">
                 <string>not:?key</string>
             </attr>
         </edge>
-        <edge from="n35107" to="n35108">
+        <edge from="n49782" to="n49782">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n49781" to="n49779">
             <attr name="label">
                 <string>msg</string>
             </attr>
         </edge>
-        <edge from="n35105" to="n35105">
+        <edge from="n49780" to="n49780">
             <attr name="label">
                 <string>{CompareStatement|Assignment}</string>
             </attr>
         </edge>
-        <edge from="n35110" to="n35110">
+        <edge from="n49779" to="n49777">
             <attr name="label">
-                <string>new:</string>
+                <string>new:?key</string>
             </attr>
         </edge>
-        <edge from="n35111" to="n35111">
+        <edge from="n49780" to="n49777">
             <attr name="label">
-                <string>del:</string>
+                <string>rhs</string>
             </attr>
         </edge>
-        <edge from="n35111" to="n35106">
-            <attr name="label">
-                <string>deferred</string>
-            </attr>
-        </edge>
-        <edge from="n35107" to="n35105">
-            <attr name="label">
-                <string>pc</string>
-            </attr>
-        </edge>
-        <edge from="n35108" to="n35108">
-            <attr name="label">
-                <string>Message</string>
-            </attr>
-        </edge>
-        <edge from="n35106" to="n35106">
+        <edge from="n49778" to="n49778">
             <attr name="label">
                 <string>?key</string>
             </attr>
         </edge>
-        <edge from="n35105" to="n35111">
+        <edge from="n49779" to="n49779">
             <attr name="label">
-                <string>rhs</string>
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n49781" to="n49780">
+            <attr name="label">
+                <string>pc</string>
             </attr>
         </edge>
     </graph>
