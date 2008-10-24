@@ -128,6 +128,12 @@ public interface CpsMessage
 	Collection<String> getCustomProperties();
 
 	/**
+	 * @return The list of all <b>set</b> properties. Message in the execution
+	 *         model do not always have all standard properties set.
+	 */
+	Collection<String> getAllProperties();
+
+	/**
 	 * Compares both messages so see to what degree they are compatible. When 0
 	 * is returned both message have equals values. Otherwise it returns the
 	 * number of properties that do not match. It returns a negative number for

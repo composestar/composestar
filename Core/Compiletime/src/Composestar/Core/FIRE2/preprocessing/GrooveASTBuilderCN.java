@@ -57,6 +57,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.AndMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.AnnotationMatching;
@@ -99,6 +100,11 @@ public class GrooveASTBuilderCN
 	 * message property)
 	 */
 	public static final String DEFERRED_EDGE = "deferred";
+
+	/**
+	 * Used for initialization of deferred values
+	 */
+	public static final String DEFERRED_VALUE_NODE = "DeferredValue";
 
 	/**
 	 * Edge label to expressions (used to point to filter-, filterelement,
@@ -300,7 +306,7 @@ public class GrooveASTBuilderCN
 		// references
 		for (CpsVariable var : cmp.getRHS())
 		{
-			node = createCpsVariableNode(var);
+			node = createCpsVariableNode(var, true);
 			graph.addEdge(cmpNode, createLabel(RHS_EDGE), node);
 			// because the node does not always link to this particular variable
 			// edge.addAnnotation(ANNOT_REPOSITORY_ENTITY, var);
@@ -319,17 +325,20 @@ public class GrooveASTBuilderCN
 	 * initialization of the execution flow graphs within groove.
 	 * 
 	 * @param var
+	 * @param createDefValNode TODO
 	 * @return
 	 * @throws IllegalStateException Thrown when an unknown CpsVariable was
 	 *             encountered
 	 */
-	protected Node createCpsVariableNode(CpsVariable var) throws IllegalStateException
+	protected Node createCpsVariableNode(CpsVariable var, boolean createDefValNode) throws IllegalStateException
 	{
 		String valueEdge = null;
+		String typeLabel = null;
 		// note: the used prefixes are only there for convenience
 		if (var instanceof CpsSelector)
 		{
 			valueEdge = VP_SELECTOR + ((CpsSelector) var).getName();
+			typeLabel = "CpsSelector";
 		}
 		else if (var instanceof CanonProperty)
 		{
@@ -337,6 +346,7 @@ public class GrooveASTBuilderCN
 			if (prop.getPrefix() == PropertyPrefix.NONE && PropertyNames.INNER.equals(prop.getBaseName()))
 			{
 				valueEdge = VP_OBJECT + PropertyNames.INNER.toString();
+				typeLabel = "CpsObject";
 			}
 			else if (prop.getPrefix() == PropertyPrefix.MESSAGE)
 			{
@@ -350,6 +360,21 @@ public class GrooveASTBuilderCN
 				graph.addEdge(node, createLabel(DEFERRED_EDGE), deferredNode);
 
 				graph.addEdge(deferredNode, createLabel(prop.getBaseName()), deferredNode);
+
+				valueEdge = "deferred:" + prop.getBaseName();
+				if (createDefValNode && !cachedValueNodes.containsKey(valueEdge))
+				{
+					Node defValueNode = graph.addNode();
+					graph.addEdge(defValueNode, createLabel(DEFERRED_VALUE_NODE), defValueNode);
+
+					deferredNode = graph.addNode();
+					addRepositoryEntity(deferredNode, var);
+					graph.addEdge(defValueNode, createLabel(DEFERRED_EDGE), deferredNode);
+
+					graph.addEdge(deferredNode, createLabel(prop.getBaseName()), deferredNode);
+
+					cachedValueNodes.put(valueEdge, defValueNode);
+				}
 
 				return node;
 			}
@@ -368,16 +393,26 @@ public class GrooveASTBuilderCN
 			// the object is always the same instance, hence the hash code
 			// should be safe
 			valueEdge = VP_OBJECT + System.identityHashCode(var);
+			typeLabel = "CpsObject";
 		}
 		else if (var instanceof CpsLiteral)
 		{
 			// this could result in very large labels
 			valueEdge = VP_LITERAL + ((CpsLiteral) var).getLiteralValue();
+			typeLabel = "CpsLiteral";
 		}
 		else if (var instanceof CpsProgramElement)
 		{
 			// different program elements should produce different hashes...
 			valueEdge = VP_PROGRAM_ELEMENT + System.identityHashCode(((CpsProgramElement) var).getProgramElement());
+			if (var instanceof CpsTypeProgramElement)
+			{
+				typeLabel = "CpsTypeProgramElement";
+			}
+			else
+			{
+				typeLabel = "CpsProgramElement";
+			}
 		}
 		else
 		{
@@ -393,6 +428,10 @@ public class GrooveASTBuilderCN
 		addRepositoryEntity(node, var);
 
 		graph.addEdge(node, createLabel(valueEdge), node);
+		if (typeLabel != null)
+		{
+			graph.addEdge(node, createLabel(typeLabel), node);
+		}
 
 		cachedValueNodes.put(valueEdge, node);
 
@@ -428,7 +467,7 @@ public class GrooveASTBuilderCN
 		graph.addEdge(node, createLabel(asgn.getProperty().getBaseName()), node);
 		graph.addEdge(cmpNode, createLabel(LHS_EDGE), node);
 
-		node = createCpsVariableNode(asgn.getValue());
+		node = createCpsVariableNode(asgn.getValue(), false);
 		graph.addEdge(cmpNode, createLabel(RHS_EDGE), node);
 		// because the node does not always link to this particular variable
 		// edge.addAnnotation(ANNOT_REPOSITORY_ENTITY, asgn.getValue());

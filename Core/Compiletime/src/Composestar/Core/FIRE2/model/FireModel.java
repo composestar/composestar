@@ -101,8 +101,7 @@ public class FireModel
 	 */
 	public static final int STRICT_SIGNATURE_CHECK = 2;
 
-	private static final String[] FM_COND_NODE_NAMES = { FlowNode.FM_CONDITION_NODE, FlowNode.PREDICATE_NODE,
-			FlowNode.FLOW_ELEMENT_NODE };
+	private static final String[] FM_COND_NODE_NAMES = { FlowNode.FM_CONDITION_NODE, FlowNode.FLOW_NODE };
 
 	/**
 	 * The concern which has the filter set superimposed.
@@ -253,7 +252,7 @@ public class FireModel
 			// If filter module condition, add node:
 			if (filterModules[i].getCondition() != null)
 			{
-				ExtendedFlowNode fmCondNode = new ExtendedFlowNode(FM_COND_NODE_NAMES, filterModules[i].getCondition());
+				ExtendedFlowNode fmCondNode = new ExtendedFlowNode(FM_COND_NODE_NAMES, filterModules[i]);
 				extendedFlowModels[filterLocation].nodes.add(fmCondNode);
 				fmConditionFlowNodes[filterLocation][i] = fmCondNode;
 
@@ -368,9 +367,17 @@ public class FireModel
 			return getOutTransitionsCurrentLayerFMCond(state);
 		}
 		else if (state.signatureCheck != NO_SIGNATURE_CHECK
-				&& state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING_NODE))
+				&& state.getFlowNode().containsName(FlowNode.COMPARE_STATEMENT_NODE))
 		{
-			return getOutTransitionsCurrentLayerSignatureCheck(state);
+			if (state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING))
+			{
+				return getOutTransitionsCurrentLayerSignatureCheck(state);
+			}
+			// TODO: check other matching types
+			else
+			{
+				return getOutTransitionsCurrentLayerNormal(state);
+			}
 		}
 		else
 		{

@@ -92,6 +92,16 @@ public class FireMessage implements CpsMessage
 	/*
 	 * (non-Javadoc)
 	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsMessage#getAllProperties()
+	 */
+	public Collection<String> getAllProperties()
+	{
+		return Collections.unmodifiableCollection(properties.keySet());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
 	 * Composestar.Core.CpsRepository2.TypeSystem.CpsMessage#getProperty(java
 	 * .lang.String)
 	 */
@@ -211,6 +221,7 @@ public class FireMessage implements CpsMessage
 	public int matchTo(CpsMessage other) throws NullPointerException
 	{
 		// TODO Auto-generated method stub
+		// keep in mind the CanonProperty values
 		return 0;
 	}
 

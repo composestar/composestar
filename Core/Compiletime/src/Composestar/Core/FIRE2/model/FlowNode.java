@@ -173,7 +173,9 @@ public interface FlowNode extends Serializable
 	@Deprecated
 	public static final String FE_VOID_COMP_OPER_NODE = "VoidCompOper";
 
-	@Deprecated
+	/**
+	 * Created by FlowModel for the filter module binding conditions
+	 */
 	public static final String FM_CONDITION_NODE = "FilterModuleCondition";
 
 	/**
