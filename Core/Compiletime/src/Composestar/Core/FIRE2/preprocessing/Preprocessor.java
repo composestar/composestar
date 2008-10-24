@@ -18,7 +18,6 @@ import groove.explore.strategy.BranchingStrategy;
 import groove.explore.strategy.LinearStrategy;
 import groove.graph.Graph;
 import groove.io.AspectGxl;
-import groove.io.AspectualViewGps;
 import groove.io.LayedOutXml;
 import groove.lts.GTS;
 import groove.lts.GraphState;
@@ -42,6 +41,7 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.FIRE2.preprocessing.io.StreamGpsLoader;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
@@ -103,34 +103,30 @@ public class Preprocessor implements CTCommonModule
 		}
 		preprocess(filterModules);
 		// preprocessMP(resources, filterModules);
+
+		// FIXME remove this
+		throw new RuntimeException("Intentional stop!");
 		// TODO return error if something failed
-		return ModuleReturnValue.Ok;
+		// return ModuleReturnValue.Ok;
 	}
 
 	public void preprocess(Set<FilterModule> filterModules)
 	{
 		logger.debug("Starting FIRE Preprocessing");
-
 		CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
-
 		for (FilterModule fm : filterModules)
 		{
 			timer.start(fm.getFullyQualifiedName());
 			preprocessModule(fm);
 			timer.stop();
 		}
-
 		logger.debug("FIRE Preprocessing done");
-
-		// FIXME remove this
-		throw new RuntimeException("Intentional stop!");
 	}
 
-	// FIXME: fire is not complete MP safe yet
+	// FIXME: Groove is not MP safe
 	public void preprocessMP(CommonResources resources, Set<FilterModule> filterModules) throws ModuleException
 	{
 		logger.debug("Starting FIRE Preprocessing");
-
 		ParallelTask ptask = new ParallelTask();
 		ptask.setPerProcessor(1);
 		for (FilterModule fm : filterModules)
@@ -138,7 +134,6 @@ public class Preprocessor implements CTCommonModule
 			ptask.addTask(new FirePreprocessTask(fm));
 		}
 		ptask.execute(null, resources);
-
 		logger.debug("FIRE Preprocessing done");
 	}
 
@@ -225,36 +220,31 @@ public class Preprocessor implements CTCommonModule
 			URL genUrl = Preprocessor.class.getResource(GRAMMAR_FLOW);
 			String fileName = genUrl.getFile().replaceAll("%20", " ");
 			logger.debug("Loading grammar: " + fileName);
-			if (fileName.indexOf('!') >= 0)
-			{
-				// timer.start("Loading grammars from jar");
-				// // load from jar:
-				// JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
-				//
-				// generateFlowGrammar = (DefaultGrammarView)
-				// jarGpsLoader.unmarshal(GRAMMAR_FLOW);
-				// runtimeGrammar = (DefaultGrammarView)
-				// jarGpsLoader.unmarshal(GRAMMAR_EXEC);
-				// timer.stop();
-			}
-			else
-			{
-				timer.start("Loading grammars");
-				// load from directory:
-				AspectualViewGps gpsLoader = new AspectualViewGps();
 
-				File f = new File(genUrl.getFile().replaceAll("%20", " "));
+			StreamGpsLoader sgpsl = new StreamGpsLoader();
+			timer.start("Loading grammars");
+			generateFlowGrammar = sgpsl.unmarshal(Preprocessor.class, GRAMMAR_FLOW);
+			runtimeGrammar = sgpsl.unmarshal(Preprocessor.class, GRAMMAR_EXEC);
+			timer.stop();
 
-				generateFlowGrammar = gpsLoader.unmarshal(f);
-
-				URL runUrl = Preprocessor.class.getResource(GRAMMAR_EXEC);
-				runtimeGrammar = gpsLoader.unmarshal(new File(runUrl.getFile().replaceAll("%20", " ")));
-
-				timer.stop();
-			}
+			// // Groove's own limited loading mechanism
+			// timer.start("Loading grammars");
+			// // load from directory:
+			// AspectualViewGps gpsLoader = new AspectualViewGps();
+			//
+			// File f = new File(genUrl.getFile().replaceAll("%20", " "));
+			//
+			// generateFlowGrammar = gpsLoader.unmarshal(f);
+			//
+			// URL runUrl = Preprocessor.class.getResource(GRAMMAR_EXEC);
+			// runtimeGrammar = gpsLoader.unmarshal(new
+			// File(runUrl.getFile().replaceAll("%20", " ")));
+			//
+			// timer.stop();
 		}
 		catch (Exception exc)
 		{
+			// TODO errors
 			exc.printStackTrace();
 			// throw new RuntimeException( "Loading grammars failed", exc );
 		}
@@ -280,28 +270,83 @@ public class Preprocessor implements CTCommonModule
 		return grooveAst;
 	}
 
+	// /**
+	// * Create a GraphGRammar for the given view and start graph
+	// *
+	// * @param view
+	// * @param startGraph
+	// * @return
+	// */
+	// private GraphGrammar getGrammar(DefaultGrammarView view, Graph
+	// startGraph)
+	// {
+	// GraphGrammar result = new GraphGrammar(view.getName());
+	// for (RuleView ruleView : view.getRuleMap().values())
+	// {
+	// try
+	// {
+	// // only add the enabled rules
+	// if (ruleView.isEnabled())
+	// {
+	// SystemProperties properties = new SystemProperties();
+	// AspectualRuleView rv = new AspectualRuleView(((AspectualRuleView)
+	// ruleView).getAspectGraph(),
+	// ruleView.getNameLabel(), properties);
+	// result.add(rv.toRule());
+	// }
+	// }
+	// catch (FormatException exc)
+	// {
+	// for (String error : exc.getErrors())
+	// {
+	// // TODO: better errors
+	// logger.error(String.format("Format error in %s: %s",
+	// ruleView.getNameLabel(), error));
+	// }
+	// return null;
+	// }
+	// }
+	// result.setProperties(view.getProperties());
+	// result.setStartGraph(startGraph);
+	// try
+	// {
+	// result.setFixed();
+	// }
+	// catch (FormatException e)
+	// {
+	// // TODO: better errors
+	// logger.error(e);
+	// return null;
+	// }
+	// return result;
+	// }
+
 	private Graph generateFlow(Graph ast)
 	{
 		DefaultScenario<GraphState> scenario = new DefaultScenario<GraphState>();
-		scenario.setStrategy(LINEAR_STRATEGY);
+		scenario.setStrategy(new LinearStrategy());
 		Result<GraphState> result = new SizedResult<GraphState>(1);
 		scenario.setResult(result);
 		FinalStateAcceptor acceptor = new FinalStateAcceptor();
 		scenario.setAcceptor(acceptor);
 
-		generateFlowGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(ast)));
+		GraphGrammar gram;
+		synchronized (generateFlowGrammar)
+		{
+			generateFlowGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(ast)));
+			try
+			{
+				gram = generateFlowGrammar.toGrammar();
+			}
+			catch (FormatException e)
+			{
+				logger.error(e);
+				return null;
+			}
+		}
 
-		GTS gts;
-		try
-		{
-			GraphGrammar gram = generateFlowGrammar.toGrammar();
-			gts = new GTS(gram);
-		}
-		catch (FormatException e)
-		{
-			logger.error(e);
-			return null;
-		}
+		GTS gts = new GTS(gram);
+
 		scenario.setGTS(gts);
 		scenario.setState(gts.startState());
 
@@ -335,25 +380,28 @@ public class Preprocessor implements CTCommonModule
 	private GTS execute(Graph flowGraph)
 	{
 		DefaultScenario<Object> scenario = new DefaultScenario<Object>();
-		scenario.setStrategy(FULL_STRATEGY);
+		scenario.setStrategy(new BranchingStrategy());
 		Result<Object> result = new EmptyResult<Object>();
 		scenario.setResult(result);
 		Acceptor<Object> acceptor = new EmptyAcceptor();
 		scenario.setAcceptor(acceptor);
 
-		runtimeGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(flowGraph)));
+		GraphGrammar gram;
+		synchronized (runtimeGrammar)
+		{
+			runtimeGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(flowGraph)));
+			try
+			{
+				gram = runtimeGrammar.toGrammar();
+			}
+			catch (FormatException e)
+			{
+				logger.error(e);
+				return null;
+			}
+		}
+		GTS gts = new GTS(gram);
 
-		GTS gts;
-		try
-		{
-			GraphGrammar gram = runtimeGrammar.toGrammar();
-			gts = new GTS(gram);
-		}
-		catch (FormatException e)
-		{
-			logger.error(e);
-			return null;
-		}
 		scenario.setGTS(gts);
 		scenario.setState(gts.startState());
 

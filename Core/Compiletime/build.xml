@@ -80,7 +80,7 @@
 		</ant>
 	</target>
 
-	<target name="compile" depends="local_init,antlr">
+	<target name="compile" depends="local_init,antlr,groove_manifest">
 		<propertyfile file="${out.build}/version.properties">
 			<entry key="version" value="${version.core}.${version.build}" />
 			<entry key="version.build" value="${version.build}" />
@@ -99,6 +99,28 @@
 		</javac>
 	</target>
 
+	<target name="groove_manifest">
+		<property name="groove_grammar_dir" value="src/Composestar/Core/FIRE2/preprocessing/groovegrammars2" />
+
+		<pathconvert property="groove.execmodel" dirsep="/" pathsep="${line.separator}">
+			<fileset dir="${groove_grammar_dir}/execmodel.gps">
+				<include name="**/*.gpr" />
+				<exclude name="MANIFEST" />
+			</fileset>
+			<map from="${basedir}/${groove_grammar_dir}/execmodel.gps/" to="" />
+		</pathconvert>
+		<echo append="false" file="${groove_grammar_dir}/execmodel.gps/MANIFEST" message="${groove.execmodel}" />
+
+		<pathconvert property="groove.flowmodel" dirsep="/" pathsep="${line.separator}">
+			<fileset dir="${groove_grammar_dir}/flowmodel.gps">
+				<include name="**/*.gpr" />
+				<exclude name="MANIFEST" />
+			</fileset>
+			<map from="${basedir}/${groove_grammar_dir}/flowmodel.gps/" to="" />
+		</pathconvert>
+		<echo append="false" file="${groove_grammar_dir}/flowmodel.gps/MANIFEST" message="${groove.flowmodel}" />
+	</target>
+
 	<target name="jar" depends="compile">
 		<copy todir="${out.build}">
 			<!-- copy groove grammars -->
@@ -106,6 +128,7 @@
 				<include name="**/*.gpr" />
 				<include name="**/*.pro" />
 				<include name="**/*.properties" />
+				<include name="**/MANIFEST" />
 				<include name="**/moduleinfo.xml" />
 				<include name="**/*.xslt" />
 				<include name="**/SECRETConfig.xml" />
