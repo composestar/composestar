@@ -7,81 +7,81 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n45161"/>
-        <node id="n45163"/>
-        <node id="n45166"/>
-        <node id="n45160"/>
-        <node id="n45165"/>
-        <node id="n45164"/>
-        <node id="n45162"/>
-        <edge from="n45163" to="n45163">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n45160" to="n45160">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n45166" to="n45166">
-            <attr name="label">
-                <string>CompareStatement</string>
-            </attr>
-        </edge>
-        <edge from="n45161" to="n45161">
+        <node id="n56394"/>
+        <node id="n56390"/>
+        <node id="n56392"/>
+        <node id="n56395"/>
+        <node id="n56393"/>
+        <node id="n56391"/>
+        <node id="n56389"/>
+        <edge from="n56390" to="n56390">
             <attr name="label">
                 <string>init</string>
             </attr>
         </edge>
-        <edge from="n45164" to="n45163">
+        <edge from="n56393" to="n56393">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n56395" to="n56395">
+            <attr name="label">
+                <string>not:{CmpSignature|CmpAnnotation}</string>
+            </attr>
+        </edge>
+        <edge from="n56394" to="n56393">
             <attr name="label">
                 <string>not:deferred</string>
             </attr>
         </edge>
-        <edge from="n45165" to="n45165">
-            <attr name="label">
-                <string>Message</string>
-            </attr>
-        </edge>
-        <edge from="n45161" to="n45165">
-            <attr name="label">
-                <string>msg</string>
-            </attr>
-        </edge>
-        <edge from="n45165" to="n45164">
+        <edge from="n56392" to="n56394">
             <attr name="label">
                 <string>new:?key</string>
             </attr>
         </edge>
-        <edge from="n45166" to="n45166">
-            <attr name="label">
-                <string>not:CmpSignature</string>
-            </attr>
-        </edge>
-        <edge from="n45166" to="n45164">
-            <attr name="label">
-                <string>rhs</string>
-            </attr>
-        </edge>
-        <edge from="n45165" to="n45160">
-            <attr name="label">
-                <string>not:?key</string>
-            </attr>
-        </edge>
-        <edge from="n45161" to="n45161">
-            <attr name="label">
-                <string>Frame</string>
-            </attr>
-        </edge>
-        <edge from="n45166" to="n45162">
+        <edge from="n56395" to="n56391">
             <attr name="label">
                 <string>lhs</string>
             </attr>
         </edge>
-        <edge from="n45162" to="n45162">
+        <edge from="n56395" to="n56395">
+            <attr name="label">
+                <string>CompareStatement</string>
+            </attr>
+        </edge>
+        <edge from="n56391" to="n56391">
             <attr name="label">
                 <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n56392" to="n56392">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n56395" to="n56394">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n56389" to="n56389">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n56390" to="n56390">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n56392" to="n56389">
+            <attr name="label">
+                <string>not:?key</string>
+            </attr>
+        </edge>
+        <edge from="n56390" to="n56392">
+            <attr name="label">
+                <string>msg</string>
             </attr>
         </edge>
     </graph>

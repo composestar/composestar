@@ -10,68 +10,68 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n49780"/>
-        <node id="n49782"/>
-        <node id="n49778"/>
-        <node id="n49777"/>
-        <node id="n49779"/>
-        <node id="n49781"/>
-        <edge from="n49781" to="n49781">
-            <attr name="label">
-                <string>Frame</string>
-            </attr>
-        </edge>
-        <edge from="n49777" to="n49778">
-            <attr name="label">
-                <string>new:referred</string>
-            </attr>
-        </edge>
-        <edge from="n49777" to="n49778">
+        <node id="n57528"/>
+        <node id="n57532"/>
+        <node id="n57530"/>
+        <node id="n57531"/>
+        <node id="n57527"/>
+        <node id="n57529"/>
+        <edge from="n57528" to="n57531">
             <attr name="label">
                 <string>del:deferred</string>
             </attr>
         </edge>
-        <edge from="n49779" to="n49782">
+        <edge from="n57529" to="n57529">
             <attr name="label">
-                <string>not:?key</string>
+                <string>Assignment</string>
             </attr>
         </edge>
-        <edge from="n49782" to="n49782">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n49781" to="n49779">
-            <attr name="label">
-                <string>msg</string>
-            </attr>
-        </edge>
-        <edge from="n49780" to="n49780">
-            <attr name="label">
-                <string>{CompareStatement|Assignment}</string>
-            </attr>
-        </edge>
-        <edge from="n49779" to="n49777">
-            <attr name="label">
-                <string>new:?key</string>
-            </attr>
-        </edge>
-        <edge from="n49780" to="n49777">
+        <edge from="n57529" to="n57528">
             <attr name="label">
                 <string>rhs</string>
             </attr>
         </edge>
-        <edge from="n49778" to="n49778">
+        <edge from="n57531" to="n57531">
             <attr name="label">
                 <string>?key</string>
             </attr>
         </edge>
-        <edge from="n49779" to="n49779">
+        <edge from="n57527" to="n57527">
             <attr name="label">
                 <string>Message</string>
             </attr>
         </edge>
-        <edge from="n49781" to="n49780">
+        <edge from="n57530" to="n57530">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n57528" to="n57531">
+            <attr name="label">
+                <string>new:referred</string>
+            </attr>
+        </edge>
+        <edge from="n57527" to="n57530">
+            <attr name="label">
+                <string>not:?key</string>
+            </attr>
+        </edge>
+        <edge from="n57532" to="n57532">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n57532" to="n57527">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n57527" to="n57528">
+            <attr name="label">
+                <string>new:?key</string>
+            </attr>
+        </edge>
+        <edge from="n57532" to="n57529">
             <attr name="label">
                 <string>pc</string>
             </attr>

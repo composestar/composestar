@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="InitMessage-CmpSignature-Alt" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>100</string>
+        </attr>
+        <attr name="remark">
+            <string>Signature selector against methods and selector type, matching against literals isn't possible</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n56041"/>
+        <node id="n56042"/>
+        <node id="n56044"/>
+        <node id="n56047"/>
+        <node id="n56046"/>
+        <node id="n56045"/>
+        <node id="n56043"/>
+        <edge from="n56043" to="n56044">
+            <attr name="label">
+                <string>not:deferred</string>
+            </attr>
+        </edge>
+        <edge from="n56045" to="n56045">
+            <attr name="label">
+                <string>CmpSignature</string>
+            </attr>
+        </edge>
+        <edge from="n56046" to="n56046">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n56047" to="n56047">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n56045" to="n56042">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n56041" to="n56041">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n56041" to="n56046">
+            <attr name="label">
+                <string>not:target</string>
+            </attr>
+        </edge>
+        <edge from="n56047" to="n56047">
+            <attr name="label">
+                <string>init</string>
+            </attr>
+        </edge>
+        <edge from="n56045" to="n56043">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n56043" to="n56043">
+            <attr name="label">
+                <string>{CpsSelector|CpsProgramElement}</string>
+            </attr>
+        </edge>
+        <edge from="n56044" to="n56044">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n56047" to="n56041">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n56041" to="n56043">
+            <attr name="label">
+                <string>new:selector</string>
+            </attr>
+        </edge>
+        <edge from="n56042" to="n56042">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

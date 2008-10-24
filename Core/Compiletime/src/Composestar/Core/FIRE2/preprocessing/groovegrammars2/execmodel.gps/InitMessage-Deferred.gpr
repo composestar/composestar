@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="InitMessage-Deferred" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>100</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n58277"/>
+        <node id="n58279"/>
+        <node id="n58276"/>
+        <node id="n58278"/>
+        <node id="n58280"/>
+        <edge from="n58277" to="n58277">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n58279" to="n58279">
+            <attr name="label">
+                <string>DeferredValue</string>
+            </attr>
+        </edge>
+        <edge from="n58280" to="n58280">
+            <attr name="label">
+                <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n58276" to="n58276">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n58278" to="n58278">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n58278" to="n58280">
+            <attr name="label">
+                <string>new:?key</string>
+            </attr>
+        </edge>
+        <edge from="n58279" to="n58280">
+            <attr name="label">
+                <string>deferred</string>
+            </attr>
+        </edge>
+        <edge from="n58277" to="n58277">
+            <attr name="label">
+                <string>init</string>
+            </attr>
+        </edge>
+        <edge from="n58277" to="n58278">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n58278" to="n58276">
+            <attr name="label">
+                <string>not:?key</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

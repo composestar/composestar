@@ -1,4 +1,4 @@
-# Layout information for C:\local\mhendrik\_groove3\fire2cn\execmodel.gps\InitMessage-CmpSignature.gpr
+# Layout information for C:\local\mhendrik\_groove3\fire2cn\execmodel.gps\InitMessage-Deferred.gpr
 # Each line contains layout information about a node or edge
 # Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
 #     v 1: label position = (x-permillage, y-permillage)
@@ -6,12 +6,10 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n55758 89 121 36 15 
-n n55757 377 119 20 15 
-n n55756 194 196 208 15 
-n n55761 203 121 51 15 
-n n55762 104 196 43 15 
-n n55760 321 266 20 15 
-n n55759 155 265 79 15 
-e n55761 n55757 "not:target" 491 0 233 131 392 129 12
-e n55758 n55758 "init" 500 0 112 131 132 60 83 63 112 131 12
+n n58277 182 160 36 15 
+n n58279 227 241 79 15 
+n n58276 419 116 20 15 
+n n58280 392 241 25 15 
+n n58278 296 160 51 15 
+e n58277 n58277 "init" 500 0 205 170 225 99 176 102 205 170 12
+e n58278 n58276 "not:?key" 500 0 326 170 466 97 12

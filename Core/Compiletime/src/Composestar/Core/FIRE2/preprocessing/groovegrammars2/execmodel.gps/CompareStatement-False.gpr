@@ -5,84 +5,89 @@
             <string>10</string>
         </attr>
         <attr name="remark">
-            <string>False in case the message has no value set for that property, this is valid because there should be an other message that have that property set (cross procduct for all matchings)</string>
+            <string>False in case the message has no value set for that property, this is valid because there should be an other message that have that property set (cross procduct for all matchings). Not valid for annotation and signature matching due to different initialization methods.</string>
         </attr>
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n48539"/>
-        <node id="n48542"/>
-        <node id="n48543"/>
-        <node id="n48545"/>
-        <node id="n48544"/>
-        <node id="n48540"/>
-        <node id="n48541"/>
-        <edge from="n48543" to="n48541">
-            <attr name="label">
-                <string>flowFalse</string>
-            </attr>
-        </edge>
-        <edge from="n48543" to="n48539">
-            <attr name="label">
-                <string>flowTrue</string>
-            </attr>
-        </edge>
-        <edge from="n48543" to="n48545">
-            <attr name="label">
-                <string>lhs</string>
-            </attr>
-        </edge>
-        <edge from="n48540" to="n48544">
-            <attr name="label">
-                <string>not:?key</string>
-            </attr>
-        </edge>
-        <edge from="n48542" to="n48541">
+        <node id="n56591"/>
+        <node id="n56588"/>
+        <node id="n56590"/>
+        <node id="n56587"/>
+        <node id="n56592"/>
+        <node id="n56589"/>
+        <node id="n56593"/>
+        <edge from="n56588" to="n56591">
             <attr name="label">
                 <string>new:pc</string>
             </attr>
         </edge>
-        <edge from="n48542" to="n48540">
-            <attr name="label">
-                <string>msg</string>
-            </attr>
-        </edge>
-        <edge from="n48545" to="n48545">
-            <attr name="label">
-                <string>?key</string>
-            </attr>
-        </edge>
-        <edge from="n48540" to="n48540">
-            <attr name="label">
-                <string>Message</string>
-            </attr>
-        </edge>
-        <edge from="n48541" to="n48541">
-            <attr name="label">
-                <string>FlowNode</string>
-            </attr>
-        </edge>
-        <edge from="n48544" to="n48544">
+        <edge from="n56593" to="n56593">
             <attr name="label">
                 <string>not:</string>
             </attr>
         </edge>
-        <edge from="n48543" to="n48543">
-            <attr name="label">
-                <string>CompareStatement</string>
-            </attr>
-        </edge>
-        <edge from="n48539" to="n48539">
+        <edge from="n56592" to="n56592">
             <attr name="label">
                 <string>FlowNode</string>
             </attr>
         </edge>
-        <edge from="n48542" to="n48543">
+        <edge from="n56589" to="n56593">
+            <attr name="label">
+                <string>not:?key</string>
+            </attr>
+        </edge>
+        <edge from="n56588" to="n56590">
             <attr name="label">
                 <string>del:pc</string>
             </attr>
         </edge>
-        <edge from="n48542" to="n48542">
+        <edge from="n56591" to="n56591">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n56590" to="n56590">
+            <attr name="label">
+                <string>not:{CmpSignature|CmpAnnotation}</string>
+            </attr>
+        </edge>
+        <edge from="n56588" to="n56589">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n56590" to="n56592">
+            <attr name="label">
+                <string>flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n56589" to="n56589">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n56590" to="n56590">
+            <attr name="label">
+                <string>CompareStatement</string>
+            </attr>
+        </edge>
+        <edge from="n56590" to="n56587">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n56590" to="n56591">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n56587" to="n56587">
+            <attr name="label">
+                <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n56588" to="n56588">
             <attr name="label">
                 <string>Frame</string>
             </attr>

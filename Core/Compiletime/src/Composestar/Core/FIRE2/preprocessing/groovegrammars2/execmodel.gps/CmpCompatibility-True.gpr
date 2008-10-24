@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="CmpCompatibility-True" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>10</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <attr name="remark">
+            <string>If they point to the same object they are always compatible</string>
+        </attr>
+        <node id="n56316"/>
+        <node id="n56315"/>
+        <node id="n56311"/>
+        <node id="n56314"/>
+        <node id="n56310"/>
+        <node id="n56313"/>
+        <node id="n56312"/>
+        <edge from="n56314" to="n56314">
+            <attr name="label">
+                <string>CmpCompatibility</string>
+            </attr>
+        </edge>
+        <edge from="n56314" to="n56316">
+            <attr name="label">
+                <string>rhs</string>
+            </attr>
+        </edge>
+        <edge from="n56311" to="n56314">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n56311" to="n56311">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n56312" to="n56312">
+            <attr name="label">
+                <string>Message</string>
+            </attr>
+        </edge>
+        <edge from="n56314" to="n56313">
+            <attr name="label">
+                <string>lhs</string>
+            </attr>
+        </edge>
+        <edge from="n56311" to="n56312">
+            <attr name="label">
+                <string>msg</string>
+            </attr>
+        </edge>
+        <edge from="n56314" to="n56310">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n56313" to="n56313">
+            <attr name="label">
+                <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n56315" to="n56315">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+        <edge from="n56312" to="n56316">
+            <attr name="label">
+                <string>?key</string>
+            </attr>
+        </edge>
+        <edge from="n56314" to="n56315">
+            <attr name="label">
+                <string>flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n56311" to="n56315">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n56310" to="n56310">
+            <attr name="label">
+                <string>FlowNode</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>
