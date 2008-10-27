@@ -4,20 +4,22 @@
  */
 package Composestar.Core.CORE2;
 
-import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Annotations.ComposestarModule.Importance;
-import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.FIRE2.util.viewer.Viewer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -46,24 +48,22 @@ public class Core implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		// Iterate over all concerns
-		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
-		while (conIter.hasNext())
+		for (Superimposed si : resources.repository().getAll(Superimposed.class))
 		{
-			Concern concern = conIter.next();
-
-			// Check whether the concern has filters superimposed
-			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
+			if (!(si.getOwner() instanceof Concern))
 			{
-				// Check for conflicts
-				findConflicts(concern);
+				continue;
 			}
+			// Check for conflicts
+			findConflicts((Concern) si.getOwner());
 		}
 		// TODO return Error when conflicts are detected
 		return ModuleReturnValue.Ok;
@@ -78,9 +78,10 @@ public class Core implements CTCommonModule
 	{
 		logger.debug("Checking concern: " + concern.getName() + " ...");
 
-		FilterModuleOrder filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-
+		List<ImposedFilterModule> filterModules = concern.getSuperimposed().getFilterModuleOrder();
 		FireModel fireModel = f2res.getFireModel(concern, filterModules);
+
+		new Viewer(fireModel.getExecutionModel(FilterDirection.Input));
 
 		CoreConflict[] conflicts = detector.findConflicts(fireModel);
 		printConflicts(conflicts);

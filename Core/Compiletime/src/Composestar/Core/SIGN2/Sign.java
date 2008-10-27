@@ -16,12 +16,14 @@ import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -1305,7 +1307,8 @@ public class Sign implements CTCommonModule
 	 * @param selector The name of the target method
 	 * @return The status of the dispatch target method.
 	 */
-	public static int getMethodStatus(Concern concern, MethodInfo method, Target target, String selector)
+	public static int getMethodStatus(Concern concern, MethodInfo method, CpsTypeProgramElement target,
+			CpsSelector selector)
 	{
 		// get the methods from the dispatch target
 		List<MethodInfo> methods;
@@ -1402,9 +1405,8 @@ public class Sign implements CTCommonModule
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.LAMA.MethodInfo#getClone(java.lang.String,
-		 *      Composestar.Core.LAMA.Type)
+		 * Composestar.Core.LAMA.Type)
 		 */
 		@Override
 		public MethodInfo getClone(String name, Type actualParent)
@@ -1414,7 +1416,6 @@ public class Sign implements CTCommonModule
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 		 */
 		@Override
@@ -1425,8 +1426,9 @@ public class Sign implements CTCommonModule
 
 		/*
 		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
+		 * @see
+		 * Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String
+		 * )
 		 */
 		@Override
 		public UnitResult getUnitRelation(String argumentName)
@@ -1436,7 +1438,6 @@ public class Sign implements CTCommonModule
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.LAMA.MethodInfo#isPrivate()
 		 */
 		@Override
@@ -1447,7 +1448,6 @@ public class Sign implements CTCommonModule
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.LAMA.MethodInfo#isProtected()
 		 */
 		@Override
@@ -1458,7 +1458,6 @@ public class Sign implements CTCommonModule
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see Composestar.Core.LAMA.MethodInfo#isPublic()
 		 */
 		@Override

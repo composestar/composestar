@@ -15,11 +15,23 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.PropertyNames;
+import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsMessageUtils;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.LAMA.MethodInfo;
@@ -195,9 +207,6 @@ public class FireModel
 		// Get the FlowModels and ExecutionModels of each FilterModule
 		for (int i = 0; i < filterModules.length; i++)
 		{
-			// FirePreprocessingResult result = (FirePreprocessingResult)
-			// filterModules[i].getFilterModule().getRef()
-			// .getDynObject(Preprocessor.RESULT_ID);
 			FirePreprocessingResult result = fire2Resources.getPreprocessingResult(filterModules[i].getFilterModule());
 
 			// input filters
@@ -509,9 +518,9 @@ public class FireModel
 			FlowNode endNode = flowModels[state.filterPosition][state.layer].getEndNode();
 			ExtendedFlowNode extendedEndNode = flowNodeMap.get(endNode);
 
-			extendedEndState = new ExtendedExecutionState(state.model, extendedEndNode, state.getMessage(), state
-					.getMessage(), ExecutionState.EXIT_STATE, state.signatureCheck, state.signatureCheckInfo,
-					state.filterPosition, state.layer);
+			extendedEndState = new ExtendedExecutionState(state.model, extendedEndNode, state.getMessage(),
+					ExecutionState.EXIT_STATE, state.signatureCheck, state.signatureCheckInfo, state.filterPosition,
+					state.layer);
 
 			// existence check:
 			extendedEndState = existenceCheck(extendedEndState);
@@ -529,10 +538,10 @@ public class FireModel
 	 * @param message
 	 * @return
 	 */
-	private ExecutionState getEndState(ExecutionModel model, Message message)
+	private ExecutionState getEndState(ExecutionModel model, CpsMessage message)
 	{
 		// Build end state set:
-		Map<Message, ExecutionState> endStates = new HashMap<Message, ExecutionState>();
+		Map<CpsMessage, ExecutionState> endStates = new HashMap<CpsMessage, ExecutionState>();
 
 		Iterator<ExecutionState> stateIter = new ExecutionStateIterator(model);
 		while (stateIter.hasNext())
@@ -551,18 +560,7 @@ public class FireModel
 			}
 		}
 
-		ExecutionState state = endStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message.getSelector()));
-
-		if (state == null)
-		{
-			state = endStates.get(new Message(message.getTarget(), Message.UNDISTINGUISHABLE_SELECTOR));
-		}
-		if (state == null)
-		{
-			state = endStates.get(Message.UNDISTINGUISHABLE_MESSAGE);
-		}
-
-		return state;
+		return endStates.get(CpsMessageUtils.getClosestMatch(message, endStates.keySet()));
 	}
 
 	/**
@@ -610,7 +608,7 @@ public class FireModel
 	 * @param nextLayer
 	 * @return
 	 */
-	private ExtendedExecutionState getStartStateNextLayer(ExtendedExecutionModel model, Message message,
+	private ExtendedExecutionState getStartStateNextLayer(ExtendedExecutionModel model, CpsMessage message,
 			int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int nextLayer)
 	{
 
@@ -625,7 +623,7 @@ public class FireModel
 		{
 			// Create condition state:
 			ExtendedExecutionState conditionState = new ExtendedExecutionState(model,
-					fmConditionFlowNodes[filterPosition][nextLayer], message, message, ExecutionState.ENTRANCE_STATE,
+					fmConditionFlowNodes[filterPosition][nextLayer], message, ExecutionState.ENTRANCE_STATE,
 					signatureCheck, signatureCheckInfo, filterPosition, nextLayer);
 
 			// Check existence and return:
@@ -642,27 +640,66 @@ public class FireModel
 	 * @param methodInfo
 	 * @return
 	 * @see MethodWrapper#UNKNOWN
-	 * @see MethodWrapper#NOT_EXISTING
+	 * @see MethodWrapper#EXISTING
 	 * @see MethodWrapper#NOT_EXISTING
 	 */
 	private int signatureCheck(ExecutionState state, int signatureCheck, MethodInfo methodInfo)
 	{
 		// check for signaturematching:
-		if (signatureCheck != NO_SIGNATURE_CHECK && state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING_NODE))
+		if (signatureCheck != NO_SIGNATURE_CHECK && state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING))
 		{
-			MatchingPart matchingPart = (MatchingPart) state.getFlowNode().getRepositoryLink();
-
-			// get the matching target:
-			Target matchTarget = matchingPart.getTarget();
-			if (Message.checkEquals(matchTarget, Message.UNDISTINGUISHABLE_TARGET))
+			RepositoryEntity re = state.getFlowNode().getRepositoryLink();
+			if (!(re instanceof SignatureMatching))
 			{
-				matchTarget = state.getMessage().getTarget();
+				return MethodWrapper.UNKNOWN;
 			}
-
-			// get the matching selector:
-			String matchSelector = state.getMessage().getSelector();
-
-			return Sign.getMethodStatus(concern, methodInfo, matchTarget, matchSelector);
+			SignatureMatching sigm = (SignatureMatching) re;
+			for (CpsVariable var : sigm.getRHS())
+			{
+				if (var instanceof CanonProperty)
+				{
+					CanonProperty prop = (CanonProperty) var;
+					if (PropertyNames.INNER.equals(prop.getName()))
+					{
+						// TODO concern.getTypeReference
+						if (Sign.getMethodStatus(concern, methodInfo, null, state.getMessage().getSelector()) == MethodWrapper.EXISTING)
+						{
+							return MethodWrapper.EXISTING;
+						}
+						continue;
+					}
+					else if (PropertyPrefix.MESSAGE == prop.getPrefix())
+					{
+						var = state.getMessage().getProperty(prop.getBaseName());
+					}
+					else
+					{
+						// TODO error, invalid property
+						continue;
+					}
+				}
+				if (var instanceof CpsTypeProgramElement)
+				{
+					if (Sign.getMethodStatus(concern, methodInfo, (CpsTypeProgramElement) var, state.getMessage()
+							.getSelector()) == MethodWrapper.EXISTING)
+					{
+						return MethodWrapper.EXISTING;
+					}
+				}
+				else if (var instanceof CpsSelector)
+				{
+					// TODO: implement
+				}
+				else if (var instanceof CpsLiteral)
+				{
+					// TODO: implement
+				}
+				else if (var instanceof CpsProgramElement)
+				{
+					// TODO: implement
+				}
+			}
+			return MethodWrapper.NOT_EXISTING;
 		}
 		else
 		{
@@ -727,60 +764,80 @@ public class FireModel
 	 * @return
 	 * @param layer
 	 */
-	private ExtendedExecutionState deriveState(ExecutionState baseState, ExtendedExecutionModel model, Message message,
-			int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer, int stateType)
+	private ExtendedExecutionState deriveState(ExecutionState baseState, ExtendedExecutionModel model,
+			CpsMessage message, int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer,
+			int stateType)
 	{
 		ExtendedExecutionState result;
 
-		if (!baseState.getMessage().isGeneralization())
+		// if (!baseState.getMessage().isGeneralization())
+		// {
+		// result = new ExtendedExecutionState(model, baseState,
+		// baseState.getMessage(), stateType, signatureCheck,
+		// signatureCheckInfo, filterPosition, layer);
+		// }
+		// else
+		// {
+
+		// CpsMessage newStateMessage = baseState.getMessage();
+		// CpsMessage derivedMessage = deriveMessage(message,
+		// newStateMessage);
+		CpsMessage derivedMessage;
+		try
 		{
-			result = new ExtendedExecutionState(model, baseState, baseState.getMessage(), stateType, signatureCheck,
-					signatureCheckInfo, filterPosition, layer);
+			derivedMessage = (CpsMessage) message.clone();
+			CpsMessageUtils.complete(derivedMessage, baseState.getMessage());
 		}
-		else
+		catch (CloneNotSupportedException e)
 		{
-
-			Message newStateMessage = baseState.getMessage();
-
-			Message derivedMessage = deriveMessage(message, newStateMessage);
-
-			result = new ExtendedExecutionState(model, baseState, derivedMessage, stateType, signatureCheck,
-					signatureCheckInfo, filterPosition, layer);
+			derivedMessage = message;
+			// TODO error
 		}
+
+		result = new ExtendedExecutionState(model, baseState, derivedMessage, stateType, signatureCheck,
+				signatureCheckInfo, filterPosition, layer);
+		// }
 
 		// Check whether the model already contains the state:
 		return existenceCheck(result);
 	}
 
-	/**
-	 * Derives a new message that is the result of the generalized message
-	 * degeneralized to the examplemessage. For example, if the example message
-	 * is T.a and the generalizedMessage is +.b, then the derived message is T.b
-	 * (the target was generalized, so is replaced with the target from the
-	 * example message, the selector was not generalized, so is not replaced).
-	 * 
-	 * @param exampleMessage
-	 * @param generalizedMessage
-	 * @return The degeneralization of the generalizedMessage with the
-	 *         exampleMessage, or <code>null</code> if the generalizedMessage or
-	 *         exampleMessage is <code>null</code>.
-	 */
-	private Message deriveMessage(Message exampleMessage, Message generalizedMessage)
-	{
-		if (generalizedMessage == null || exampleMessage == null)
-		{
-			return null;
-		}
-
-		Target derivedTarget = Message.checkEquals(generalizedMessage.getTarget(), Message.UNDISTINGUISHABLE_TARGET) ? exampleMessage
-				.getTarget()
-				: generalizedMessage.getTarget();
-
-		String derivedSelector = Message.checkEquals(generalizedMessage.getSelector(),
-				Message.UNDISTINGUISHABLE_SELECTOR) ? exampleMessage.getSelector() : generalizedMessage.getSelector();
-
-		return new Message(derivedTarget, derivedSelector);
-	}
+	// /**
+	// * Derives a new message that is the result of the generalized message
+	// * degeneralized to the examplemessage. For example, if the example
+	// message
+	// * is T.a and the generalizedMessage is +.b, then the derived message is
+	// T.b
+	// * (the target was generalized, so is replaced with the target from the
+	// * example message, the selector was not generalized, so is not replaced).
+	// *
+	// * @param exampleMessage
+	// * @param generalizedMessage
+	// * @return The degeneralization of the generalizedMessage with the
+	// * exampleMessage, or <code>null</code> if the generalizedMessage or
+	// * exampleMessage is <code>null</code>.
+	// */
+	// private CpsMessage deriveMessage(CpsMessage exampleMessage, CpsMessage
+	// generalizedMessage)
+	// {
+	// if (generalizedMessage == null || exampleMessage == null)
+	// {
+	// return null;
+	// }
+	//
+	// Target derivedTarget =
+	// Message.checkEquals(generalizedMessage.getTarget(),
+	// Message.UNDISTINGUISHABLE_TARGET) ? exampleMessage
+	// .getTarget()
+	// : generalizedMessage.getTarget();
+	//
+	// String derivedSelector =
+	// Message.checkEquals(generalizedMessage.getSelector(),
+	// Message.UNDISTINGUISHABLE_SELECTOR) ? exampleMessage.getSelector() :
+	// generalizedMessage.getSelector();
+	//
+	// return new Message(derivedTarget, derivedSelector);
+	// }
 
 	/**
 	 * Checks whether the given state already exists in the given model. If so,
@@ -881,24 +938,26 @@ public class FireModel
 		return new ExtendedExecutionModel(filterPosition, methodInfo, signatureCheck);
 	}
 
-	/**
-	 * Returns the ExecutionModel for a given target and methodinfo.
-	 * 
-	 * @param filterPosition Indicates for which filters the executionmodel
-	 *            should be returned, for the input filters (
-	 *            <code>INPUT_FILTERS</code>) or for the output filters (
-	 *            <code>OUTPUT_FILTERS</code>).
-	 * @param target The entrance target
-	 * @param methodInfo The entrance method
-	 * @param signatureCheck Indicates whether a signatureCheck needs to be
-	 *            done.
-	 * @return
-	 */
-	public ExecutionModel getExecutionModel(FilterDirection filterPosition, Target target, MethodInfo methodInfo,
-			int signatureCheck)
-	{
-		return new ExtendedExecutionModel(filterPosition, target, methodInfo, signatureCheck);
-	}
+	// /**
+	// * Returns the ExecutionModel for a given target and methodinfo.
+	// *
+	// * @param filterPosition Indicates for which filters the executionmodel
+	// * should be returned, for the input filters (
+	// * <code>INPUT_FILTERS</code>) or for the output filters (
+	// * <code>OUTPUT_FILTERS</code>).
+	// * @param target The entrance target
+	// * @param methodInfo The entrance method
+	// * @param signatureCheck Indicates whether a signatureCheck needs to be
+	// * done.
+	// * @return
+	// */
+	// public ExecutionModel getExecutionModel(FilterDirection filterPosition,
+	// Target target, MethodInfo methodInfo,
+	// int signatureCheck)
+	// {
+	// return new ExtendedExecutionModel(filterPosition, target, methodInfo,
+	// signatureCheck);
+	// }
 
 	/**
 	 * Returns a message object with the given selector and the target set to
@@ -907,10 +966,30 @@ public class FireModel
 	 * @param selector
 	 * @return
 	 */
-	private Message getEntranceMessage(String selector)
+	private CpsMessage getEntranceMessage(CpsSelector selector)
+	{
+		FireMessage result = new FireMessage();
+		// TODO: set correct target
+		CpsObject target = null;
+		result.setTarget(target);
+		if (selector != null)
+		{
+			result.setSelector(selector);
+		}
+		result.setSelf(target);
+		result.setServer(target);
+		return result;
+	}
+
+	private CpsMessage getEntranceMessage(String selector)
+	{
+		return getEntranceMessage(new CpsSelectorImpl(selector));
+	}
+
+	private CpsMessage getEntranceMessage(MethodInfo selector)
 	{
 		// start with inner target:
-		return new Message(Message.SELF_TARGET, selector);
+		return getEntranceMessage(new CpsSelectorMethodInfo(selector));
 	}
 
 	/**
@@ -936,20 +1015,20 @@ public class FireModel
 	 *            <code>OUTPUT_FILTERS</code>).
 	 * @return The distinguishable selectors.
 	 */
-	private Set<String> getDistinguishableSelectors(int filterPosition)
+	private Set<CpsSelector> getDistinguishableSelectors(int filterPosition)
 	{
-		Set<String> distinguishable = new HashSet<String>();
+		Set<CpsSelector> distinguishable = new HashSet<CpsSelector>();
 		for (int i = 0; i < filterModules.length; i++)
 		{
-			for (Message message : executionModels[filterPosition][i].getEntranceMessages())
+			for (CpsMessage message : executionModels[filterPosition][i].getEntranceMessages())
 			{
-				if (!Message.checkEquals(message.getSelector(), Message.UNDISTINGUISHABLE_SELECTOR))
+				CpsSelector sel = message.getSelector();
+				if (sel != null)
 				{
-					distinguishable.add(message.getSelector());
+					distinguishable.add(sel);
 				}
 			}
 		}
-
 		return distinguishable;
 	}
 
@@ -962,7 +1041,7 @@ public class FireModel
 	 *            <code>OUTPUT_FILTERS</code>).
 	 * @return The distinguishable selectors.
 	 */
-	public Set<String> getDistinguishableSelectors(FilterDirection filterPosition)
+	public Set<CpsSelector> getDistinguishableSelectors(FilterDirection filterPosition)
 	{
 		return getDistinguishableSelectors(filterPosition.getIndex());
 	}
@@ -1004,7 +1083,7 @@ public class FireModel
 			// ExecutionState state;
 			ExtendedExecutionState extendedState;
 
-			for (String selector : getDistinguishableSelectors(filterPosition))
+			for (CpsSelector selector : getDistinguishableSelectors(filterPosition))
 			{
 				message = getEntranceMessage(selector);
 
@@ -1021,7 +1100,8 @@ public class FireModel
 			}
 
 			// undistinguishable selector:
-			message = getEntranceMessage(Message.UNDISTINGUISHABLE_SELECTOR);
+			CpsSelector nullsel = null;
+			message = getEntranceMessage(nullsel);
 
 			// state =
 			// executionModels[filterPosition][0].getEntranceState(message);
@@ -1062,7 +1142,7 @@ public class FireModel
 		{
 			filterPosition = filterDirection.getIndex();
 
-			CpsMessage message = getEntranceMessage(methodInfo.getName());
+			CpsMessage message = getEntranceMessage(methodInfo);
 
 			// ExecutionState state =
 			// executionModels[filterPosition][0].getEntranceState(message);
@@ -1075,28 +1155,30 @@ public class FireModel
 			fullModel = false;
 		}
 
-		public ExtendedExecutionModel(FilterDirection filterDirection, Target target, MethodInfo methodInfo,
-				int signatureCheck)
-		{
-			filterPosition = filterDirection.getIndex();
-
-			Message message = new Message(target, methodInfo);
-
-			// ExecutionState state =
-			// executionModels[filterPosition][0].getEntranceState(message);
-
-			ExtendedExecutionState extendedState = getStartStateNextLayer(this, message, signatureCheck, methodInfo,
-					filterPosition, 0);
-
-			// ExtendedExecutionState extendedState = new
-			// ExtendedExecutionState(this,
-			// state, message, signatureCheck,
-			// methodInfo, filterPosition, 0);
-
-			entranceTable.put(message, extendedState);
-
-			fullModel = false;
-		}
+		// public ExtendedExecutionModel(FilterDirection filterDirection, Target
+		// target, MethodInfo methodInfo,
+		// int signatureCheck)
+		// {
+		// filterPosition = filterDirection.getIndex();
+		//
+		// CpsMessage message = new Message(target, methodInfo);
+		//
+		// // ExecutionState state =
+		// // executionModels[filterPosition][0].getEntranceState(message);
+		//
+		// ExtendedExecutionState extendedState = getStartStateNextLayer(this,
+		// message, signatureCheck, methodInfo,
+		// filterPosition, 0);
+		//
+		// // ExtendedExecutionState extendedState = new
+		// // ExtendedExecutionState(this,
+		// // state, message, signatureCheck,
+		// // methodInfo, filterPosition, 0);
+		//
+		// entranceTable.put(message, extendedState);
+		//
+		// fullModel = false;
+		// }
 
 		/*
 		 * (non-Javadoc)
@@ -1124,8 +1206,19 @@ public class FireModel
 			{
 				// create the entrance-state:
 				ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
-				ExtendedExecutionState newState = new ExtendedExecutionState(this, state, message, NO_SIGNATURE_CHECK,
-						null, filterPosition, 0);
+				CpsMessage derivedMessage;
+				try
+				{
+					derivedMessage = (CpsMessage) message.clone();
+					CpsMessageUtils.complete(derivedMessage, state.getMessage());
+				}
+				catch (CloneNotSupportedException e)
+				{
+					derivedMessage = message;
+					// TODO error
+				}
+				ExtendedExecutionState newState = new ExtendedExecutionState(this, state, derivedMessage,
+						NO_SIGNATURE_CHECK, null, filterPosition, 0);
 				entranceTable.put(message, newState);
 				return newState;
 			}
@@ -1205,11 +1298,10 @@ public class FireModel
 		 */
 		private List<ExecutionTransition> outTransitions;
 
-		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, Message message,
+		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, CpsMessage message,
 				int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
 		{
-			super(flowNodeMap.get(baseState.getFlowNode()), message, deriveMessage(message, baseState
-					.getSubstitutionMessage()), baseState.getStateType());
+			super(flowNodeMap.get(baseState.getFlowNode()), message, baseState.getStateType());
 
 			this.model = model;
 			this.baseState = baseState;
@@ -1232,11 +1324,10 @@ public class FireModel
 		 * @param filterPosition
 		 * @param layer
 		 */
-		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, Message message,
+		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, CpsMessage message,
 				int stateType, int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
 		{
-			super(flowNodeMap.get(baseState.getFlowNode()), message, deriveMessage(message, baseState
-					.getSubstitutionMessage()), stateType);
+			super(flowNodeMap.get(baseState.getFlowNode()), message, stateType);
 
 			this.model = model;
 			this.baseState = baseState;
@@ -1246,11 +1337,10 @@ public class FireModel
 			this.layer = layer;
 		}
 
-		public ExtendedExecutionState(ExtendedExecutionModel model, FlowNode flowNode, Message message,
-				Message substitutionMessage, int stateType, int signatureCheck, MethodInfo signatureCheckInfo,
-				int filterPosition, int layer)
+		public ExtendedExecutionState(ExtendedExecutionModel model, FlowNode flowNode, CpsMessage message,
+				int stateType, int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
 		{
-			super(flowNode, message, substitutionMessage, stateType);
+			super(flowNode, message, stateType);
 
 			this.model = model;
 			this.signatureCheck = signatureCheck;

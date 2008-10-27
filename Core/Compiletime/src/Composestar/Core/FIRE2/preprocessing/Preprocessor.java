@@ -13,7 +13,6 @@ import groove.explore.result.EmptyResult;
 import groove.explore.result.FinalStateAcceptor;
 import groove.explore.result.Result;
 import groove.explore.result.SizedResult;
-import groove.explore.strategy.AbstractStrategy;
 import groove.explore.strategy.BranchingStrategy;
 import groove.explore.strategy.LinearStrategy;
 import groove.graph.Graph;
@@ -70,10 +69,6 @@ public class Preprocessor implements CTCommonModule
 
 	private DefaultGrammarView runtimeGrammar;
 
-	private static final AbstractStrategy LINEAR_STRATEGY = new LinearStrategy();
-
-	private static final AbstractStrategy FULL_STRATEGY = new BranchingStrategy();
-
 	private static final String GRAMMAR_FLOW = "groovegrammars2/flowmodel.gps";
 
 	private static final String GRAMMAR_EXEC = "groovegrammars2/execmodel.gps";
@@ -104,10 +99,8 @@ public class Preprocessor implements CTCommonModule
 		preprocess(filterModules);
 		// preprocessMP(resources, filterModules);
 
-		// FIXME remove this
-		throw new RuntimeException("Intentional stop!");
 		// TODO return error if something failed
-		// return ModuleReturnValue.Ok;
+		return ModuleReturnValue.Ok;
 	}
 
 	public void preprocess(Set<FilterModule> filterModules)

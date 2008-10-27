@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
@@ -34,6 +33,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsMessageUtils;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -391,23 +391,8 @@ public class ExecutionModelExtractor
 			{
 				return state;
 			}
-
-			int bestScore = Integer.MAX_VALUE;
-			state = null;
-			for (Entry<CpsMessage, ExecutionState> entry : entranceStates.entrySet())
-			{
-				int curScore = entry.getKey().matchTo(message);
-				if (curScore < 0)
-				{
-					continue;
-				}
-				if (curScore < bestScore)
-				{
-					bestScore = curScore;
-					state = entry.getValue();
-				}
-			}
-			return state;
+			CpsMessage msg = CpsMessageUtils.getClosestMatch(message, entranceStates.keySet());
+			return entranceStates.get(msg);
 		}
 
 		/**

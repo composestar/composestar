@@ -12,7 +12,7 @@
 // either express or implied. See the License for the specific 
 // language governing permissions and limitations under the License.
 /*
- * $Id: DefaultGxl.java,v 1.21 2007-12-03 08:55:18 rensink Exp $
+ * $Id$
  */
 package Composestar.Core.FIRE2.preprocessing.io;
 
@@ -59,7 +59,7 @@ import org.exolab.castor.xml.ValidationException;
  * 
  * @author Arend Rensink
  * @author Michiel Hendriks (converted DefaultGxl to StreamGxl)
- * @version $Revision: 1.21 $
+ * @version $Revision$
  */
 public class StreamGxl implements Xml<Graph>
 {

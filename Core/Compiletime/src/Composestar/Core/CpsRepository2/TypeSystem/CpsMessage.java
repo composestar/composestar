@@ -31,7 +31,7 @@ import java.util.Collection;
  * 
  * @author Michiel Hendriks
  */
-public interface CpsMessage
+public interface CpsMessage extends Cloneable
 {
 	/**
 	 * @return The current target
@@ -134,34 +134,7 @@ public interface CpsMessage
 	Collection<String> getAllProperties();
 
 	/**
-	 * Compares both messages so see to what degree they are compatible. When 0
-	 * is returned both message have equals values. Otherwise it returns the
-	 * number of properties that do not match. It returns a negative number for
-	 * the number of conflicting properties, otherwise a positive number of
-	 * disjoint properties. For example
-	 * 
-	 * <pre>
-	 * msg1.target = foo;
-	 * msg2.target = foo;
-	 * msg2.selector = bar;
-	 * msg1.matchTo(msg2) == 1 (msg1 does not care about .selector)
-	 * msg2.matchTo(msg1) == -1 (msg2 cares about .selector)
-	 * 
-	 * msg1.target = foo;
-	 * msg2.target = bar;
-	 * msg1.matchTo(msg2) == -1 (targets do not match)
-	 * </pre>
-	 * 
-	 * Note: this method does not have the same behavior as
-	 * {@link Comparable#compareTo(Object)}
-	 * 
-	 * @param other The message to compare this one to
-	 * @return 0 when the messages are equal, >0 when the other message matches
-	 *         to a certain degree, <0 when the other message conflicts with
-	 *         certain properties in this message. A result closer to 0 is
-	 *         better.
-	 * @throws NullPointerException when the message is null
+	 * @see Cloneable
 	 */
-	// TODO: move to utility class because it might need conversion mechanisms
-	int matchTo(CpsMessage other) throws NullPointerException;
+	public Object clone() throws CloneNotSupportedException;
 }

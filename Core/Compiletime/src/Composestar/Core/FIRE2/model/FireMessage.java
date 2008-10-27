@@ -110,7 +110,11 @@ public class FireMessage implements CpsMessage
 		CpsVariable var = properties.get(name);
 		if (var instanceof CanonProperty)
 		{
-			return getProperty(name, new ArrayList<String>());
+			CpsVariable var2 = getProperty(name, new ArrayList<String>());
+			if (var2 != null)
+			{
+				return var2;
+			}
 		}
 		return var;
 	}
@@ -215,19 +219,6 @@ public class FireMessage implements CpsMessage
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.TypeSystem.CpsMessage#matchTo(Composestar
-	 * .Core.CpsRepository2.TypeSystem.CpsMessage)
-	 */
-	public int matchTo(CpsMessage other) throws NullPointerException
-	{
-		// TODO Auto-generated method stub
-		// keep in mind the CanonProperty values
-		return 0;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
 	 * Composestar.Core.CpsRepository2.TypeSystem.CpsMessage#send(Composestar
 	 * .Core.CpsRepository2.TypeSystem.CpsObject)
 	 */
@@ -240,6 +231,18 @@ public class FireMessage implements CpsMessage
 		FireMessage msg = new FireMessage(this);
 		msg.properties.put(PropertyNames.SENDER, sender);
 		return msg;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		FireMessage result = new FireMessage(this);
+		result.originator = this;
+		return result;
 	}
 
 	/*
@@ -388,9 +391,60 @@ public class FireMessage implements CpsMessage
 		properties.put(PropertyNames.TARGET, value);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return properties.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		FireMessage other = (FireMessage) obj;
+		if (properties == null)
+		{
+			if (other.properties != null)
+			{
+				return false;
+			}
+		}
+		else if (!properties.equals(other.properties))
+		{
+			return false;
+		}
+		return true;
 	}
 }

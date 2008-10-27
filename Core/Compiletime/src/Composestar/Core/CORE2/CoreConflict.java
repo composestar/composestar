@@ -1,6 +1,6 @@
 package Composestar.Core.CORE2;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
  * A conflict found by CORE
