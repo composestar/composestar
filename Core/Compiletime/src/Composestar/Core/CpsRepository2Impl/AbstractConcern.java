@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
 
 /**
@@ -49,6 +50,11 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 	 * Handle to the superimposed information.
 	 */
 	protected Superimposed superimposed;
+
+	/**
+	 * The associated type reference
+	 */
+	protected TypeReference typeReference;
 
 	/**
 	 * Create a new concern concern
@@ -110,6 +116,26 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 	public List<String> getNamespaceAsList()
 	{
 		return Collections.unmodifiableList(namespace);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.Concern#setTypeReference(Composestar.
+	 * Core.CpsRepository2.References.TypeReference)
+	 */
+	public void setTypeReference(TypeReference ref)
+	{
+		typeReference = ref;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.Concern#getTypeReference()
+	 */
+	public TypeReference getTypeReference()
+	{
+		return typeReference;
 	}
 
 	/*

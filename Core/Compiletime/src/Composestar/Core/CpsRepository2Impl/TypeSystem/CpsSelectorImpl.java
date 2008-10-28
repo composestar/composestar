@@ -25,6 +25,7 @@
 package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -72,6 +73,26 @@ public class CpsSelectorImpl extends AbstractRepositoryEntity implements CpsSele
 	public String toString()
 	{
 		return getName();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		if (!(other instanceof CpsSelector))
+		{
+			return false;
+		}
+		CpsSelector o = (CpsSelector) other;
+		if (name == null)
+		{
+			return o.getName() == null;
+		}
+		return name.equals(o.getName());
 	}
 
 }

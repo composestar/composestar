@@ -26,15 +26,20 @@ package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.LAMA.Type;
 
 /**
  * @author Michiel Hendriks
  */
-// TODO: implement?
 public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObject
 {
 	private static final long serialVersionUID = -5151470511518075199L;
+
+	/**
+	 * If true this object represents an inner object
+	 */
+	protected boolean innerObject;
 
 	/**
 	 * @param type
@@ -42,7 +47,18 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 	 */
 	public CpsObjectImpl(Type type) throws NullPointerException
 	{
+		this(type, false);
+	}
+
+	/**
+	 * @param type
+	 * @param isInner TODO
+	 * @throws NullPointerException
+	 */
+	public CpsObjectImpl(Type type, boolean isInner) throws NullPointerException
+	{
 		super(type);
+		innerObject = isInner;
 	}
 
 	/**
@@ -51,6 +67,53 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 	 */
 	public CpsObjectImpl(TypeReference ref) throws NullPointerException
 	{
+		this(ref, false);
+	}
+
+	/**
+	 * @param ref
+	 * @param isInner TODO
+	 * @throws NullPointerException
+	 */
+	public CpsObjectImpl(TypeReference ref, boolean isInner) throws NullPointerException
+	{
 		super(ref);
+		innerObject = isInner;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isInnerObject()
+	 */
+	public boolean isInnerObject()
+	{
+		return innerObject;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.TypeSystem.CpsTypeProgramElementImpl
+	 * #compatible(Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	@Override
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		if (other instanceof CpsObject)
+		{
+			// objects must match instance
+			return other == this;
+		}
+		return super.compatible(other);
+	}
+
+	@Override
+	public String toString()
+	{
+		if (innerObject)
+		{
+			return "[inner] " + super.toString();
+		}
+		return super.toString();
 	}
 }

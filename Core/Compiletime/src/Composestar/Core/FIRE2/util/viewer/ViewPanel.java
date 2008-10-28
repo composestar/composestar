@@ -39,7 +39,7 @@ public class ViewPanel extends JPanel
 
 	private static final int RADIUS = 40;
 
-	private static final int MARGIN = 10;
+	private static final int MARGIN = 30;
 
 	private static final int ARROW_HEAD_XOFFSET = -10;
 
@@ -250,7 +250,8 @@ public class ViewPanel extends JPanel
 
 		Node node = nodeMap.get(state);
 
-		for (ExecutionTransition transition : state.getOutTransitionsEx())
+		Collection<ExecutionTransition> out = state.getOutTransitionsEx();
+		for (ExecutionTransition transition : out)
 		{
 			ExecutionState nextState = transition.getEndState();
 			if (!nodeMap.containsKey(nextState))
@@ -356,8 +357,13 @@ public class ViewPanel extends JPanel
 		}
 		if (node.state != null)
 		{
-			g.drawString(node.state.getMessage().toString(), node.xPos - width / 2, node.yPos + 2
-					* (int) (metrics.getHeight() * 1.25));
+			String[] items = node.state.getMessage().toString().split("\\n");
+			int i = 2;
+			for (String item : items)
+			{
+				g.drawString(item, node.xPos - RADIUS, node.yPos + i * (int) (metrics.getHeight() * 1.25));
+				i++;
+			}
 			// g.drawString(node.state.getSubstitutionMessage().toString(),
 			// node.xPos - width / 2, node.yPos + 3
 			// * (int) (metrics.getHeight() * 1.25));

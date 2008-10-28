@@ -35,4 +35,14 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
  */
 public interface CpsVariable extends RepositoryEntity
 {
+	/**
+	 * Similar to the equals check, except this allows equality on a super class
+	 * to be valid too.
+	 * 
+	 * @param other
+	 * @return True when both sides are compatible
+	 * @throws UnsupportedOperationException Thrown by subtypes that do not
+	 *             encapsulate a real value (like properties or parameters)
+	 */
+	boolean compatible(CpsVariable other) throws UnsupportedOperationException;
 }

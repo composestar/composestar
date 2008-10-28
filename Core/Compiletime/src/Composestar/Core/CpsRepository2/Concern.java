@@ -26,6 +26,7 @@ package Composestar.Core.CpsRepository2;
 
 import java.util.List;
 
+import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
 
 /**
@@ -72,4 +73,19 @@ public interface Concern extends QualifiedRepositoryEntity
 	 * @see #getSuperimposed()
 	 */
 	void setSuperimposed(Superimposed si) throws IllegalStateException;
+
+	/**
+	 * Set the type reference/platform representation of this concern.
+	 * Theoretically the reference id of the type reference is the same as the
+	 * fully qualified name of the concern, but this is not a strict rule.
+	 * 
+	 * @param ref The type reference
+	 */
+	void setTypeReference(TypeReference ref);
+
+	/**
+	 * @return The type reference of this concern. Can be null when this concern
+	 *         has no platform representation in the form of a type.
+	 */
+	TypeReference getTypeReference();
 }

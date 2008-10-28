@@ -25,6 +25,7 @@
 package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.MethodInfo;
 
@@ -73,5 +74,33 @@ public class CpsSelectorMethodInfo extends AbstractRepositoryEntity implements C
 	public String toString()
 	{
 		return mi.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		if (!(other instanceof CpsSelector))
+		{
+			return false;
+		}
+		if (other instanceof CpsSelectorMethodInfo)
+		{
+			if (getMethodInfo() == null)
+			{
+				return ((CpsSelectorMethodInfo) other).getMethodInfo() == null;
+			}
+			return getMethodInfo().equals(((CpsSelectorMethodInfo) other).getMethodInfo());
+		}
+		CpsSelector o = (CpsSelector) other;
+		if (getName() == null)
+		{
+			return o.getName() == null;
+		}
+		return getName().equals(o.getName());
 	}
 }

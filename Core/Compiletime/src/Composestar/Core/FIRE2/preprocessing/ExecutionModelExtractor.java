@@ -57,6 +57,8 @@ public class ExecutionModelExtractor
 
 	private Map<GraphState, BasicExecutionState> stateTable;
 
+	private Set<ExecutionTransition> nonExecTransitions;
+
 	/**
 	 * The label on the Frame node
 	 */
@@ -88,6 +90,7 @@ public class ExecutionModelExtractor
 	{
 		meta = metaData;
 		stateTable = new HashMap<GraphState, BasicExecutionState>();
+		nonExecTransitions = new HashSet<ExecutionTransition>();
 
 		BasicExecutionModel executionModel = new BasicExecutionModel();
 
@@ -113,7 +116,7 @@ public class ExecutionModelExtractor
 		// analyseNextStates( startState, model );
 		//
 
-		// new Viewer(executionModel);
+		resolveNonExecTransitions(executionModel);
 
 		return executionModel;
 	}
@@ -125,7 +128,6 @@ public class ExecutionModelExtractor
 		GraphTransition transition;
 		GraphState nextState;
 		BasicExecutionState startState, endState;
-
 		while (iter.hasNext())
 		{
 			transition = iter.next();
@@ -154,7 +156,58 @@ public class ExecutionModelExtractor
 		ExecutionTransition exeTrans = new BasicExecutionTransition(startState, transition.label().text(), endState,
 				flowTransition);
 
-		executionModel.addTransition(exeTrans);
+		if (flowTransition == null)
+		{
+			nonExecTransitions.add(exeTrans);
+		}
+		else
+		{
+			executionModel.addTransition(exeTrans);
+		}
+	}
+
+	/**
+	 * This gets rid of possible "deferred" transitions which are not really
+	 * execution
+	 * 
+	 * @param executionModel
+	 */
+	private void resolveNonExecTransitions(BasicExecutionModel executionModel)
+	{
+		for (ExecutionTransition pruneme : nonExecTransitions)
+		{
+			BasicExecutionState startState = (BasicExecutionState) pruneme.getStartState();
+			BasicExecutionState endState = (BasicExecutionState) pruneme.getEndState();
+
+			for (ExecutionTransition trans : endState.getOutTransitionsEx())
+			{
+				BasicExecutionState newEnd = (BasicExecutionState) trans.getEndState();
+				FlowTransition flowTransition = startState.getFlowNode().getTransition(newEnd.getFlowNode());
+
+				if (flowTransition == null)
+				{
+					// TODO nice error?
+					throw new IllegalStateException("Two concecutive non-flow transitions");
+				}
+
+				ExecutionTransition exeTrans = new BasicExecutionTransition(startState, trans.getLabel(), newEnd,
+						flowTransition);
+				executionModel.addTransition(exeTrans);
+			}
+
+			startState.removeOutTransition(pruneme);
+			endState.removeInTransition(pruneme);
+			if (endState.getInTransitionsEx().isEmpty())
+			{
+				for (ExecutionTransition trans : endState.getOutTransitionsEx())
+				{
+					BasicExecutionState otherEnd = (BasicExecutionState) trans.getEndState();
+					otherEnd.removeInTransition(trans);
+					executionModel.removeTransitions(trans);
+				}
+				executionModel.removeState(endState);
+			}
+		}
 	}
 
 	private boolean addState(GraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
@@ -406,6 +459,11 @@ public class ExecutionModelExtractor
 			states.add(state);
 		}
 
+		void removeState(ExecutionState state)
+		{
+			states.remove(state);
+		}
+
 		/**
 		 * Adds a transition to this model.
 		 * 
@@ -421,6 +479,11 @@ public class ExecutionModelExtractor
 			// {
 			// starTransitions.addElement( transition );
 			// }
+		}
+
+		void removeTransitions(ExecutionTransition transition)
+		{
+			transitions.remove(transition);
 		}
 
 		/**

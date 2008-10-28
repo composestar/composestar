@@ -27,6 +27,10 @@ package Composestar.Core.CpsRepository2Impl.FilterModules;
 import Composestar.Core.CpsRepository2.FilterModules.Internal;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
 
@@ -96,6 +100,15 @@ public class InternalImpl extends AbstractQualifiedRepositoryEntity implements I
 
 	/*
 	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isInnerObject()
+	 */
+	public boolean isInnerObject()
+	{
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see
 	 * Composestar.Core.CpsRepository2.Instantiatable.Instantiatable#newInstance
 	 * (Composestar.Core.CpsRepository2.Instantiatable.Instantiator)
@@ -103,5 +116,43 @@ public class InternalImpl extends AbstractQualifiedRepositoryEntity implements I
 	public Internal newInstance(Instantiator instantiator) throws UnsupportedOperationException
 	{
 		return instantiator.instantiate(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		if (other instanceof CpsObject)
+		{
+			// objects must match instance
+			return other == this;
+		}
+		if (!(other instanceof CpsProgramElement))
+		{
+			return false;
+		}
+		if (other instanceof CpsTypeProgramElement)
+		{
+			if (typeReference == null)
+			{
+				return ((CpsTypeProgramElement) other).getTypeReference() == null;
+			}
+			if (((CpsTypeProgramElement) other).getTypeReference() == null)
+			{
+				return false;
+			}
+			return typeReference.getReferenceId().equals(
+					((CpsTypeProgramElement) other).getTypeReference().getReferenceId());
+		}
+		CpsProgramElement o = (CpsProgramElement) other;
+		if (getProgramElement() == null)
+		{
+			return o.getProgramElement() == null;
+		}
+		return getProgramElement().equals(o.getProgramElement());
 	}
 }

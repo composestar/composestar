@@ -15,8 +15,6 @@ import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
-import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
-import Composestar.Core.FIRE2.util.viewer.Viewer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
@@ -80,8 +78,6 @@ public class Core implements CTCommonModule
 
 		List<ImposedFilterModule> filterModules = concern.getSuperimposed().getFilterModuleOrder();
 		FireModel fireModel = f2res.getFireModel(concern, filterModules);
-
-		new Viewer(fireModel.getExecutionModel(FilterDirection.Input));
 
 		CoreConflict[] conflicts = detector.findConflicts(fireModel);
 		printConflicts(conflicts);

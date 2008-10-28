@@ -25,6 +25,7 @@
 package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
 import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -63,5 +64,25 @@ public class CpsLiteralImpl extends AbstractRepositoryEntity implements CpsLiter
 	public String getLiteralValue()
 	{
 		return literalValue;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		if (!(other instanceof CpsLiteral))
+		{
+			return false;
+		}
+		CpsLiteral o = (CpsLiteral) other;
+		if (literalValue == null)
+		{
+			return o.getLiteralValue() == null;
+		}
+		return literalValue.equals(o.getLiteralValue());
 	}
 }

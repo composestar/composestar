@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.PropertyPrefix;
@@ -54,6 +55,11 @@ public class FireMessage implements CpsMessage
 	protected Map<String, CpsVariable> properties;
 
 	/**
+	 * The inner object
+	 */
+	protected CpsObject inner;
+
+	/**
 	 * Create a new empty message
 	 */
 	public FireMessage()
@@ -70,6 +76,7 @@ public class FireMessage implements CpsMessage
 	{
 		this();
 		properties.putAll(from.properties);
+		inner = from.inner;
 	}
 
 	/*
@@ -393,12 +400,47 @@ public class FireMessage implements CpsMessage
 
 	/*
 	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsMessage#getInner()
+	 */
+	public CpsObject getInner()
+	{
+		return inner;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsMessage#setInner(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsObject)
+	 */
+	public void setInner(CpsObject value) throws NullPointerException
+	{
+		if (value == null)
+		{
+			throw new NullPointerException("Inner can not be null");
+		}
+		inner = value;
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return properties.toString();
+		StringBuilder sb = new StringBuilder();
+		for (Entry<String, CpsVariable> entry : properties.entrySet())
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(" \n");
+			}
+			sb.append(entry.getKey());
+			sb.append('=');
+			sb.append(entry.getValue());
+		}
+		return sb.toString();
 	}
 
 	/*
@@ -442,6 +484,10 @@ public class FireMessage implements CpsMessage
 			}
 		}
 		else if (!properties.equals(other.properties))
+		{
+			return false;
+		}
+		if (inner != other.inner)
 		{
 			return false;
 		}

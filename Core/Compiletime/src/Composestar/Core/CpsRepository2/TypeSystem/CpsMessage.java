@@ -34,6 +34,23 @@ import java.util.Collection;
 public interface CpsMessage extends Cloneable
 {
 	/**
+	 * Technically inner is not a message property (it is also not available
+	 * through the other property methods). It's just available in the message
+	 * because the message provides a proper context.
+	 * 
+	 * @return The inner object
+	 */
+	CpsObject getInner();
+
+	/**
+	 * Set inner object
+	 * 
+	 * @param value The new inner value
+	 * @throws NullPointerException Thrown when the target is null
+	 */
+	void setInner(CpsObject value) throws NullPointerException;
+
+	/**
 	 * @return The current target
 	 */
 	CpsObject getTarget();
@@ -136,5 +153,5 @@ public interface CpsMessage extends Cloneable
 	/**
 	 * @see Cloneable
 	 */
-	public Object clone() throws CloneNotSupportedException;
+	Object clone() throws CloneNotSupportedException;
 }

@@ -41,4 +41,17 @@ public class ParameterizedCpsVariable extends AbstractParameterized implements C
 	{
 		super(parameter);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		// parameters need to be resolved to something, thus they are never
+		// compatible
+		throw new UnsupportedOperationException();
+	}
 }

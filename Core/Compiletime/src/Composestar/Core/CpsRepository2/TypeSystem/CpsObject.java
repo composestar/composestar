@@ -32,5 +32,8 @@ package Composestar.Core.CpsRepository2.TypeSystem;
  */
 public interface CpsObject extends CpsTypeProgramElement
 {
-
+	/**
+	 * @return True when this is an inner object.
+	 */
+	boolean isInnerObject();
 }

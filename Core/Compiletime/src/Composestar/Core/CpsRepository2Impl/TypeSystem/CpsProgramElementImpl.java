@@ -25,6 +25,7 @@
 package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
 import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
 
@@ -64,5 +65,25 @@ public class CpsProgramElementImpl extends AbstractRepositoryEntity implements C
 	public ProgramElement getProgramElement()
 	{
 		return programElement;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		if (!(other instanceof CpsProgramElement))
+		{
+			return false;
+		}
+		CpsProgramElement o = (CpsProgramElement) other;
+		if (programElement == null)
+		{
+			return o.getProgramElement() == null;
+		}
+		return programElement.equals(o.getProgramElement());
 	}
 }

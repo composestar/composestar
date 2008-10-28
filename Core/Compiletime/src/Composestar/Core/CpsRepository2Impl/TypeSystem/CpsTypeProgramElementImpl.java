@@ -25,7 +25,9 @@
 package Composestar.Core.CpsRepository2Impl.TypeSystem;
 
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -94,6 +96,57 @@ public class CpsTypeProgramElementImpl extends AbstractRepositoryEntity implemen
 			return typeReference.getReference();
 		}
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		if (!(other instanceof CpsProgramElement))
+		{
+			return false;
+		}
+		if (other instanceof CpsTypeProgramElement)
+		{
+			if (typeReference == null)
+			{
+				return ((CpsTypeProgramElement) other).getTypeReference() == null;
+			}
+			if (((CpsTypeProgramElement) other).getTypeReference() == null)
+			{
+				return false;
+			}
+			return typeReference.getReferenceId().equals(
+					((CpsTypeProgramElement) other).getTypeReference().getReferenceId());
+		}
+		CpsProgramElement o = (CpsProgramElement) other;
+		if (getProgramElement() == null)
+		{
+			return o.getProgramElement() == null;
+		}
+		return getProgramElement().equals(o.getProgramElement());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		if (typeReference != null)
+		{
+			if (typeReference.getReference() != null)
+			{
+				return typeReference.getReference().toString();
+			}
+			return typeReference.getReferenceId();
+		}
+		return super.toString();
 	}
 
 	/**

@@ -27,6 +27,8 @@ package Composestar.Core.CpsRepository2Impl.FilterModules;
 import Composestar.Core.CpsRepository2.FilterModules.Condition;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
 
@@ -104,6 +106,26 @@ public class ConditionImpl extends AbstractQualifiedRepositoryEntity implements 
 	public Condition newInstance(Instantiator instantiator) throws UnsupportedOperationException
 	{
 		return instantiator.instantiate(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		if (!(other instanceof CpsProgramElement))
+		{
+			return false;
+		}
+		CpsProgramElement o = (CpsProgramElement) other;
+		if (getProgramElement() == null)
+		{
+			return o.getProgramElement() == null;
+		}
+		return getProgramElement().equals(o.getProgramElement());
 	}
 
 }

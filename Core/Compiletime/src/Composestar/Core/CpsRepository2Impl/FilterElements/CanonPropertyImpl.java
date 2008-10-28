@@ -27,6 +27,7 @@ package Composestar.Core.CpsRepository2Impl.FilterElements;
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -115,6 +116,18 @@ public class CanonPropertyImpl extends AbstractRepositoryEntity implements Canon
 	public PropertyPrefix getPrefix()
 	{
 		return prefix;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible(Composestar
+	 * .Core.CpsRepository2.TypeSystem.CpsVariable)
+	 */
+	public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+	{
+		// never compatible because it's value needs to be resolved
+		throw new UnsupportedOperationException();
 	}
 
 	/*

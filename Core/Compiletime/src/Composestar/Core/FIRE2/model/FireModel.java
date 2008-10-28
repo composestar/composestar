@@ -30,12 +30,15 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsMessageUtils;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsObjectImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.SIGN2.Sign;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * The generic FIRE model for a certain concern and filter module ordering. This
@@ -48,6 +51,8 @@ import Composestar.Core.SIGN2.Sign;
  */
 public class FireModel
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);
+
 	/**
 	 * The filter set type
 	 */
@@ -121,6 +126,17 @@ public class FireModel
 	private Concern concern;
 
 	/**
+	 * The CpsObject representation of the current concern. Used for the initial
+	 * target, self, server, ...
+	 */
+	private CpsObject selfObject;
+
+	/**
+	 * The special inner object
+	 */
+	private CpsObject innerObject;
+
+	/**
 	 * The FlowModels of each filter module in the filter set, for both input
 	 * and output filters.
 	 */
@@ -163,6 +179,13 @@ public class FireModel
 	protected FireModel(FIRE2Resources resources, Concern concern, List<ImposedFilterModule> order)
 	{
 		this.concern = concern;
+		if (concern.getTypeReference() == null)
+		{
+			// TODO: error
+		}
+		// TODO: needs to be improved
+		selfObject = new CpsObjectImpl(concern.getTypeReference());
+		innerObject = new CpsObjectImpl(concern.getTypeReference(), true);
 		initialize(order.toArray(new ImposedFilterModule[order.size()]), resources);
 	}
 
@@ -661,8 +684,7 @@ public class FireModel
 					CanonProperty prop = (CanonProperty) var;
 					if (PropertyNames.INNER.equals(prop.getName()))
 					{
-						// TODO concern.getTypeReference
-						if (Sign.getMethodStatus(concern, methodInfo, null, state.getMessage().getSelector()) == MethodWrapper.EXISTING)
+						if (Sign.getMethodStatus(concern, methodInfo, innerObject, state.getMessage().getSelector()) == MethodWrapper.EXISTING)
 						{
 							return MethodWrapper.EXISTING;
 						}
@@ -786,7 +808,7 @@ public class FireModel
 		try
 		{
 			derivedMessage = (CpsMessage) message.clone();
-			CpsMessageUtils.complete(derivedMessage, baseState.getMessage());
+			CpsMessageUtils.update(derivedMessage, baseState.getMessage());
 		}
 		catch (CloneNotSupportedException e)
 		{
@@ -969,15 +991,14 @@ public class FireModel
 	private CpsMessage getEntranceMessage(CpsSelector selector)
 	{
 		FireMessage result = new FireMessage();
-		// TODO: set correct target
-		CpsObject target = null;
-		result.setTarget(target);
+		result.setInner(innerObject);
+		result.setTarget(selfObject);
 		if (selector != null)
 		{
 			result.setSelector(selector);
 		}
-		result.setSelf(target);
-		result.setServer(target);
+		result.setSelf(selfObject);
+		result.setServer(selfObject);
 		return result;
 	}
 
@@ -1210,7 +1231,7 @@ public class FireModel
 				try
 				{
 					derivedMessage = (CpsMessage) message.clone();
-					CpsMessageUtils.complete(derivedMessage, state.getMessage());
+					CpsMessageUtils.update(derivedMessage, state.getMessage());
 				}
 				catch (CloneNotSupportedException e)
 				{

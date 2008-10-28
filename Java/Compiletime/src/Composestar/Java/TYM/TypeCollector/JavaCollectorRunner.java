@@ -14,6 +14,8 @@ import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.Meta.FileInformation;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
+import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.FieldInfo;
@@ -172,18 +174,25 @@ public class JavaCollectorRunner implements CTCommonModule
 		// }
 
 		Repository repository = resources.repository();
+		ReferenceManager refman = resources.get(ReferenceManager.RESOURCE_KEY);
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
 		for (Type type : register.getTypeMap().values())
 		{
+			TypeReference tref = refman.getTypeReference(type.getFullName());
+			tref.setReference(type);
 			if (repository.get(type.getFullName()) != null)
 			{
 				QualifiedRepositoryEntity o = repository.get(type.getFullName());
-				logger.error(String.format("The repository already contains an entry with the name %s with type: %s",
-						type.getFullName(), o.getClass()));
 				if (o instanceof Concern)
 				{
-					// type.setParentConcern((Concern) o);
+					((Concern) o).setTypeReference(tref);
+				}
+				else
+				{
+					logger.error(String.format(
+							"The repository already contains an entry with the name %s with type: %s", type
+									.getFullName(), o.getClass()));
 				}
 				continue;
 			}
@@ -195,8 +204,7 @@ public class JavaCollectorRunner implements CTCommonModule
 				SourceInformation srcInfo = new SourceInformation(new FileInformation(typeSource.getFile()));
 				pc.setSourceInformation(srcInfo);
 			}
-			// pc.setPlatformRepresentation(type);
-			// type.setParentConcern(pc);
+			pc.setTypeReference(tref);
 			repository.add(pc);
 		}
 
