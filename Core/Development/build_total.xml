@@ -282,7 +282,6 @@
 	<target name="integration">
 		<!-- remove the next couple of lines to re-enable full builds -->
 		<antcall target="clean" inheritRefs="true" />
-		<antcall target="checkstyle" inheritRefs="true" />
 		<echo level="error">
 			Integration builds disabled.
 			Edit the Core/Development/build_total.xml file
