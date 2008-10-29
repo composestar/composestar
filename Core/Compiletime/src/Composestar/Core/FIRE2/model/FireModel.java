@@ -37,6 +37,7 @@ import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.SIGN2.MethodStatus;
 import Composestar.Core.SIGN2.Sign;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -461,8 +462,8 @@ public class FireModel
 		{
 			// There are more than one options (two), so signature matching. Try
 			// to find the correct out-transitions
-			int result = signatureCheck(state, state.signatureCheck, state.signatureCheckInfo);
-			if (result == MethodWrapper.UNKNOWN)
+			MethodStatus result = signatureCheck(state, state.signatureCheck, state.signatureCheckInfo);
+			if (result == MethodStatus.UNKNOWN)
 			{
 				if (state.signatureCheck == STRICT_SIGNATURE_CHECK)
 				{
@@ -476,7 +477,7 @@ public class FireModel
 					transitions = baseState.getOutTransitionsEx();
 				}
 			}
-			else if (result == MethodWrapper.EXISTING)
+			else if (result == MethodStatus.EXISTING)
 			{
 				// If existing, only the true-transition
 				transitions = new ArrayList<ExecutionTransition>();
@@ -666,7 +667,7 @@ public class FireModel
 	 * @see MethodWrapper#EXISTING
 	 * @see MethodWrapper#NOT_EXISTING
 	 */
-	private int signatureCheck(ExecutionState state, int signatureCheck, MethodInfo methodInfo)
+	private MethodStatus signatureCheck(ExecutionState state, int signatureCheck, MethodInfo methodInfo)
 	{
 		// check for signaturematching:
 		if (signatureCheck != NO_SIGNATURE_CHECK && state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING))
@@ -674,7 +675,7 @@ public class FireModel
 			RepositoryEntity re = state.getFlowNode().getRepositoryLink();
 			if (!(re instanceof SignatureMatching))
 			{
-				return MethodWrapper.UNKNOWN;
+				return MethodStatus.UNKNOWN;
 			}
 			SignatureMatching sigm = (SignatureMatching) re;
 			for (CpsVariable var : sigm.getRHS())
@@ -684,9 +685,9 @@ public class FireModel
 					CanonProperty prop = (CanonProperty) var;
 					if (PropertyNames.INNER.equals(prop.getName()))
 					{
-						if (Sign.getMethodStatus(concern, methodInfo, innerObject, state.getMessage().getSelector()) == MethodWrapper.EXISTING)
+						if (Sign.getMethodStatus(concern, methodInfo, innerObject, state.getMessage().getSelector()) == MethodStatus.EXISTING)
 						{
-							return MethodWrapper.EXISTING;
+							return MethodStatus.EXISTING;
 						}
 						continue;
 					}
@@ -703,9 +704,9 @@ public class FireModel
 				if (var instanceof CpsTypeProgramElement)
 				{
 					if (Sign.getMethodStatus(concern, methodInfo, (CpsTypeProgramElement) var, state.getMessage()
-							.getSelector()) == MethodWrapper.EXISTING)
+							.getSelector()) == MethodStatus.EXISTING)
 					{
-						return MethodWrapper.EXISTING;
+						return MethodStatus.EXISTING;
 					}
 				}
 				else if (var instanceof CpsSelector)
@@ -721,11 +722,11 @@ public class FireModel
 					// TODO: implement
 				}
 			}
-			return MethodWrapper.NOT_EXISTING;
+			return MethodStatus.NOT_EXISTING;
 		}
 		else
 		{
-			return MethodWrapper.UNKNOWN;
+			return MethodStatus.UNKNOWN;
 		}
 	}
 
@@ -922,7 +923,13 @@ public class FireModel
 	 * @param selector
 	 * @return
 	 */
+	@Deprecated
 	public ExecutionModel getExecutionModel(FilterDirection filterPosition, String selector)
+	{
+		return new ExtendedExecutionModel(filterPosition, selector);
+	}
+
+	public ExecutionModel getExecutionModel(FilterDirection filterPosition, CpsSelector selector)
 	{
 		return new ExtendedExecutionModel(filterPosition, selector);
 	}
@@ -1138,7 +1145,29 @@ public class FireModel
 			fullModel = true;
 		}
 
+		@Deprecated
 		public ExtendedExecutionModel(FilterDirection filterDirection, String selector)
+		{
+			filterPosition = filterDirection.getIndex();
+
+			CpsMessage message = getEntranceMessage(selector);
+
+			// ExecutionState state =
+			// executionModels[filterPosition][0].getEntranceState(message);
+
+			ExtendedExecutionState extendedState = getStartStateNextLayer(this, message, NO_SIGNATURE_CHECK, null,
+					filterPosition, 0);
+
+			// ExtendedExecutionState extendedState = new
+			// ExtendedExecutionState(this, state, message, NO_SIGNATURE_CHECK,
+			// null, filterPosition, 0);
+
+			entranceTable.put(message, extendedState);
+
+			fullModel = false;
+		}
+
+		public ExtendedExecutionModel(FilterDirection filterDirection, CpsSelector selector)
 		{
 			filterPosition = filterDirection.getIndex();
 

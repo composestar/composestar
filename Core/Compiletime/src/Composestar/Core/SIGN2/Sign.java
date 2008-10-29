@@ -9,23 +9,26 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.Signature;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.PropertyNames;
+import Composestar.Core.CpsRepository2.PropertyPrefix;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsTypeProgramElementImpl;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -46,10 +49,7 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -60,6 +60,8 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Arjan de Roo
  */
+// FIXME this can be optimized a lot, quite some repository.getAll(Concern.clss)
+// calls, and other things
 @ComposestarModule(ID = ModuleNames.SIGN, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH })
 public class Sign implements CTCommonModule
 {
@@ -80,9 +82,9 @@ public class Sign implements CTCommonModule
 
 	private Map<Concern, FireModel> fireModels;
 
-	private Map<Concern, Set<String>> distinguishableSets;
+	private Map<Concern, Set<CpsSelector>> distinguishableSets;
 
-	private Set<MethodWrapper> cyclicDispatchSet;
+	private Set<MethodInfoWrapper> cyclicDispatchSet;
 
 	private boolean change;
 
@@ -97,7 +99,10 @@ public class Sign implements CTCommonModule
 	@ResourceManager
 	private FIRE2Resources fire2Resources;
 
-	private DataStore datastore;
+	@ResourceManager
+	private SIGNResources sign2Resources;
+
+	private Repository repository;
 
 	public Sign()
 	{
@@ -119,7 +124,7 @@ public class Sign implements CTCommonModule
 	{
 		try
 		{
-			datastore = inresc.repository();
+			repository = inresc.repository();
 			// fire2Resources = inresc.getResourceManager(FIRE2Resources.class);
 			error = false;
 			logger.debug("Start signature generation and checking");
@@ -180,33 +185,31 @@ public class Sign implements CTCommonModule
 	{
 		superimposedConcerns = new HashSet<Concern>();
 		fireModels = new HashMap<Concern, FireModel>();
-		distinguishableSets = new HashMap<Concern, Set<String>>();
+		distinguishableSets = new HashMap<Concern, Set<CpsSelector>>();
 
 		initializeSignatures();
 	}
 
 	private void initializeSignatures()
 	{
-		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
-		while (conIter.hasNext())
+		for (Concern concern : repository.getAll(Concern.class))
 		{
-			Concern concern = conIter.next();
-			if (concern.getDynObject(SIinfo.DATAMAP_KEY) == null)
+			if (concern.getSuperimposed() == null)
 			{
-				Signature signature = getSignature(concern);
+				Signature signature = sign2Resources.getSignature(concern);
 				List<MethodInfo> methods = getMethodList(concern);
 
 				// Add all (usr src) methods to the signature with status
 				// existing.
 				for (MethodInfo method : methods)
 				{
-					signature.addMethodWrapper(new MethodWrapper(method, MethodWrapper.EXISTING));
+					signature.addMethodInfoWrapper(new MethodInfoWrapper(method, MethodStatus.EXISTING));
 				}
 			}
 			else
 			{
-				FireModel model = fire2Resources.getFireModel(concern, (FilterModuleOrder) concern
-						.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY));
+				FireModel model = fire2Resources
+						.getFireModel(concern, concern.getSuperimposed().getFilterModuleOrder());
 				fireModels.put(concern, model);
 
 				// initialize distinguishable set:
@@ -249,8 +252,7 @@ public class Sign implements CTCommonModule
 
 		FireModel fireModel = fireModels.get(concern);
 
-		String[] selectors = distinguishableSets.get(concern).toArray(new String[0]);
-		for (String sel : selectors)
+		for (CpsSelector sel : distinguishableSets.get(concern))
 		{
 			ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, sel);
 
@@ -274,15 +276,15 @@ public class Sign implements CTCommonModule
 		addToSignature(concern, sig);
 	}
 
-	private List<MethodInfo> startSignatureClass1(Concern concern, String selector, ExecutionState state)
+	private List<MethodInfo> startSignatureClass1(Concern concern, CpsSelector selector, ExecutionState state)
 	{
 		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
 
-		Message substMessage = state.getSubstitutionMessage();
-		Target substTarget = substMessage.getTarget();
-		String substSelector = substMessage.getSelector();
+		CpsMessage message = state.getMessage();
+		CpsObject target = message.getTarget();
+		CpsSelector newSelector = message.getSelector();
 
-		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		for (MethodInfo method : targetMethods(concern, target, newSelector))
 		{
 			// Add method 'selector' with all types the dispatch method has
 			// in the dispatch target
@@ -291,25 +293,25 @@ public class Sign implements CTCommonModule
 		}
 
 		// Add the probe method for cyclic dependency conflict check
-		MethodInfo probeMethod = new ProbeMethodInfo(selector, "?");
+		MethodInfo probeMethod = new ProbeMethodInfo(selector.getName(), "?");
 		sig.add(probeMethod);
 
 		// Add dispatch selector to distinguishable set of dispatch target:
-		addDistinguishableSelector(concern, substTarget, substSelector);
+		addDistinguishableSelector(concern, target, newSelector);
 
 		return sig;
 	}
 
-	private List<MethodInfo> startSignatureClass2(Concern concern, String selector, ExecutionState state,
+	private List<MethodInfo> startSignatureClass2(Concern concern, CpsSelector selector, ExecutionState state,
 			List<MethodInfo> typeSet)
 	{
 		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
 
-		Message substMessage = state.getSubstitutionMessage();
-		Target substTarget = substMessage.getTarget();
-		String substSelector = substMessage.getSelector();
+		CpsMessage message = state.getMessage();
+		CpsObject target = message.getTarget();
+		CpsSelector newSelector = message.getSelector();
 
-		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		for (MethodInfo method : targetMethods(concern, target, newSelector))
 		{
 			// Add method 'selector' with all types the dispatch method has
 			// in the dispatch target
@@ -323,11 +325,11 @@ public class Sign implements CTCommonModule
 			MethodInfo probeMethod = cloneMethod(typeMethod, "?", typeMethod.parent());
 			sig.add(probeMethod);
 		}
-		MethodInfo probeMethod = new ProbeMethodInfo(selector, "?");
+		MethodInfo probeMethod = new ProbeMethodInfo(selector.getName(), "?");
 		sig.add(probeMethod);
 
 		// Add dispatch selector to distinguishable set of dispatch target:
-		addDistinguishableSelector(concern, substTarget, substSelector);
+		addDistinguishableSelector(concern, target, newSelector);
 
 		return sig;
 	}
@@ -335,8 +337,8 @@ public class Sign implements CTCommonModule
 	private void startSignatureUndistinguishable(Concern concern)
 	{
 		FireModel fireModel = fireModels.get(concern);
-		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input,
-				Message.UNDISTINGUISHABLE_SELECTOR);
+		CpsSelector sel = null;
+		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, sel);
 
 		Map<ExecutionState, List<MethodInfo>> signatureSets = createSignatureSet(concern, execModel);
 		Map<ExecutionState, List<MethodInfo>> typeSets = createTypeSet(concern, execModel);
@@ -345,7 +347,7 @@ public class Sign implements CTCommonModule
 
 		for (ExecutionState state : dispatchStates(execModel))
 		{
-			if (state.getSubstitutionMessage().getSelector().equals(Message.UNDISTINGUISHABLE_SELECTOR))
+			if (state.getMessage().getSelector() == null)
 			{
 				if (signatureSets.get(state) == null)
 				{
@@ -360,7 +362,7 @@ public class Sign implements CTCommonModule
 			{
 				if (signatureSets.get(state) == null)
 				{
-					error("Infinite signature found in concern '" + concern.getQualifiedName() + "'!");
+					error("Infinite signature found in concern '" + concern.getFullyQualifiedName() + "'!");
 				}
 				else
 				{
@@ -386,11 +388,11 @@ public class Sign implements CTCommonModule
 	{
 		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
 
-		Message substMessage = state.getSubstitutionMessage();
-		Target substTarget = substMessage.getTarget();
-		String substSelector = substMessage.getSelector();
+		CpsMessage message = state.getMessage();
+		CpsObject target = message.getTarget();
+		CpsSelector selector = message.getSelector();
 
-		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		for (MethodInfo method : targetMethods(concern, target, selector))
 		{
 			sig.add(method);
 		}
@@ -406,11 +408,11 @@ public class Sign implements CTCommonModule
 	{
 		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
 
-		Message substMessage = state.getSubstitutionMessage();
-		Target substTarget = substMessage.getTarget();
-		String substSelector = substMessage.getSelector();
+		CpsMessage message = state.getMessage();
+		CpsObject target = message.getTarget();
+		CpsSelector sleector = message.getSelector();
 
-		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		for (MethodInfo method : targetMethods(concern, target, sleector))
 		{
 			sig.add(method);
 		}
@@ -430,9 +432,9 @@ public class Sign implements CTCommonModule
 	{
 		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
 
-		Message substMessage = state.getSubstitutionMessage();
-		Target substTarget = substMessage.getTarget();
-		String substSelector = substMessage.getSelector();
+		CpsMessage message = state.getMessage();
+		CpsObject target = message.getTarget();
+		CpsSelector selector = message.getSelector();
 
 		for (MethodInfo method : signatureSet)
 		{
@@ -440,7 +442,7 @@ public class Sign implements CTCommonModule
 		}
 
 		// Add the probe methods for cyclic dependency conflict check
-		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		for (MethodInfo method : targetMethods(concern, target, selector))
 		{
 			sig.add(cloneMethod(method, "?", method.parent()));
 		}
@@ -448,7 +450,7 @@ public class Sign implements CTCommonModule
 		sig.add(probeMethod);
 
 		// Add dispatch selector to distinguishable set of dispatch target:
-		addDistinguishableSelector(concern, substTarget, substSelector);
+		addDistinguishableSelector(concern, target, selector);
 
 		return sig;
 	}
@@ -458,9 +460,9 @@ public class Sign implements CTCommonModule
 	{
 		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
 
-		Message substMessage = state.getSubstitutionMessage();
-		Target substTarget = substMessage.getTarget();
-		String substSelector = substMessage.getSelector();
+		CpsMessage message = state.getMessage();
+		CpsObject target = message.getTarget();
+		CpsSelector selector = message.getSelector();
 
 		for (MethodInfo method : signatureSet)
 		{
@@ -468,7 +470,7 @@ public class Sign implements CTCommonModule
 		}
 
 		// Add the probe methods for cyclic dependency conflict check
-		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		for (MethodInfo method : targetMethods(concern, target, selector))
 		{
 			sig.add(cloneMethod(method, "?", method.parent()));
 		}
@@ -480,7 +482,7 @@ public class Sign implements CTCommonModule
 		sig.add(probeMethod);
 
 		// Add dispatch selector to distinguishable set of dispatch target:
-		addDistinguishableSelector(concern, substTarget, substSelector);
+		addDistinguishableSelector(concern, target, selector);
 
 		return sig;
 	}
@@ -567,19 +569,51 @@ public class Sign implements CTCommonModule
 					{
 						if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
 						{
-							MatchingPart matchingPart = (MatchingPart) startState.getFlowNode().getRepositoryLink();
+							SignatureMatching matchExpr = (SignatureMatching) startState.getFlowNode()
+									.getRepositoryLink();
 
-							// get the matching target:
-							Target matchTarget = matchingPart.getTarget();
-							if (matchTarget.getName().equals(STAR_TARGET))
+							for (CpsVariable var : matchExpr.getRHS())
 							{
-								matchTarget = startState.getMessage().getTarget();
+								// get the matching target:
+								CpsTypeProgramElement matchTarget = null;
+
+								if (var instanceof CpsTypeProgramElement)
+								{
+									matchTarget = (CpsTypeProgramElement) var;
+								}
+								else if (var instanceof CanonProperty)
+								{
+									CanonProperty prop = (CanonProperty) var;
+									if (PropertyNames.INNER.equals(prop.getName()))
+									{
+										matchTarget = new CpsTypeProgramElementImpl(concern.getTypeReference());
+									}
+									else if (PropertyPrefix.MESSAGE == prop.getPrefix())
+									{
+										CpsVariable var2 = startState.getMessage().getProperty(prop.getBaseName());
+										if (var2 instanceof CpsTypeProgramElement)
+										{
+											matchTarget = (CpsTypeProgramElement) var2;
+										}
+									}
+								}
+								else
+								{
+									// FIXME handle this
+									continue;
+								}
+
+								if (matchTarget == null)
+								{
+									// FIXME error
+									continue;
+								}
+
+								// get the matching selector:
+								CpsSelector matchSelector = startState.getMessage().getSelector();
+
+								transitionMatchingSet.addAll(targetMethods(concern, matchTarget, matchSelector));
 							}
-
-							// get the matching selector:
-							String matchSelector = startState.getMessage().getSelector();
-
-							transitionMatchingSet.addAll(targetMethods(concern, matchTarget, matchSelector));
 						}
 						else if (startStateMatchingSet == null)
 						{
@@ -645,12 +679,13 @@ public class Sign implements CTCommonModule
 	 */
 	private boolean checkCorrectSignatureMatchingState(ExecutionState state, int type)
 	{
-		if (!state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING_NODE))
+		if (!state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING))
 		{
 			return false;
 		}
+		// FIXME what is this?
 
-		String selector = state.getMessage().getSelector();
+		CpsSelector selector = state.getMessage().getSelector();
 		if (selector.equals(Message.UNDISTINGUISHABLE_SELECTOR) && type == SIGNATURE_MATCHING_SET)
 		{
 			return true;
@@ -686,16 +721,16 @@ public class Sign implements CTCommonModule
 
 	private void finalSignature(Concern concern)
 	{
-		for (MethodWrapper method : methods(concern))
+		for (MethodInfoWrapper method : methods(concern))
 		{
-			if (method.getStatus() == MethodWrapper.UNKNOWN)
+			if (method.getStatus() == MethodStatus.UNKNOWN)
 			{
 				checkDispatchable(method, concern);
 			}
 		}
 	}
 
-	private void checkDispatchable(MethodWrapper method, Concern concern)
+	private void checkDispatchable(MethodInfoWrapper method, Concern concern)
 	{
 		FireModel fireModel = fireModels.get(concern);
 		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, method.getMethodInfo(),
@@ -704,9 +739,9 @@ public class Sign implements CTCommonModule
 		// Check whether it can be marked EXISTING
 		for (ExecutionState state : dispatchStates(execModel))
 		{
-			if (getDispatchTargetStatus(concern, method.getMethodInfo(), state) == MethodWrapper.EXISTING)
+			if (getDispatchTargetStatus(concern, method.getMethodInfo(), state) == MethodStatus.EXISTING)
 			{
-				method.setStatus(MethodWrapper.EXISTING);
+				method.setStatus(MethodStatus.EXISTING);
 				change = true;
 				return;
 			}
@@ -718,7 +753,7 @@ public class Sign implements CTCommonModule
 
 		for (ExecutionState state : dispatchStates(execModel))
 		{
-			if (getDispatchTargetStatus(concern, method.getMethodInfo(), state) != MethodWrapper.NOT_EXISTING)
+			if (getDispatchTargetStatus(concern, method.getMethodInfo(), state) != MethodStatus.NOT_EXISTING)
 			{
 				return;
 			}
@@ -726,7 +761,7 @@ public class Sign implements CTCommonModule
 
 		// When it cannot be marked EXISTING and it does not keep the
 		// UNKNOWN marking, mark it NOT_EXISTING
-		method.setStatus(MethodWrapper.NOT_EXISTING);
+		method.setStatus(MethodStatus.NOT_EXISTING);
 		change = true;
 	}
 
@@ -747,11 +782,11 @@ public class Sign implements CTCommonModule
 	{
 		for (Concern concern : superimposedConcerns)
 		{
-			for (MethodWrapper method : methods(concern))
+			for (MethodInfoWrapper method : methods(concern))
 			{
-				if (method.getStatus() == MethodWrapper.UNKNOWN)
+				if (method.getStatus() == MethodStatus.UNKNOWN)
 				{
-					error("Cyclic dependency conflict found in concern '" + concern.getQualifiedName()
+					error("Cyclic dependency conflict found in concern '" + concern.getFullyQualifiedName()
 							+ "' on method '" + methodInfoString(method.getMethodInfo()) + "'!");
 				}
 			}
@@ -763,9 +798,9 @@ public class Sign implements CTCommonModule
 		for (Concern concern : superimposedConcerns)
 		{
 			FireModel fireModel = fireModels.get(concern);
-			for (MethodWrapper method : methods(concern))
+			for (MethodInfoWrapper method : methods(concern))
 			{
-				if (method.getStatus() != MethodWrapper.EXISTING)
+				if (method.getStatus() != MethodStatus.EXISTING)
 				{
 					// Check only existing methods
 					continue;
@@ -778,9 +813,9 @@ public class Sign implements CTCommonModule
 					if (!existsDispatchTarget(concern, method.getMethodInfo(), state))
 					{
 						warning("The methodcall to method '" + methodInfoString(method.getMethodInfo())
-								+ "' in concern '" + concern.name + "' might be dispatched to the unresolved method '"
-								+ state.getSubstitutionMessage().getSelector() + "' in '"
-								+ targetInfoString(state.getSubstitutionMessage().getTarget()) + "'!", state
+								+ "' in concern '" + concern.getName()
+								+ "' might be dispatched to the unresolved method '" + state.getMessage().getSelector()
+								+ "' in '" + targetInfoString(state.getMessage().getTarget()) + "'!", state
 								.getFlowNode().getRepositoryLink());
 					}
 				}
@@ -799,8 +834,8 @@ public class Sign implements CTCommonModule
 	 */
 	private boolean existsDispatchTarget(Concern concern, MethodInfo method, ExecutionState state)
 	{
-		int status = getDispatchTargetStatus(concern, method, state);
-		return status != MethodWrapper.NOT_EXISTING;
+		MethodStatus status = getDispatchTargetStatus(concern, method, state);
+		return status != MethodStatus.NOT_EXISTING;
 	}
 
 	private void cyclicDispatchConflictCheck()
@@ -812,12 +847,12 @@ public class Sign implements CTCommonModule
 
 	private void cyclicDispatchConflictCheckInit()
 	{
-		cyclicDispatchSet = new HashSet<MethodWrapper>();
+		cyclicDispatchSet = new HashSet<MethodInfoWrapper>();
 		for (Concern concern : superimposedConcerns)
 		{
-			for (MethodWrapper method : methods(concern))
+			for (MethodInfoWrapper method : methods(concern))
 			{
-				if (method.getStatus() == MethodWrapper.EXISTING)
+				if (method.getStatus() == MethodStatus.EXISTING)
 				{
 					cyclicDispatchSet.add(method);
 				}
@@ -834,7 +869,7 @@ public class Sign implements CTCommonModule
 			for (Concern concern : superimposedConcerns)
 			{
 				FireModel fireModel = fireModels.get(concern);
-				for (MethodWrapper wrapper : methods(concern))
+				for (MethodInfoWrapper wrapper : methods(concern))
 				{
 					boolean cyclDisp = false;
 					ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, wrapper
@@ -842,8 +877,8 @@ public class Sign implements CTCommonModule
 					MethodInfo methodInfo = wrapper.getMethodInfo();
 					for (ExecutionState state : dispatchStates(execModel))
 					{
-						MethodWrapper targetMethod = getTargetMethod(concern, methodInfo, state
-								.getSubstitutionMessage().getTarget(), state.getSubstitutionMessage().getSelector());
+						MethodInfoWrapper targetMethod = getTargetMethod(concern, methodInfo, state.getMessage()
+								.getTarget(), state.getMessage().getSelector());
 						if (cyclicDispatchSet.contains(targetMethod))
 						{
 							cyclDisp = true;
@@ -868,11 +903,11 @@ public class Sign implements CTCommonModule
 	{
 		for (Concern concern : superimposedConcerns)
 		{
-			for (MethodWrapper method : methods(concern))
+			for (MethodInfoWrapper method : methods(concern))
 			{
 				if (cyclicDispatchSet.contains(method))
 				{
-					warning("Cyclic dispatch conflict found in concern '" + concern.getQualifiedName()
+					warning("Cyclic dispatch conflict found in concern '" + concern.getFullyQualifiedName()
 							+ "' on method '" + methodInfoString(method.getMethodInfo()) + "'!");
 					break;
 				}
@@ -882,25 +917,17 @@ public class Sign implements CTCommonModule
 
 	private List<MethodInfo> getMethodList(Concern c)
 	{
-		Type dt = (Type) c.getPlatformRepresentation();
+		if (c.getTypeReference() == null)
+		{
+			return new ArrayList<MethodInfo>();
+		}
+		Type dt = (Type) c.getTypeReference().getReference();
 		if (dt == null)
 		{
-			return new LinkedList<MethodInfo>();
+			return new ArrayList<MethodInfo>();
 		}
 
-		return new LinkedList<MethodInfo>(dt.getMethods());
-	}
-
-	private static Signature getSignature(Concern c)
-	{
-		Signature signature = c.getSignature();
-		if (signature == null)
-		{
-			signature = new Signature();
-			c.setSignature(signature);
-		}
-
-		return signature;
+		return new ArrayList<MethodInfo>(dt.getMethods());
 	}
 
 	private String methodInfoString(MethodInfo info)
@@ -925,22 +952,25 @@ public class Sign implements CTCommonModule
 		return buffer.toString();
 	}
 
-	private String targetInfoString(Target target)
+	private String targetInfoString(CpsObject target)
 	{
-		if (target.getName().equals(Target.SELF))
-		{
-			return "self";
-		}
-		else if (target.getName().equals(Target.INNER))
-		{
-			return "inner";
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
-			Concern targetConcern = ref.getRef().getType().getRef();
-			return target.getName() + '(' + targetConcern.getQualifiedName() + ')';
-		}
+		return target.toString();
+		// if (target.getName().equals(Target.SELF))
+		// {
+		// return "self";
+		// }
+		// else if (target.getName().equals(Target.INNER))
+		// {
+		// return "inner";
+		// }
+		// else
+		// {
+		// DeclaredObjectReference ref = (DeclaredObjectReference)
+		// target.getRef();
+		// Concern targetConcern = ref.getRef().getType().getRef();
+		// return target.getName() + '(' + targetConcern.getFullyQualifiedName()
+		// + ')';
+		// }
 	}
 
 	// ####################################################
@@ -951,49 +981,45 @@ public class Sign implements CTCommonModule
 
 	public void finishing()
 	{
-		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
-
-		while (conIter.hasNext())
+		for (Concern concern : repository.getAll(Concern.class))
 		{
-			Concern concern = conIter.next();
-
 			List<MethodInfo> dnmi = getMethodList(concern);
-			Signature signature = concern.getSignature();
+			Signature signature = sign2Resources.getSignature(concern);
 
 			for (MethodInfo methodInfo : dnmi)
 			{
-				MethodWrapper wrapper = signature.getMethodWrapper(methodInfo);
+				MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(methodInfo);
 
 				if (wrapper == null)
 				{
-					wrapper = new MethodWrapper(methodInfo, MethodWrapper.NOT_EXISTING);
-					wrapper.setRelationType(MethodWrapper.REMOVED);
-					signature.addMethodWrapper(wrapper);
+					wrapper = new MethodInfoWrapper(methodInfo, MethodStatus.NOT_EXISTING);
+					wrapper.setRelation(MethodRelation.REMOVED);
+					signature.addMethodInfoWrapper(wrapper);
 				}
-				else if (wrapper.getStatus() == MethodWrapper.NOT_EXISTING)
+				else if (wrapper.getStatus() == MethodStatus.NOT_EXISTING)
 				{
-					wrapper.setRelationType(MethodWrapper.REMOVED);
-					signature.addMethodWrapper(wrapper);
+					wrapper.setRelation(MethodRelation.REMOVED);
+					signature.addMethodInfoWrapper(wrapper);
 				}
 				else
 				{
-					wrapper.setRelationType(MethodWrapper.NORMAL);
-					signature.addMethodWrapper(wrapper);
+					wrapper.setRelation(MethodRelation.NORMAL);
+					signature.addMethodInfoWrapper(wrapper);
 				}
 			}
 
-			for (MethodWrapper wrapper : methods(concern))
+			for (MethodInfoWrapper wrapper : methods(concern))
 			{
 				MethodInfo minfo = wrapper.getMethodInfo();
 				if (!containsMethod(dnmi, minfo))
 				{
-					if (wrapper.getStatus() == MethodWrapper.EXISTING)
+					if (wrapper.getStatus() == MethodStatus.EXISTING)
 					{
-						wrapper.setRelationType(MethodWrapper.ADDED);
+						wrapper.setRelation(MethodRelation.ADDED);
 					}
 					else
 					{
-						signature.removeMethodWrapper(wrapper);
+						signature.removeMethodInfoWrapper(wrapper);
 					}
 				}
 			}
@@ -1005,37 +1031,32 @@ public class Sign implements CTCommonModule
 		boolean signaturesmodified = false;
 
 		// Get all the concerns
-		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
-		while (conIter.hasNext())
+		for (Concern concern : repository.getAll(Concern.class))
 		{
-			Concern concern = conIter.next();
-
-			Signature st = concern.getSignature();
-			if (st != null && concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
+			if (concern.getSuperimposed() != null)
 			{
-				logger.info("\tSignature for concern: " + concern.getQualifiedName());
+				Signature st = sign2Resources.getSignature(concern);
+				logger.info("\tSignature for concern: " + concern.getFullyQualifiedName());
 
 				// Show them your goodies.
-				Iterator<MethodWrapper> wrapperIter = st.getMethodWrapperIterator();
-				while (wrapperIter.hasNext())
+				for (MethodInfoWrapper wrapper : st.getMethodInfoWrappers())
 				{
-					MethodWrapper wrapper = wrapperIter.next();
-					if (wrapper.getRelationType() == MethodWrapper.REMOVED
-							|| wrapper.getRelationType() == MethodWrapper.ADDED)
+					if (wrapper.getRelation() == MethodRelation.REMOVED
+							|| wrapper.getRelation() == MethodRelation.ADDED)
 					{
 						signaturesmodified = true;
 					}
 
 					String relation = "?";
-					if (wrapper.getRelationType() == MethodWrapper.ADDED)
+					if (wrapper.getRelation() == MethodRelation.ADDED)
 					{
 						relation = "added";
 					}
-					if (wrapper.getRelationType() == MethodWrapper.REMOVED)
+					if (wrapper.getRelation() == MethodRelation.REMOVED)
 					{
 						relation = "removed";
 					}
-					if (wrapper.getRelationType() == MethodWrapper.NORMAL)
+					if (wrapper.getRelation() == MethodRelation.NORMAL)
 					{
 						relation = "kept";
 					}
@@ -1064,20 +1085,16 @@ public class Sign implements CTCommonModule
 	 */
 	public void cleanProbes()
 	{
-		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
-
-		while (conIter.hasNext())
+		for (Concern concern : repository.getAll(Concern.class))
 		{
-			Concern concern = conIter.next();
+			Signature signature = sign2Resources.getSignature(concern);
 
-			Signature signature = concern.getSignature();
-
-			for (MethodWrapper wrapper : methods(concern))
+			for (MethodInfoWrapper wrapper : methods(concern))
 			{
 				MethodInfo minfo = wrapper.getMethodInfo();
 				if (minfo instanceof ProbeMethodInfo)
 				{
-					signature.removeMethodWrapper(wrapper);
+					signature.removeMethodInfoWrapper(wrapper);
 				}
 			}
 		}
@@ -1114,7 +1131,7 @@ public class Sign implements CTCommonModule
 		logger.warn(msg, entity);
 	}
 
-	private MethodInfo cloneMethod(MethodInfo method, Concern concern, String selector, Concern newConcern)
+	private MethodInfo cloneMethod(MethodInfo method, Concern concern, CpsSelector selector, Concern newConcern)
 	{
 		if (selector.equals(method.getName()) && concern.equals(newConcern))
 		{
@@ -1122,7 +1139,11 @@ public class Sign implements CTCommonModule
 		}
 		else
 		{
-			return method.getClone(selector, (Type) newConcern.getPlatformRepresentation());
+			if (newConcern.getTypeReference() == null)
+			{
+				// TODO error and recovery
+			}
+			return method.getClone(selector.getName(), newConcern.getTypeReference().getReference());
 		}
 	}
 
@@ -1160,39 +1181,40 @@ public class Sign implements CTCommonModule
 	 * @param selector The selector to test.
 	 * @return A list containing the requested methods from the target.
 	 */
-	private List<MethodInfo> targetMethods(Concern concern, Target target, String selector)
+	private List<MethodInfo> targetMethods(Concern concern, CpsTypeProgramElement target, CpsSelector selector)
 	{
 		// get dispatchtarget concern and methods:
-		List<MethodInfo> methods;
-		if (target.getName().equals(Target.INNER))
-		{
-			methods = getMethodList(concern);
-		}
-		else
-		{
-			Concern targetConcern;
+		Collection<MethodInfo> methods = target.getTypeReference().getReference().getMethods();
+		// if (target.getName().equals(Target.INNER))
+		// {
+		// methods = getMethodList(concern);
+		// }
+		// else
+		// {
+		// Concern targetConcern;
+		//
+		// if (target.getName().equals(Target.SELF))
+		// {
+		// targetConcern = concern;
+		// }
+		// else
+		// {
+		// DeclaredObjectReference ref = (DeclaredObjectReference)
+		// target.getRef();
+		// targetConcern = ref.getRef().getType().getRef();
+		// }
+		//
+		// Signature signature = sign2Resources.getSignature(targetConcern);
+		// methods = signature.getMethods();
+		// }
 
-			if (target.getName().equals(Target.SELF))
-			{
-				targetConcern = concern;
-			}
-			else
-			{
-				DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
-				targetConcern = ref.getRef().getType().getRef();
-			}
-
-			Signature signature = getSignature(targetConcern);
-			methods = signature.getMethods();
-		}
-
-		Set<String> distinguishableSelectors = fireModels.get(concern).getDistinguishableSelectors(
+		Set<CpsSelector> distinguishableSelectors = fireModels.get(concern).getDistinguishableSelectors(
 				FilterDirection.Input);
 
 		ArrayList<MethodInfo> targetMethods = new ArrayList<MethodInfo>();
 		for (MethodInfo method : methods)
 		{
-			if (selector.equals(Message.UNDISTINGUISHABLE_SELECTOR))
+			if (selector == null) // undistinguishable
 			{
 				if (!distinguishableSelectors.contains(method.getName()))
 				{
@@ -1221,32 +1243,35 @@ public class Sign implements CTCommonModule
 	 */
 	private void addToSignature(Concern concern, List<MethodInfo> sig)
 	{
-		Signature signature = getSignature(concern);
+		Signature signature = sign2Resources.getSignature(concern);
 		for (MethodInfo method : sig)
 		{
 			if (!signature.hasMethod(method))
 			{
-				MethodInfo newMethod = cloneMethod(method, method.getName(), (Type) concern.getPlatformRepresentation());
-				MethodWrapper wrapper = new MethodWrapper(newMethod, MethodWrapper.UNKNOWN);
-				signature.addMethodWrapper(wrapper);
+				// TODO null check on TypeReference
+				MethodInfo newMethod = cloneMethod(method, method.getName(), concern.getTypeReference().getReference());
+				MethodInfoWrapper wrapper = new MethodInfoWrapper(newMethod, MethodStatus.UNKNOWN);
+				signature.addMethodInfoWrapper(wrapper);
 				change = true;
 			}
 		}
 	}
 
-	private void addDistinguishableSelector(Concern concern, Target target, String selector)
+	private void addDistinguishableSelector(Concern concern, CpsObject target, CpsSelector selector)
 	{
-		Concern targetConcern;
+		Concern targetConcern = repository.get(target.getTypeReference().getReferenceId(), Concern.class);
 
-		if (target.getName().equals(Target.INNER) || target.getName().equals(Target.SELF))
-		{
-			targetConcern = concern;
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
-			targetConcern = ref.getRef().getType().getRef();
-		}
+		// if (target.getName().equals(Target.INNER) ||
+		// target.getName().equals(Target.SELF))
+		// {
+		// targetConcern = concern;
+		// }
+		// else
+		// {
+		// DeclaredObjectReference ref = (DeclaredObjectReference)
+		// target.getRef();
+		// targetConcern = ref.getRef().getType().getRef();
+		// }
 
 		if (distinguishableSets.containsKey(targetConcern))
 		{
@@ -1267,16 +1292,10 @@ public class Sign implements CTCommonModule
 		return false;
 	}
 
-	private List<MethodWrapper> methods(Concern concern)
+	private Collection<MethodInfoWrapper> methods(Concern concern)
 	{
-		Signature signature = getSignature(concern);
-		ArrayList<MethodWrapper> list = new ArrayList<MethodWrapper>();
-		Iterator<MethodWrapper> wrapperIter = signature.getMethodWrapperIterator();
-		while (wrapperIter.hasNext())
-		{
-			list.add(wrapperIter.next());
-		}
-		return list;
+		Signature signature = sign2Resources.getSignature(concern);
+		return signature.getMethodInfoWrappers();
 	}
 
 	/**
@@ -1287,15 +1306,9 @@ public class Sign implements CTCommonModule
 	 * @param state The dispatch state
 	 * @return The status of the dispatch target method.
 	 */
-	private int getDispatchTargetStatus(Concern concern, MethodInfo method, ExecutionState state)
+	private MethodStatus getDispatchTargetStatus(Concern concern, MethodInfo method, ExecutionState state)
 	{
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-
-		return getMethodStatus(concern, method, dispTarget, dispSelector);
+		return getMethodStatus(concern, method, state.getMessage().getTarget(), state.getMessage().getSelector());
 	}
 
 	/**
@@ -1307,88 +1320,60 @@ public class Sign implements CTCommonModule
 	 * @param selector The name of the target method
 	 * @return The status of the dispatch target method.
 	 */
-	public static int getMethodStatus(Concern concern, MethodInfo method, CpsTypeProgramElement target,
+	public MethodStatus getMethodStatus(Concern concern, MethodInfo method, CpsTypeProgramElement target,
 			CpsSelector selector)
 	{
 		// get the methods from the dispatch target
-		List<MethodInfo> methods;
-		Type type;
-		if (target.getName().equals(Target.INNER))
-		{
-			type = (Type) concern.getPlatformRepresentation();
-			methods = type.getMethods();
+		Type type = target.getTypeReference().getReference();
+		Concern targetConcern;
 
-			// Check whether the dispatchmethod is contained in the dispatch
-			// target
-			MethodInfo dispatchMethod = method.getClone(selector, type);
-			if (containsMethod(methods, dispatchMethod))
-			{
-				return MethodWrapper.EXISTING;
-			}
-			else
-			{
-				return MethodWrapper.NOT_EXISTING;
-			}
+		MethodInfo dispatchMethod = method.getClone(selector.getName(), type);
+		targetConcern = repository.get(target.getTypeReference().getReferenceId(), Concern.class);
+
+		// get the method wrapper
+		Signature signature = sign2Resources.getSignature(targetConcern);
+		MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(dispatchMethod);
+		if (wrapper == null)
+		{
+			return MethodStatus.NOT_EXISTING;
 		}
 		else
 		{
-			Concern targetConcern;
-
-			if (target.getName().equals(Target.SELF))
-			{
-				targetConcern = concern;
-			}
-			else
-			{
-				DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
-				targetConcern = ref.getRef().getType().getRef();
-			}
-
-			type = (Type) targetConcern.getPlatformRepresentation();
-			MethodInfo dispatchMethod = method.getClone(selector, type);
-
-			// get the method wrapper
-			Signature signature = getSignature(targetConcern);
-			MethodWrapper wrapper = signature.getMethodWrapper(dispatchMethod);
-			if (wrapper == null)
-			{
-				return MethodWrapper.NOT_EXISTING;
-			}
-			else
-			{
-				return wrapper.getStatus();
-			}
+			return wrapper.getStatus();
 		}
+
 	}
 
-	private MethodWrapper getTargetMethod(Concern concern, MethodInfo methodInfo, Target target, String selector)
+	private MethodInfoWrapper getTargetMethod(Concern concern, MethodInfo methodInfo, CpsObject target,
+			CpsSelector selector)
 	{
 		// get the methods from the dispatch target
-		Type type;
-		if (target.getName().equals(Target.INNER))
+		if (target.isInnerObject())
 		{
 			return null;
 		}
 		else
 		{
-			Concern targetConcern;
+			// Concern targetConcern;
+			//
+			// if (target.getName().equals(Target.SELF))
+			// {
+			// targetConcern = concern;
+			// }
+			// else
+			// {
+			// DeclaredObjectReference ref = (DeclaredObjectReference)
+			// target.getRef();
+			// targetConcern = ref.getRef().getType().getRef();
+			// }
 
-			if (target.getName().equals(Target.SELF))
-			{
-				targetConcern = concern;
-			}
-			else
-			{
-				DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
-				targetConcern = ref.getRef().getType().getRef();
-			}
-
-			type = (Type) targetConcern.getPlatformRepresentation();
-			MethodInfo dispatchMethod = methodInfo.getClone(selector, type);
+			Type type = target.getTypeReference().getReference();
+			MethodInfo dispatchMethod = methodInfo.getClone(selector.getName(), type);
 
 			// get the method wrapper
-			Signature signature = getSignature(targetConcern);
-			MethodWrapper wrapper = signature.getMethodWrapper(dispatchMethod);
+			Signature signature = sign2Resources.getSignature(repository.get(
+					target.getTypeReference().getReferenceId(), Concern.class));
+			MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(dispatchMethod);
 			return wrapper;
 		}
 	}
