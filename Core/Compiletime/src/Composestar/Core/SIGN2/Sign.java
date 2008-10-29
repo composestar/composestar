@@ -36,7 +36,6 @@ import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
-import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.iterator.OrderedExecutionStateIterator;
@@ -102,6 +101,9 @@ public class Sign implements CTCommonModule
 	@ResourceManager
 	private SIGNResources sign2Resources;
 
+	// FIXME BRIAN DON'T!!!
+	private static SIGNResources staticSign2Resources;
+
 	private Repository repository;
 
 	public Sign()
@@ -124,6 +126,7 @@ public class Sign implements CTCommonModule
 	{
 		try
 		{
+			staticSign2Resources = sign2Resources;
 			repository = inresc.repository();
 			// fire2Resources = inresc.getResourceManager(FIRE2Resources.class);
 			error = false;
@@ -565,7 +568,7 @@ public class Sign implements CTCommonModule
 					// Check whether the start state is a signature matching
 					// state and add the
 					// matched methods from the signature to the matching set:
-					if (checkCorrectSignatureMatchingState(state, type))
+					if (checkCorrectSignatureMatchingState(startState, type))
 					{
 						if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
 						{
@@ -683,15 +686,14 @@ public class Sign implements CTCommonModule
 		{
 			return false;
 		}
-		// FIXME what is this?
 
 		CpsSelector selector = state.getMessage().getSelector();
-		if (selector.equals(Message.UNDISTINGUISHABLE_SELECTOR) && type == SIGNATURE_MATCHING_SET)
+		if (selector == null && type == SIGNATURE_MATCHING_SET)
 		{
 			return true;
 		}
 
-		if (!selector.equals(Message.UNDISTINGUISHABLE_SELECTOR) && type == TYPE_MATCHING_SET)
+		if (selector != null && type == TYPE_MATCHING_SET)
 		{
 			return true;
 		}
@@ -1295,7 +1297,7 @@ public class Sign implements CTCommonModule
 	private Collection<MethodInfoWrapper> methods(Concern concern)
 	{
 		Signature signature = sign2Resources.getSignature(concern);
-		return signature.getMethodInfoWrappers();
+		return new ArrayList<MethodInfoWrapper>(signature.getMethodInfoWrappers());
 	}
 
 	/**
@@ -1320,18 +1322,16 @@ public class Sign implements CTCommonModule
 	 * @param selector The name of the target method
 	 * @return The status of the dispatch target method.
 	 */
-	public MethodStatus getMethodStatus(Concern concern, MethodInfo method, CpsTypeProgramElement target,
+	public static MethodStatus getMethodStatus(Concern concern, MethodInfo method, CpsTypeProgramElement target,
 			CpsSelector selector)
 	{
 		// get the methods from the dispatch target
 		Type type = target.getTypeReference().getReference();
-		Concern targetConcern;
 
 		MethodInfo dispatchMethod = method.getClone(selector.getName(), type);
-		targetConcern = repository.get(target.getTypeReference().getReferenceId(), Concern.class);
 
 		// get the method wrapper
-		Signature signature = sign2Resources.getSignature(targetConcern);
+		Signature signature = staticSign2Resources.getSignature(target.getTypeReference().getReferenceId());
 		MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(dispatchMethod);
 		if (wrapper == null)
 		{
