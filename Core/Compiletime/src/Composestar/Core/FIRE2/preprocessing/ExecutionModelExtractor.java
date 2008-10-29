@@ -55,8 +55,37 @@ public class ExecutionModelExtractor
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);
 
+	/**
+	 * Rules encountered in the GTS which are not execution transitions (i.e.
+	 * don't change the pc edge). When an transition is encountered in the graph
+	 * state with this rule name it will be added to the non-execution
+	 * transitions list queued to be cleaned up.
+	 */
+	private static final Set<String> nonExecTransRules;
+
+	static
+	{
+		nonExecTransRules = new HashSet<String>();
+		nonExecTransRules.add("Deferred");
+		nonExecTransRules.add("Deferred-NewProperty");
+		// these should be ignored by the node creations
+		nonExecTransRules.add("InitFrame");
+		nonExecTransRules.add("InitMessage");
+		nonExecTransRules.add("InitMessage-CmpSignature");
+		nonExecTransRules.add("InitMessage-CmpSignature-Alt");
+		nonExecTransRules.add("InitMessage-CmpSignature-Other");
+		nonExecTransRules.add("InitMessage-Deferred");
+		nonExecTransRules.add("InitMessage-End");
+	}
+
 	private Map<GraphState, BasicExecutionState> stateTable;
 
+	/**
+	 * Transitions which are not execution transitions and therefore should not
+	 * be listed in the execution model. These transitions are relinked by
+	 * copying the end nodes of the outgoing transitions of the end node in this
+	 * transition with the begin node.
+	 */
 	private Set<ExecutionTransition> nonExecTransitions;
 
 	/**
@@ -156,7 +185,7 @@ public class ExecutionModelExtractor
 		ExecutionTransition exeTrans = new BasicExecutionTransition(startState, transition.label().text(), endState,
 				flowTransition);
 
-		if (flowTransition == null)
+		if (flowTransition == null || nonExecTransRules.contains(transition.label().text()))
 		{
 			nonExecTransitions.add(exeTrans);
 		}
@@ -184,10 +213,10 @@ public class ExecutionModelExtractor
 				BasicExecutionState newEnd = (BasicExecutionState) trans.getEndState();
 				FlowTransition flowTransition = startState.getFlowNode().getTransition(newEnd.getFlowNode());
 
-				if (flowTransition == null)
+				if (flowTransition == null || nonExecTransRules.contains(trans.getLabel()))
 				{
 					// TODO nice error?
-					throw new IllegalStateException("Two concecutive non-flow transitions");
+					throw new IllegalStateException("Two concecutive non-execution transitions");
 				}
 
 				ExecutionTransition exeTrans = new BasicExecutionTransition(startState, trans.getLabel(), newEnd,
@@ -239,7 +268,7 @@ public class ExecutionModelExtractor
 				}
 				else if (fedfe.label().equals(INIT_LABEL) && fedfe.opposite().equals(fedfe.source()))
 				{
-					// still being initialized
+					// still being initialized, escape from the node creation.
 					return false;
 				}
 				else if (fedfe.label().equals(FRAME_LABEL) && fedfe.opposite().equals(fedfe.source()))

@@ -22,6 +22,8 @@ import Composestar.Core.FIRE2.util.iterator.OrderedFlowNodeIterator;
 /**
  * The hart of CORE which performs the actual consistency reasoning
  */
+// FIXME add conflict detection for new canonical filter conflicts (i.e.
+// uninitalized message properties, ...)
 public class CoreConflictDetector
 {
 	private FlowNode currentFilterNode;
@@ -36,7 +38,7 @@ public class CoreConflictDetector
 
 	private FlowNode currentFilterElementNode;
 
-	private FlowNode currentConditionOperatorNode;
+	private FlowNode currentMatchingExpressionNode;
 
 	private FlowNode currentMatchingPatternNode;
 
@@ -49,7 +51,7 @@ public class CoreConflictDetector
 	public CoreConflictDetector()
 	{}
 
-	public CoreConflict[] findConflicts(FireModel fireModel)
+	public List<CoreConflict> findConflicts(FireModel fireModel)
 	{
 		// Input filters:
 		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input);
@@ -63,8 +65,7 @@ public class CoreConflictDetector
 		flowModel = fireModel.getFlowModel(FilterDirection.Output);
 		reachableParts = findReachableParts(execModel);
 		conflicts.addAll(checkForConflicts(flowModel, reachableParts));
-
-		return conflicts.toArray(new CoreConflict[conflicts.size()]);
+		return conflicts;
 	}
 
 	private Set<Object> findReachableParts(ExecutionModel execModel)
@@ -120,16 +121,11 @@ public class CoreConflictDetector
 				currentFilterElementNode = node;
 				filterElementCounter++;
 			}
-			else if (node.containsName(FlowNode.CONDITION_OPERATOR_NODE))
+			else if (node.containsName(FlowNode.MATCHING_EXPRESSION_NODE))
 			{
-				currentConditionOperatorNode = node;
+				currentMatchingExpressionNode = node;
 			}
-			else if (node.containsName(FlowNode.MATCHING_PART_NODE))
-			{
-				// FIXME, should be matching pattern node
-				currentMatchingPatternNode = node;
-			}
-			else if (node.containsName(FlowNode.ACTION_NODE))
+			else if (node.containsName(FlowNode.FILTER_ACTION_NODE))
 			{
 				currentActionNodes.add(node);
 			}
@@ -162,12 +158,13 @@ public class CoreConflictDetector
 
 		if (currentFilterNode != null && rejectingFilterElementCounter == filterElementCounter)
 		{
-			CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_ALWAYS_REJECTS, currentFilterNode
+			CoreConflict conflict = new CoreConflict(ConflictType.FILTER_ALWAYS_REJECTS, currentFilterNode
 					.getRepositoryLink());
 			conflicts.add(conflict);
 
 		}
 
+		// TODO this isn't property checked ...
 		if (!unreachableActionNodes.isEmpty())
 		{
 			boolean onlyContinue = true;
@@ -183,7 +180,7 @@ public class CoreConflictDetector
 
 			if (onlyContinue)
 			{
-				CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_REDUNDANT, currentFilterNode
+				CoreConflict conflict = new CoreConflict(ConflictType.FILTER_REDUNDANT, currentFilterNode
 						.getRepositoryLink(), accRejFilterConflict);
 				conflicts.add(conflict);
 			}
@@ -213,23 +210,23 @@ public class CoreConflictDetector
 		{
 			unreachableFilter = true;
 
-			CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_UNREACHABLE, unreachableNode
+			CoreConflict conflict = new CoreConflict(ConflictType.FILTER_UNREACHABLE, unreachableNode
 					.getRepositoryLink(), accRejFilterConflict);
 			conflicts.add(conflict);
 		}
 		else if (unreachableNode.containsName(FlowNode.FILTER_ELEMENT_NODE))
 		{
-			CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_ELEMENT_UNREACHABLE, unreachableNode
+			CoreConflict conflict = new CoreConflict(ConflictType.FILTER_ELEMENT_UNREACHABLE, unreachableNode
 					.getRepositoryLink(), acceptingFilterElementConflict);
 			conflicts.add(conflict);
 		}
-		else if (unreachableNode.containsName(FlowNode.MATCHING_PATTERN_NODE))
+		else if (unreachableNode.containsName(FlowNode.MATCHING_EXPRESSION_NODE))
 		{
-			CoreConflict conflict = new CoreConflict(CoreConflict.MATCHING_PATTERN_UNREACHABLE, unreachableNode
+			CoreConflict conflict = new CoreConflict(ConflictType.MATCHING_EXPRESSION_UNREACHABLE, unreachableNode
 					.getRepositoryLink());
 			conflicts.add(conflict);
 		}
-		else if (unreachableNode.containsName(FlowNode.ACTION_NODE))
+		else if (unreachableNode.containsName(FlowNode.FILTER_ACTION_NODE))
 		{
 			unreachableActionNodes.add(unreachableNode);
 		}
@@ -250,61 +247,67 @@ public class CoreConflictDetector
 
 		if (unreachableTransition.getType() == FlowTransition.FLOW_TRUE_TRANSITION)
 		{
-			if (unreachableTransition.getStartNode().containsName(FlowNode.CONDITION_EXPRESSION_NODE))
+			if (unreachableTransition.getStartNode().containsName(FlowNode.FALSE_NODE))
+			{
+				// the "flowTrue" transition of the False node is never reached
+			}
+
+			// TODO: unverified conflicts
+			else if (unreachableTransition.getStartNode().containsName(FlowNode.CONDITION_EXPRESSION_NODE))
 			{
 				// Condition expression
-				CoreConflict conflict1 = new CoreConflict(CoreConflict.CONDITION_EXPRESSION_FALSE,
+				CoreConflict conflict1 = new CoreConflict(ConflictType.CONDITION_EXPRESSION_FALSE,
 						unreachableTransition.getStartNode().getRepositoryLink());
 				conflicts.add(conflict1);
 
-				CoreConflict conflict2 = new CoreConflict(CoreConflict.FILTER_ELEMENT_ALWAYS_REJECTS,
+				CoreConflict conflict2 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
 						currentFilterElementNode.getRepositoryLink(), conflict1);
 				conflicts.add(conflict2);
 				rejectingFilterElementCounter++;
 
-				CoreConflict conflict3 = new CoreConflict(CoreConflict.FILTER_ELEMENT_REDUNDANT,
+				CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
 						currentFilterElementNode.getRepositoryLink(), conflict2);
 				conflicts.add(conflict3);
 			}
 			else
 			{
 				// Matching part
-				CoreConflict conflict1 = new CoreConflict(CoreConflict.MATCHING_PART_NEVER_MATCHES,
+				CoreConflict conflict1 = new CoreConflict(ConflictType.MATCHING_PART_NEVER_MATCHES,
 						unreachableTransition.getStartNode().getRepositoryLink());
 				conflicts.add(conflict1);
 
-				if (currentConditionOperatorNode.containsName(FlowNode.ENABLE_OPERATOR_NODE))
+				if (currentMatchingExpressionNode.containsName(FlowNode.ENABLE_OPERATOR_NODE))
 				{
-					CoreConflict conflict2 = new CoreConflict(CoreConflict.MATCHING_PATTERN_ALWAYS_REJECTS,
+					CoreConflict conflict2 = new CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_REJECTS,
 							currentMatchingPatternNode.getRepositoryLink(), conflict1);
 
 					conflicts.add(conflict2);
 
 					// TODO: add always rejecting filter element check
-					CoreConflict conflict3 = new CoreConflict(CoreConflict.FILTER_ELEMENT_ALWAYS_REJECTS,
+					CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
 							currentFilterElementNode.getRepositoryLink(), conflict2);
 					conflicts.add(conflict3);
 					rejectingFilterElementCounter++;
 
-					CoreConflict conflict4 = new CoreConflict(CoreConflict.FILTER_ELEMENT_REDUNDANT,
+					CoreConflict conflict4 = new CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
 							currentFilterElementNode.getRepositoryLink(), conflict3);
 					conflicts.add(conflict4);
 				}
 				else
 				{
-					CoreConflict conflict2 = new CoreConflict(CoreConflict.MATCHING_PATTERN_ALWAYS_ACCEPTS,
+					CoreConflict conflict2 = new CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_ACCEPTS,
 							currentMatchingPatternNode.getRepositoryLink(), conflict1);
 					conflicts.add(conflict2);
 
 					FilterElement filterElement = (FilterElement) currentFilterElementNode.getRepositoryLink();
 					if (filterElement.getConditionPart() instanceof True)
 					{
-						CoreConflict conflict3 = new CoreConflict(CoreConflict.FILTER_ELEMENT_ALWAYS_ACCEPTS,
+						CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_ACCEPTS,
 								currentFilterElementNode.getRepositoryLink(), conflict2);
 						acceptingFilterElementConflict = conflict3;
 						conflicts.add(conflict3);
 
-						CoreConflict conflict4 = new CoreConflict(CoreConflict.FILTER_ALWAYS_ACCEPTS,
+						CoreConflict conflict4 = new CoreConflict(ConflictType.FILTER_ALWAYS_ACCEPTS,
 								currentFilterElementNode.getRepositoryLink(), conflict3);
 						accRejFilterConflict = conflict4;
 						conflicts.add(conflict4);
@@ -315,49 +318,57 @@ public class CoreConflictDetector
 		}
 		else if (unreachableTransition.getType() == FlowTransition.FLOW_FALSE_TRANSITION)
 		{
-			if (unreachableTransition.getStartNode().containsName(FlowNode.CONDITION_EXPRESSION_NODE))
+			if (unreachableTransition.getStartNode().containsName(FlowNode.TRUE_NODE))
 			{
-				// Condition expression
-				// No conflict
+				// the "flowFalse" transition of the true node is never reached
 			}
+
+			// TODO: unverified conflicts
+			// else if
+			// (unreachableTransition.getStartNode().containsName(FlowNode
+			// .CONDITION_EXPRESSION_NODE))
+			// {
+			// // Condition expression
+			// // No conflict
+			// }
 			else
 			{
 				// Matching part
-				CoreConflict conflict1 = new CoreConflict(CoreConflict.MATCHING_PART_ALWAYS_MATCHES,
+				CoreConflict conflict1 = new CoreConflict(ConflictType.MATCHING_PART_ALWAYS_MATCHES,
 						unreachableTransition.getStartNode().getRepositoryLink());
 				conflicts.add(conflict1);
 
-				if (currentConditionOperatorNode.containsName(FlowNode.DISABLE_OPERATOR_NODE))
+				if (currentMatchingExpressionNode.containsName(FlowNode.DISABLE_OPERATOR_NODE))
 				{
-					CoreConflict conflict2 = new CoreConflict(CoreConflict.MATCHING_PATTERN_ALWAYS_REJECTS,
+					CoreConflict conflict2 = new CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_REJECTS,
 							currentMatchingPatternNode.getRepositoryLink(), conflict1);
 					conflicts.add(conflict2);
 
 					// TODO: add always rejecting filter element check
-					CoreConflict conflict3 = new CoreConflict(CoreConflict.FILTER_ELEMENT_ALWAYS_REJECTS,
+					CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
 							currentFilterElementNode.getRepositoryLink(), conflict2);
 					conflicts.add(conflict3);
 					rejectingFilterElementCounter++;
 
-					CoreConflict conflict4 = new CoreConflict(CoreConflict.FILTER_ELEMENT_REDUNDANT,
+					CoreConflict conflict4 = new CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
 							currentFilterElementNode.getRepositoryLink(), conflict3);
 					conflicts.add(conflict4);
 				}
 				else
 				{
-					CoreConflict conflict2 = new CoreConflict(CoreConflict.MATCHING_PATTERN_ALWAYS_ACCEPTS,
+					CoreConflict conflict2 = new CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_ACCEPTS,
 							currentMatchingPatternNode.getRepositoryLink(), conflict1);
 					conflicts.add(conflict2);
 
 					FilterElement filterElement = (FilterElement) currentFilterElementNode.getRepositoryLink();
 					if (filterElement.getConditionPart() instanceof True)
 					{
-						CoreConflict conflict3 = new CoreConflict(CoreConflict.FILTER_ELEMENT_ALWAYS_ACCEPTS,
+						CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_ACCEPTS,
 								currentFilterElementNode.getRepositoryLink(), conflict2);
 						acceptingFilterElementConflict = conflict3;
 						conflicts.add(conflict3);
 
-						CoreConflict conflict4 = new CoreConflict(CoreConflict.FILTER_ALWAYS_ACCEPTS,
+						CoreConflict conflict4 = new CoreConflict(ConflictType.FILTER_ALWAYS_ACCEPTS,
 								currentFilterElementNode.getRepositoryLink(), conflict3);
 						accRejFilterConflict = conflict4;
 						conflicts.add(conflict4);

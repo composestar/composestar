@@ -4,6 +4,7 @@
  */
 package Composestar.Core.CORE2;
 
+import java.util.Collection;
 import java.util.List;
 
 import Composestar.Core.Annotations.ComposestarModule;
@@ -78,9 +79,7 @@ public class Core implements CTCommonModule
 
 		List<ImposedFilterModule> filterModules = concern.getSuperimposed().getFilterModuleOrder();
 		FireModel fireModel = f2res.getFireModel(concern, filterModules);
-
-		CoreConflict[] conflicts = detector.findConflicts(fireModel);
-		printConflicts(conflicts);
+		printConflicts(detector.findConflicts(fireModel));
 	}
 
 	/**
@@ -88,7 +87,7 @@ public class Core implements CTCommonModule
 	 * 
 	 * @param conflicts
 	 */
-	private void printConflicts(CoreConflict[] conflicts)
+	private void printConflicts(Collection<CoreConflict> conflicts)
 	{
 		for (CoreConflict conflict : conflicts)
 		{
