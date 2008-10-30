@@ -27,7 +27,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
-import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsTypeProgramElementImpl;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsObjectImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
@@ -37,6 +37,7 @@ import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.FIRE2.preprocessing.GrooveASTBuilderCN;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.iterator.OrderedExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.Predicate;
@@ -67,6 +68,8 @@ public class Sign implements CTCommonModule
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SIGN);
 
 	private static final String DISPATCH_FORMULA = "isDispatch";
+
+	private static final String SEND_FORMULA = "isSend";
 
 	private static final int SIGNATURE_MATCHING_SET = 1;
 
@@ -116,7 +119,11 @@ public class Sign implements CTCommonModule
 		// creating dictionary
 		dictionary = new HashMap<String, Predicate>();
 
-		dictionary.put("isDispatch", new StateType("DispatchAction"));
+		// TODO there should be a better way to find message dispatching
+		// (actually, should only dispatch actions result into signature
+		// expansion?)
+		dictionary.put(DISPATCH_FORMULA, new StateType(GrooveASTBuilderCN.createFilterActionText("DispatchAction")));
+		dictionary.put(SEND_FORMULA, new StateType(GrooveASTBuilderCN.createFilterActionText("SendAction")));
 	}
 
 	/**
@@ -170,6 +177,7 @@ public class Sign implements CTCommonModule
 			logger.error(exc, exc);
 			return ModuleReturnValue.Error;
 		}
+		System.exit(-1);
 		return ModuleReturnValue.Ok;
 	}
 
@@ -255,7 +263,7 @@ public class Sign implements CTCommonModule
 
 		FireModel fireModel = fireModels.get(concern);
 
-		for (CpsSelector sel : distinguishableSets.get(concern))
+		for (CpsSelector sel : new HashSet<CpsSelector>(distinguishableSets.get(concern)))
 		{
 			ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, sel);
 
@@ -589,7 +597,7 @@ public class Sign implements CTCommonModule
 									CanonProperty prop = (CanonProperty) var;
 									if (PropertyNames.INNER.equals(prop.getName()))
 									{
-										matchTarget = new CpsTypeProgramElementImpl(concern.getTypeReference());
+										matchTarget = new CpsObjectImpl(concern.getTypeReference(), true);
 									}
 									else if (PropertyPrefix.MESSAGE == prop.getPrefix())
 									{
@@ -1169,7 +1177,7 @@ public class Sign implements CTCommonModule
 	 */
 	private List<ExecutionState> dispatchStates(ExecutionModel model)
 	{
-		CtlChecker checker = new CtlChecker(model, DISPATCH_FORMULA, dictionary);
+		CtlChecker checker = new CtlChecker(model, DISPATCH_FORMULA + "||" + SEND_FORMULA, dictionary);
 		return checker.matchingStates();
 	}
 
@@ -1185,8 +1193,18 @@ public class Sign implements CTCommonModule
 	 */
 	private List<MethodInfo> targetMethods(Concern concern, CpsTypeProgramElement target, CpsSelector selector)
 	{
+		Collection<MethodInfo> methods;
 		// get dispatchtarget concern and methods:
-		Collection<MethodInfo> methods = target.getTypeReference().getReference().getMethods();
+		if ((target instanceof CpsObject) && ((CpsObject) target).isInnerObject())
+		{
+			// inner target should only get the actual methods
+			methods = target.getTypeReference().getReference().getMethods();
+		}
+		else
+		{
+			Signature sig = sign2Resources.getSignature(target.getTypeReference().getReferenceId());
+			methods = sig.getMethods();
+		}
 		// if (target.getName().equals(Target.INNER))
 		// {
 		// methods = getMethodList(concern);
@@ -1225,7 +1243,8 @@ public class Sign implements CTCommonModule
 			}
 			else
 			{
-				if (method.getName().equals(selector))
+				// TODO: what to do when CpsSelectorMethodInfo?
+				if (method.getName().equals(selector.getName()))
 				{
 					targetMethods.add(method);
 				}
@@ -1327,8 +1346,24 @@ public class Sign implements CTCommonModule
 	{
 		// get the methods from the dispatch target
 		Type type = target.getTypeReference().getReference();
-
 		MethodInfo dispatchMethod = method.getClone(selector.getName(), type);
+
+		if ((target instanceof CpsObject) && ((CpsObject) target).isInnerObject())
+		{
+			// special case, don't check the signature
+			List<MethodInfo> methods = type.getMethods();
+
+			// Check whether the dispatchmethod is contained in the dispatch
+			// target
+			if (containsMethod(methods, dispatchMethod))
+			{
+				return MethodStatus.EXISTING;
+			}
+			else
+			{
+				return MethodStatus.NOT_EXISTING;
+			}
+		}
 
 		// get the method wrapper
 		Signature signature = staticSign2Resources.getSignature(target.getTypeReference().getReferenceId());

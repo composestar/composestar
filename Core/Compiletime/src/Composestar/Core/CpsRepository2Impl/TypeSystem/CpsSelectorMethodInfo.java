@@ -103,4 +103,51 @@ public class CpsSelectorMethodInfo extends AbstractRepositoryEntity implements C
 		}
 		return getName().equals(o.getName());
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mi == null) ? 0 : mi.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		CpsSelectorMethodInfo other = (CpsSelectorMethodInfo) obj;
+		if (mi == null)
+		{
+			if (other.mi != null)
+			{
+				return false;
+			}
+		}
+		else if (!mi.equals(other.mi))
+		{
+			return false;
+		}
+		return true;
+	}
 }

@@ -675,8 +675,12 @@ public class FireModel
 			RepositoryEntity re = state.getFlowNode().getRepositoryLink();
 			if (!(re instanceof SignatureMatching))
 			{
+				// this shouldn't even be possible
 				return MethodStatus.UNKNOWN;
 			}
+			// default is fail, but might be unknown
+			MethodStatus result = MethodStatus.NOT_EXISTING;
+
 			SignatureMatching sigm = (SignatureMatching) re;
 			for (CpsVariable var : sigm.getRHS())
 			{
@@ -703,10 +707,17 @@ public class FireModel
 				}
 				if (var instanceof CpsTypeProgramElement)
 				{
-					if (Sign.getMethodStatus(concern, methodInfo, (CpsTypeProgramElement) var, state.getMessage()
-							.getSelector()) == MethodStatus.EXISTING)
+					MethodStatus val = Sign.getMethodStatus(concern, methodInfo, (CpsTypeProgramElement) var, state
+							.getMessage().getSelector());
+					if (val == MethodStatus.EXISTING)
 					{
 						return MethodStatus.EXISTING;
+					}
+					else if (val == MethodStatus.UNKNOWN)
+					{
+						// there might be a match in the second round
+						// UNKNOWN is better than NON_EXISTING
+						result = val;
 					}
 				}
 				else if (var instanceof CpsSelector)
@@ -722,7 +733,7 @@ public class FireModel
 					// TODO: implement
 				}
 			}
-			return MethodStatus.NOT_EXISTING;
+			return result;
 		}
 		else
 		{

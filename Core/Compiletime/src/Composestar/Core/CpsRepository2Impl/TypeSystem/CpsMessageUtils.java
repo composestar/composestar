@@ -133,7 +133,7 @@ public final class CpsMessageUtils
 			else
 			{
 				// compare value 2 with value 1
-				if (!v1.equals(v2) && !v2.equals(v1))
+				if (!v1.compatible(v2) && !v2.compatible(v1))
 				{
 					--neg;
 				}

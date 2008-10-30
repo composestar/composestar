@@ -192,6 +192,22 @@ public class GrooveASTBuilderCN
 	}
 
 	/**
+	 * Create a label for the filter action
+	 * 
+	 * @param labelStr
+	 * @return
+	 */
+	public static final Label createFilterActionLabel(String labelStr)
+	{
+		return DefaultLabel.createLabel(createFilterActionText(labelStr));
+	}
+
+	public static final String createFilterActionText(String labelStr)
+	{
+		return '@' + labelStr;
+	}
+
+	/**
 	 * Create a graph builder for the given filter module and filter direction
 	 * 
 	 * @param fm
@@ -665,6 +681,7 @@ public class GrooveASTBuilderCN
 		addRepositoryEntity(actionNode, action);
 
 		graph.addEdge(actionNode, createLabel(FlowNode.FILTER_ACTION_NODE), actionNode);
+		graph.addEdge(actionNode, createFilterActionLabel(action.getName()), actionNode);
 		makeFlowNode(actionNode);
 
 		switch (action.getFlowBehavior())
