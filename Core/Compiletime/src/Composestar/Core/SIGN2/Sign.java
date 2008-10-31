@@ -102,10 +102,10 @@ public class Sign implements CTCommonModule
 	private FIRE2Resources fire2Resources;
 
 	@ResourceManager
-	private SIGNResources sign2Resources;
+	private SIGN2Resources sign2Resources;
 
 	// FIXME BRIAN DON'T!!!
-	private static SIGNResources staticSign2Resources;
+	private static SIGN2Resources staticSign2Resources;
 
 	private Repository repository;
 
