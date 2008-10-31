@@ -130,15 +130,12 @@ public abstract class MECompareStatementTestBase extends RepositoryEntityTestBas
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getValue
-		 * ()
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible
+		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
 		 */
-		public CpsVariable getValue()
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
 		{
-			return null;
+			return false;
 		}
-
-		public void setValue(CpsVariable newvalue) throws NullPointerException, IllegalArgumentException
-		{}
 	}
 }

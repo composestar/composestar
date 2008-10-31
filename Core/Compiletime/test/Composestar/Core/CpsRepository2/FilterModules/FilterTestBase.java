@@ -377,21 +377,12 @@ public abstract class FilterTestBase extends QualifiedRepositoryEntityTestBase
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#getValue
-		 * ()
-		 */
-		public CpsVariable getValue()
-		{
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.FilterElements.CanonProperty#setValue
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible
 		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
 		 */
-		public void setValue(CpsVariable newvalue) throws NullPointerException, IllegalArgumentException
-		{}
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			return false;
+		}
 	}
 }

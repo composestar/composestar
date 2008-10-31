@@ -34,6 +34,7 @@ import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
@@ -645,16 +646,35 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 			return null;
 		}
 
-		public Object getInstance()
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.TypeSystem.CpsProgramElement#
+		 * getProgramElement()
+		 */
+		public ProgramElement getProgramElement()
 		{
-			// TODO Auto-generated method stub
 			return null;
 		}
 
-		public ProgramElement getProgramElement()
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isInnerObject()
+		 */
+		public boolean isInnerObject()
 		{
-			// TODO Auto-generated method stub
-			return null;
+			return false;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible
+		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
+		 */
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			return false;
 		}
 	}
 
@@ -721,16 +741,35 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 			return null;
 		}
 
-		public Object getInstance()
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.TypeSystem.CpsProgramElement#
+		 * getProgramElement()
+		 */
+		public ProgramElement getProgramElement()
 		{
-			// TODO Auto-generated method stub
 			return null;
 		}
 
-		public ProgramElement getProgramElement()
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isInnerObject()
+		 */
+		public boolean isInnerObject()
 		{
-			// TODO Auto-generated method stub
-			return null;
+			return false;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible
+		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
+		 */
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			return false;
 		}
 	}
 
@@ -779,10 +818,25 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.TypeSystem.CpsProgramElement#
+		 * getProgramElement()
+		 */
 		public ProgramElement getProgramElement()
 		{
-			// TODO Auto-generated method stub
 			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible
+		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
+		 */
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			return false;
 		}
 	}
 

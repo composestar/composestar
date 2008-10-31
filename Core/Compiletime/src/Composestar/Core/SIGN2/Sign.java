@@ -21,12 +21,18 @@ import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
+import Composestar.Core.CpsRepository2.Signatures.MethodInfoWrapper;
+import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
+import Composestar.Core.CpsRepository2.Signatures.MethodStatus;
+import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
+import Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapperImpl;
+import Composestar.Core.CpsRepository2Impl.Signatures.SignatureImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsObjectImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -86,7 +92,7 @@ public class Sign implements CTCommonModule
 
 	private Map<Concern, Set<CpsSelector>> distinguishableSets;
 
-	private Set<MethodInfoWrapper> cyclicDispatchSet;
+	private Set<MethodInfoWrapperImpl> cyclicDispatchSet;
 
 	private boolean change;
 
@@ -101,13 +107,13 @@ public class Sign implements CTCommonModule
 	@ResourceManager
 	private FIRE2Resources fire2Resources;
 
-	@ResourceManager
-	private SIGN2Resources sign2Resources;
-
-	// FIXME BRIAN DON'T!!!
-	private static SIGN2Resources staticSign2Resources;
-
 	private Repository repository;
+
+	/**
+	 * Local copy of all concerns because it is often begin iterated. This list
+	 * only contains concerns which have been inspected by sign
+	 */
+	private Set<Concern> concerns;
 
 	public Sign()
 	{
@@ -133,7 +139,6 @@ public class Sign implements CTCommonModule
 	{
 		try
 		{
-			staticSign2Resources = sign2Resources;
 			repository = inresc.repository();
 			// fire2Resources = inresc.getResourceManager(FIRE2Resources.class);
 			error = false;
@@ -177,7 +182,6 @@ public class Sign implements CTCommonModule
 			logger.error(exc, exc);
 			return ModuleReturnValue.Error;
 		}
-		System.exit(-1);
 		return ModuleReturnValue.Ok;
 	}
 
@@ -194,27 +198,40 @@ public class Sign implements CTCommonModule
 
 	private void initialize()
 	{
+		concerns = new HashSet<Concern>();
 		superimposedConcerns = new HashSet<Concern>();
 		fireModels = new HashMap<Concern, FireModel>();
 		distinguishableSets = new HashMap<Concern, Set<CpsSelector>>();
+
+		for (Concern concern : repository.getAll(Concern.class))
+		{
+			if (concern.getTypeReference() == null)
+			{
+				// no need to do anything with these, which would be CpsConcern
+				// without a type
+				continue;
+			}
+			concerns.add(concern);
+		}
 
 		initializeSignatures();
 	}
 
 	private void initializeSignatures()
 	{
-		for (Concern concern : repository.getAll(Concern.class))
+		for (Concern concern : concerns)
 		{
+			// always make sure the signature objects have been created
+			Signature signature = getSignature(concern);
 			if (concern.getSuperimposed() == null)
 			{
-				Signature signature = sign2Resources.getSignature(concern);
 				List<MethodInfo> methods = getMethodList(concern);
 
 				// Add all (usr src) methods to the signature with status
 				// existing.
 				for (MethodInfo method : methods)
 				{
-					signature.addMethodInfoWrapper(new MethodInfoWrapper(method, MethodStatus.EXISTING));
+					signature.addMethodInfoWrapper(new MethodInfoWrapperImpl(method, MethodStatus.EXISTING));
 				}
 			}
 			else
@@ -229,6 +246,24 @@ public class Sign implements CTCommonModule
 				superimposedConcerns.add(concern);
 			}
 		}
+	}
+
+	/**
+	 * Get the signature for a concern
+	 * 
+	 * @param concern
+	 * @return
+	 */
+	private Signature getSignature(Concern concern)
+	{
+		Signature sig = concern.getSignature();
+		if (sig == null)
+		{
+			sig = new SignatureImpl();
+			concern.setSignature(sig);
+			repository.add(sig);
+		}
+		return sig;
 	}
 
 	// ####################################################
@@ -857,10 +892,10 @@ public class Sign implements CTCommonModule
 
 	private void cyclicDispatchConflictCheckInit()
 	{
-		cyclicDispatchSet = new HashSet<MethodInfoWrapper>();
+		cyclicDispatchSet = new HashSet<MethodInfoWrapperImpl>();
 		for (Concern concern : superimposedConcerns)
 		{
-			for (MethodInfoWrapper method : methods(concern))
+			for (MethodInfoWrapperImpl method : methods(concern))
 			{
 				if (method.getStatus() == MethodStatus.EXISTING)
 				{
@@ -991,18 +1026,18 @@ public class Sign implements CTCommonModule
 
 	public void finishing()
 	{
-		for (Concern concern : repository.getAll(Concern.class))
+		for (Concern concern : concerns)
 		{
 			List<MethodInfo> dnmi = getMethodList(concern);
-			Signature signature = sign2Resources.getSignature(concern);
+			Signature signature = getSignature(concern);
 
 			for (MethodInfo methodInfo : dnmi)
 			{
-				MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(methodInfo);
+				MethodInfoWrapperImpl wrapper = signature.getMethodInfoWrapper(methodInfo);
 
 				if (wrapper == null)
 				{
-					wrapper = new MethodInfoWrapper(methodInfo, MethodStatus.NOT_EXISTING);
+					wrapper = new MethodInfoWrapperImpl(methodInfo, MethodStatus.NOT_EXISTING);
 					wrapper.setRelation(MethodRelation.REMOVED);
 					signature.addMethodInfoWrapper(wrapper);
 				}
@@ -1041,11 +1076,11 @@ public class Sign implements CTCommonModule
 		boolean signaturesmodified = false;
 
 		// Get all the concerns
-		for (Concern concern : repository.getAll(Concern.class))
+		for (Concern concern : concerns)
 		{
 			if (concern.getSuperimposed() != null)
 			{
-				Signature st = sign2Resources.getSignature(concern);
+				Signature st = getSignature(concern);
 				logger.info("\tSignature for concern: " + concern.getFullyQualifiedName());
 
 				// Show them your goodies.
@@ -1095,9 +1130,9 @@ public class Sign implements CTCommonModule
 	 */
 	public void cleanProbes()
 	{
-		for (Concern concern : repository.getAll(Concern.class))
+		for (Concern concern : concerns)
 		{
-			Signature signature = sign2Resources.getSignature(concern);
+			Signature signature = getSignature(concern);
 
 			for (MethodInfoWrapper wrapper : methods(concern))
 			{
@@ -1202,7 +1237,7 @@ public class Sign implements CTCommonModule
 		}
 		else
 		{
-			Signature sig = sign2Resources.getSignature(target.getTypeReference().getReferenceId());
+			Signature sig = getSignature(repository.get(target.getTypeReference().getReferenceId(), Concern.class));
 			methods = sig.getMethods();
 		}
 		// if (target.getName().equals(Target.INNER))
@@ -1264,14 +1299,14 @@ public class Sign implements CTCommonModule
 	 */
 	private void addToSignature(Concern concern, List<MethodInfo> sig)
 	{
-		Signature signature = sign2Resources.getSignature(concern);
+		Signature signature = getSignature(concern);
 		for (MethodInfo method : sig)
 		{
 			if (!signature.hasMethod(method))
 			{
 				// TODO null check on TypeReference
 				MethodInfo newMethod = cloneMethod(method, method.getName(), concern.getTypeReference().getReference());
-				MethodInfoWrapper wrapper = new MethodInfoWrapper(newMethod, MethodStatus.UNKNOWN);
+				MethodInfoWrapperImpl wrapper = new MethodInfoWrapperImpl(newMethod, MethodStatus.UNKNOWN);
 				signature.addMethodInfoWrapper(wrapper);
 				change = true;
 			}
@@ -1313,10 +1348,10 @@ public class Sign implements CTCommonModule
 		return false;
 	}
 
-	private Collection<MethodInfoWrapper> methods(Concern concern)
+	private Collection<MethodInfoWrapperImpl> methods(Concern concern)
 	{
-		Signature signature = sign2Resources.getSignature(concern);
-		return new ArrayList<MethodInfoWrapper>(signature.getMethodInfoWrappers());
+		Signature signature = getSignature(concern);
+		return new ArrayList<MethodInfoWrapperImpl>(signature.getMethodInfoWrappers());
 	}
 
 	/**
@@ -1366,7 +1401,12 @@ public class Sign implements CTCommonModule
 		}
 
 		// get the method wrapper
-		Signature signature = staticSign2Resources.getSignature(target.getTypeReference().getReferenceId());
+		Concern c = target.getTypeReference().getReference().getConcern();
+		if (c == null)
+		{
+			return MethodStatus.NOT_EXISTING;
+		}
+		Signature signature = c.getSignature();
 		MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(dispatchMethod);
 		if (wrapper == null)
 		{
@@ -1406,8 +1446,8 @@ public class Sign implements CTCommonModule
 			MethodInfo dispatchMethod = methodInfo.getClone(selector.getName(), type);
 
 			// get the method wrapper
-			Signature signature = sign2Resources.getSignature(repository.get(
-					target.getTypeReference().getReferenceId(), Concern.class));
+			Signature signature = getSignature(repository
+					.get(target.getTypeReference().getReferenceId(), Concern.class));
 			MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(dispatchMethod);
 			return wrapper;
 		}

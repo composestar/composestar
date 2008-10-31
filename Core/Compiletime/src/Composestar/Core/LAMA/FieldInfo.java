@@ -1,9 +1,23 @@
 /*
- * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2006 University of Twente.
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
  *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
  * $Id$
  */
@@ -13,15 +27,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-//
-// !! Compose* Runtime Warning !!
-//
-// This class is referenced in the Compose* Runtime for .NET 1.1
-// Do not use Java features added after Java 2.0
-//
-
 public abstract class FieldInfo extends ProgramElement
 {
+
+	private static final long serialVersionUID = 5933829502250438682L;
 
 	public String name;
 
@@ -56,12 +65,12 @@ public abstract class FieldInfo extends ProgramElement
 
 	public void setFieldType(String fieldtype)
 	{
-		this.fieldTypeString = fieldtype;
+		fieldTypeString = fieldtype;
 	}
 
 	public void setFieldType(Type value)
 	{
-		this.fieldType = value;
+		fieldType = value;
 	}
 
 	public Type getParent()
@@ -78,9 +87,9 @@ public abstract class FieldInfo extends ProgramElement
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitName()
 	 */
+	@Override
 	public String getUnitName()
 	{
 		return getName();
@@ -88,9 +97,9 @@ public abstract class FieldInfo extends ProgramElement
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
 	 */
+	@Override
 	public String getUnitType()
 	{
 		return "Field";
@@ -98,9 +107,9 @@ public abstract class FieldInfo extends ProgramElement
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.core.LAMA.ProgramElement#hasAttribute(java.lang.String)
 	 */
+	@Override
 	public boolean hasUnitAttribute(String attribute)
 	{
 		return getUnitAttributes().contains(attribute);

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2007 University of Twente.
+ * Copyright (C) 2007-2008 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 

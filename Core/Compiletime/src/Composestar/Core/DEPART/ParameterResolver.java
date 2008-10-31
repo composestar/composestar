@@ -218,6 +218,7 @@ public class ParameterResolver extends ObjectInputStream
 						if (tr.getReference() == null)
 						{
 							tr.setReference((Type) pe);
+							refman.addReferenceUser(tr, value, false);
 						}
 						return tr;
 					}
@@ -241,6 +242,7 @@ public class ParameterResolver extends ObjectInputStream
 						if (tr.getReference() == null)
 						{
 							tr.setReference((MethodInfo) pe);
+							refman.addReferenceUser(tr, value, false);
 						}
 						return tr;
 					}

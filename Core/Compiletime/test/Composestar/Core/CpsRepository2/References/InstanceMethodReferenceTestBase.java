@@ -27,6 +27,7 @@ package Composestar.Core.CpsRepository2.References;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.LAMA.ProgramElement;
 
 /**
@@ -145,5 +146,26 @@ public abstract class InstanceMethodReferenceTestBase extends MethodReferenceTes
 		 */
 		public void setSourceInformation(SourceInformation srcInfo)
 		{}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isInnerObject()
+		 */
+		public boolean isInnerObject()
+		{
+			return false;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible
+		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
+		 */
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			return false;
+		}
 	}
 }

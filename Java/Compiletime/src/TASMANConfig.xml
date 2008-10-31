@@ -20,15 +20,22 @@
 	<module class="Composestar.Core.CORE2.Core" />
 	<module class="Composestar.Core.SIGN2.Sign" />
 	<parallel perprocessor="1">
+		<!-- 
 		<module class="Composestar.Core.DIGGER2.DIGGER" />
 		<module class="Composestar.Core.CKRET.CKRET" />
+	 -->
 		<sequential>
-			<module class="Composestar.Java.TYM.SignatureTransformer.JavaSignatureTransformer" />
-			<module class="Composestar.Core.RECOMA.RealSourceManager" />
+			<!--
+				<module class="Composestar.Java.TYM.SignatureTransformer.JavaSignatureTransformer" /> <module
+				class="Composestar.Core.RECOMA.RealSourceManager" />
+			-->
 			<module class="Composestar.Java.CONE.JavaRepositorySerializer" />
-			<module class="Composestar.Java.WEAVER.JavaWeaver" />
-			<module class="Composestar.Java.BACO.JavaBACO" />
+			<!--
+				<module class="Composestar.Java.WEAVER.JavaWeaver" /> <module class="Composestar.Java.BACO.JavaBACO" />
+			-->
 		</sequential>
 	</parallel>
+	<!-- 
 	<module class="Composestar.Core.INCRE.INCRESerializer" />
+	 -->
 </tasks>

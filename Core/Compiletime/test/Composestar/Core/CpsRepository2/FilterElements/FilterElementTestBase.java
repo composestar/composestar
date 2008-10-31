@@ -304,6 +304,12 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		{
 			return prefix;
 		}
+
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 
 }

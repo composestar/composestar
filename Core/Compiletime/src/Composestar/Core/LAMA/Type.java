@@ -1,9 +1,23 @@
 /*
- * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2006 University of Twente.
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
  *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
  * $Id$
  */
@@ -13,15 +27,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-//
-// !! Compose* Runtime Warning !!
-//
-// This class is referenced in the Compose* Runtime for .NET 1.1
-// Do not use Java features added after Java 2.0
-//
+import Composestar.Core.CpsRepository2.Concern;
 
 public abstract class Type extends ProgramElement
 {
+
+	private static final long serialVersionUID = 670886830455938414L;
+
 	// note: it must be an implemented type and not an interface (for .net 1.1
 	// deserialization)
 	public ArrayList methods;
@@ -35,6 +47,11 @@ public abstract class Type extends ProgramElement
 	public boolean nestedPrivate;
 
 	public boolean nestedPublic;
+
+	/**
+	 * The Concern counter part of this type
+	 */
+	protected Concern concern;
 
 	public Type()
 	{
@@ -149,17 +166,17 @@ public abstract class Type extends ProgramElement
 
 	public void addAnnotationInstance(Annotation annotation)
 	{
-		this.annotationInstances.add(annotation);
+		annotationInstances.add(annotation);
 	}
 
 	public void removeAnnotationInstance(Annotation annotation)
 	{
-		this.annotationInstances.remove(annotation);
+		annotationInstances.remove(annotation);
 	}
 
 	public List getAnnotationInstances()
 	{
-		return this.annotationInstances;
+		return annotationInstances;
 	}
 
 	// stuff for LOLA
@@ -167,6 +184,7 @@ public abstract class Type extends ProgramElement
 	/**
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitName()
 	 */
+	@Override
 	public String getUnitName()
 	{
 		return getFullName();
@@ -175,6 +193,7 @@ public abstract class Type extends ProgramElement
 	/**
 	 * @see Composestar.Core.LAMA.ProgramElement#hasUnitAttribute(java.lang.String)
 	 */
+	@Override
 	public boolean hasUnitAttribute(String attribute)
 	{
 		return getUnitAttributes().contains(attribute);
@@ -193,4 +212,14 @@ public abstract class Type extends ProgramElement
 	public abstract void addMethodReturnType(ProgramElement returnType);
 
 	public abstract void addFieldType(ProgramElement fieldType);
+
+	public Concern getConcern()
+	{
+		return concern;
+	}
+
+	public void setConcern(Concern value)
+	{
+		concern = value;
+	}
 }

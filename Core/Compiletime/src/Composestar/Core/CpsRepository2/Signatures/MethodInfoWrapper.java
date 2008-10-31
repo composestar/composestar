@@ -21,12 +21,44 @@
  *
  * $Id$
  */
-package Composestar.Core.SIGN2;
+package Composestar.Core.CpsRepository2.Signatures;
+
+import java.io.Serializable;
+
+import Composestar.Core.LAMA.MethodInfo;
 
 /**
- * TODO description
+ * A wrapper for the MethodInfo structure, it contains relational information
+ * about what has happened to the method.
+ * 
+ * @author Michiel Hendriks
  */
-public enum MethodStatus
+public interface MethodInfoWrapper extends Serializable
 {
-	EXISTING, NOT_EXISTING, UNKNOWN
+
+	/**
+	 * @return the methodInfo
+	 */
+	MethodInfo getMethodInfo();
+
+	/**
+	 * @return the relation
+	 */
+	MethodRelation getRelation();
+
+	/**
+	 * @param value the relation to set
+	 */
+	void setRelation(MethodRelation value);
+
+	/**
+	 * @return the status
+	 */
+	MethodStatus getStatus();
+
+	/**
+	 * @param value the status to set
+	 */
+	void setStatus(MethodStatus value);
+
 }

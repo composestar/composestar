@@ -5,14 +5,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import Composestar.Core.CONE.CONE;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2.References.ReferenceUsage;
+import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataMap;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
 
@@ -37,9 +43,27 @@ public class JavaRepositorySerializer extends CONE
 
 		logger.info("writing repository to file " + repositoryFilename + " ...");
 
-		DataStore ds = resources.repository();
+		Repository ds = resources.repository();
 
-		ds.excludeUnreferenced(PrimitiveConcern.class);
+		// ds.excludeUnreferenced(PrimitiveConcern.class);
+		logger.debug(String.format("Repository size before: %d", ds.size()));
+		ReferenceManager refman = resources.get(ReferenceManager.RESOURCE_KEY);
+		Iterator<PrimitiveConcern> it = ds.getAllIterator(PrimitiveConcern.class);
+		Set<RepositoryEntity> extraRemove = new HashSet<RepositoryEntity>();
+		while (it.hasNext())
+		{
+			PrimitiveConcern pc = it.next();
+			Collection<ReferenceUsage> refusers = refman.getReferenceUsage(pc.getTypeReference());
+			if (refusers.isEmpty() && pc.getSuperimposed() == null)
+			{
+				logger.trace(String.format("PrimitiveConcern %s not used", pc.getFullyQualifiedName()));
+				// delayed remove of the signatures
+				extraRemove.add(pc.getSignature());
+				it.remove();
+			}
+		}
+		ds.removeAll(extraRemove);
+		logger.debug(String.format("Repository size after: %d", ds.size()));
 
 		ObjectOutputStream oos = null;
 		try
@@ -49,17 +73,7 @@ public class JavaRepositorySerializer extends CONE
 			FileOutputStream fos = new FileOutputStream(repositoryFilename);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			oos = new ObjectOutputStream(bos);
-
-			// collect the objects
-			Iterator<Object> it = ds.getIterator();
-
-			// write the objects
-			while (it.hasNext())
-			{
-				Object item = it.next();
-				oos.writeObject(item);
-			}
-
+			oos.writeObject(ds);
 			logger.info("repository has been serialized");
 		}
 		catch (StackOverflowError ex)

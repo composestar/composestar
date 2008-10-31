@@ -1,30 +1,38 @@
 /*
- * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2006 University of Twente.
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
  *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
  * $Id$
  */
 package Composestar.Core.LAMA;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
-
-//
-// !! Compose* Runtime Warning !!
-//
-// This class is referenced in the Compose* Runtime for .NET 1.1
-// Do not use Java features added after Java 2.0
-//
-
-public abstract class ProgramElement extends PlatformRepresentation
+public abstract class ProgramElement implements Serializable
 {
+	private static final long serialVersionUID = 7176893071089850442L;
+
 	/**
 	 * @return the name of this program element
 	 */
@@ -62,12 +70,12 @@ public abstract class ProgramElement extends PlatformRepresentation
 
 	public void addAnnotation(Annotation annotation)
 	{
-		this.annotations.add(annotation);
+		annotations.add(annotation);
 	}
 
 	public void removeAnnotation(Annotation annotation)
 	{
-		this.annotations.remove(annotation);
+		annotations.remove(annotation);
 	}
 
 	public List<Annotation> getAnnotations()

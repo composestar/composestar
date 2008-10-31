@@ -187,6 +187,7 @@ public class JavaCollectorRunner implements CTCommonModule
 				if (o instanceof Concern)
 				{
 					((Concern) o).setTypeReference(tref);
+					type.setConcern((Concern) o);
 				}
 				else
 				{
@@ -205,6 +206,7 @@ public class JavaCollectorRunner implements CTCommonModule
 				pc.setSourceInformation(srcInfo);
 			}
 			pc.setTypeReference(tref);
+			type.setConcern(pc);
 			repository.add(pc);
 		}
 

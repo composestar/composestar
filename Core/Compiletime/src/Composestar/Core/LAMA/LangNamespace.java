@@ -1,19 +1,31 @@
 /*
- * LangNamespace.java - Created on 5-aug-2004 by havingaw
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
  */
-
 package Composestar.Core.LAMA;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-//
-// !! Compose* Runtime Warning !!
-//
-// This class is referenced in the Compose* Runtime for .NET 1.1
-// Do not use Java features added after Java 2.0
-//
 
 /**
  * Namespace unit type
@@ -44,11 +56,11 @@ public class LangNamespace extends ProgramElement
 
 	public LangNamespace(String inName)
 	{
-		this.name = inName;
-		this.childClasses = new HashSet();
-		this.childInterfaces = new HashSet();
-		this.parentNamespace = null;
-		this.childNamespaces = new HashSet();
+		name = inName;
+		childClasses = new HashSet();
+		childInterfaces = new HashSet();
+		parentNamespace = null;
+		childNamespaces = new HashSet();
 	}
 
 	/**
@@ -56,12 +68,12 @@ public class LangNamespace extends ProgramElement
 	 */
 	public HashSet getChildClasses()
 	{
-		return this.childClasses;
+		return childClasses;
 	}
 
 	public LangNamespace getParentNamespace()
 	{
-		return this.parentNamespace;
+		return parentNamespace;
 	}
 
 	/**
@@ -69,7 +81,7 @@ public class LangNamespace extends ProgramElement
 	 */
 	public void setParentNamespace(LangNamespace inParentNamespace)
 	{
-		this.parentNamespace = inParentNamespace;
+		parentNamespace = inParentNamespace;
 	}
 
 	/**
@@ -77,7 +89,7 @@ public class LangNamespace extends ProgramElement
 	 */
 	public void setChildClasses(HashSet inChildClasses)
 	{
-		this.childClasses = inChildClasses;
+		childClasses = inChildClasses;
 	}
 
 	/**
@@ -93,7 +105,7 @@ public class LangNamespace extends ProgramElement
 	 */
 	public void setChildInterfaces(HashSet inChildInterfaces)
 	{
-		this.childInterfaces = inChildInterfaces;
+		childInterfaces = inChildInterfaces;
 	}
 
 	public void addChildClass(ProgramElement childClass)
@@ -127,6 +139,7 @@ public class LangNamespace extends ProgramElement
 		childNamespaces.add(childNamespace);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "LangNamespace(name=" + getUnitName() + ')';
@@ -145,6 +158,7 @@ public class LangNamespace extends ProgramElement
 	/**
 	 * @return Returns the unit name.
 	 */
+	@Override
 	public String getUnitName()
 	{
 		return name;
@@ -152,10 +166,11 @@ public class LangNamespace extends ProgramElement
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
+	 * @see
+	 * Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
 	 */
 
+	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
 		if (argumentName.equals("ChildNamespaces"))
@@ -183,9 +198,9 @@ public class LangNamespace extends ProgramElement
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
 	 */
+	@Override
 	public String getUnitType()
 	{
 		return "Namespace";
@@ -193,9 +208,9 @@ public class LangNamespace extends ProgramElement
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#hasAttribute(java.lang.String)
 	 */
+	@Override
 	public boolean hasUnitAttribute(String attribute)
 	{
 		// Namespaces don't have any attributes because they're not 'real' units
@@ -204,9 +219,9 @@ public class LangNamespace extends ProgramElement
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
+	@Override
 	public Collection getUnitAttributes()
 	{
 		return new HashSet();

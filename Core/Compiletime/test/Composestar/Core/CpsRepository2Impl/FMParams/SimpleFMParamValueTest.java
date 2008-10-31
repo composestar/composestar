@@ -84,6 +84,17 @@ public class SimpleFMParamValueTest extends FMParameterValueTestBase
 	protected static class DummyCPSV extends AbstractRepositoryEntity implements CpsVariable
 	{
 		private static final long serialVersionUID = 1L;
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable#compatible
+		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
+		 */
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			return false;
+		}
 	}
 
 }

@@ -22,8 +22,11 @@
  * $Id$
  */
 
-package Composestar.Core.SIGN2;
+package Composestar.Core.CpsRepository2Impl.Signatures;
 
+import Composestar.Core.CpsRepository2.Signatures.MethodInfoWrapper;
+import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
+import Composestar.Core.CpsRepository2.Signatures.MethodStatus;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
@@ -32,8 +35,10 @@ import Composestar.Core.LAMA.MethodInfo;
  * 
  * @author Michiel Hendriks
  */
-public class MethodInfoWrapper
+public class MethodInfoWrapperImpl implements MethodInfoWrapper
 {
+	private static final long serialVersionUID = -1662333594134019298L;
+
 	/**
 	 * The method info structure
 	 */
@@ -55,7 +60,7 @@ public class MethodInfoWrapper
 	 * @param stat
 	 * @throws NullPointerException
 	 */
-	public MethodInfoWrapper(MethodInfo mi, MethodStatus stat) throws NullPointerException
+	public MethodInfoWrapperImpl(MethodInfo mi, MethodStatus stat) throws NullPointerException
 	{
 		if (mi == null)
 		{
@@ -65,40 +70,54 @@ public class MethodInfoWrapper
 		status = stat;
 	}
 
-	/**
-	 * @return the methodInfo
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapper#
+	 * getMethodInfo()
 	 */
 	public MethodInfo getMethodInfo()
 	{
 		return methodInfo;
 	}
 
-	/**
-	 * @return the relation
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapper#getRelation
+	 * ()
 	 */
 	public MethodRelation getRelation()
 	{
 		return relation;
 	}
 
-	/**
-	 * @param value the relation to set
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapper#setRelation
+	 * (Composestar.Core.CpsRepository2.Signatures.MethodRelation)
 	 */
 	public void setRelation(MethodRelation value)
 	{
 		relation = value;
 	}
 
-	/**
-	 * @return the status
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapper#getStatus
+	 * ()
 	 */
 	public MethodStatus getStatus()
 	{
 		return status;
 	}
 
-	/**
-	 * @param value the status to set
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapper#setStatus
+	 * (Composestar.Core.CpsRepository2.Signatures.MethodStatus)
 	 */
 	public void setStatus(MethodStatus value)
 	{

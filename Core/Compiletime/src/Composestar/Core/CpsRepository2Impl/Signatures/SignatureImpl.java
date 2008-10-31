@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.SIGN2;
+package Composestar.Core.CpsRepository2Impl.Signatures;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Composestar.Core.CpsRepository2.Signatures.MethodInfoWrapper;
+import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
+import Composestar.Core.CpsRepository2.Signatures.Signature;
+import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
@@ -40,37 +44,37 @@ import Composestar.Core.LAMA.MethodInfo;
  * 
  * @author Michiel Hendriks
  */
-public class Signature
+public class SignatureImpl extends AbstractRepositoryEntity implements Signature
 {
+	private static final long serialVersionUID = 4483989831726824465L;
+
 	/**
 	 * All method registered, the key is a generated key through MethodInfo
 	 */
-	protected Map<String, MethodInfoWrapper> methods;
+	protected Map<String, MethodInfoWrapperImpl> methods;
 
 	/**
 	 * The methods by name
 	 */
-	protected Map<String, List<MethodInfoWrapper>> methodsByName;
+	protected Map<String, List<MethodInfoWrapperImpl>> methodsByName;
 
 	/**
 	 * Create a new signature for a concern
 	 */
-	public Signature()
+	public SignatureImpl()
 	{
 		super();
-		methods = new HashMap<String, MethodInfoWrapper>();
-		methodsByName = new HashMap<String, List<MethodInfoWrapper>>();
+		methods = new HashMap<String, MethodInfoWrapperImpl>();
+		methodsByName = new HashMap<String, List<MethodInfoWrapperImpl>>();
 	}
 
-	/**
-	 * Add a method info wrapper to the list
-	 * 
-	 * @param miw The wrapper to add
-	 * @return True when the wrapper was added to the list
-	 * @throws NullPointerException Thrown when the wrapper is null or when it
-	 *             doesn't have a MethodInfo object assigned.
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.Signature#addMethodInfoWrapper
+	 * (Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapper)
 	 */
-	public boolean addMethodInfoWrapper(MethodInfoWrapper miw) throws NullPointerException
+	public boolean addMethodInfoWrapper(MethodInfoWrapperImpl miw) throws NullPointerException
 	{
 		if (miw == null)
 		{
@@ -85,10 +89,10 @@ public class Signature
 		{
 			methods.put(key, miw);
 			String name = miw.getMethodInfo().getName();
-			List<MethodInfoWrapper> wrappersByName = methodsByName.get(name);
+			List<MethodInfoWrapperImpl> wrappersByName = methodsByName.get(name);
 			if (wrappersByName == null)
 			{
-				wrappersByName = new ArrayList<MethodInfoWrapper>();
+				wrappersByName = new ArrayList<MethodInfoWrapperImpl>();
 				methodsByName.put(name, wrappersByName);
 			}
 			wrappersByName.add(miw);
@@ -97,21 +101,21 @@ public class Signature
 		return false;
 	}
 
-	/**
-	 * @param relation
-	 * @return
-	 * @see #getMethods(EnumSet)
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.Signature#getMethods(
+	 * Composestar.Core.CpsRepository2.Signatures.MethodRelation)
 	 */
 	public Collection<MethodInfo> getMethods(MethodRelation relation)
 	{
 		return getMethods(EnumSet.of(relation));
 	}
 
-	/**
-	 * Get all methodinfo objects with a certain relation
-	 * 
-	 * @param relations
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.Signature#getMethods(java
+	 * .util.EnumSet)
 	 */
 	public Collection<MethodInfo> getMethods(EnumSet<MethodRelation> relations)
 	{
@@ -126,8 +130,10 @@ public class Signature
 		return result;
 	}
 
-	/**
-	 * @return All method info objects
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.Signature#getMethods()
 	 */
 	public Collection<MethodInfo> getMethods()
 	{
@@ -139,26 +145,26 @@ public class Signature
 		return result;
 	}
 
-	/**
-	 * @param relation
-	 * @return
-	 * @see Signature#getMethodInfoWrappers(EnumSet)
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.Signature#
+	 * getMethodInfoWrappers
+	 * (Composestar.Core.CpsRepository2.Signatures.MethodRelation)
 	 */
-	public Collection<MethodInfoWrapper> getMethodInfoWrappers(MethodRelation relation)
+	public Collection<MethodInfoWrapperImpl> getMethodInfoWrappers(MethodRelation relation)
 	{
 		return getMethodInfoWrappers(EnumSet.of(relation));
 	}
 
-	/**
-	 * Get all methodinfowrapper objects with a certain relation
-	 * 
-	 * @param relations
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.Signature#
+	 * getMethodInfoWrappers(java.util.EnumSet)
 	 */
-	public Collection<MethodInfoWrapper> getMethodInfoWrappers(EnumSet<MethodRelation> relations)
+	public Collection<MethodInfoWrapperImpl> getMethodInfoWrappers(EnumSet<MethodRelation> relations)
 	{
-		List<MethodInfoWrapper> result = new ArrayList<MethodInfoWrapper>();
-		for (MethodInfoWrapper miw : methods.values())
+		List<MethodInfoWrapperImpl> result = new ArrayList<MethodInfoWrapperImpl>();
+		for (MethodInfoWrapperImpl miw : methods.values())
 		{
 			if (relations.contains(miw.getRelation()))
 			{
@@ -168,23 +174,23 @@ public class Signature
 		return result;
 	}
 
-	/**
-	 * @return All method info wrappers
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.Signature#
+	 * getMethodInfoWrappers()
 	 */
-	public Collection<MethodInfoWrapper> getMethodInfoWrappers()
+	public Collection<MethodInfoWrapperImpl> getMethodInfoWrappers()
 	{
 		return Collections.unmodifiableCollection(methods.values());
 	}
 
-	/**
-	 * Get a method info wrapper for a given method info object (using its
-	 * generated key)
-	 * 
-	 * @param mi
-	 * @return
-	 * @throws NullPointerException
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.Signature#getMethodInfoWrapper
+	 * (Composestar.Core.LAMA.MethodInfo)
 	 */
-	public MethodInfoWrapper getMethodInfoWrapper(MethodInfo mi) throws NullPointerException
+	public MethodInfoWrapperImpl getMethodInfoWrapper(MethodInfo mi) throws NullPointerException
 	{
 		if (mi == null)
 		{
@@ -194,10 +200,11 @@ public class Signature
 		return methods.get(key);
 	}
 
-	/**
-	 * Remove a methodinfo wrapper
-	 * 
-	 * @param miw
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.Signature#
+	 * removeMethodInfoWrapper
+	 * (Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapper)
 	 */
 	public void removeMethodInfoWrapper(MethodInfoWrapper miw)
 	{
@@ -212,7 +219,7 @@ public class Signature
 			methods.remove(key);
 
 			String name = mi.getName();
-			List<MethodInfoWrapper> wrappers = methodsByName.get(name);
+			List<MethodInfoWrapperImpl> wrappers = methodsByName.get(name);
 			if (wrappers != null)
 			{
 				wrappers.remove(miw);
@@ -224,12 +231,10 @@ public class Signature
 		}
 	}
 
-	/**
-	 * Return true if there is a method with the given key
-	 * 
-	 * @param dnmi
-	 * @return True when a method info exists with the same key
-	 * @throws NullPointerException Thrown when the methodinfo is null
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.Signature#hasMethod(
+	 * Composestar.Core.LAMA.MethodInfo)
 	 */
 	public boolean hasMethod(MethodInfo dnmi) throws NullPointerException
 	{
@@ -241,11 +246,11 @@ public class Signature
 		return methods.containsKey(key);
 	}
 
-	/**
-	 * Returns true if there is a method with the given name.
-	 * 
-	 * @param methodName
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.Signatures.Signature#hasMethod(java
+	 * .lang.String)
 	 */
 	public boolean hasMethod(String methodName)
 	{

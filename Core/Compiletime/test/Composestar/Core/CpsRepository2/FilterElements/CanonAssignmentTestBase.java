@@ -120,5 +120,11 @@ public abstract class CanonAssignmentTestBase extends RepositoryEntityTestBase
 			return null;
 		}
 
+		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			// TODO Auto-generated method stub
+			return false;
+		}
+
 	}
 }

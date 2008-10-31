@@ -21,6 +21,7 @@ import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.Signatures.MethodStatus;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
@@ -37,7 +38,6 @@ import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.SIGN2.MethodStatus;
 import Composestar.Core.SIGN2.Sign;
 import Composestar.Utils.Logging.CPSLogger;
 
