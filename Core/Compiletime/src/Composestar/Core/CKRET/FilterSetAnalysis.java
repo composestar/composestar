@@ -13,30 +13,31 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
+import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
-import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.FIRE2.util.regex.AbstractMatcher;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.MatcherEx;
 import Composestar.Core.FIRE2.util.regex.AbstractMatcher.MatchTrace;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -57,7 +58,7 @@ public class FilterSetAnalysis implements Serializable
 	/**
 	 * Order used to analyze
 	 */
-	private FilterModuleOrder order;
+	private List<ImposedFilterModule> order;
 
 	/**
 	 * Is this the selected order
@@ -77,9 +78,9 @@ public class FilterSetAnalysis implements Serializable
 	/**
 	 * A list of conflicts found
 	 */
-	private Map<String, List<Conflict>> conflicts;
+	private Map<CpsSelector, List<Conflict>> conflicts;
 
-	public FilterSetAnalysis(Concern inconcern, FilterModuleOrder inorder, FilterDirection indir, boolean insel)
+	public FilterSetAnalysis(Concern inconcern, List<ImposedFilterModule> inorder, FilterDirection indir, boolean insel)
 	{
 		concern = inconcern;
 		order = inorder;
@@ -87,7 +88,7 @@ public class FilterSetAnalysis implements Serializable
 		isSelectedOrder = insel;
 
 		filters = new ArrayList<Filter>();
-		conflicts = new HashMap<String, List<Conflict>>();
+		conflicts = new HashMap<CpsSelector, List<Conflict>>();
 
 		getFilterList();
 	}
@@ -96,6 +97,7 @@ public class FilterSetAnalysis implements Serializable
 	 * @see #filters
 	 * @return
 	 */
+	// TODO what is this used for?
 	public List<Filter> getFilters()
 	{
 		return Collections.unmodifiableList(filters);
@@ -169,7 +171,7 @@ public class FilterSetAnalysis implements Serializable
 	 * @see #getOrder()
 	 * @return
 	 */
-	public FilterModuleOrder getOrder()
+	public List<ImposedFilterModule> getOrder()
 	{
 		return order;
 	}
@@ -178,28 +180,36 @@ public class FilterSetAnalysis implements Serializable
 	 * Construct the list of filters in the order that they appear according to
 	 * the given ordering.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void getFilterList()
 	{
-		for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) order.filterModuleSIList())
+		for (ImposedFilterModule fmsi : order)
 		{
-			FilterModule fm = fmsi.getFilterModule().getRef();
-			Iterator ifItr;
+			FilterModule fm = fmsi.getFilterModule();
 
 			if (filterDirection == FilterDirection.Output)
 			{
-				ifItr = fm.getOutputFilterIterator();
+				getFilterList(fm.getOutputFilterExpression());
 			}
 			else
 			{
-				ifItr = fm.getInputFilterIterator();
+				getFilterList(fm.getInputFilterExpression());
 			}
+		}
+	}
 
-			while (ifItr.hasNext())
-			{
-				Filter f = (Filter) ifItr.next();
-				filters.add(f);
-			}
+	/**
+	 * @param fex
+	 */
+	protected void getFilterList(FilterExpression fex)
+	{
+		if (fex instanceof Filter)
+		{
+			filters.add((Filter) fex);
+		}
+		else if (fex instanceof BinaryFilterOperator)
+		{
+			getFilterList(((BinaryFilterOperator) fex).getLHS());
+			getFilterList(((BinaryFilterOperator) fex).getRHS());
 		}
 	}
 
@@ -254,20 +264,24 @@ public class FilterSetAnalysis implements Serializable
 		conflict.setTrace(trans);
 		conflict.setOperations(trace.getOperations());
 		// first state has the entrance message
-		Message entranceMessage = trans.get(0).getStartState().getMessage();
+		CpsMessage entranceMessage = trans.get(0).getStartState().getMessage();
 		conflict.setSelector(entranceMessage.getSelector());
 
 		logger.warn(String.format("Resource operation conflict for \"%s.%s\" on the resource \"%s\". ", concern
-				.getQualifiedName(), entranceMessage.getSelector(), resource.getName()));
+				.getFullyQualifiedName(), entranceMessage.getSelector(), resource.getName()));
 		logger.warn(String.format("Violating operation sequence: %s", conflict.getOperations()));
-		RepositoryEntity re = null;
+		QualifiedRepositoryEntity re = null;
 		for (ExecutionTransition et : trans)
 		{
 			FlowNode fn = et.getStartState().getFlowNode();
 			if (fn.containsName(FlowNode.FILTER_NODE))
 			{
-				re = fn.getRepositoryLink();
-				if (re.getDescriptionFileName() == null)
+				if (!(fn.getRepositoryLink() instanceof QualifiedRepositoryEntity))
+				{
+					continue;
+				}
+				re = (QualifiedRepositoryEntity) fn.getRepositoryLink();
+				if (re.getSourceInformation() == null)
 				{
 					re = null;
 					continue;
@@ -279,7 +293,7 @@ public class FilterSetAnalysis implements Serializable
 				{
 					if (!fn.containsName("ContinueAction") && !fn.containsName("SkipAction"))
 					{
-						logger.warn(re.getRepositoryKey(), re);
+						logger.warn(re.getFullyQualifiedName(), re);
 					}
 					re = null;
 				}

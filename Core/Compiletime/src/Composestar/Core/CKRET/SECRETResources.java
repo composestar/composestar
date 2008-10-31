@@ -44,7 +44,7 @@ import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
-import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
@@ -94,7 +94,6 @@ public class SECRETResources implements ModuleResourceManager
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Resources.ModuleResourceManager#getModuleName()
 	 */
 	public String getModuleName()
@@ -199,7 +198,7 @@ public class SECRETResources implements ModuleResourceManager
 	 */
 	public void addConcernAnalysis(ConcernAnalysis ca)
 	{
-		concernAnalyses.put(ca.getConcern().getQualifiedName(), ca);
+		concernAnalyses.put(ca.getConcern().getFullyQualifiedName(), ca);
 	}
 
 	/**
@@ -231,7 +230,7 @@ public class SECRETResources implements ModuleResourceManager
 		{
 			throw new IllegalArgumentException("Concern can not be null");
 		}
-		return getConcernAnalysis(ca.getQualifiedName());
+		return getConcernAnalysis(ca.getFullyQualifiedName());
 	}
 
 	/**

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 
 /**
@@ -27,7 +27,8 @@ public interface Labeler
 	// Note: changing this value also requires code changes to weaver
 	// implementations.
 	// For starlight:
-	// Composestar.StarLight.ILWeaver.CecilInliningInstructionVisitor#WeaveBookKeeping
+	// Composestar.StarLight.ILWeaver.CecilInliningInstructionVisitor#
+	// WeaveBookKeeping
 	public static final String FILTER_ACTION_SEPARATOR = "<FilterAction>";
 
 	/**

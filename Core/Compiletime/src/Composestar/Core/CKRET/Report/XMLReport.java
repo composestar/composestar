@@ -57,12 +57,12 @@ import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
-import Composestar.Core.FILTH.InnerDispatcher;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.FILTH2.DefaultInnerDispatchNames;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -89,9 +89,9 @@ public class XMLReport implements SECRETReport
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CKRET.Report.SECRETReport#report(Composestar.Core.Resources.CommonResources,
-	 *      Composestar.Core.CKRET.SECRETResources)
+	 * @see
+	 * Composestar.Core.CKRET.Report.SECRETReport#report(Composestar.Core.Resources
+	 * .CommonResources, Composestar.Core.CKRET.SECRETResources)
 	 */
 	public void report(CommonResources resources, SECRETResources secretResources)
 	{
@@ -302,7 +302,7 @@ public class XMLReport implements SECRETReport
 		for (ConcernAnalysis ca : secretResources.getConcernAnalyses())
 		{
 			Element caElm = xmlDoc.createElement("analysis");
-			caElm.setAttribute("concern", ca.getConcern().getQualifiedName());
+			caElm.setAttribute("concern", ca.getConcern().getFullyQualifiedName());
 
 			for (FilterSetAnalysis fsa : ca.getAnalysis())
 			{
@@ -311,19 +311,18 @@ public class XMLReport implements SECRETReport
 				fsaElm.setAttribute("direction", fsa.getFilterDirection().toString());
 
 				Element orderElm = xmlDoc.createElement("order");
-				for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) fsa.getOrder()
-						.filterModuleSIList())
+				for (ImposedFilterModule fmsi : fsa.getOrder())
 				{
-					if (InnerDispatcher.isDefaultDispatch(fmsi.getFilterModule().getRef()))
+					if (DefaultInnerDispatchNames.FILTER_MODULE.equals(fmsi.getFilterModule().getFullyQualifiedName()))
 					{
 						continue;
 					}
 					Element fmsiElm = xmlDoc.createElement("filtermodule");
 					if (fmsi.getCondition() != null)
 					{
-						fmsiElm.setAttribute("condition", fmsi.getCondition().getQualifiedName());
+						fmsiElm.setAttribute("condition", fmsi.getCondition().getReferenceId());
 					}
-					fmsiElm.setTextContent(fmsi.getFilterModule().getRef().getOriginalQualifiedName());
+					fmsiElm.setTextContent(fmsi.getFilterModule().getFullyQualifiedName());
 					orderElm.appendChild(fmsiElm);
 				}
 				fsaElm.appendChild(orderElm);
@@ -333,7 +332,7 @@ public class XMLReport implements SECRETReport
 					Element confElm = xmlDoc.createElement("conflict");
 					confElm.setAttribute("ruleid", ruleIds.get(conf.getRule()));
 					confElm.setAttribute("resource", conf.getResource().getName());
-					confElm.setAttribute("selector", conf.getSelector());
+					confElm.setAttribute("selector", conf.getSelector().toString());
 
 					Element opsElm = xmlDoc.createElement("sequence");
 					opsElm.setTextContent(StringUtils.join(conf.getOperations(), " "));

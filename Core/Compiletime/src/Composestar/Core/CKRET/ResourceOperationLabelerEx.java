@@ -37,8 +37,9 @@ import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
 import Composestar.Core.CKRET.Config.OperationSequence.LabelType;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
+import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.regex.LabelSequence;
@@ -146,8 +147,9 @@ public class ResourceOperationLabelerEx implements Labeler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FIRE2.util.regex.Labeler#getLabels(Composestar.Core.FIRE2.model.ExecutionTransition)
+	 * @see
+	 * Composestar.Core.FIRE2.util.regex.Labeler#getLabels(Composestar.Core.
+	 * FIRE2.model.ExecutionTransition)
 	 */
 	public LabelSequence getLabels(ExecutionTransition transition)
 	{
@@ -168,8 +170,9 @@ public class ResourceOperationLabelerEx implements Labeler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FIRE2.util.regex.Labeler#getResourceOperations(Composestar.Core.FIRE2.model.ExecutionTransition)
+	 * @see
+	 * Composestar.Core.FIRE2.util.regex.Labeler#getResourceOperations(Composestar
+	 * .Core.FIRE2.model.ExecutionTransition)
 	 */
 	public List<String> getResourceOperations(ExecutionTransition transition, Set<String> excludeResources)
 	{
@@ -181,23 +184,27 @@ public class ResourceOperationLabelerEx implements Labeler
 			// filter the operations for filter action (should be done during
 			// weaving).
 			FlowNode node = transition.getStartState().getFlowNode();
-			Filter filter = (Filter) node.getRepositoryLink();
+			Filter flt = (Filter) node.getRepositoryLink();
+			if (flt.getType() instanceof PrimitiveFilterType)
+			{
+				PrimitiveFilterType filter = (PrimitiveFilterType) flt.getType();
 
-			if (node.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
-			{
-				filterAction = filter.getFilterType().getAcceptCallAction().getName();
-			}
-			else if (node.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
-			{
-				filterAction = filter.getFilterType().getRejectCallAction().getName();
-			}
-			else if (node.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
-			{
-				filterAction = filter.getFilterType().getAcceptReturnAction().getName();
-			}
-			else if (node.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
-			{
-				filterAction = filter.getFilterType().getRejectReturnAction().getName();
+				if (node.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
+				{
+					filterAction = filter.getAcceptCallAction().getName();
+				}
+				else if (node.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
+				{
+					filterAction = filter.getRejectCallAction().getName();
+				}
+				else if (node.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
+				{
+					filterAction = filter.getAcceptReturnAction().getName();
+				}
+				else if (node.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
+				{
+					filterAction = filter.getRejectReturnAction().getName();
+				}
 			}
 		}
 
@@ -248,8 +255,9 @@ public class ResourceOperationLabelerEx implements Labeler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FIRE2.util.regex.Labeler#setCurrentConcern(Composestar.Core.CpsProgramRepository.Concern)
+	 * @see
+	 * Composestar.Core.FIRE2.util.regex.Labeler#setCurrentConcern(Composestar
+	 * .Core.CpsProgramRepository.Concern)
 	 */
 	public void setCurrentConcern(Concern curConcern)
 	{
@@ -258,8 +266,9 @@ public class ResourceOperationLabelerEx implements Labeler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FIRE2.util.regex.Labeler#setCurrentResource(java.lang.String)
+	 * @see
+	 * Composestar.Core.FIRE2.util.regex.Labeler#setCurrentResource(java.lang
+	 * .String)
 	 */
 	public void setCurrentResource(Resource resource)
 	{
@@ -287,7 +296,6 @@ public class ResourceOperationLabelerEx implements Labeler
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Comparable#compareTo(java.lang.Object)
 		 */
 		public int compareTo(PrioGraphLabel o)
@@ -307,7 +315,6 @@ public class ResourceOperationLabelerEx implements Labeler
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -321,7 +328,6 @@ public class ResourceOperationLabelerEx implements Labeler
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override

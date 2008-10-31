@@ -14,6 +14,7 @@ import java.util.List;
 
 import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 
 /**
@@ -45,7 +46,7 @@ public class Conflict implements Serializable
 	/**
 	 * The used selector which resulted in a violation
 	 */
-	private String selector;
+	private CpsSelector selector;
 
 	/**
 	 * The sequence of operations that lead to the violation
@@ -103,7 +104,7 @@ public class Conflict implements Serializable
 	 * @see #selector
 	 * @param sel
 	 */
-	public void setSelector(String sel)
+	public void setSelector(CpsSelector sel)
 	{
 		selector = sel;
 	}
@@ -112,7 +113,7 @@ public class Conflict implements Serializable
 	 * @see #selector
 	 * @return
 	 */
-	public String getSelector()
+	public CpsSelector getSelector()
 	{
 		return selector;
 	}

@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 
 /**
@@ -98,7 +98,7 @@ public class ConcernAnalysis implements Serializable
 	 * @param isSelected is this the selected filter module order
 	 * @return true when there was a conflict
 	 */
-	protected boolean analyseOrder(FilterModuleOrder order, boolean isSelected)
+	protected boolean analyseOrder(List<ImposedFilterModule> order, boolean isSelected)
 	{
 		FilterSetAnalysis oa = new FilterSetAnalysis(concern, order, FilterDirection.Input, isSelected);
 		oa.analyze(resources);

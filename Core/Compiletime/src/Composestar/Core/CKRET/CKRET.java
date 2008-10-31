@@ -11,8 +11,8 @@ package Composestar.Core.CKRET;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -30,19 +30,17 @@ import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.CKRET.Report.SECRETReport;
 import Composestar.Core.CKRET.Report.XMLReport;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.RegularState;
 import Composestar.Core.FIRE2.util.regex.RegularTransition;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.FilterModuleSuperImposition;
-import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
 import Composestar.Utils.Perf.CPSTimer;
@@ -116,8 +114,9 @@ public class CKRET implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
@@ -126,14 +125,11 @@ public class CKRET implements CTCommonModule
 
 		secretResources.setLabeler(new ResourceOperationLabelerEx(secretResources));
 
-		Iterator<Concern> conIt = resources.repository().getAllInstancesOf(Concern.class);
-		while (conIt.hasNext())
+		for (Concern concern : resources.repository().getAll(Concern.class))
 		{
-			Concern concern = conIt.next();
-
-			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
+			if (concern.getSuperimposed() != null)
 			{
-				CPSTimer timer = CPSTimer.getTimer(ModuleNames.SECRET, concern.getUniqueID());
+				CPSTimer timer = CPSTimer.getTimer(ModuleNames.SECRET, concern.getFullyQualifiedName());
 				run(concern);
 				timer.stop();
 			}
@@ -225,10 +221,8 @@ public class CKRET implements CTCommonModule
 		}
 
 		// load operation sequences from filter action
-		Iterator<FilterAction> facts = resources.repository().getAllInstancesOf(FilterAction.class);
-		while (facts.hasNext())
+		for (FilterAction fact : resources.repository().getAll(FilterAction.class))
 		{
-			FilterAction fact = facts.next();
 			OperationSequence opseq = new OperationSequence();
 			opseq.addLabel(fact.getName(), "node");
 			secretResources.addOperationSequence(opseq);
@@ -397,14 +391,13 @@ public class CKRET implements CTCommonModule
 	 */
 	private void run(Concern concern) throws ModuleException
 	{
-		FilterModuleOrder singleOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+		List<ImposedFilterModule> singleOrder = concern.getSuperimposed().getFilterModuleOrder();
 		if (singleOrder != null)
 		{
 			// ok need to do some checking
 			ConcernAnalysis ca = new ConcernAnalysis(concern, secretResources);
 			secretResources.addConcernAnalysis(ca);
-			List<List<FilterModuleSuperImposition>> fmolist = (List<List<FilterModuleSuperImposition>>) concern
-					.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
+			Collection<List<ImposedFilterModule>> fmolist = concern.getSuperimposed().getAllOrders();
 
 			switch (mode)
 			{
@@ -412,7 +405,7 @@ public class CKRET implements CTCommonModule
 					if (!ca.analyseOrder(singleOrder, true))
 					{
 						logger.warn(new LogMessage("Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), "", 0));
+								+ concern.getFullyQualifiedName(), "", 0));
 					}
 					break;
 
@@ -420,15 +413,13 @@ public class CKRET implements CTCommonModule
 					if (!ca.analyseOrder(singleOrder, true))
 					{
 						logger.warn(new LogMessage("Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), "", 0));
+								+ concern.getFullyQualifiedName(), "", 0));
 					}
-					for (List<FilterModuleSuperImposition> aFmolist1 : fmolist)
+					for (List<ImposedFilterModule> aFmolist1 : fmolist)
 					{
-						FilterModuleOrder fmo = new FilterModuleOrder(aFmolist1);
-
-						if (!fmo.equals(singleOrder))
+						if (!aFmolist1.equals(singleOrder))
 						{
-							ca.analyseOrder(fmo, false);
+							ca.analyseOrder(aFmolist1, false);
 						}
 					}
 					break;
@@ -436,21 +427,20 @@ public class CKRET implements CTCommonModule
 				case Progressive:
 					boolean foundGoodOrder = ca.analyseOrder(singleOrder, true);
 
-					for (List<FilterModuleSuperImposition> aFmolist : fmolist)
+					for (List<ImposedFilterModule> aFmolist : fmolist)
 					{
-						FilterModuleOrder fmo = new FilterModuleOrder(aFmolist);
-						if (!fmo.equals(singleOrder))
+						if (!aFmolist.equals(singleOrder))
 						{
-							if (ca.analyseOrder(fmo, fmo.equals(singleOrder)))
+							if (ca.analyseOrder(aFmolist, aFmolist.equals(singleOrder)))
 							{
 								if (!foundGoodOrder)
 								{
 									// so this is the first good order found...
 									foundGoodOrder = true;
-									concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmo);
-									logger.info("Selected filtermodule order for concern " + concern.getQualifiedName()
-											+ ':');
-									logger.info('\t' + fmo.toString());
+									concern.getSuperimposed().setFilterModuleOrder(aFmolist);
+									logger.info("Selected filtermodule order for concern "
+											+ concern.getFullyQualifiedName() + ':');
+									logger.info('\t' + aFmolist.toString());
 								}
 							}
 						}
@@ -458,7 +448,7 @@ public class CKRET implements CTCommonModule
 					if (!foundGoodOrder)
 					{
 						logger.warn("Unable to find a filtermodule order without conflicts for concern:");
-						logger.warn('\t' + concern.getQualifiedName());
+						logger.warn('\t' + concern.getFullyQualifiedName());
 					}
 
 					break;
