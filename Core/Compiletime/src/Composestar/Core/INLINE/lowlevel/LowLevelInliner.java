@@ -14,10 +14,10 @@ import java.util.Set;
 
 import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.ResourceType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.CpsRepository2.FilterModules.Condition;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -98,7 +98,7 @@ public class LowLevelInliner
 	 * @param filterSet
 	 * @param method
 	 */
-	public void inline(ExecutionModel model, FilterModuleOrder filterSet, MethodInfo method)
+	public void inline(ExecutionModel model, List<ImposedFilterModule> filterSet, MethodInfo method)
 
 	{
 		jumpMap = new HashMap<ExecutionState, TopLevelBlock>();
@@ -115,7 +115,7 @@ public class LowLevelInliner
 	 * @param filterSet
 	 * @param method
 	 */
-	private void inline(List<TopLevelBlock> blocks, FilterModuleOrder filterSet, MethodInfo method)
+	private void inline(List<TopLevelBlock> blocks, List<ImposedFilterModule> filterSet, MethodInfo method)
 	{
 		strategy.startInline(filterSet, method);
 

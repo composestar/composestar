@@ -12,15 +12,12 @@ import java.util.Stack;
 import Composestar.Core.CKRET.ConcernAnalysis;
 import Composestar.Core.CKRET.Conflict;
 import Composestar.Core.CKRET.FilterSetAnalysis;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FlowNode;
-import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
@@ -29,7 +26,6 @@ import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.StringUtils;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy
@@ -148,7 +144,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startInline(Composestar.Core.FILTH.FilterModuleOrder,
 	 *      Composestar.Core.LAMA.MethodInfo, java.lang.String[])
 	 */
-	public void startInline(FilterModuleOrder filterSet, MethodInfo method)
+	public void startInline(List<ImposedFilterModule> filterSet, MethodInfo method)
 	{
 		conflicts = null;
 		if (concernAnalysis != null)
@@ -156,10 +152,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			FilterSetAnalysis fsa = concernAnalysis.getSelectedAnalysis(filterSetType);
 			if (fsa != null)
 			{
-				conflicts = fsa.executionConflicts(method.getName());
+				conflicts = fsa.executionConflicts(new CpsSelectorMethodInfo(method));
 				if (conflicts == null)
 				{
-					conflicts = fsa.executionConflicts(Message.UNDISTINGUISHABLE_SELECTOR);
+					conflicts = fsa.executionConflicts(null);
 				}
 			}
 		}
@@ -183,19 +179,16 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		// default dispatch filter module, are conditional. Then we can check
 		// all these conditions in advance and when they are all false, no
 		// filtercode needs to be executed.
-		List<FilterModuleSuperImposition> list = filterSet.filterModuleSIList();
 		boolean hasCheckConditions = true;
-		for (int i = 0; i < list.size() - 1; i++)
+		for (ImposedFilterModule fmsi : filterSet)
 		{
-			FilterModuleSuperImposition fmsi = list.get(i);
 			hasCheckConditions = hasCheckConditions && fmsi.getCondition() != null;
 		}
 
 		if (hasCheckConditions)
 		{
-			for (int i = 0; i < list.size() - 1; i++)
+			for (ImposedFilterModule fmsi : filterSet)
 			{
-				FilterModuleSuperImposition fmsi = list.get(i);
 				filterCode.addCheckCondition(fmsi.getCondition());
 			}
 		}

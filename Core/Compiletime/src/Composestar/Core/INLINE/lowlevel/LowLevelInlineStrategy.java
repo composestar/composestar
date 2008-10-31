@@ -6,10 +6,9 @@ package Composestar.Core.INLINE.lowlevel;
 
 import java.util.List;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.LAMA.MethodInfo;
 
@@ -28,7 +27,7 @@ public interface LowLevelInlineStrategy
 	 * @param method The method for which inlining is done
 	 * @param argReferences
 	 */
-	public void startInline(FilterModuleOrder filterSet, MethodInfo method);
+	public void startInline(List<ImposedFilterModule> filterSet, MethodInfo method);
 
 	/**
 	 * Called when inlining is done.

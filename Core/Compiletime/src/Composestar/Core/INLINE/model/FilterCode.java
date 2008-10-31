@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
+import Composestar.Core.CpsRepository2.References.MethodReference;
 
 /**
  * Contains the filter code for one method/call
@@ -17,7 +17,7 @@ public class FilterCode implements Visitable
 	/**
 	 * The conditions to check before filter code execution.
 	 */
-	private List<Condition> checkConditions;
+	private List<MethodReference> checkConditions;
 
 	/**
 	 * The filter code instructions
@@ -34,7 +34,7 @@ public class FilterCode implements Visitable
 	 */
 	public FilterCode()
 	{
-		checkConditions = new ArrayList<Condition>();
+		checkConditions = new ArrayList<MethodReference>();
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class FilterCode implements Visitable
 	 * 
 	 * @param condition
 	 */
-	public void addCheckCondition(Condition condition)
+	public void addCheckCondition(MethodReference condition)
 	{
 		checkConditions.add(condition);
 	}
@@ -55,12 +55,12 @@ public class FilterCode implements Visitable
 	 * @deprecated use getCheckConditionsEx
 	 */
 	@Deprecated
-	public Iterator<Condition> getCheckConditions()
+	public Iterator<MethodReference> getCheckConditions()
 	{
 		return getCheckConditionsEx().iterator();
 	}
 
-	public List<Condition> getCheckConditionsEx()
+	public List<MethodReference> getCheckConditionsEx()
 	{
 		return Collections.unmodifiableList(checkConditions);
 	}

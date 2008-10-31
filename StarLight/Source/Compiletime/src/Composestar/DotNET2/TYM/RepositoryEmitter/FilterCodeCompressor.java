@@ -249,14 +249,14 @@ public class FilterCodeCompressor
 			}
 
 			// Check whether condition expression equals
-			if (branch.getConditionExpression() == null)
+			if (branch.getMatchingExpression() == null)
 			{
-				if (!branch.getCondition().equals(checkBranch.getCondition()))
+				if (!branch.getConditionMethod().equals(checkBranch.getConditionMethod()))
 				{
 					return Boolean.FALSE;
 				}
 			}
-			else if (!branch.getConditionExpression().equals(checkBranch.getConditionExpression()))
+			else if (!branch.getMatchingExpression().equals(checkBranch.getMatchingExpression()))
 			{
 				return Boolean.FALSE;
 			}
@@ -420,13 +420,13 @@ public class FilterCodeCompressor
 			int value = 0;
 
 			// condition expression
-			if (branch.getConditionExpression() == null)
+			if (branch.getMatchingExpression() == null)
 			{
-				value += branch.getCondition().hashCode();
+				value += branch.getConditionMethod().hashCode();
 			}
 			else
 			{
-				value += branch.getConditionExpression().hashCode();
+				value += branch.getMatchingExpression().hashCode();
 			}
 
 			// True block
@@ -531,13 +531,13 @@ public class FilterCodeCompressor
 			Branch copy;
 
 			// condition
-			if (branch.getCondition() == null)
+			if (branch.getConditionMethod() == null)
 			{
-				copy = new Branch(branch.getConditionExpression());
+				copy = new Branch(branch.getMatchingExpression());
 			}
 			else
 			{
-				copy = new Branch(branch.getCondition());
+				copy = new Branch(branch.getConditionMethod());
 			}
 
 			// label

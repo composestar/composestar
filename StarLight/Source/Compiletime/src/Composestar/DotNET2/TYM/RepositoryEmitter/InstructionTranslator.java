@@ -174,13 +174,13 @@ class InstructionTranslator implements Visitor
 
 		setLabel(branch, weaveBranch);
 
-		if (branch.getConditionExpression() != null)
+		if (branch.getMatchingExpression() != null)
 		{
-			weaveBranch.setCondition(translateConditionExpression(branch.getConditionExpression()));
+			weaveBranch.setCondition(translateConditionExpression(branch.getMatchingExpression()));
 		}
 		else
 		{
-			weaveBranch.setCondition(translateCondition(branch.getCondition()));
+			weaveBranch.setCondition(translateCondition(branch.getConditionMethod()));
 		}
 
 		weaveBranch.setTrueBlock((composestar.dotNET2.tym.entities.Block) branch.getTrueBlock().accept(this));

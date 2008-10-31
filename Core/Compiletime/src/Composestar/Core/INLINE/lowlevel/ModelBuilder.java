@@ -4,9 +4,9 @@
  */
 package Composestar.Core.INLINE.lowlevel;
 
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
@@ -14,9 +14,10 @@ import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CKRET.ConcernAnalysis;
 import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
+import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -28,7 +29,6 @@ import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -87,7 +87,7 @@ public class ModelBuilder implements CTCommonModule
 	/**
 	 * The Datastore.
 	 */
-	private DataStore dataStore;
+	private Repository repository;
 
 	/**
 	 * The current selector being processed.
@@ -126,7 +126,7 @@ public class ModelBuilder implements CTCommonModule
 		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.Output, bkmode);
 		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy, resources);
 
-		dataStore = resources.repository();
+		repository = resources.repository();
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		startInliner();
 		// TODO return error when model building failed
@@ -155,11 +155,8 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private void process()
 	{
-		Iterator<Concern> concerns = dataStore.getAllInstancesOf(Concern.class);
-
-		while (concerns.hasNext())
+		for (Concern concern : repository.getAll(Concern.class))
 		{
-			Concern concern = concerns.next();
 			processConcern(concern);
 		}
 	}
@@ -172,7 +169,7 @@ public class ModelBuilder implements CTCommonModule
 	private void processConcern(Concern concern)
 	{
 		// get inputFiltermodules:
-		if (concern.getDynObject("superImpInfo") == null)
+		if (concern.getSuperimposed() == null)
 		{
 			return;
 		}
@@ -183,9 +180,7 @@ public class ModelBuilder implements CTCommonModule
 		inlinedMethodSet = new HashSet<Integer>();
 
 		// get filtermodules:
-		modules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
-
-		currentFireModelIF = f2res.getFireModel(concern, modules);
+		currentFireModelIF = f2res.getFireModel(concern, concern.getSuperimposed().getFilterModuleOrder());
 		currentFireModelOF = currentFireModelIF;
 
 		ConcernAnalysis ca = secretRes.getConcernAnalysis(concern);
@@ -197,7 +192,7 @@ public class ModelBuilder implements CTCommonModule
 
 		// iterate methods:
 		Signature sig = concern.getSignature();
-		List<MethodInfo> methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
+		Collection<MethodInfo> methods = sig.getMethods(EnumSet.of(MethodRelation.NORMAL, MethodRelation.ADDED));
 
 		for (MethodInfo method : methods)
 		{
@@ -262,7 +257,7 @@ public class ModelBuilder implements CTCommonModule
 		}
 		else
 		{
-			execModel = currentFireModelOF.getExecutionModel(FilterDirection.Output, call.getMethodName());
+			execModel = currentFireModelOF.getExecutionModel(FilterDirection.Output, call.getCalledMethod());
 		}
 
 		// create inlineModel:

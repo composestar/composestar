@@ -270,13 +270,13 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	public Object visitBranch(Branch branch)
 	{
 		String condition = null;
-		if (branch.getConditionExpression() != null)
+		if (branch.getMatchingExpression() != null)
 		{
-			condition = visitConditionExpression(branch.getConditionExpression());
+			condition = visitConditionExpression(branch.getMatchingExpression());
 		}
-		else if (branch.getCondition() != null)
+		else if (branch.getConditionMethod() != null)
 		{
-			condition = emitCondition(branch.getCondition());
+			condition = emitCondition(branch.getConditionMethod());
 		}
 		String trueBranch = null;
 		if (branch.getTrueBlock() != null)

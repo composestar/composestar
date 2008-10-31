@@ -109,7 +109,7 @@ public class FilterSetAnalysis implements Serializable
 	 * @param selector
 	 * @return
 	 */
-	public List<Conflict> executionConflicts(String selector)
+	public List<Conflict> executionConflicts(CpsSelector selector)
 	{
 		if (!conflicts.containsKey(selector))
 		{

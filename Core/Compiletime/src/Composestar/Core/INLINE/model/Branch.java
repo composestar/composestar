@@ -4,8 +4,8 @@
  */
 package Composestar.Core.INLINE.model;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
+import Composestar.Core.CpsRepository2.References.MethodReference;
 
 /**
  * An instruction indicating a conditional branch.
@@ -18,13 +18,13 @@ public class Branch extends Instruction
 	 * The conditionexpression that is checked to do the branching, or
 	 * <code>null</code> if the condition is used.
 	 */
-	private ConditionExpression conditionExpression;
+	private MatchingExpression matchingExpression;
 
 	/**
 	 * The condition that is checked to do the branching, or <code>null</code>
 	 * if the conditionexpression is used.
 	 */
-	private Condition condition;
+	private MethodReference conditionMethod;
 
 	/**
 	 * The instructionblock that should be executed when the conditionexpression
@@ -41,12 +41,11 @@ public class Branch extends Instruction
 	/**
 	 * The constructor
 	 * 
-	 * @param conditionExpression The conditionexpression to check for the
-	 *            branching.
+	 * @param expression The expression to check for the branching.
 	 */
-	public Branch(ConditionExpression conditionExpression)
+	public Branch(MatchingExpression expression)
 	{
-		this.conditionExpression = conditionExpression;
+		this.matchingExpression = expression;
 	}
 
 	/**
@@ -54,25 +53,25 @@ public class Branch extends Instruction
 	 * 
 	 * @param condition The condition to check for the branching.
 	 */
-	public Branch(Condition condition)
+	public Branch(MethodReference condition)
 	{
-		this.condition = condition;
+		this.conditionMethod = condition;
 	}
 
 	/**
 	 * @return the conditionExpression
 	 */
-	public ConditionExpression getConditionExpression()
+	public MatchingExpression getMatchingExpression()
 	{
-		return conditionExpression;
+		return matchingExpression;
 	}
 
 	/**
 	 * @return the condition
 	 */
-	public Condition getCondition()
+	public MethodReference getConditionMethod()
 	{
-		return condition;
+		return conditionMethod;
 	}
 
 	/**

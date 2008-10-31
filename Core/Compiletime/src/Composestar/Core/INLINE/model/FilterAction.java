@@ -4,13 +4,14 @@
  */
 package Composestar.Core.INLINE.model;
 
-import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 
 /**
  * Instruction indicating a FilterAction.
  * 
  * @author Arjan
  */
+// TODO: filter arguments
 public class FilterAction extends Instruction
 {
 	/**
@@ -21,13 +22,7 @@ public class FilterAction extends Instruction
 	/**
 	 * The current message in the filterset
 	 */
-	private Message message;
-
-	/**
-	 * The substituted message (substitutionpart applied on the current
-	 * message).
-	 */
-	private Message substitutedMessage;
+	private CpsMessage message;
 
 	/**
 	 * Indicates whether the action is on call (true) or on return (false)
@@ -70,11 +65,10 @@ public class FilterAction extends Instruction
 	 * @param returning Indicates whether the action returns the flow (only when
 	 *            the action is on call).
 	 */
-	public FilterAction(String type, Message message, Message substitutedMessage, boolean onCall, boolean returning)
+	public FilterAction(String type, CpsMessage message, boolean onCall, boolean returning)
 	{
 		this.type = type;
 		this.message = message;
-		this.substitutedMessage = substitutedMessage;
 		this.onCall = onCall;
 		this.returning = returning;
 	}
@@ -82,17 +76,9 @@ public class FilterAction extends Instruction
 	/**
 	 * @return the message
 	 */
-	public Message getMessage()
+	public CpsMessage getMessage()
 	{
 		return message;
-	}
-
-	/**
-	 * @return the substitutedMessage
-	 */
-	public Message getSubstitutedMessage()
-	{
-		return substitutedMessage;
 	}
 
 	/**
