@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 
 /**
  * Stores the input and output crumbs for a given concern.
@@ -35,18 +35,18 @@ public class ConcernCrumbs implements Serializable
 	/**
 	 * Mapping of selector to crumbs for input filters
 	 */
-	protected Map<String, Breadcrumb> inputCrumbs;
+	protected Map<CpsSelector, Breadcrumb> inputCrumbs;
 
 	/**
 	 * Mapping of selector to crumbs for output filters
 	 */
-	protected Map<String, Breadcrumb> outputCrumbs;
+	protected Map<CpsSelector, Breadcrumb> outputCrumbs;
 
 	public ConcernCrumbs(Concern inConcern)
 	{
 		concern = inConcern;
-		inputCrumbs = new HashMap<String, Breadcrumb>();
-		outputCrumbs = new HashMap<String, Breadcrumb>();
+		inputCrumbs = new HashMap<CpsSelector, Breadcrumb>();
+		outputCrumbs = new HashMap<CpsSelector, Breadcrumb>();
 	}
 
 	/**
@@ -72,14 +72,14 @@ public class ConcernCrumbs implements Serializable
 	 * @param selector
 	 * @return
 	 */
-	public Breadcrumb getInputCrumb(String selector)
+	public Breadcrumb getInputCrumb(CpsSelector selector)
 	{
 		if (inputCrumbs.containsKey(selector))
 		{
 			return inputCrumbs.get(selector);
 		}
 		// return the "+" crumb otherwise
-		return inputCrumbs.get(Message.UNDISTINGUISHABLE_SELECTOR);
+		return inputCrumbs.get(null);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class ConcernCrumbs implements Serializable
 	 * @param selector
 	 * @return the output crubs for the given selector
 	 */
-	public Breadcrumb getOutputCrumb(String selector)
+	public Breadcrumb getOutputCrumb(CpsSelector selector)
 	{
 		// TODO:
 		throw new UnsupportedOperationException();

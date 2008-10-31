@@ -10,7 +10,7 @@
 
 package Composestar.Core.DIGGER2;
 
-import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsRepository2.Concern;
 
 /**
  * Base class for the message results

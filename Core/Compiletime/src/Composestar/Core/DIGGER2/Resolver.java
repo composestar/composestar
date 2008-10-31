@@ -13,19 +13,19 @@ package Composestar.Core.DIGGER2;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
-import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.FIRE2.preprocessing.GrooveASTBuilderCN;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -60,7 +60,7 @@ public class Resolver
 	public Breadcrumb resolve(Concern concern, ExecutionState state, FilterDirection filterChain)
 			throws ModuleException
 	{
-		Message msg = state.getMessage();
+		CpsMessage msg = state.getMessage();
 		logger.trace("entrance message: " + msg.toString());
 		Breadcrumb crumb = new Breadcrumb(concern, msg, filterChain);
 		traverseState(state, crumb, crumb.addTrail(), new LinkedList<ExecutionState>());
@@ -90,7 +90,7 @@ public class Resolver
 			if (trail.getTargetConcern() != null)
 			{
 				// crumbs always refer to input crumbs
-				String selector = trail.getResultMessage().getSelector();
+				CpsSelector selector = trail.getResultMessage().getSelector();
 				// if (Message.STAR_SELECTOR.equals(selector))
 				// {
 				// selector = crumb.getMessage().getSelector();
@@ -143,13 +143,13 @@ public class Resolver
 			{
 				// ignore
 			}
-			else if (flowNode.containsName("DispatchAction"))
+			else if (flowNode.containsName(GrooveASTBuilderCN.createFilterActionText("DispatchAction")))
 			{
 				// Message newMsg = new
 				// Message(state.getSubstitutionMessage().getTarget(),
 				// state.getSubstitutionMessage()
 				// .getSelector());
-				Message newMsg = state.getSubstitutionMessage();
+				CpsMessage newMsg = state.getMessage();
 				trail.setResultMessage(newMsg);
 				Concern targetConcern = findTargetConcern(crumb, newMsg.getTarget());
 				trail.setTargetConcern(targetConcern);
@@ -221,7 +221,7 @@ public class Resolver
 	 * @return
 	 * @throws ModuleException
 	 */
-	public static Concern findTargetConcern(Breadcrumb crumb, Target target) throws ModuleException
+	public static Concern findTargetConcern(Breadcrumb crumb, CpsObject target) throws ModuleException
 	{
 		return findTargetConcern(crumb.getConcern(), crumb.getFilterPosition(), target);
 	}
@@ -236,24 +236,10 @@ public class Resolver
 	 * @return
 	 * @throws ModuleException
 	 */
-	public static Concern findTargetConcern(Concern concern, FilterDirection filterPosition, Target target)
+	public static Concern findTargetConcern(Concern concern, FilterDirection filterPosition, CpsObject target)
 			throws ModuleException
 	{
-		String targetString = target.getName();
-		if (Target.SELF.equals(targetString))
-		{
-			if (filterPosition == FilterDirection.Input)
-			{
-				// send to itself
-				return concern;
-			}
-			else if (filterPosition == FilterDirection.Output)
-			{
-				// TODO: unresolved target; need data from concern internals
-				return null;
-			}
-		}
-		else if (Target.INNER.equals(targetString))
+		if (target.isInnerObject())
 		{
 			if (filterPosition == FilterDirection.Input)
 			{
@@ -266,22 +252,6 @@ public class Resolver
 				return concern;
 			}
 		}
-		else
-		{
-			// uses an internal/external, look it up in the filter module
-			DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
-			if (ref != null && ref.getResolved())
-			{
-				TypedDeclaration typeDecl = ref.getRef();
-				ConcernReference concernRef = typeDecl.getType();
-				return concernRef.getRef();
-			}
-			else
-			{
-				throw new ModuleException("Unresolved internal/external: " + targetString, ModuleNames.DIGGER);
-			}
-		}
-		throw new ModuleException("Unresolved target: " + targetString + " in " + concern.getQualifiedName()
-				+ " filterPosition:" + filterPosition, ModuleNames.DIGGER);
+		return target.getTypeReference().getReference().getConcern();
 	}
 }

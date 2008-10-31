@@ -18,9 +18,10 @@ import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Annotations.ComposestarModule.Importance;
-import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
@@ -30,8 +31,6 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
@@ -43,6 +42,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Michiel Hendriks
  */
+// FIXME not yet adjusted to the canonical model
 @ComposestarModule(ID = ModuleNames.DIGGER, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH }, importance = Importance.VALIDATION)
 public class DIGGER implements CTCommonModule
 {
@@ -56,8 +56,8 @@ public class DIGGER implements CTCommonModule
 
 	/**
 	 * The initial dispatch graph created by digger. This instance is added
-	 * under the repository key defined by
-	 * {@link DispatchGraph#REPOSITORY_KEY DispatchGraph.REPOSITORY_KEY}
+	 * under the repository key defined by {@link DispatchGraph#REPOSITORY_KEY
+	 * DispatchGraph.REPOSITORY_KEY}
 	 */
 	protected DispatchGraph graph;
 
@@ -97,8 +97,8 @@ public class DIGGER implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
+	 * @seeComposestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.
+	 * CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
@@ -146,22 +146,19 @@ public class DIGGER implements CTCommonModule
 	 * 
 	 * @throws ModuleException
 	 */
-	protected void createBreadcrumbs(DataStore ds) throws ModuleException
+	protected void createBreadcrumbs(Repository ds) throws ModuleException
 	{
 		timer.start("Creating breadcrumbs in mode " + graph.getMode());
-		Iterator<Concern> concerns = ds.getAllInstancesOf(Concern.class);
-		while (concerns.hasNext())
+		for (Concern concern : ds.getAll(Concern.class))
 		{
-			Concern concern = concerns.next();
-			FilterModuleOrder fmOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-			if (fmOrder != null)
+			if (concern.getSuperimposed() != null)
 			{
 				if (logger.isInfoEnabled())
 				{
-					logger.info("Generating dispatch graph for: " + concern.getQualifiedName());
+					logger.info("Generating dispatch graph for: " + concern.getFullyQualifiedName());
 				}
 
-				FireModel fm = f2res.getFireModel(concern, fmOrder);
+				FireModel fm = f2res.getFireModel(concern, concern.getSuperimposed().getFilterModuleOrder());
 				switch (graph.getMode())
 				{
 					case DispatchGraph.MODE_BASIC:
@@ -308,7 +305,11 @@ public class DIGGER implements CTCommonModule
 	 */
 	protected void processFullFireModel(Concern concern, FireModel fm) throws ModuleException
 	{
-		Type type = (Type) concern.getPlatformRepresentation();
+		if (concern.getTypeReference() == null)
+		{
+			return;
+		}
+		Type type = (Type) concern.getTypeReference().getReference();
 		if (type == null)
 		{
 			return;

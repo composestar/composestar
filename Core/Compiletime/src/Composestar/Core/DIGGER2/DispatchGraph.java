@@ -17,8 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
@@ -140,22 +140,6 @@ public class DispatchGraph implements Serializable
 	}
 
 	/**
-	 * @see DispatchGraph#getInputCrumb(Concern, String)
-	 */
-	public Breadcrumb getInputCrumb(Concern concern, MessageSelector selector) throws ModuleException
-	{
-		if (concern == null)
-		{
-			throw new ModuleException("Called getInputCrumb without a valid concern instance", ModuleNames.DIGGER);
-		}
-		if (selector == null)
-		{
-			throw new ModuleException("Called getInputCrumb without a valid selector", ModuleNames.DIGGER);
-		}
-		return getInputCrumb(concern, selector.getName());
-	}
-
-	/**
 	 * Returns the input breadcrumb for a given concern and selector. The result
 	 * can be null in case there is not crumb for the given selector and one
 	 * could not be resolved.
@@ -165,7 +149,7 @@ public class DispatchGraph implements Serializable
 	 * @return
 	 * @throws ModuleException
 	 */
-	public Breadcrumb getInputCrumb(Concern concern, String selector) throws ModuleException
+	public Breadcrumb getInputCrumb(Concern concern, CpsSelector selector) throws ModuleException
 	{
 		if (concern == null)
 		{
@@ -191,7 +175,7 @@ public class DispatchGraph implements Serializable
 	 * @param selector
 	 * @return
 	 */
-	protected Breadcrumb performAutoResolve(Concern concern, String selector)
+	protected Breadcrumb performAutoResolve(Concern concern, CpsSelector selector)
 	{
 		// TODO: this doesn't work yet
 		/*
@@ -200,8 +184,8 @@ public class DispatchGraph implements Serializable
 		 * switch (mode) { case MODE_BASIC: em =
 		 * fm.getExecutionModel(FireModel.INPUT_FILTERS, selector); break;
 		 * default: //MethodInfo methodInfo = ((Type)
-		 * concern.getPlatformRepresentation()).getMethod(selector, types); //em =
-		 * fm.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo,
+		 * concern.getPlatformRepresentation()).getMethod(selector, types); //em
+		 * = fm.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo,
 		 * FireModel.STRICT_SIGNATURE_CHECK); break; }
 		 */
 		throw new UnsupportedOperationException();
@@ -230,7 +214,7 @@ public class DispatchGraph implements Serializable
 	 * @throws RecursiveFilterException
 	 */
 	protected List<AbstractMessageResult> getResultingMessages(Breadcrumb crumb, List<Trail> stack,
-			String initialSelector)
+			CpsSelector initialSelector)
 	{
 		List<AbstractMessageResult> results = new ArrayList<AbstractMessageResult>();
 		boolean freshCrumb = true;

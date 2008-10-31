@@ -10,8 +10,8 @@
 
 package Composestar.Core.DIGGER2;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 
 /**
  * A (possible) final result of a message.
@@ -32,7 +32,7 @@ public class MessageResult extends AbstractMessageResult
 	 * when the dispatch graph is created in mode 0) the initial selector is
 	 * used.
 	 */
-	protected String selector;
+	protected CpsSelector selector;
 
 	/**
 	 * Default constructor
@@ -42,13 +42,13 @@ public class MessageResult extends AbstractMessageResult
 	 * @param initialSelector fallback selector used in case of star and
 	 *            undistinguishable selector usage
 	 */
-	public MessageResult(Breadcrumb inCrumb, Trail inTrail, String initialSelector)
+	public MessageResult(Breadcrumb inCrumb, Trail inTrail, CpsSelector initialSelector)
 	{
 		crumb = inCrumb;
 		trail = inTrail;
 
 		selector = trail.getResultMessage().getSelector();
-		if (Message.UNDISTINGUISHABLE_SELECTOR.equals(selector))
+		if (selector == null)
 		{
 			selector = initialSelector;
 		}
@@ -56,7 +56,6 @@ public class MessageResult extends AbstractMessageResult
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.DIGGER2.AbstractMessageResult#isValidResult()
 	 */
 	@Override
@@ -91,7 +90,7 @@ public class MessageResult extends AbstractMessageResult
 	 * @see MessageResult#selector
 	 * @return the resulting selector for the message.
 	 */
-	public String getSelector()
+	public CpsSelector getSelector()
 	{
 		return selector;
 	}

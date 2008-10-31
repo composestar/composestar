@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 
 /**
@@ -39,7 +39,7 @@ public class Breadcrumb implements Serializable
 	/**
 	 * The message that functioned as entrance message for the execution graph
 	 */
-	protected Message message;
+	protected CpsMessage message;
 
 	/**
 	 * input or output filter
@@ -56,7 +56,7 @@ public class Breadcrumb implements Serializable
 	 */
 	protected transient boolean resolvedStatus;
 
-	public Breadcrumb(Concern inConcern, Message inMessage, FilterDirection inFilterPosition)
+	public Breadcrumb(Concern inConcern, CpsMessage inMessage, FilterDirection inFilterPosition)
 	{
 		concern = inConcern;
 		message = inMessage;
@@ -75,7 +75,7 @@ public class Breadcrumb implements Serializable
 	/**
 	 * @return the associated message
 	 */
-	public Message getMessage()
+	public CpsMessage getMessage()
 	{
 		return message;
 	}
@@ -163,12 +163,11 @@ public class Breadcrumb implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return concern.getQualifiedName() + " " + message.toString();
+		return concern.getFullyQualifiedName() + " " + message.toString();
 	}
 }

@@ -46,6 +46,7 @@ import Composestar.Utils.Logging.LogMessage;
 import Composestar.Utils.Perf.CPSTimer;
 
 // FIXME: rename package to SECRET
+//FIXME not yet adjusted to the canonical model
 /**
  * If multiple filtermodules are imposed on the same joinpoint, certain
  * conflicts may be introduced. The concern containing these filtermodules are

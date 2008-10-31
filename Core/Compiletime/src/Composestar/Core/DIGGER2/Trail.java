@@ -12,10 +12,10 @@ package Composestar.Core.DIGGER2;
 
 import java.io.Serializable;
 
-import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.FIRE2.model.Message;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 
 /**
  * A trail contains information about the transition to a new breadcrumb.
@@ -48,14 +48,14 @@ public class Trail implements Serializable
 	 * the breadcrumb it leads to (target value of the breadcrumb is always
 	 * inner).
 	 */
-	protected Message resultMessage;
+	protected CpsMessage resultMessage;
 
 	/**
 	 * Points to the next breadcrumb. This will be null in the following cases:
 	 * <ul>
-	 * <li> points to the inner object (in this case the targetConcern is null
-	 * too) </li>
-	 * <li> points to a concern without superimposition </li>
+	 * <li>points to the inner object (in this case the targetConcern is null
+	 * too)</li>
+	 * <li>points to a concern without superimposition</li>
 	 * </ul>
 	 * In both cases it's the end of the trail.
 	 */
@@ -138,7 +138,7 @@ public class Trail implements Serializable
 	 * 
 	 * @param inMessage
 	 */
-	public void setResultMessage(Message inMessage)
+	public void setResultMessage(CpsMessage inMessage)
 	{
 		resultMessage = inMessage;
 	}
@@ -146,7 +146,7 @@ public class Trail implements Serializable
 	/**
 	 * @return the resulting message
 	 */
-	public Message getResultMessage()
+	public CpsMessage getResultMessage()
 	{
 		return resultMessage;
 	}
@@ -156,7 +156,7 @@ public class Trail implements Serializable
 	 *            selector
 	 * @return
 	 */
-	public Message getResultMessage(boolean resolveSelector)
+	public CpsMessage getResultMessage(boolean resolveSelector)
 	{
 		// if (Message.STAR_SELECTOR.equals(resultMessage.getSelector()))
 		// {
