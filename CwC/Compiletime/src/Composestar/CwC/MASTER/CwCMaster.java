@@ -34,8 +34,8 @@ import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
+import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
 import Composestar.Core.Master.Master;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.CwC.Filters.FilterLoader;
 import Composestar.Utils.CmdLineParser;
@@ -65,7 +65,7 @@ public class CwCMaster extends Master
 		{
 			// create the repository and common resources
 			resources = new CommonResources();
-			resources.setRepository(DataStore.instance());
+			resources.setRepository(new RepositoryImpl());
 			resources.put(RESOURCE_CONFIGFILE, configFilename);
 			BuildConfig config = new BuildConfig();
 			Project proj = config.getNewProject();

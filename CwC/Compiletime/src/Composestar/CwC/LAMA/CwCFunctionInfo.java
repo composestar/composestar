@@ -25,7 +25,6 @@
 package Composestar.CwC.LAMA;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -96,9 +95,8 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.MethodInfo#getClone(java.lang.String,
-	 *      Composestar.Core.LAMA.Type)
+	 * Composestar.Core.LAMA.Type)
 	 */
 	@Override
 	public MethodInfo getClone(String name, Type actualParent)
@@ -119,7 +117,6 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.MethodInfo#isDeclaredHere()
 	 */
 	@Override
@@ -130,7 +127,6 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.MethodInfo#isPrivate()
 	 */
 	@Override
@@ -141,7 +137,6 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.MethodInfo#isProtected()
 	 */
 	@Override
@@ -152,7 +147,6 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.MethodInfo#isPublic()
 	 */
 	@Override
@@ -173,7 +167,6 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
 	@Override
@@ -190,8 +183,8 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
+	 * @see
+	 * Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
 	 */
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
@@ -225,7 +218,7 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 			}
 			return new UnitResult(res);
 		}
-		return new UnitResult(Collections.emptySet());
+		return new UnitResult(new HashSet<ProgramElement>());
 	}
 
 	public String getFilename()

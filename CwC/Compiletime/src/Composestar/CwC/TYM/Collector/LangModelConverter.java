@@ -50,9 +50,14 @@ import weavec.cmodel.type.FunctionType;
 import weavec.grammar.TranslationUnitResult;
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.CpsConcern;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Meta.FileInformation;
+import Composestar.Core.CpsRepository2.Meta.SourceInformation;
+import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -113,8 +118,9 @@ public class LangModelConverter implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
@@ -170,29 +176,38 @@ public class LangModelConverter implements CTCommonModule
 		}
 
 		logger.info("Phase 3: Creating primitive types");
+		ReferenceManager refman = resources.get(ReferenceManager.RESOURCE_KEY);
 		for (Type type : register.getTypeMap().values())
 		{
+			TypeReference tref = refman.getTypeReference(type.getFullName());
+			tref.setReference(type);
 			Concern pc = null;
-			Object o = resources.repository().getObjectByID(type.getFullName());
+			RepositoryEntity o = resources.repository().get(type.getFullName());
 			if (o instanceof CpsConcern)
 			{
 				pc = (Concern) o;
-				if (pc.getPlatformRepresentation() != null)
+				if (pc.getTypeReference() != null)
 				{
-					type.setParentConcern(pc);
+					type.setConcern(pc);
 					logger.error(String.format("CpsConcern %s is already bound to a platform representation", pc
-							.getQualifiedName()));
+							.getFullyQualifiedName()));
 					continue;
 				}
 			}
 			if (pc == null)
 			{
-				pc = new PrimitiveConcern();
-				pc.setName(type.getFullName());
-				resources.repository().addObject(type.getFullName(), pc);
+				pc = new PrimitiveConcern(type.getFullName().split("\\."));
+				Composestar.Core.Config.Source typeSource = resources.configuration().getProject().getTypeMapping()
+						.getSource(type.getFullName());
+				if (typeSource != null)
+				{
+					SourceInformation srcInfo = new SourceInformation(new FileInformation(typeSource.getFile()));
+					pc.setSourceInformation(srcInfo);
+				}
+				resources.repository().add(pc);
 			}
-			pc.setPlatformRepresentation(type);
-			type.setParentConcern(pc);
+			pc.setTypeReference(tref);
+			type.setConcern(pc);
 		}
 		logger.info("Phase 4: Resolve call to other methods");
 		resolveCTOMs();

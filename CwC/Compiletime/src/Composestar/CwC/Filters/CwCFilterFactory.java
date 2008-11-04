@@ -24,15 +24,9 @@
 
 package Composestar.CwC.Filters;
 
-import Composestar.Core.COPPER2.FilterTypeMapping;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
-import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
-import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterActionException;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
-import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.COPPER3.FilterTypeFactory;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
 
 /**
  * The filter factor for CwC. Certain default filter actions are simply not
@@ -40,71 +34,33 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  * 
  * @author Michiel Hendriks
  */
-public class CwCFilterFactory extends DefaultFilterFactory
+public class CwCFilterFactory extends FilterTypeFactory
 {
-	public CwCFilterFactory(DataStore repo)
+	public CwCFilterFactory(Repository repo)
 	{
 		super(repo);
-	}
-
-	public CwCFilterFactory(FilterTypeMapping ftm, DataStore repo)
-	{
-		super(ftm, repo);
+		allowCustomFilterTypeCreation = false;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory#addLegacyFilterTypes()
+	 * @seeComposestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory#
+	 * allowLegacyCustomFilters()
 	 */
 	@Override
-	public void addLegacyFilterTypes() throws UnsupportedFilterTypeException
+	public void setAllowCustomFilterTypeCreation(boolean value)
 	{
-		throw new UnsupportedOperationException("Legacy custom filters are not supported in Compose*/CwC");
+		throw new UnsupportedOperationException("On-the-fly custom filters are not supported in Compose*/CwC");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory#allowLegacyCustomFilters()
+	 * @see Composestar.Core.COPPER3.FilterTypeFactory#getMetaAction()
 	 */
 	@Override
-	public boolean allowLegacyCustomFilters()
+	public FilterAction getMetaAction()
 	{
-		return false;
+		// TODO throw more specific (non-runtime) exception
+		throw new UnsupportedOperationException("Meta action not available in Compose*/CwC");
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory#createLegacyCustomFilterType(java.lang.String)
-	 */
-	@Override
-	public FilterType createLegacyCustomFilterType(String name) throws UnsupportedFilterTypeException
-	{
-		throw new UnsupportedFilterTypeException(FilterTypeNames.CUSTOM);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory#getMetaAction()
-	 */
-	@Override
-	public FilterAction getMetaAction() throws UnsupportedFilterActionException
-	{
-		throw new UnsupportedFilterActionException(FilterActionNames.META_ACTION);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory#setAllowLegacyCustomFilters(boolean)
-	 */
-	@Override
-	public void setAllowLegacyCustomFilters(boolean value)
-	{
-		throw new UnsupportedOperationException("Legacy custom filters are not supported in Compose*/CwC");
-	}
-
 }

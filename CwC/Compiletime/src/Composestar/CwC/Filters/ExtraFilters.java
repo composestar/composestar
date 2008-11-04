@@ -33,15 +33,14 @@ import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterActionException;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
+import Composestar.Core.COPPER3.FilterTypeFactory;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2Impl.Filters.FilterActionImpl;
+import Composestar.Core.CpsRepository2Impl.Filters.PrimitiveFilterTypeImpl;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.Master.Master;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.CwC.INLINE.CodeGen.CTimerActionCodeGenerator;
 import Composestar.CwC.INLINE.CodeGen.CTraceActionCodeGenerator;
 import Composestar.Utils.Logging.CPSLogger;
@@ -71,20 +70,19 @@ public class ExtraFilters implements CustomCwCFilters
 
 	public static final String TIMER_STOP_ACTION = "TimerStopAction";
 
-	protected FilterAction traceInAction;
+	protected FilterActionImpl traceInAction;
 
-	protected FilterAction traceOutAction;
+	protected FilterActionImpl traceOutAction;
 
-	protected FilterAction timerStartAction;
+	protected FilterActionImpl timerStartAction;
 
-	protected FilterAction timerStopAction;
+	protected FilterActionImpl timerStopAction;
 
 	public ExtraFilters()
 	{}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.CwC.Filters.CustomCwCFilters#getCodeGenerators()
 	 */
 	public Collection<FilterActionCodeGenerator<String>> getCodeGenerators()
@@ -97,29 +95,24 @@ public class ExtraFilters implements CustomCwCFilters
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.CwC.Filters.CustomCwCFilters#registerFilters(Composestar.Core.RepositoryImplementation.DataStore,
-	 *      Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory)
+	 * @see
+	 * Composestar.CwC.Filters.CustomCwCFilters#registerFilters(Composestar.
+	 * Core.RepositoryImplementation.DataStore,
+	 * Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory)
 	 */
-	public void registerFilters(DataStore repository, DefaultFilterFactory factory)
+	public void registerFilters(Repository repository, FilterTypeFactory factory)
 	{
-		try
-		{
-			addTraceFilterType(repository, factory);
-			addTraceInFilterType(repository, factory);
-			addTraceOutFilterType(repository, factory);
-			addProfilingFilterType(repository, factory);
-		}
-		catch (UnsupportedFilterTypeException e)
-		{
-			logger.error(e, e);
-		}
+		addTraceFilterType(repository, factory);
+		addTraceInFilterType(repository, factory);
+		addTraceOutFilterType(repository, factory);
+		addProfilingFilterType(repository, factory);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.CwC.Filters.CustomCwCFilters#registerSecretResources(Composestar.Core.CKRET.SECRETResources)
+	 * @see
+	 * Composestar.CwC.Filters.CustomCwCFilters#registerSecretResources(Composestar
+	 * .Core.CKRET.SECRETResources)
 	 */
 	public void registerSecretResources(SECRETResources resources)
 	{
@@ -139,164 +132,92 @@ public class ExtraFilters implements CustomCwCFilters
 		}
 	}
 
-	public FilterAction getTraceInAction(DataStore repository)
+	public FilterAction getTraceInAction(Repository repository)
 	{
 		if (traceInAction != null)
 		{
 			return traceInAction;
 		}
-		traceInAction = new FilterAction();
-		traceInAction.setName(TRACE_IN_ACTION);
-		traceInAction.setFullName(TRACE_IN_ACTION);
-		traceInAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		traceInAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		traceInAction = new FilterActionImpl(TRACE_IN_ACTION);
 		traceInAction.setResourceOperations("arg.read");
-		traceInAction.setCreateJPC(false);
-		repository.addObject(traceInAction);
+		repository.add(traceInAction);
 		return traceInAction;
 	}
 
-	public FilterAction getTraceOutAction(DataStore repository)
+	public FilterAction getTraceOutAction(Repository repository)
 	{
 		if (traceOutAction != null)
 		{
 			return traceOutAction;
 		}
-		traceOutAction = new FilterAction();
-		traceOutAction.setName(TRACE_OUT_ACTION);
-		traceOutAction.setFullName(TRACE_OUT_ACTION);
-		traceOutAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		traceOutAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		traceOutAction = new FilterActionImpl(TRACE_OUT_ACTION);
 		traceOutAction.setResourceOperations("arg.read;return.read");
-		traceOutAction.setCreateJPC(false);
-		repository.addObject(traceOutAction);
+		repository.add(traceOutAction);
 		return traceOutAction;
 	}
 
-	public void addTraceFilterType(DataStore repository, DefaultFilterFactory factory)
-			throws UnsupportedFilterTypeException
+	public void addTraceFilterType(Repository repository, FilterTypeFactory factory)
 	{
-		FilterType type = new FilterType();
-		type.setType(TRACE_FILTER);
-		try
-		{
-			type.setAcceptCallAction(getTraceInAction(repository));
-			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(getTraceOutAction(repository));
-			type.setRejectReturnAction(factory.getContinueAction());
-		}
-		catch (UnsupportedFilterActionException e)
-		{
-			throw new UnsupportedFilterTypeException(TRACE_FILTER, e);
-		}
-		repository.addObject(type);
-		if (factory.getTypeMapping() != null)
-		{
-			factory.getTypeMapping().registerFilterType(type);
-		}
+		PrimitiveFilterTypeImpl type = new PrimitiveFilterTypeImpl(TRACE_FILTER);
+		type.setAcceptCallAction(getTraceInAction(repository));
+		type.setRejectCallAction(factory.getContinueAction());
+		type.setAcceptReturnAction(getTraceOutAction(repository));
+		type.setRejectReturnAction(factory.getContinueAction());
+		repository.add(type);
 	}
 
-	public void addTraceInFilterType(DataStore repository, DefaultFilterFactory factory)
-			throws UnsupportedFilterTypeException
+	public void addTraceInFilterType(Repository repository, FilterTypeFactory factory)
 	{
-		FilterType type = new FilterType();
-		type.setType(TRACE_IN_FILTER);
-		try
-		{
-			type.setAcceptCallAction(getTraceInAction(repository));
-			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(factory.getContinueAction());
-			type.setRejectReturnAction(factory.getContinueAction());
-		}
-		catch (UnsupportedFilterActionException e)
-		{
-			throw new UnsupportedFilterTypeException(TRACE_IN_FILTER, e);
-		}
-		repository.addObject(type);
-		if (factory.getTypeMapping() != null)
-		{
-			factory.getTypeMapping().registerFilterType(type);
-		}
+		PrimitiveFilterTypeImpl type = new PrimitiveFilterTypeImpl(TRACE_IN_FILTER);
+		type.setAcceptCallAction(getTraceInAction(repository));
+		type.setRejectCallAction(factory.getContinueAction());
+		type.setAcceptReturnAction(factory.getContinueAction());
+		type.setRejectReturnAction(factory.getContinueAction());
+		repository.add(type);
 	}
 
-	public void addTraceOutFilterType(DataStore repository, DefaultFilterFactory factory)
-			throws UnsupportedFilterTypeException
+	public void addTraceOutFilterType(Repository repository, FilterTypeFactory factory)
 	{
-		FilterType type = new FilterType();
-		type.setType(TRACE_OUT_FILTER);
-		try
-		{
-			type.setAcceptCallAction(factory.getContinueAction());
-			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(getTraceOutAction(repository));
-			type.setRejectReturnAction(factory.getContinueAction());
-		}
-		catch (UnsupportedFilterActionException e)
-		{
-			throw new UnsupportedFilterTypeException(TRACE_OUT_FILTER, e);
-		}
-		repository.addObject(type);
-		if (factory.getTypeMapping() != null)
-		{
-			factory.getTypeMapping().registerFilterType(type);
-		}
+		PrimitiveFilterTypeImpl type = new PrimitiveFilterTypeImpl(TRACE_OUT_FILTER);
+		type.setAcceptCallAction(factory.getContinueAction());
+		type.setRejectCallAction(factory.getContinueAction());
+		type.setAcceptReturnAction(getTraceOutAction(repository));
+		type.setRejectReturnAction(factory.getContinueAction());
+		repository.add(type);
 	}
 
-	public FilterAction getTimerStartAction(DataStore repository)
+	public FilterAction getTimerStartAction(Repository repository)
 	{
 		if (timerStartAction != null)
 		{
 			return timerStartAction;
 		}
-		timerStartAction = new FilterAction();
-		timerStartAction.setName(TIMER_START_ACTION);
-		timerStartAction.setFullName(TIMER_START_ACTION);
-		timerStartAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		timerStartAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		timerStartAction = new FilterActionImpl(TIMER_START_ACTION);
 		timerStartAction.setResourceOperations("timer.write");
-		timerStartAction.setCreateJPC(false);
-		repository.addObject(timerStartAction);
+		repository.add(timerStartAction);
 		return timerStartAction;
 	}
 
-	public FilterAction getTimerStopAction(DataStore repository)
+	public FilterAction getTimerStopAction(Repository repository)
 	{
 		if (timerStopAction != null)
 		{
 			return timerStopAction;
 		}
-		timerStopAction = new FilterAction();
-		timerStopAction.setName(TIMER_STOP_ACTION);
-		timerStopAction.setFullName(TIMER_STOP_ACTION);
-		timerStopAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		timerStopAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		timerStopAction = new FilterActionImpl(TIMER_STOP_ACTION);
 		timerStopAction.setResourceOperations("timer.read");
-		timerStopAction.setCreateJPC(false);
-		repository.addObject(timerStopAction);
+		repository.add(timerStopAction);
 		return timerStopAction;
 	}
 
-	public void addProfilingFilterType(DataStore repository, DefaultFilterFactory factory)
-			throws UnsupportedFilterTypeException
+	public void addProfilingFilterType(Repository repository, FilterTypeFactory factory)
 	{
-		FilterType type = new FilterType();
-		type.setType(PROFILING_FILTER);
-		try
-		{
-			type.setAcceptCallAction(getTimerStartAction(repository));
-			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(getTimerStopAction(repository));
-			type.setRejectReturnAction(factory.getContinueAction());
-		}
-		catch (UnsupportedFilterActionException e)
-		{
-			throw new UnsupportedFilterTypeException(PROFILING_FILTER, e);
-		}
-		repository.addObject(type);
-		if (factory.getTypeMapping() != null)
-		{
-			factory.getTypeMapping().registerFilterType(type);
-		}
+		PrimitiveFilterTypeImpl type = new PrimitiveFilterTypeImpl(PROFILING_FILTER);
+		type.setAcceptCallAction(getTimerStartAction(repository));
+		type.setRejectCallAction(factory.getContinueAction());
+		type.setAcceptReturnAction(getTimerStopAction(repository));
+		type.setRejectReturnAction(factory.getContinueAction());
+		repository.add(type);
 	}
 
 }

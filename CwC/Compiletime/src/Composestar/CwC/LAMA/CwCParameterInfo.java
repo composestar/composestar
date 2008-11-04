@@ -33,6 +33,7 @@ import java.util.Set;
 import weavec.cmodel.declaration.ObjectDeclaration;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.ERelationType;
@@ -60,7 +61,6 @@ public class CwCParameterInfo extends ParameterInfo
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
 	@Override
@@ -71,8 +71,8 @@ public class CwCParameterInfo extends ParameterInfo
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
+	 * @see
+	 * Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
 	 */
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
@@ -99,6 +99,6 @@ public class CwCParameterInfo extends ParameterInfo
 			}
 			return new UnitResult(res);
 		}
-		return new UnitResult(Collections.emptySet());
+		return new UnitResult(new HashSet<ProgramElement>());
 	}
 }

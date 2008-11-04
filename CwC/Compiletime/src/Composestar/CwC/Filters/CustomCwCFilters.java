@@ -27,9 +27,9 @@ package Composestar.CwC.Filters;
 import java.util.Collection;
 
 import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
+import Composestar.Core.COPPER3.FilterTypeFactory;
+import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
-import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
  * Interface for custom CFilters. This class will be used to register
@@ -50,7 +50,7 @@ public interface CustomCwCFilters
 	 * @param repository
 	 * @param factory
 	 */
-	void registerFilters(DataStore repository, DefaultFilterFactory factory);
+	void registerFilters(Repository repository, FilterTypeFactory factory);
 
 	/**
 	 * Will be called after registerFilters, this can be used to register custom

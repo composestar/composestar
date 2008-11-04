@@ -35,10 +35,9 @@ import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.CKRET.SECRETResources;
+import Composestar.Core.COPPER3.FilterTypeFactory;
 import Composestar.Core.Config.CustomFilter;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
-import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
+import Composestar.Core.CpsRepository2.Filters.FilterTypeNames;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Resources.CommonResources;
@@ -62,18 +61,12 @@ public class FilterLoader
 		resources.put(RESOURCE_KEY, this);
 		customFilters = new HashSet<CustomCwCFilters>();
 
-		DefaultFilterFactory filterFactory = new CwCFilterFactory(resources.repository());
+		FilterTypeFactory filterFactory = new CwCFilterFactory(resources.repository());
 		String[] filters = { FilterTypeNames.DISPATCH, FilterTypeNames.SEND, FilterTypeNames.ERROR,
-				FilterTypeNames.BEFORE, FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION, };
-		try
-		{
-			filterFactory.createFilterTypes(filters);
-		}
-		catch (UnsupportedFilterTypeException e)
-		{
-			logger.error(e.getMessage(), e);
-		}
-		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+				FilterTypeNames.BEFORE, FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION, FilterTypeNames.VOID, };
+
+		filterFactory.createDefaultFilterTypes(filters);
+		resources.put(FilterTypeFactory.RESOURCE_KEY, filterFactory);
 
 		SECRETResources secretResc = resources.getResourceManager(SECRETResources.class, true);
 

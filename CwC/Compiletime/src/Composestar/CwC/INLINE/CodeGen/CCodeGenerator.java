@@ -28,14 +28,9 @@ import java.util.List;
 
 import weavec.cmodel.type.VoidType;
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
@@ -90,9 +85,10 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitBinaryOperator(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator,
-	 *      java.lang.Object, java.lang.Object)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitBinaryOperator(Composestar
+	 * .Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator,
+	 * java.lang.Object, java.lang.Object)
 	 */
 	public String emitBinaryOperator(BinaryOperator op, String lhs, String rhs)
 	{
@@ -109,8 +105,8 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitBlock(java.lang.Object)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitBlock(java.lang.Object)
 	 */
 	public String emitBlock(String code)
 	{
@@ -119,9 +115,9 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitBranch(java.lang.Object,
-	 *      java.lang.Object, java.lang.Object)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitBranch(java.lang.Object
+	 * , java.lang.Object, java.lang.Object)
 	 */
 	public String emitBranch(String condition, String trueBranch, String falseBranch)
 	{
@@ -143,8 +139,9 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitCondLiteral(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitCondLiteral(Composestar
+	 * .Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral)
 	 */
 	public String emitCondLiteral(CondLiteral literal)
 	{
@@ -161,9 +158,9 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitFilterCode(java.lang.Object,
-	 *      java.lang.Object, java.lang.Object)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitFilterCode(java.lang
+	 * .Object, java.lang.Object, java.lang.Object)
 	 */
 	public String emitFilterCode(String fmConditions, String onCall, String onReturn)
 	{
@@ -290,7 +287,6 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitSetInnerCall(int)
 	 */
 	public String emitSetInnerCall(int methodId)
@@ -300,7 +296,6 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitReturnActions()
 	 */
 	public String emitReturnActions()
@@ -337,9 +332,9 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitReturnFilterAction(int,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitReturnFilterAction(int,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
 	public String emitReturnFilterAction(int idx, FilterAction filterAction)
 	{
@@ -349,9 +344,9 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitShortOr(java.lang.Object,
-	 *      java.lang.Object)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitShortOr(java.lang.Object
+	 * , java.lang.Object)
 	 */
 	public String emitShortOr(String lhs, String rhs)
 	{
@@ -360,9 +355,10 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitUnaryOperator(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator,
-	 *      java.lang.Object)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitUnaryOperator(Composestar
+	 * .Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator,
+	 * java.lang.Object)
 	 */
 	public String emitUnaryOperator(UnaryOperator op, String expr)
 	{
@@ -375,7 +371,6 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitJump(int)
 	 */
 	public String emitJump(int labelId)
@@ -392,12 +387,10 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitLabel(int)
 	 */
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitLabel(int)
 	 */
 	public String emitLabel(int labelId)
@@ -415,8 +408,9 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitDefaultFilterAction(Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitDefaultFilterAction
+	 * (Composestar.Core.INLINE.model.FilterAction)
 	 */
 	public String emitDefaultFilterAction(FilterAction filterAction)
 	{
@@ -425,7 +419,6 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getJPCType()
 	 */
 	public String getJPCType(boolean asReference)
@@ -439,7 +432,6 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getJPCVariable()
 	 */
 	public String getJPCVariable(boolean asReference)
@@ -453,8 +445,8 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitJpcInitialization(Composestar.Core.INLINE.model.FilterAction)
+	 * @seeComposestar.Core.INLINE.CodeGen.CodeGenerator#emitJpcInitialization(
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
 	public String emitJpcInitialization(FilterAction filterAction)
 	{
@@ -507,9 +499,8 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.StringCodeGenerator#emitMethodCall(Composestar.Core.LAMA.MethodInfo,
-	 *      java.util.List, java.lang.Object)
+	 * @seeComposestar.Core.INLINE.CodeGen.StringCodeGenerator#emitMethodCall(
+	 * Composestar.Core.LAMA.MethodInfo, java.util.List, java.lang.Object)
 	 */
 	@Override
 	public String emitMethodCall(MethodInfo method, List<String> args, Object context)
