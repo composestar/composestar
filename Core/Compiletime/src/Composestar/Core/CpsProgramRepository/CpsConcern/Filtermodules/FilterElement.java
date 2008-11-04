@@ -56,7 +56,7 @@ public class FilterElement extends ContextRepositoryEntity
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpr
 	 *         ession
 	 */
-	public ConditionExpression getConditionPart()
+	public MatchingExpression getConditionPart()
 	{
 		return filterElementAST.conditionPart;
 	}
@@ -64,7 +64,7 @@ public class FilterElement extends ContextRepositoryEntity
 	/**
 	 * @param conditionValue
 	 */
-	public void setConditionPart(ConditionExpression conditionValue)
+	public void setConditionPart(MatchingExpression conditionValue)
 	{
 		filterElementAST.setConditionPart(conditionValue);
 	}

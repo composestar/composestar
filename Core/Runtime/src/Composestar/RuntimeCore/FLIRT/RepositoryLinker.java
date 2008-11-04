@@ -15,7 +15,7 @@ import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperatorType;
@@ -480,7 +480,7 @@ public class RepositoryLinker
 	 * 
 	 * @param conditionExpression
 	 */
-	private ConditionExpressionRuntime conditionRuntimeFactory(ConditionExpression conditionExpression)
+	private ConditionExpressionRuntime conditionRuntimeFactory(MatchingExpression conditionExpression)
 			throws Exception
 	{
 		ConditionExpressionRuntime conditionExpressionRuntime;
@@ -530,7 +530,7 @@ public class RepositoryLinker
 		return conditionExpressionRuntime;
 	}
 
-	private void linkConditionPart(ConditionExpression conditionExpression, FilterElementRuntime filterElementRuntime)
+	private void linkConditionPart(MatchingExpression conditionExpression, FilterElementRuntime filterElementRuntime)
 			throws Exception
 	{
 		ConditionExpressionRuntime conditionExpressionRuntime = conditionRuntimeFactory(conditionExpression);
@@ -542,7 +542,7 @@ public class RepositoryLinker
 		filterElementRuntime.conditionpart = conditionExpressionRuntime;
 	}
 
-	private void linkLeft(ConditionExpression conditionExpression, BinaryOperatorRuntime boRuntime) throws Exception
+	private void linkLeft(MatchingExpression conditionExpression, BinaryOperatorRuntime boRuntime) throws Exception
 	{
 		ConditionExpressionRuntime conditionExpressionRuntime = conditionRuntimeFactory(conditionExpression);
 
@@ -551,7 +551,7 @@ public class RepositoryLinker
 
 	}
 
-	private void linkRight(ConditionExpression conditionExpression, BinaryOperatorRuntime boRuntime) throws Exception
+	private void linkRight(MatchingExpression conditionExpression, BinaryOperatorRuntime boRuntime) throws Exception
 	{
 		ConditionExpressionRuntime conditionExpressionRuntime = conditionRuntimeFactory(conditionExpression);
 
@@ -559,7 +559,7 @@ public class RepositoryLinker
 		boRuntime.right = conditionExpressionRuntime;
 	}
 
-	private void linkOperand(ConditionExpression conditionExpression, UnaryOperatorRuntime uoRuntime) throws Exception
+	private void linkOperand(MatchingExpression conditionExpression, UnaryOperatorRuntime uoRuntime) throws Exception
 	{
 		ConditionExpressionRuntime conditionExpressionRuntime = conditionRuntimeFactory(conditionExpression);
 

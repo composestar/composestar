@@ -81,5 +81,4 @@ public class CDispatchActionCodeGen extends DispatchActionCodeGen
 	{
 		return null;
 	}
-
 }

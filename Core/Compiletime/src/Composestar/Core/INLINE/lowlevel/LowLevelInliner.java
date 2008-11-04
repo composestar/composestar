@@ -1,10 +1,30 @@
 /*
- * Created on 23-aug-2006
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
  *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
  */
 package Composestar.Core.INLINE.lowlevel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,10 +34,18 @@ import java.util.Set;
 
 import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.ResourceType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsRepository2.FilterModules.Condition;
+import Composestar.Core.CpsRepository2.PropertyNames;
+import Composestar.Core.CpsRepository2.PropertyPrefix;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
+import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
+import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.FilterElements.CanonAssignmentImpl;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -46,7 +74,7 @@ public class LowLevelInliner
 	 */
 	private LowLevelInlineStrategy strategy;
 
-	private StateType isCondExpr;
+	private StateType isFilterElement;
 
 	private StateType isFilter;
 
@@ -82,7 +110,7 @@ public class LowLevelInliner
 	private void initialize()
 	{
 		isFilter = new StateType(FlowNode.FILTER_NODE);
-		isCondExpr = new StateType(FlowNode.CONDITION_EXPRESSION_NODE);
+		isFilterElement = new StateType(FlowNode.FILTER_ELEMENT_NODE);
 		isFMCondition = new StateType(FlowNode.FM_CONDITION_NODE);
 
 		excludeResources = new HashSet<String>();
@@ -167,47 +195,54 @@ public class LowLevelInliner
 	{
 		FilterElementBlock filterElement = filterElements.next();
 
-		ExecutionState flowFalseExitState = filterElement.flowFalseExitState;
-		ExecutionState flowTrueExitState = filterElement.flowTrueExitState;
+		ExecutionState flowFalseExitState = filterElement.falseExit;
+		ExecutionState flowTrueExitState = filterElement.trueExit;
+
+		// the filter argument
+		Map<String, CanonAssignment> filterArgs = new HashMap<String, CanonAssignment>();
+		addFilterArguments(filterElement.filterElementState, filterArgs, false);
+		Map<String, CanonAssignment> filterArgsFE = new HashMap<String, CanonAssignment>(filterArgs);
+		addFilterArguments(filterElement.filterElementState, filterArgsFE, true);
 
 		if (flowFalseExitState == null)
 		{
-			// flueTrue can't be null if flowFalse is null
+			// flowTrue can't be null if flowFalse is null
 
-			if (isCondExpr.isTrue(flowTrueExitState))
+			if (isFilterElement.isTrue(flowTrueExitState))
 			{
 				// continue with next filter element:
 				inlineFilterElements(filterElements);
 			}
 			else
 			{
-				strategy.generateAction(filterElement.flowTrueAction1, filterElement.flowTrueRescOps1);
-				strategy.generateAction(filterElement.flowTrueAction2, filterElement.flowTrueRescOps2);
+				strategy.generateAction(filterElement.trueActionReturn, filterArgsFE.values(),
+						filterElement.trueRescOpsReturn);
+				strategy.generateAction(filterElement.trueActionCall, filterArgsFE.values(),
+						filterElement.trueRescOpsCall);
 				generateJump(flowTrueExitState);
 			}
 		}
-		else if (isCondExpr.isTrue(flowFalseExitState))
+		else if (isFilterElement.isTrue(flowFalseExitState))
 		{
 			if (flowTrueExitState == null)
 			{
 				// continue with next filter element:
 				inlineFilterElements(filterElements);
 			}
-			else if (isCondExpr.isTrue(flowTrueExitState))
+			else if (isFilterElement.isTrue(flowTrueExitState))
 			{
 				// continue with next filter element:
 				inlineFilterElements(filterElements);
 			}
 			else
 			{
-				ExecutionState conditionExprState = filterElement.conditionExprState;
-				FlowNode condExprFlowNode = conditionExprState.getFlowNode();
-
-				strategy.evalCondExpr((ConditionExpression) condExprFlowNode.getRepositoryLink());
+				strategy.evalMatchingExpr(filterElement.expression);
 				strategy.beginTrueBranch();
 
-				strategy.generateAction(filterElement.flowTrueAction1, filterElement.flowTrueRescOps1);
-				strategy.generateAction(filterElement.flowTrueAction2, filterElement.flowTrueRescOps2);
+				strategy.generateAction(filterElement.trueActionReturn, filterArgsFE.values(),
+						filterElement.trueRescOpsReturn);
+				strategy.generateAction(filterElement.trueActionCall, filterArgsFE.values(),
+						filterElement.trueRescOpsCall);
 				generateJump(flowTrueExitState);
 
 				strategy.endTrueBranch();
@@ -223,11 +258,13 @@ public class LowLevelInliner
 		{
 			if (flowTrueExitState == null)
 			{
-				strategy.generateAction(filterElement.flowFalseAction1, filterElement.flowFalseRescOps1);
-				strategy.generateAction(filterElement.flowFalseAction2, filterElement.flowFalseRescOps2);
+				strategy.generateAction(filterElement.falseActionReturn, filterArgs.values(),
+						filterElement.falseRescOpsReturn);
+				strategy.generateAction(filterElement.falseActionCall, filterArgs.values(),
+						filterElement.falseRescOpsCall);
 				generateJump(flowFalseExitState);
 			}
-			else if (isCondExpr.isTrue(flowTrueExitState))
+			else if (isFilterElement.isTrue(flowTrueExitState))
 			{
 				// not possible
 			}
@@ -235,27 +272,30 @@ public class LowLevelInliner
 			{
 				if (flowFalseExitState.equals(flowTrueExitState))
 				{
-					strategy.generateAction(filterElement.flowFalseAction1, filterElement.flowFalseRescOps1);
-					strategy.generateAction(filterElement.flowFalseAction2, filterElement.flowFalseRescOps2);
+					strategy.generateAction(filterElement.falseActionReturn, filterArgs.values(),
+							filterElement.falseRescOpsReturn);
+					strategy.generateAction(filterElement.falseActionCall, filterArgs.values(),
+							filterElement.falseRescOpsCall);
 					generateJump(flowFalseExitState);
 				}
 				else
 				{
-					ExecutionState conditionExprState = filterElement.conditionExprState;
-					FlowNode condExprFlowNode = conditionExprState.getFlowNode();
-
-					strategy.evalCondExpr((ConditionExpression) condExprFlowNode.getRepositoryLink());
+					strategy.evalMatchingExpr(filterElement.expression);
 					strategy.beginTrueBranch();
 
-					strategy.generateAction(filterElement.flowTrueAction1, filterElement.flowTrueRescOps1);
-					strategy.generateAction(filterElement.flowTrueAction2, filterElement.flowTrueRescOps2);
+					strategy.generateAction(filterElement.trueActionReturn, filterArgsFE.values(),
+							filterElement.trueRescOpsReturn);
+					strategy.generateAction(filterElement.trueActionCall, filterArgsFE.values(),
+							filterElement.trueRescOpsCall);
 					generateJump(flowTrueExitState);
 
 					strategy.endTrueBranch();
 					strategy.beginFalseBranch();
 
-					strategy.generateAction(filterElement.flowFalseAction1, filterElement.flowFalseRescOps1);
-					strategy.generateAction(filterElement.flowFalseAction2, filterElement.flowFalseRescOps2);
+					strategy.generateAction(filterElement.falseActionReturn, filterArgs.values(),
+							filterElement.falseRescOpsReturn);
+					strategy.generateAction(filterElement.falseActionCall, filterArgs.values(),
+							filterElement.falseRescOpsCall);
 					generateJump(flowFalseExitState);
 
 					strategy.endFalseBranch();
@@ -264,11 +304,104 @@ public class LowLevelInliner
 		}
 	}
 
+	/**
+	 * Collect the filter arguments
+	 * 
+	 * @param feState
+	 * @param result
+	 * @param fromFe
+	 */
+	private void addFilterArguments(ExecutionState feState, Map<String, CanonAssignment> result, boolean fromFe)
+	{
+		if (!(feState.getFlowNode().getRepositoryLink() instanceof FilterElement))
+		{
+			// TODO: error
+			return;
+		}
+		CpsMessage message = feState.getMessage();
+		FilterElement fe = (FilterElement) feState.getFlowNode().getRepositoryLink();
+		Collection<CanonAssignment> assignments = null;
+		if (fromFe)
+		{
+			assignments = fe.getAssignments();
+		}
+		else
+		{
+			RepositoryEntity re = fe.getOwner();
+			while (re != null)
+			{
+				if (re instanceof Filter)
+				{
+					assignments = ((Filter) re).getArguments();
+					break;
+				}
+				re = re.getOwner();
+			}
+		}
+		if (assignments == null)
+		{
+			// TODO: error
+			return;
+		}
+
+		for (CanonAssignment ca : assignments)
+		{
+			if (PropertyPrefix.FILTER != ca.getProperty().getPrefix())
+			{
+				continue;
+			}
+			CpsVariable value = ca.getValue();
+			if (value instanceof CanonProperty)
+			{
+				CanonProperty prop = (CanonProperty) value;
+				if (PropertyNames.INNER.equals(prop.getName()))
+				{
+					value = message.getInner();
+				}
+				else if (PropertyPrefix.MESSAGE == prop.getPrefix())
+				{
+					value = message.getProperty(prop.getBaseName());
+				}
+				else if (PropertyPrefix.FILTER == prop.getPrefix())
+				{
+					CanonAssignment calt = result.get(prop.getName());
+					if (calt != null)
+					{
+						value = calt.getValue();
+					}
+					else
+					{
+						value = null;
+					}
+				}
+				if (value != ca.getValue())
+				{
+					// duplicate the canon assignment with the real value
+					CanonAssignment corig = ca;
+					ca = new CanonAssignmentImpl();
+					ca.setSourceInformation(corig.getSourceInformation());
+					ca.setProperty(corig.getProperty());
+					ca.setValue(value);
+					ca.setOwner(corig.getOwner());
+				}
+			}
+			if (value != null)
+			{
+				result.put(ca.getProperty().getName(), ca);
+			}
+			else
+			{
+				// TODO error
+			}
+		}
+	}
+
 	private void inlineFilterModuleCondition(FilterModuleCondition fmCond)
 	{
-		Condition condition = (Condition) fmCond.filterModuleConditionState.getFlowNode().getRepositoryLink();
+		ImposedFilterModule ifm = (ImposedFilterModule) fmCond.filterModuleConditionState.getFlowNode()
+				.getRepositoryLink();
 
-		strategy.evalCondition(condition, fmCond.label);
+		strategy.evalConditionMethod(ifm.getCondition(), fmCond.label);
 
 		// True branch
 		strategy.beginTrueBranch();
@@ -400,13 +533,13 @@ public class LowLevelInliner
 			FilterElementBlock block = identifyFilterElementBlock(nextState);
 			result.add(block);
 
-			if (isCondExpr.isTrue(block.flowTrueExitState))
+			if (isFilterElement.isTrue(block.trueExit))
 			{
-				nextState = block.flowTrueExitState;
+				nextState = block.trueExit;
 			}
-			else if (isCondExpr.isTrue(block.flowFalseExitState))
+			else if (isFilterElement.isTrue(block.falseExit))
 			{
-				nextState = block.flowFalseExitState;
+				nextState = block.falseExit;
 			}
 			else
 			{
@@ -421,75 +554,61 @@ public class LowLevelInliner
 	 * Identifies the complete filterelement block corresponding with the
 	 * condition expression.
 	 * 
-	 * @param condExpr
+	 * @param filterElementState
 	 * @return
 	 */
-	private FilterElementBlock identifyFilterElementBlock(ExecutionState condExpr)
+	private FilterElementBlock identifyFilterElementBlock(ExecutionState filterElementState)
 	{
 		FilterElementBlock block = new FilterElementBlock();
 
-		block.conditionExprState = condExpr;
+		block.filterElementState = filterElementState;
 
-		// enumeration has 1 or 2 elements (True and False branch)
-		for (ExecutionTransition transition : condExpr.getOutTransitionsEx())
+		Set<ExecutionState> exitStates = new HashSet<ExecutionState>();
+		getExitStates(filterElementState, exitStates);
+
+		assert exitStates.size() <= 2 : "Filter element can not have more than 2 disctinct exit state";
+
+		for (ExecutionState state : exitStates)
 		{
-			if (labeler != null)
+			ExecutionState callAction = null;
+			ExecutionState returnAction = null;
+
+			if (state.getFlowNode().containsName(FlowNode.FILTER_ACTION_NODE))
 			{
-				if (resourceOperations == null)
+				// TODO assumes return-action, call-action; but does not
+				// explicitly validate it
+				returnAction = state;
+				callAction = getNextState(state);
+				if (!state.getFlowNode().containsName(FlowNode.FILTER_ACTION_NODE))
 				{
-					resourceOperations = new ArrayList<String>();
+					callAction = null;
 				}
-				resourceOperations.addAll(labeler.getResourceOperations(transition, excludeResources));
 			}
 
-			ExecutionState exitState = getExitState(transition.getEndState());
-
-			if (transition.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_TRUE))
+			if (state.getFlowNode().containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE)
+					|| state.getFlowNode().containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
 			{
-				block.flowTrueExitState = exitState;
-				if (exitState.getFlowNode().containsName(FlowNode.ACTION_NODE))
-				{
-					// operations up to this state belong to the call
-					block.flowTrueRescOps2 = resourceOperations;
-					resourceOperations = new ArrayList<String>();
-
-					block.flowTrueAction1 = exitState;
-					block.flowTrueAction2 = getNextState(exitState);
-
-					// after this the actions of the return are extracted
-					block.flowTrueRescOps1 = resourceOperations;
-
-					// get the resource operations of the transition which
-					// belong to the call action
-					resourceOperations = block.flowTrueRescOps2;
-					getNextState(block.flowTrueAction2);
-					resourceOperations = new ArrayList<String>();
-				}
+				// accepting exit state
+				block.trueExit = state;
+				block.trueActionCall = callAction;
+				block.trueActionReturn = returnAction;
+				// TODO: resource operations
 			}
 			else
 			{
-				block.flowFalseExitState = exitState;
-				if (exitState.getFlowNode().containsName(FlowNode.ACTION_NODE))
-				{
-					// operations up to this state belong to the call
-					block.flowFalseRescOps2 = resourceOperations;
-					resourceOperations = new ArrayList<String>();
-
-					block.flowFalseAction1 = exitState;
-					block.flowFalseAction2 = getNextState(exitState);
-
-					// after this the actions of the return are extracted
-					block.flowFalseRescOps1 = resourceOperations;
-
-					// get the resource operations of the transition which
-					// belong to the call action
-					resourceOperations = block.flowFalseRescOps2;
-					getNextState(block.flowFalseAction2);
-					resourceOperations = new ArrayList<String>();
-				}
+				// must be rejecting exit state
+				block.falseExit = state;
+				block.falseActionCall = callAction;
+				block.falseActionReturn = returnAction;
+				// TODO: resource operations ??
 			}
 		}
 
+		if (exitStates.size() >= 2)
+		{
+			// reconstruct the expression making various things constant
+			block.expression = ExpressionResolver.createExpression(filterElementState, block.trueExit, block.falseExit);
+		}
 		return block;
 	}
 
@@ -519,41 +638,36 @@ public class LowLevelInliner
 	}
 
 	/**
-	 * This method gets the exitstate from the filterelement for one trace
-	 * starting with the given state. This exitState is either an actionstate or
-	 * the next ConditionExpressionState, marking the next filterelement.
+	 * Find all exit states
 	 * 
 	 * @param state
-	 * @return
+	 * @param result exit states will be saved here
 	 */
-	private ExecutionState getExitState(ExecutionState state)
+	private void getExitStates(ExecutionState state, Set<ExecutionState> result)
 	{
-		ExecutionState currentState = state;
-
-		while (!isExitState(currentState))
+		for (ExecutionTransition trans : state.getOutTransitionsEx())
 		{
-			// get the next state:
-			ExecutionTransition transition = currentState.getOutTransitionsEx().get(0);
-			if (labeler != null)
+			ExecutionState os = trans.getEndState();
+			if (isExitState(os))
 			{
-				resourceOperations.addAll(labeler.getResourceOperations(transition, excludeResources));
+				result.add(os);
 			}
-			currentState = transition.getEndState();
+			else
+			{
+				getExitStates(os, result);
+			}
 		}
-
-		return currentState;
 	}
 
 	/**
-	 * Indicates whether the given executionstate is an exitstate or not.
-	 * 
 	 * @param state
-	 * @return
+	 * @return True then this state left the previous filter element scope and
+	 *         entered either a new filter element scope or returned to the
+	 *         filter scope.
 	 */
 	private boolean isExitState(ExecutionState state)
 	{
-		// exitstate is either a ConditionExpression or an Action state:
-		return isCondExpr.isTrue(state) || state.getFlowNode().containsName(FlowNode.ACTION_NODE);
+		return state.getFlowNode().containsName(FlowNode.FILTER_ACTION_NODE) || isFilterElement.isTrue(state);
 	}
 
 	/**
@@ -582,51 +696,55 @@ public class LowLevelInliner
 	private static class FilterElementBlock
 	{
 		/**
+		 * The compact branching expression
+		 */
+		public MatchingExpression expression;
+
+		/**
 		 * The executionstate corresponding with the conditionexpression of this
 		 * filterelement.
 		 */
-		public ExecutionState conditionExprState;
+		public ExecutionState filterElementState;
 
 		/**
 		 * The exit(last) state of this filterelement when the
 		 * conditionexpression was true.
 		 */
-		public ExecutionState flowTrueExitState;
+		public ExecutionState trueExit;
 
 		/**
 		 * The first (on return) action when the conditionexpression was true.
 		 */
-		public ExecutionState flowTrueAction1;
+		public ExecutionState trueActionReturn;
 
 		/**
 		 * The second (on call) action when the conditionexpression was true.
 		 */
-		public ExecutionState flowTrueAction2;
+		public ExecutionState trueActionCall;
 
-		public List<String> flowTrueRescOps1;
+		public List<String> trueRescOpsReturn;
 
-		public List<String> flowTrueRescOps2;
+		public List<String> trueRescOpsCall;
 
 		/**
 		 * The exit(last) state of this filterelement when the
 		 * conditionexpression was false.
 		 */
-		public ExecutionState flowFalseExitState;
+		public ExecutionState falseExit;
 
 		/**
 		 * The first (on return) action when the conditionexpression was false.
 		 */
-		public ExecutionState flowFalseAction1;
+		public ExecutionState falseActionReturn;
 
 		/**
 		 * The second (on call) action when the conditionexpression was false.
 		 */
-		public ExecutionState flowFalseAction2;
+		public ExecutionState falseActionCall;
 
-		public List<String> flowFalseRescOps1;
+		public List<String> falseRescOpsReturn;
 
-		public List<String> flowFalseRescOps2;
-
+		public List<String> falseRescOpsCall;
 	}
 
 	private static class FilterModuleCondition extends TopLevelBlock
@@ -654,5 +772,4 @@ public class LowLevelInliner
 		 */
 		public int label;
 	}
-
 }

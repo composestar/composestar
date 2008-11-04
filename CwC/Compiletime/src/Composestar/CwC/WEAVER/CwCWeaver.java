@@ -68,20 +68,20 @@ import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Project;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
+import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INLINE.CodeGen.AdviceActionCodeGen;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
+import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.SIinfo;
 import Composestar.CwC.Filters.FilterLoader;
 import Composestar.CwC.INLINE.CodeGen.CCodeGenerator;
 import Composestar.CwC.INLINE.CodeGen.CDispatchActionCodeGen;
@@ -172,8 +172,9 @@ public class CwCWeaver implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resc) throws ModuleException
 	{
@@ -211,10 +212,8 @@ public class CwCWeaver implements CTCommonModule
 		copyComposeStarC(FileUtils.relocateFile(currentProject.getBase(), new File("ComposeStar.c"), outputDir));
 
 		// inject filter code
-		Iterator<Concern> concernIterator = resources.repository().getAllInstancesOf(Concern.class);
-		while (concernIterator.hasNext())
+		for (Concern concern : resources.repository().getAll(Concern.class))
 		{
-			Concern concern = concernIterator.next();
 			processConcern(concern);
 		}
 
@@ -429,20 +428,24 @@ public class CwCWeaver implements CTCommonModule
 
 	protected void processConcern(Concern concern)
 	{
-		if (!(concern.getPlatformRepresentation() instanceof CwCFile))
+		if (concern.getTypeReference() == null)
+		{
+			return;
+		}
+		if (!(concern.getTypeReference().getReference() instanceof CwCFile))
 		{
 			return;
 		}
 
-		if (concern.getDynObject(SIinfo.DATAMAP_KEY) == null)
+		if (concern.getSuperimposed() == null)
 		{
 			return;
 		}
 
-		logger.info(String.format("Weaving concern %s", concern.getQualifiedName()));
+		logger.info(String.format("Weaving concern %s", concern.getFullyQualifiedName()));
 		timer.start("Weaving concern " + concern.getName());
 
-		CwCFile type = (CwCFile) concern.getPlatformRepresentation();
+		CwCFile type = (CwCFile) concern.getTypeReference().getReference();
 
 		TranslationUnitResult tunit = null;
 		for (TranslationUnitResult ttu : weavecResc.translationUnitResults())
@@ -456,7 +459,7 @@ public class CwCWeaver implements CTCommonModule
 		if (tunit == null)
 		{
 			logger.error(String.format("Concern '%s' does not have a translation unit associated with it.", concern
-					.getQualifiedName()));
+					.getFullyQualifiedName()));
 			return;
 		}
 
@@ -467,9 +470,9 @@ public class CwCWeaver implements CTCommonModule
 		codeGen.setHeaderGenerator(extraFuncDecls);
 
 		Signature sig = concern.getSignature();
-		List<CwCFunctionInfo> functions = sig.getMethods(MethodWrapper.NORMAL);
-		for (CwCFunctionInfo func : functions)
+		for (MethodInfo method : sig.getMethods(MethodRelation.NORMAL))
 		{
+			CwCFunctionInfo func = (CwCFunctionInfo) method;
 			// look up the "real" function
 			List<ParameterInfo> pis = func.getParameters();
 			String[] params = new String[pis.size()];
@@ -480,20 +483,20 @@ public class CwCWeaver implements CTCommonModule
 			CwCFunctionInfo realFunc = (CwCFunctionInfo) type.getMethod(func.getName(), params);
 			if (realFunc == null)
 			{
-				logger.error(String.format("Unable to find the method %s.%s(%s)", concern.getQualifiedName(), func
+				logger.error(String.format("Unable to find the method %s.%s(%s)", concern.getFullyQualifiedName(), func
 						.getName(), Arrays.toString(params)));
 				continue;
 			}
 			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
 			if (filterCode != null)
 			{
-				logger.info(String.format("Weaving function %s.%s", concern.getQualifiedName(), func.getName()),
+				logger.info(String.format("Weaving function %s.%s", concern.getFullyQualifiedName(), func.getName()),
 						realFunc);
 				containsFilterCode = true;
 				processFilterCode(realFunc, filterCode, imports);
 			}
 
-			for (CwCCallToOtherMethod ctom : (Collection<CwCCallToOtherMethod>) func.getCallsToOtherMethods())
+			for (CallToOtherMethod ctom : realFunc.getCallsToOtherMethods())
 			{
 				// check if this method was added, in which case the call to
 				// other method is not set
@@ -516,21 +519,21 @@ public class CwCWeaver implements CTCommonModule
 				if (filterCode != null)
 				{
 					logger.info(String.format("Weaving call to function %s from %s.%s", ctom.getMethodName(), concern
-							.getQualifiedName(), func.getName()), realFunc);
+							.getFullyQualifiedName(), func.getName()), realFunc);
 					containsFilterCode = true;
-					processOutputFilterCode(ctom, func, filterCode, imports);
+					processOutputFilterCode((CwCCallToOtherMethod) ctom, func, filterCode, imports);
 				}
 			}
 		}
 
-		functions = sig.getMethods(MethodWrapper.ADDED);
-		for (CwCFunctionInfo func : functions)
+		for (MethodInfo method : sig.getMethods(MethodRelation.ADDED))
 		{
+			CwCFunctionInfo func = (CwCFunctionInfo) method;
 			createAddedFunctionAST(func, type);
 			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
 			if (filterCode != null)
 			{
-				logger.info(String.format("Weaving function %s.%s", concern.getQualifiedName(), func.getName()));
+				logger.info(String.format("Weaving function %s.%s", concern.getFullyQualifiedName(), func.getName()));
 				containsFilterCode = true;
 				processFilterCode(func, filterCode, imports);
 			}
@@ -575,14 +578,12 @@ public class CwCWeaver implements CTCommonModule
 		if (methodLookup == null)
 		{
 			methodLookup = new HashMap<String, MethodInfo>();
-			Iterator<Concern> concernIterator = resources.repository().getAllInstancesOf(Concern.class);
-			while (concernIterator.hasNext())
+			for (Concern concern : resources.repository().getAll(Concern.class))
 			{
-				Concern concern = concernIterator.next();
 				Signature sign = concern.getSignature();
 				if (sign != null)
 				{
-					for (MethodInfo mi : (Collection<MethodInfo>) sign.getMethods(MethodWrapper.ADDED))
+					for (MethodInfo mi : (Collection<MethodInfo>) sign.getMethods(MethodRelation.ADDED))
 					{
 						methodLookup.put(mi.getName(), mi);
 					}

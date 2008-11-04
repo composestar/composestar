@@ -15,11 +15,11 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
  * 
  * @author Michiel Hendriks
  */
-public abstract class BinaryOperator extends ConditionExpression
+public abstract class BinaryOperator extends MatchingExpression
 {
-	public ConditionExpression left;
+	public MatchingExpression left;
 
-	public ConditionExpression right;
+	public MatchingExpression right;
 
 	public BinaryOperator()
 	{
@@ -29,7 +29,7 @@ public abstract class BinaryOperator extends ConditionExpression
 	/**
 	 * @return ConditionExpression
 	 */
-	public ConditionExpression getLeft()
+	public MatchingExpression getLeft()
 	{
 		return left;
 	}
@@ -37,7 +37,7 @@ public abstract class BinaryOperator extends ConditionExpression
 	/**
 	 * @return ConditionExpression
 	 */
-	public ConditionExpression getRight()
+	public MatchingExpression getRight()
 	{
 		return right;
 	}
@@ -45,7 +45,7 @@ public abstract class BinaryOperator extends ConditionExpression
 	/**
 	 * @param leftValue
 	 */
-	public void setLeft(ConditionExpression leftValue)
+	public void setLeft(MatchingExpression leftValue)
 	{
 		this.left = leftValue;
 	}
@@ -53,7 +53,7 @@ public abstract class BinaryOperator extends ConditionExpression
 	/**
 	 * @param rightValue
 	 */
-	public void setRight(ConditionExpression rightValue)
+	public void setRight(MatchingExpression rightValue)
 	{
 		this.right = rightValue;
 	}

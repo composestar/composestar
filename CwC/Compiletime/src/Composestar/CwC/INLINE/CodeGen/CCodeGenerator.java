@@ -27,15 +27,18 @@ package Composestar.CwC.INLINE.CodeGen;
 import java.util.List;
 
 import weavec.cmodel.type.VoidType;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
+import Composestar.Core.CpsRepository2.FilterElements.MELiteral;
+import Composestar.Core.CpsRepository2.FilterElements.UnaryMEOperator;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2Impl.FilterElements.AndMEOper;
+import Composestar.Core.CpsRepository2Impl.FilterElements.NotMEOper;
+import Composestar.Core.CpsRepository2Impl.FilterElements.OrMEOper;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.CodeGen.StringCodeGenerator;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
@@ -90,13 +93,13 @@ public class CCodeGenerator extends StringCodeGenerator
 	 * .Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator,
 	 * java.lang.Object, java.lang.Object)
 	 */
-	public String emitBinaryOperator(BinaryOperator op, String lhs, String rhs)
+	public String emitBinaryOperator(BinaryMEOperator op, String lhs, String rhs)
 	{
-		if (op instanceof And)
+		if (op instanceof AndMEOper)
 		{
 			return String.format("( %s && %s )", lhs, rhs);
 		}
-		else if (op instanceof Or)
+		else if (op instanceof OrMEOper)
 		{
 			return String.format("( %s || %s )", lhs, rhs);
 		}
@@ -143,17 +146,16 @@ public class CCodeGenerator extends StringCodeGenerator
 	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitCondLiteral(Composestar
 	 * .Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral)
 	 */
-	public String emitCondLiteral(CondLiteral literal)
+	public String emitCondLiteral(MELiteral literal)
 	{
-		if (literal instanceof True)
+		if (literal.getLiteralValue())
 		{
 			return "1";
 		}
-		else if (literal instanceof False)
+		else
 		{
 			return "0";
 		}
-		return null;
 	}
 
 	/*
@@ -178,7 +180,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append(" ) {\n");
 		}
 
-		if (createJPC)
+		if (createJPC != JoinPointContextArgument.UNUSED && createJPC != JoinPointContextArgument.NONE)
 		{
 			sb.append(String.format("\t%s %s;\n", getJPCType(false), getJPCVariable(false)));
 		}
@@ -196,7 +198,7 @@ public class CCodeGenerator extends StringCodeGenerator
 					returnActions.size()));
 		}
 
-		for (FilterAction action : allActions)
+		for (FilterActionInstruction action : allActions)
 		{
 			FilterActionCodeGenerator<String> facg = faCodeGens.get(action.getType());
 			if (facg != null)
@@ -209,7 +211,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			}
 		}
 
-		if (createJPC)
+		if (createJPC != JoinPointContextArgument.UNUSED && createJPC != JoinPointContextArgument.NONE)
 		{
 			String jpcVarName = getJPCVariable(false);
 			sb.append("\t/* init JPC */\n");
@@ -336,7 +338,7 @@ public class CCodeGenerator extends StringCodeGenerator
 	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitReturnFilterAction(int,
 	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String emitReturnFilterAction(int idx, FilterAction filterAction)
+	public String emitReturnFilterAction(int idx, FilterActionInstruction filterAction)
 	{
 		return String.format("__cstar_return_actions[__cstar_return_actions_cnt++] = %d; /* queue: %s */\n", idx,
 				filterAction.getType());
@@ -360,9 +362,9 @@ public class CCodeGenerator extends StringCodeGenerator
 	 * .Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator,
 	 * java.lang.Object)
 	 */
-	public String emitUnaryOperator(UnaryOperator op, String expr)
+	public String emitUnaryOperator(UnaryMEOperator op, String expr)
 	{
-		if (op instanceof Not)
+		if (op instanceof NotMEOper)
 		{
 			return String.format("!%s", expr);
 		}
@@ -412,7 +414,7 @@ public class CCodeGenerator extends StringCodeGenerator
 	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitDefaultFilterAction
 	 * (Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String emitDefaultFilterAction(FilterAction filterAction)
+	public String emitDefaultFilterAction(FilterActionInstruction filterAction)
 	{
 		return "/* " + filterAction.getType() + " */ ;\n";
 	}
@@ -448,52 +450,49 @@ public class CCodeGenerator extends StringCodeGenerator
 	 * @seeComposestar.Core.INLINE.CodeGen.CodeGenerator#emitJpcInitialization(
 	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String emitJpcInitialization(FilterAction filterAction)
+	public String emitJpcInitialization(FilterActionInstruction filterAction, JoinPointContextArgument jpc)
 	{
+		if (jpc == JoinPointContextArgument.NONE || jpc == JoinPointContextArgument.UNUSED)
+		{
+			return "";
+		}
 		StringBuffer sb = new StringBuffer();
 		String jpcVarName = getJPCVariable(false);
 
-		Target target = filterAction.getMessage().getTarget();
-		Type targetType = null;
-		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
-		{
-			targetType = method.parent();
-		}
-		else
-		{
-			Concern crn = target.getRefToConcern();
-			if (crn != null)
-			{
-				targetType = (Type) crn.getPlatformRepresentation();
-			}
-		}
+		CpsObject target = filterAction.getMessage().getTarget();
+		Type targetType = target.getTypeReference().getReference();
 
 		if (targetType != null)
 		{
 			sb.append(String.format("%s.currentTarget = \"%s\";\n", jpcVarName, targetType.getFullName()));
 		}
-		sb.append(String.format("%s.currentSelector = \"%s\";\n", jpcVarName, filterAction.getMessage().getSelector()));
+		sb.append(String.format("%s.currentSelector = \"%s\";\n", jpcVarName, filterAction.getMessage().getSelector()
+				.getName()));
 
-		target = filterAction.getSubstitutedMessage().getTarget();
-		targetType = null;
-		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
-		{
-			targetType = method.parent();
-		}
-		else
-		{
-			Concern crn = target.getRefToConcern();
-			if (crn != null)
-			{
-				targetType = (Type) crn.getPlatformRepresentation();
-			}
-		}
-		if (targetType != null)
-		{
-			sb.append(String.format("%s.substTarget = \"%s\";\n", jpcVarName, targetType.getFullName()));
-		}
-		sb.append(String.format("%s.substSelector = \"%s\";\n", jpcVarName, filterAction.getSubstitutedMessage()
-				.getSelector()));
+		// "substitution" message doesn't exist
+		// target = filterAction.getSubstitutedMessage().getTarget();
+		// targetType = null;
+		// if (Target.INNER.equals(target.getName()) ||
+		// Target.SELF.equals(target.getName()))
+		// {
+		// targetType = method.parent();
+		// }
+		// else
+		// {
+		// Concern crn = target.getRefToConcern();
+		// if (crn != null)
+		// {
+		// targetType = (Type) crn.getPlatformRepresentation();
+		// }
+		// }
+		// if (targetType != null)
+		// {
+		// sb.append(String.format("%s.substTarget = \"%s\";\n", jpcVarName,
+		// targetType.getFullName()));
+		// }
+		// sb.append(String.format("%s.substSelector = \"%s\";\n", jpcVarName,
+		// filterAction.getSubstitutedMessage()
+		// .getSelector()));
 		return sb.toString();
 	}
 

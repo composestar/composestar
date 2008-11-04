@@ -27,7 +27,7 @@ package Composestar.Core.INLINE.CodeGen;
 import java.util.Set;
 
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 
 /**
  * Interface for all code generators for filter actions
@@ -59,7 +59,7 @@ public interface FilterActionCodeGenerator<T>
 	 * @return the generated code in whatever format the code generator expects.
 	 *         Return null when this filter action does not result in code.
 	 */
-	T generate(CodeGenerator<T> codeGen, FilterAction action);
+	T generate(CodeGenerator<T> codeGen, FilterActionInstruction action);
 
 	/**
 	 * Will be called for every filter action to produce code that is inserted
@@ -71,7 +71,7 @@ public interface FilterActionCodeGenerator<T>
 	 * @param action
 	 * @return
 	 */
-	T generateMethodInit(CodeGenerator<T> codeGen, FilterAction action);
+	T generateMethodInit(CodeGenerator<T> codeGen, FilterActionInstruction action);
 
 	/**
 	 * Should return a list of types/packages/... that should be included in the

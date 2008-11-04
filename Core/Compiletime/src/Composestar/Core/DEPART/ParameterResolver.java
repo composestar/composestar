@@ -36,6 +36,7 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.FMParams.Parameterized;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.References.InnerTypeReference;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.Reference;
@@ -162,6 +163,11 @@ public class ParameterResolver extends ObjectInputStream
 	{
 		if (obj instanceof TypeReference)
 		{
+			if (obj instanceof InnerTypeReference)
+			{
+				// don't relocate these.
+				return obj;
+			}
 			obj = refman.getTypeReference(obj.getReferenceId());
 		}
 		else if (obj instanceof FilterModuleReference)

@@ -1,9 +1,30 @@
 /*
- * Created on 6-sep-2006
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
  *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
  */
 package Composestar.Core.INLINE.lowlevel;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,16 +33,25 @@ import java.util.Stack;
 import Composestar.Core.CKRET.ConcernAnalysis;
 import Composestar.Core.CKRET.Conflict;
 import Composestar.Core.CKRET.FilterSetAnalysis;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2.Filters.FilterAction.FlowBehavior;
+import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
@@ -249,10 +279,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	/**
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalCondition(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition,
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalConditionMethod(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition,
 	 *      int)
 	 */
-	public void evalCondition(Condition condition, int jumpLabel)
+	public void evalConditionMethod(MethodReference condition, int jumpLabel)
 	{
 		Branch branch = new Branch(condition);
 		branch.setLabel(new Label(jumpLabel));
@@ -263,9 +293,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	}
 
 	/**
-	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalCondExpr(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression)
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalMatchingExpr(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression)
 	 */
-	public void evalCondExpr(ConditionExpression condition)
+	public void evalMatchingExpr(MatchingExpression condition)
 	{
 		Branch branch = new Branch(condition);
 		currentBlock.addInstruction(branch);
@@ -341,12 +371,19 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	public void generateAction(ExecutionState state, List<String> resourceOps)
 	{
+		generateAction(state, null, resourceOps);
+	}
+
+	/**
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#generateAction(Composestar.Core.FIRE2.model.ExecutionState)
+	 */
+	public void generateAction(ExecutionState state, Collection<CanonAssignment> filterArgs, List<String> resourceOps)
+	{
 		FlowNode node = state.getFlowNode();
 
-		Filter filter = (Filter) node.getRepositoryLink();
-		FilterType filterType = filter.getFilterType();
+		FilterAction action = (FilterAction) node.getRepositoryLink();
 
-		if (node.containsName("ContinueAction"))
+		if (FilterActionNames.CONTINUE_ACTION.equals(action.getName()))
 		{
 			// if ( node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE) ||
 			// node.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE)){
@@ -355,11 +392,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			// currentBlock.addInstruction(instruction);
 			// }
 		}
-		else if (node.containsName("DispatchAction"))
+		else if (FilterActionNames.DISPATCH_ACTION.equals(action.getName())
+				|| FilterActionNames.SEND_ACTION.equals(action.getName()))
 		{
-			generateDispatchAction(state, resourceOps);
+			generateDispatchAction(action, state, resourceOps);
 		}
-		else if (node.containsName("SkipAction"))
+		else if (action.getName().equals("SkipAction"))
 		{
 			// jump to end:
 			jump(-1);
@@ -367,27 +405,19 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 		else if (node.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
 		{
-			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
-					.getAcceptCallAction();
-			generateCallAction(state, action, resourceOps);
+			generateCallAction(state, action, filterArgs, resourceOps);
 		}
 		else if (node.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
 		{
-			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
-					.getRejectCallAction();
-			generateCallAction(state, action, resourceOps);
+			generateCallAction(state, action, filterArgs, resourceOps);
 		}
 		else if (node.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
 		{
-			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
-					.getAcceptReturnAction();
-			generateReturnAction(state, action, resourceOps);
+			generateReturnAction(state, action, filterArgs, resourceOps);
 		}
 		else if (node.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
 		{
-			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
-					.getRejectReturnAction();
-			generateReturnAction(state, action, resourceOps);
+			generateReturnAction(state, action, filterArgs, resourceOps);
 		}
 	}
 
@@ -397,16 +427,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * @param state The state corresponding with the action
 	 * @param action The action
 	 */
-	private void generateCallAction(ExecutionState state,
-			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action, List<String> resourceOps)
+	private void generateCallAction(ExecutionState state, FilterAction action, Collection<CanonAssignment> filterArgs,
+			List<String> resourceOps)
 	{
-		FilterAction instruction = new FilterAction(
-				action.getName(),
-				state.getMessage(),
-				state.getSubstitutionMessage(),
-				true,
-				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
-		instruction.setCreateJPC(action.getCreateJPC());
+		FilterActionInstruction instruction = new FilterActionInstruction(action.getName(), state.getMessage(),
+				filterArgs, true, action.getFlowBehavior() == FlowBehavior.RETURN);
+		instruction.setCreateJPC(action.needsJoinPointContext());
 		setBookKeeping(instruction, state, resourceOps);
 
 		empty = false;
@@ -419,16 +445,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * @param state The state corresponding with the action
 	 * @param action The action
 	 */
-	private void generateReturnAction(ExecutionState state,
-			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action, List<String> resourceOps)
+	private void generateReturnAction(ExecutionState state, FilterAction action,
+			Collection<CanonAssignment> filterArgs, List<String> resourceOps)
 	{
-		FilterAction instruction = new FilterAction(
-				action.getName(),
-				state.getMessage(),
-				state.getSubstitutionMessage(),
-				false,
-				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
-		instruction.setCreateJPC(action.getCreateJPC());
+		FilterActionInstruction instruction = new FilterActionInstruction(action.getName(), state.getMessage(),
+				filterArgs, false, action.getFlowBehavior() == FlowBehavior.RETURN);
+		instruction.setCreateJPC(action.needsJoinPointContext());
 		setBookKeeping(instruction, state, resourceOps);
 
 		empty = false;
@@ -442,19 +464,18 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * 
 	 * @param state The state corresponding with the action
 	 */
-	private void generateDispatchAction(ExecutionState state, List<String> resourceOps)
+	private void generateDispatchAction(FilterAction action, ExecutionState state, List<String> resourceOps)
 	{
-		Message callMessage = state.getSubstitutionMessage();
-
-		FilterAction instruction = new FilterAction("DispatchAction", state.getMessage(), callMessage, true, true);
-		instruction.setCreateJPC(false); // dispatch doesn't need a JPC
+		CpsMessage msg = state.getMessage();
+		FilterActionInstruction instruction = new FilterActionInstruction(action.getName(), msg,
+				new ArrayList<CanonAssignment>(), true, true);
+		instruction.setCreateJPC(JoinPointContextArgument.UNUSED);
 		setBookKeeping(instruction, state, resourceOps);
 		currentBlock.addInstruction(instruction);
 
-		Target target = callMessage.getTarget();
-		String selector = callMessage.getSelector();
-		if (!Message.checkEquals(Message.INNER_TARGET, target)
-				|| !Message.checkEquals(selector, builder.getCurrentSelector()))
+		CpsObject target = msg.getTarget();
+		CpsSelector sel = msg.getSelector();
+		if (!target.isInnerObject() || !sel.compatible(builder.getCurrentSelector()))
 		{
 			empty = false;
 		}
@@ -506,7 +527,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * 
 	 * @param forAction
 	 */
-	private void setBookKeeping(FilterAction forAction, ExecutionState state, List<String> resourceOps)
+	private void setBookKeeping(FilterActionInstruction forAction, ExecutionState state, List<String> resourceOps)
 	{
 		boolean val;
 		switch (bookKeepingMode)

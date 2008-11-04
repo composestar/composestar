@@ -11,7 +11,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
@@ -274,17 +274,17 @@ public class FilterCodeCompressor
 		}
 
 		/**
-		 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterAction)
+		 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterActionInstruction)
 		 */
-		public Object visitFilterAction(FilterAction filterAction)
+		public Object visitFilterAction(FilterActionInstruction filterAction)
 		{
 			// Check for same class
-			if (!(currentCheckInstruction instanceof FilterAction))
+			if (!(currentCheckInstruction instanceof FilterActionInstruction))
 			{
 				return Boolean.FALSE;
 			}
 
-			FilterAction checkFilterAction = (FilterAction) currentCheckInstruction;
+			FilterActionInstruction checkFilterAction = (FilterActionInstruction) currentCheckInstruction;
 
 			if (checkFilterAction.getBookKeeping() != filterAction.getBookKeeping())
 			{
@@ -439,9 +439,9 @@ public class FilterCodeCompressor
 		}
 
 		/**
-		 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterAction)
+		 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterActionInstruction)
 		 */
-		public Object visitFilterAction(FilterAction filterAction)
+		public Object visitFilterAction(FilterActionInstruction filterAction)
 		{
 			int value = 0;
 
@@ -553,9 +553,9 @@ public class FilterCodeCompressor
 		}
 
 		/**
-		 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterAction)
+		 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterActionInstruction)
 		 */
-		public Object visitFilterAction(FilterAction filterAction)
+		public Object visitFilterAction(FilterActionInstruction filterAction)
 		{
 			Message message = filterAction.getMessage();
 			Message genMessage = generalize(message);
@@ -563,7 +563,7 @@ public class FilterCodeCompressor
 			Message substMessage = filterAction.getSubstitutedMessage();
 			Message genSubstMessage = generalize(substMessage);
 
-			FilterAction copy = new FilterAction(filterAction.getType(), genMessage, genSubstMessage, filterAction
+			FilterActionInstruction copy = new FilterActionInstruction(filterAction.getType(), genMessage, genSubstMessage, filterAction
 					.isOnCall(), filterAction.isReturning());
 
 			copyLabel(filterAction, copy);

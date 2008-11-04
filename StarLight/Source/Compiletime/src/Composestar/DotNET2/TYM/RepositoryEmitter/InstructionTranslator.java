@@ -8,7 +8,7 @@ import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
@@ -20,7 +20,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
@@ -189,7 +189,7 @@ class InstructionTranslator implements Visitor
 		return weaveBranch;
 	}
 
-	public Object visitFilterAction(FilterAction filterAction)
+	public Object visitFilterAction(FilterActionInstruction filterAction)
 	{
 		composestar.dotNET2.tym.entities.FilterAction weaveAction = composestar.dotNET2.tym.entities.FilterAction.Factory
 				.newInstance();
@@ -236,7 +236,7 @@ class InstructionTranslator implements Visitor
 	}
 
 	private composestar.dotNET2.tym.entities.ConditionExpression translateConditionExpression(
-			ConditionExpression expression)
+			MatchingExpression expression)
 	{
 		if (expression instanceof And)
 		{

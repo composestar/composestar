@@ -4,12 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2.PropertyNames;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 
 /**
@@ -33,8 +41,9 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources(Composestar.Core.INLINE.lowlevel.InlinerResources)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources
+	 * (Composestar.Core.INLINE.lowlevel.InlinerResources)
 	 */
 	public void setInlinerResources(InlinerResources resources)
 	{
@@ -43,8 +52,9 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes()
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes
+	 * ()
 	 */
 	public String[] supportedTypes()
 	{
@@ -54,28 +64,65 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @seeComposestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generate(CodeGenerator<String> codeGen, FilterAction action)
+	public String generate(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
-		MethodInfo currentMethod = codeGen.getCurrentMethod();
-		Target target = action.getSubstitutedMessage().getTarget();
+		CpsObject target = null;
+		CpsSelector selector = null;
 
-		Type targetType = null;
-		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
+		for (CanonAssignment asgn : action.getArguments())
 		{
-			targetType = currentMethod.parent();
-		}
-		else
-		{
-			Concern crn = target.getRefToConcern();
-			if (crn != null)
+			if (PropertyNames.TARGET.equalsIgnoreCase(asgn.getProperty().getBaseName()))
 			{
-				targetType = (Type) crn.getPlatformRepresentation();
+				CpsVariable var = asgn.getValue();
+				if (var instanceof CpsObject)
+				{
+					target = (CpsObject) var;
+				}
+				else
+				{
+					// TODO: error
+				}
+			}
+			else if (PropertyNames.SELECTOR.equalsIgnoreCase(asgn.getProperty().getBaseName()))
+			{
+				CpsVariable var = asgn.getValue();
+				if (var instanceof CpsSelector)
+				{
+					selector = (CpsSelector) var;
+				}
+				else if (var instanceof CpsLiteral)
+				{
+					selector = new CpsSelectorImpl(((CpsLiteral) var).getLiteralValue());
+				}
+				else if (var instanceof CpsProgramElement)
+				{
+					ProgramElement pe = ((CpsProgramElement) var).getProgramElement();
+					if (pe instanceof MethodInfo)
+					{
+						selector = new CpsSelectorMethodInfo((MethodInfo) pe);
+					}
+				}
+				else
+				{
+					// TODO: error
+				}
 			}
 		}
+
+		if (target == null)
+		{
+			target = action.getMessage().getTarget();
+		}
+		if (selector == null)
+		{
+			selector = action.getMessage().getSelector();
+		}
+
+		Type targetType = target.getTypeReference().getReference();
 
 		if (targetType == null)
 		{
@@ -83,9 +130,12 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 			return null;
 		}
 
+		// TODO: this doesn't take into account of the possible MethodInfo in
+		// the selector
+
 		String[] params = new String[1];
 		params[0] = codeGen.getJPCType(true);
-		MethodInfo method = targetType.getMethod(action.getSubstitutedMessage().getSelector(), params);
+		MethodInfo method = targetType.getMethod(selector.getName(), params);
 
 		if (method == null)
 		{
@@ -93,7 +143,7 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 			params[0] = codeGen.getBaseType();
 			if (params[0] != null)
 			{
-				method = targetType.getMethod(action.getSubstitutedMessage().getSelector(), params);
+				method = targetType.getMethod(selector.getName(), params);
 			}
 		}
 
@@ -101,7 +151,7 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 		{
 			// try to find a method that doesn't use a JPC
 			params = new String[0];
-			method = targetType.getMethod(action.getSubstitutedMessage().getSelector(), params);
+			method = targetType.getMethod(selector.getName(), params);
 		}
 
 		List<String> args = new ArrayList<String>();
@@ -111,7 +161,7 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 
 		// TODO: resolve target and context
 
-		if (Target.INNER.equals(target.getName()))
+		if (target.isInnerObject())
 		{
 			prefix = codeGen.emitSetInnerCall(inlinerResources.getMethodId(method));
 		}
@@ -120,11 +170,12 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		return null;
 	}

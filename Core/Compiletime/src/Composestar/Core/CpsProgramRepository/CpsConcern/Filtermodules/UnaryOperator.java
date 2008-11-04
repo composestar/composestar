@@ -15,12 +15,12 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
  * 
  * @author Michiel Hendriks
  */
-public abstract class UnaryOperator extends ConditionExpression
+public abstract class UnaryOperator extends MatchingExpression
 {
 	/**
 	 * Unary operator
 	 */
-	public ConditionExpression operand;
+	public MatchingExpression operand;
 
 	public UnaryOperator()
 	{
@@ -30,7 +30,7 @@ public abstract class UnaryOperator extends ConditionExpression
 	/**
 	 * @return ConditionExpression
 	 */
-	public ConditionExpression getOperand()
+	public MatchingExpression getOperand()
 	{
 		return operand;
 	}
@@ -38,7 +38,7 @@ public abstract class UnaryOperator extends ConditionExpression
 	/**
 	 * @param operandValue
 	 */
-	public void setOperand(ConditionExpression operandValue)
+	public void setOperand(MatchingExpression operandValue)
 	{
 		this.operand = operandValue;
 	}

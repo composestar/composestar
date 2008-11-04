@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
@@ -147,7 +147,7 @@ public class HighLevelInliner
 				ExecutionState conditionExprState = filterElement.conditionExprState;
 				FlowNode condExprFlowNode = conditionExprState.getFlowNode();
 
-				strategy.openBranchTrue((ConditionExpression) condExprFlowNode.getRepositoryLink());
+				strategy.openBranchTrue((MatchingExpression) condExprFlowNode.getRepositoryLink());
 
 				strategy.generateAction(flowTrueExitState);
 
@@ -181,7 +181,7 @@ public class HighLevelInliner
 					ExecutionState conditionExprState = filterElement.conditionExprState;
 					FlowNode condExprFlowNode = conditionExprState.getFlowNode();
 
-					strategy.openBranchTrue((ConditionExpression) condExprFlowNode.getRepositoryLink());
+					strategy.openBranchTrue((MatchingExpression) condExprFlowNode.getRepositoryLink());
 
 					strategy.generateAction(flowTrueExitState);
 
@@ -437,7 +437,7 @@ public class HighLevelInliner
 
 		private Map<ExecutionState, List<ExecutionTransition>> reverseTable;
 
-		private Map<ExecutionState, ConditionExpression> conditionTable;
+		private Map<ExecutionState, MatchingExpression> conditionTable;
 
 		public ConditionalInliner(HighLevelInlineStrategy strategy)
 		{
@@ -450,7 +450,7 @@ public class HighLevelInliner
 			states = new HashSet<ExecutionState>();
 			backwardStateVector = new ArrayList<ExecutionState>();
 			reverseTable = new HashMap<ExecutionState, List<ExecutionTransition>>();
-			conditionTable = new HashMap<ExecutionState, ConditionExpression>();
+			conditionTable = new HashMap<ExecutionState, MatchingExpression>();
 
 			Iterator<ExecutionState> startStates = model.getEntranceStates();
 			while (startStates.hasNext())
@@ -506,7 +506,7 @@ public class HighLevelInliner
 			List<ExecutionTransition> transitions = reverseTable.get(state);
 			ExecutionTransition transition;
 
-			ConditionExpression currentExpr = null;
+			MatchingExpression currentExpr = null;
 			for (int i = 0; i < transitions.size(); i++)
 			{
 				transition = transitions.get(i);
@@ -517,7 +517,7 @@ public class HighLevelInliner
 				}
 				else
 				{
-					ConditionExpression expr = getCondition(transition);
+					MatchingExpression expr = getCondition(transition);
 					if (expr != null)
 					{
 						Or or = new Or();
@@ -534,7 +534,7 @@ public class HighLevelInliner
 			}
 		}
 
-		private ConditionExpression getCondition(ExecutionTransition transition)
+		private MatchingExpression getCondition(ExecutionTransition transition)
 		{
 			ExecutionState startState = transition.getStartState();
 			FlowNode flowNode = startState.getFlowNode();
@@ -544,8 +544,8 @@ public class HighLevelInliner
 			// expression
 			if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE))
 			{
-				ConditionExpression expr1 = conditionTable.get(startState);
-				ConditionExpression expr2 = (ConditionExpression) flowNode.getRepositoryLink();
+				MatchingExpression expr1 = conditionTable.get(startState);
+				MatchingExpression expr2 = (MatchingExpression) flowNode.getRepositoryLink();
 
 				if (transition.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_FALSE))
 				{
@@ -605,7 +605,7 @@ public class HighLevelInliner
 			// return;
 			// }
 
-			ConditionExpression expr = conditionTable.get(state);
+			MatchingExpression expr = conditionTable.get(state);
 
 			if (expr != null)
 			{

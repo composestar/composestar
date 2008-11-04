@@ -27,6 +27,7 @@ package Composestar.Core.COPPER3;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
 import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.CpsRepository2.Filters.FilterTypeNames;
 import Composestar.Core.CpsRepository2.Filters.FilterAction.FlowBehavior;
@@ -107,7 +108,7 @@ public class FilterTypeFactory
 
 	/**
 	 * If true allow custom filter types to be created on the fly. These custom
-	 * filter types will contain all continue actions, it is strongly adviced to
+	 * filter types will contain all continue actions, it is strongly advised to
 	 * use an other module to resolve the true behavior of these filter type
 	 * (like the FITER module).
 	 * 
@@ -169,7 +170,7 @@ public class FilterTypeFactory
 		{
 			return continueAction;
 		}
-		continueAction = new FilterActionImpl("ContinueAction");
+		continueAction = new FilterActionImpl(FilterActionNames.CONTINUE_ACTION);
 		repository.add(continueAction);
 		return continueAction;
 	}
@@ -183,7 +184,7 @@ public class FilterTypeFactory
 		{
 			return dispatchAction;
 		}
-		dispatchAction = new FilterActionImpl("DispatchAction");
+		dispatchAction = new FilterActionImpl(FilterActionNames.DISPATCH_ACTION);
 		repository.add(dispatchAction);
 		dispatchAction.setFlowBehavior(FlowBehavior.RETURN);
 		dispatchAction.setResourceOperations("arg.read;message.dispatch;return.read");
@@ -199,7 +200,7 @@ public class FilterTypeFactory
 		{
 			return sendAction;
 		}
-		sendAction = new FilterActionImpl("SendAction");
+		sendAction = new FilterActionImpl(FilterActionNames.SEND_ACTION);
 		repository.add(sendAction);
 		sendAction.setFlowBehavior(FlowBehavior.RETURN);
 		sendAction.setResourceOperations("arg.read;sender.write;message.dispatch;return.read");
@@ -215,7 +216,7 @@ public class FilterTypeFactory
 		{
 			return errorAction;
 		}
-		errorAction = new FilterActionImpl("ErrorAction");
+		errorAction = new FilterActionImpl(FilterActionNames.ERROR_ACTION);
 		repository.add(errorAction);
 		errorAction.setFlowBehavior(FlowBehavior.EXIT);
 		errorAction.setResourceOperations("message.discard;return.discard;arg.discard");
@@ -231,7 +232,7 @@ public class FilterTypeFactory
 		{
 			return adviceAction;
 		}
-		adviceAction = new FilterActionImpl("AdviceAction");
+		adviceAction = new FilterActionImpl(FilterActionNames.ADVICE_ACTION);
 		repository.add(adviceAction);
 		adviceAction.setFlowBehavior(FlowBehavior.CONTINUE);
 		adviceAction.setJoinPointContextArgument(JoinPointContextArgument.FULL);
@@ -247,7 +248,7 @@ public class FilterTypeFactory
 		{
 			return metaAction;
 		}
-		metaAction = new FilterActionImpl("MetaAction");
+		metaAction = new FilterActionImpl(FilterActionNames.META_ACTION);
 		repository.add(metaAction);
 		metaAction.setFlowBehavior(FlowBehavior.CONTINUE);
 		return metaAction;

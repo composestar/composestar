@@ -21,6 +21,7 @@ import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
+import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
 import Composestar.Core.CpsRepository2.Signatures.MethodInfoWrapper;
 import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
 import Composestar.Core.CpsRepository2.Signatures.MethodStatus;
@@ -128,8 +129,10 @@ public class Sign implements CTCommonModule
 		// TODO there should be a better way to find message dispatching
 		// (actually, should only dispatch actions result into signature
 		// expansion?)
-		dictionary.put(DISPATCH_FORMULA, new StateType(GrooveASTBuilderCN.createFilterActionText("DispatchAction")));
-		dictionary.put(SEND_FORMULA, new StateType(GrooveASTBuilderCN.createFilterActionText("SendAction")));
+		dictionary.put(DISPATCH_FORMULA, new StateType(GrooveASTBuilderCN
+				.createFilterActionText(FilterActionNames.DISPATCH_ACTION)));
+		dictionary.put(SEND_FORMULA, new StateType(GrooveASTBuilderCN
+				.createFilterActionText(FilterActionNames.SEND_ACTION)));
 	}
 
 	/**

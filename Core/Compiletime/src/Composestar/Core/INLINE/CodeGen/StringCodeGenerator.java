@@ -32,20 +32,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
+import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
+import Composestar.Core.CpsRepository2.FilterElements.MECondition;
+import Composestar.Core.CpsRepository2.FilterElements.MELiteral;
+import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
+import Composestar.Core.CpsRepository2.FilterElements.UnaryMEOperator;
+import Composestar.Core.CpsRepository2.References.InnerTypeReference;
+import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
@@ -77,9 +75,9 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	protected FilterDirection filterDirection;
 
-	protected List<FilterAction> allActions;
+	protected List<FilterActionInstruction> allActions;
 
-	protected List<FilterAction> returnActions;
+	protected List<FilterActionInstruction> returnActions;
 
 	protected Set<String> imports;
 
@@ -87,7 +85,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	protected Map<String, FilterActionCodeGenerator<String>> faCodeGens;
 
-	protected boolean createJPC;
+	protected JoinPointContextArgument createJPC;
 
 	public StringCodeGenerator()
 	{
@@ -96,9 +94,9 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#generate(Composestar.Core.INLINE.model.FilterCode,
-	 *      Composestar.Core.LAMA.MethodInfo, int)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#generate(Composestar.Core
+	 * .INLINE.model.FilterCode, Composestar.Core.LAMA.MethodInfo, int)
 	 */
 	public String generate(FilterCode code, MethodInfo currentMethod, int currentMethodId)
 	{
@@ -113,10 +111,10 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#generate(Composestar.Core.INLINE.model.FilterCode,
-	 *      Composestar.Core.LAMA.MethodInfo, int,
-	 *      Composestar.Core.LAMA.MethodInfo, int)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#generate(Composestar.Core
+	 * .INLINE.model.FilterCode, Composestar.Core.LAMA.MethodInfo, int,
+	 * Composestar.Core.LAMA.MethodInfo, int)
 	 */
 	public String generate(FilterCode code, CallToOtherMethod currentMethod, int currentMethodId,
 			MethodInfo fromMethod, int fromMethodId)
@@ -137,13 +135,13 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	protected String generate(FilterCode code)
 	{
-		allActions = new ArrayList<FilterAction>();
-		returnActions = new ArrayList<FilterAction>();
+		allActions = new ArrayList<FilterActionInstruction>();
+		returnActions = new ArrayList<FilterActionInstruction>();
 		imports = new HashSet<String>();
 		deps = new HashSet<String>();
 		String result = code.accept(this).toString();
 		Set<String> visited = new HashSet<String>();
-		for (FilterAction fc : allActions)
+		for (FilterActionInstruction fc : allActions)
 		{
 			String fcn = fc.getType();
 			if (visited.contains(fcn))
@@ -171,7 +169,6 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getDependencies()
 	 */
 	public Set<String> getDependencies()
@@ -181,7 +178,6 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getImports()
 	 */
 	public Set<String> getImports()
@@ -191,7 +187,6 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCurrentMethod()
 	 */
 	public MethodInfo getCurrentMethod()
@@ -201,7 +196,6 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCalledMethod()
 	 */
 	public MethodInfo getCalledFromMethod()
@@ -211,7 +205,6 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCurrentMethodId()
 	 */
 	public int getCurrentMethodId()
@@ -221,7 +214,6 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCalledMethodId()
 	 */
 	public int getCalledFromMethodId()
@@ -231,7 +223,6 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCallToOtherMethod()
 	 */
 	public CallToOtherMethod getCallToOtherMethod()
@@ -241,8 +232,9 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.model.Visitor#visitBlock(Composestar.Core.INLINE.model.Block)
+	 * @see
+	 * Composestar.Core.INLINE.model.Visitor#visitBlock(Composestar.Core.INLINE
+	 * .model.Block)
 	 */
 	public Object visitBlock(Block block)
 	{
@@ -264,8 +256,9 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.model.Visitor#visitBranch(Composestar.Core.INLINE.model.Branch)
+	 * @see
+	 * Composestar.Core.INLINE.model.Visitor#visitBranch(Composestar.Core.INLINE
+	 * .model.Branch)
 	 */
 	public Object visitBranch(Branch branch)
 	{
@@ -276,7 +269,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 		}
 		else if (branch.getConditionMethod() != null)
 		{
-			condition = emitCondition(branch.getConditionMethod());
+			condition = emitMethodReference(branch.getConditionMethod());
 		}
 		String trueBranch = null;
 		if (branch.getTrueBlock() != null)
@@ -293,16 +286,14 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core
+	 * .INLINE.model.FilterAction)
 	 */
-	public Object visitFilterAction(FilterAction filterAction)
+	public Object visitFilterAction(FilterActionInstruction filterAction)
 	{
 		allActions.add(filterAction);
-		if (filterAction.getCreateJPC())
-		{
-			createJPC = true;
-		}
+		updateCreateJPC(filterAction.getNeededJPC());
 		if (!filterAction.isOnCall())
 		{
 			int idx = returnActions.size();
@@ -314,20 +305,21 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.model.Visitor#visitFilterCode(Composestar.Core.INLINE.model.FilterCode)
+	 * @see
+	 * Composestar.Core.INLINE.model.Visitor#visitFilterCode(Composestar.Core
+	 * .INLINE.model.FilterCode)
 	 */
 	public Object visitFilterCode(FilterCode filterCode)
 	{
-		createJPC = false;
+		createJPC = JoinPointContextArgument.UNUSED;
 		String fmConditions = null;
-		List<Condition> fmConds = filterCode.getCheckConditionsEx();
+		List<MethodReference> fmConds = filterCode.getCheckConditionsEx();
 		if (fmConds != null && fmConds.size() > 0)
 		{
-			fmConditions = emitCondition(fmConds.get(0));
+			fmConditions = emitMethodReference(fmConds.get(0));
 			for (int i = 1; i < fmConds.size(); i++)
 			{
-				fmConditions = emitShortOr(fmConditions, emitCondition(fmConds.get(i)));
+				fmConditions = emitShortOr(fmConditions, emitMethodReference(fmConds.get(i)));
 			}
 		}
 		String onCall = filterCode.getInstruction().accept(this).toString();
@@ -341,8 +333,9 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.model.Visitor#visitJump(Composestar.Core.INLINE.model.Jump)
+	 * @see
+	 * Composestar.Core.INLINE.model.Visitor#visitJump(Composestar.Core.INLINE
+	 * .model.Jump)
 	 */
 	public Object visitJump(Jump jump)
 	{
@@ -353,26 +346,26 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 		return null;
 	}
 
-	protected String visitConditionExpression(ConditionExpression expr)
+	protected String visitConditionExpression(MatchingExpression expr)
 	{
-		if (expr instanceof BinaryOperator)
+		if (expr instanceof BinaryMEOperator)
 		{
-			BinaryOperator bop = (BinaryOperator) expr;
-			return emitBinaryOperator(bop, visitConditionExpression(bop.getLeft()), visitConditionExpression(bop
-					.getRight()));
+			BinaryMEOperator bop = (BinaryMEOperator) expr;
+			return emitBinaryOperator(bop, visitConditionExpression(bop.getLHS()), visitConditionExpression(bop
+					.getRHS()));
 		}
-		else if (expr instanceof UnaryOperator)
+		else if (expr instanceof UnaryMEOperator)
 		{
-			return emitUnaryOperator((UnaryOperator) expr,
-					visitConditionExpression(((UnaryOperator) expr).getOperand()));
+			return emitUnaryOperator((UnaryMEOperator) expr, visitConditionExpression(((UnaryMEOperator) expr)
+					.getOperand()));
 		}
-		else if (expr instanceof CondLiteral)
+		else if (expr instanceof MELiteral)
 		{
-			return emitCondLiteral((CondLiteral) expr);
+			return emitCondLiteral((MELiteral) expr);
 		}
-		else if (expr instanceof ConditionVariable)
+		else if (expr instanceof MECondition)
 		{
-			return emitCondition(((ConditionVariable) expr).getCondition().getRef());
+			return emitMethodReference(((MECondition) expr).getCondition().getMethodReference());
 		}
 		logger.error(String.format("Unhandled condition expression type: \"%s\"", expr.getClass().getName()));
 		throw new RuntimeException("Unhandled condition expression type");
@@ -380,8 +373,9 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#register(Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#register(Composestar.Core
+	 * .INLINE.CodeGen.FilterActionCodeGenerator)
 	 */
 	public void register(FilterActionCodeGenerator<String> facg)
 	{
@@ -398,55 +392,31 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitCondition(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitCondition(Composestar
+	 * .Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition)
 	 */
-	public String emitCondition(Condition cond)
+	public String emitMethodReference(MethodReference mref)
 	{
-		Reference ref = cond.getShortref();
-		Type type = null;
-		if (ref instanceof DeclaredObjectReference)
+		MethodInfo mi = mref.getReference();
+		if (mi == null && mref.getTypeReference() instanceof InnerTypeReference)
 		{
-			DeclaredObjectReference dor = (DeclaredObjectReference) ref;
-			if (dor.getName().equals(Target.INNER) || dor.getName().equals(Target.SELF))
+			Type innerType = method.parent();
+			for (MethodInfo m : (List<MethodInfo>) innerType.getMethods())
 			{
-				type = method.parent();
+				if (mref.getReferenceId().equals(m.getName()))
+				{
+					mi = m;
+					break;
+				}
 			}
-			else
-			{
-				type = (Type) dor.getRef().getType().getRef().getPlatformRepresentation();
-			}
 		}
-		else if (ref instanceof ConcernReference)
-		{
-			ConcernReference cor = (ConcernReference) ref;
-			type = (Type) cor.getRef().getPlatformRepresentation();
-		}
-		else
-		{
-			logger.error(String.format("Unknown reference type: \"%s\"", ref.getClass().getName()));
-			throw new RuntimeException("Unknown reference type");
-		}
-		String[] args = new String[0];
-		MethodInfo mi = type.getMethod((String) cond.getDynObject("selector"), args);
-
-		// TODO: if mi == null find method with a certain argument?
-		if (mi == null)
-		{
-			args = new String[1];
-			args[0] = "";
-			mi = type.getMethod((String) cond.getDynObject("selector"), args);
-		}
-
-		// TODO: resolve context (interal/external)
 		if (mi != null)
 		{
 			List<String> condArgs = Collections.emptyList();
+			// TODO: pass possible JPC
 			return emitMethodCall(mi, condArgs, null);
 		}
-
-		logger.error(String.format("Method condition for \"%s\" not found: %s.%s", cond.getName(), type.getFullName(),
-				cond.getDynObject("selector")));
 		return " /* unable to resolve method */ ";
 
 		// throw new RuntimeException("Method condition not found");
@@ -454,16 +424,13 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitFilterAction(Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitFilterAction(Composestar
+	 * .Core.INLINE.model.FilterAction)
 	 */
-	public String emitFilterAction(FilterAction filterAction)
+	public String emitFilterAction(FilterActionInstruction filterAction)
 	{
-		String jpcInit = "";
-		if (filterAction.getCreateJPC())
-		{
-			jpcInit = emitJpcInitialization(filterAction);
-		}
+		String jpcInit = emitJpcInitialization(filterAction, filterAction.getNeededJPC());
 		FilterActionCodeGenerator<String> facg = faCodeGens.get(filterAction.getType());
 		String res = null;
 		if (facg == null)
@@ -484,9 +451,9 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitMethodCall(Composestar.Core.LAMA.MethodInfo,
-	 *      java.util.List, java.lang.Object)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitMethodCall(Composestar
+	 * .Core.LAMA.MethodInfo, java.util.List, java.lang.Object)
 	 */
 	public String emitMethodCall(MethodInfo method, List<String> args, Object context)
 	{
@@ -505,11 +472,22 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#needJPC()
 	 */
-	public void needJPC()
+	public void updateCreateJPC(JoinPointContextArgument value)
 	{
-		createJPC = true;
+		switch (value)
+		{
+			case FULL:
+				createJPC = value;
+				break;
+			case PARTIAL:
+				if (createJPC != JoinPointContextArgument.FULL)
+				{
+					createJPC = value;
+				}
+			default:
+				// don't care
+		}
 	}
 }

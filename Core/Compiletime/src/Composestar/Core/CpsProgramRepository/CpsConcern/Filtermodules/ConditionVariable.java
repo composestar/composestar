@@ -18,7 +18,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionRefe
  * References.ConditionReference is in a Reference inheritance tree. This class
  * used to be called ConditionLiteral
  */
-public class ConditionVariable extends ConditionExpression
+public class ConditionVariable extends MatchingExpression
 {
 	private static final long serialVersionUID = 3303327628885059583L;
 

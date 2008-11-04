@@ -34,6 +34,7 @@ import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.FMParams.Parameterized;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.References.InnerTypeReference;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.Reference;
@@ -235,6 +236,10 @@ public class RexRef implements CTCommonModule
 	 */
 	protected void resolveMethodReference(MethodReference ref)
 	{
+		if (ref.getTypeReference() instanceof InnerTypeReference)
+		{
+			return;
+		}
 		Type type = ref.getTypeReference().getReference();
 		if (type == null)
 		{

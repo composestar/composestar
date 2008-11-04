@@ -41,7 +41,7 @@ public interface Visitor
 	 * @param filterAction
 	 * @return
 	 */
-	public Object visitFilterAction(FilterAction filterAction);
+	public Object visitFilterAction(FilterActionInstruction filterAction);
 
 	/**
 	 * Called when a jump is visited.

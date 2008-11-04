@@ -12,7 +12,7 @@ package Composestar.Core.DIGGER2;
 
 import java.util.List;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
 
 /**
  * A special MessageResult that signals a recursive message.
@@ -44,7 +44,7 @@ public class RecursiveMessageResult extends AbstractMessageResult
 		{
 			trail.setRecursive(true);
 			int cnd = trail.getCondition().simulateResult();
-			if (cnd != ConditionExpression.RESULT_FALSE)
+			if (cnd != MatchingExpression.RESULT_FALSE)
 			{
 				vars += cnd;
 			}

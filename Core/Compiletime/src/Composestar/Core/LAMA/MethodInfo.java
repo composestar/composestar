@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public abstract class MethodInfo extends ProgramElement
 {
@@ -42,15 +43,15 @@ public abstract class MethodInfo extends ProgramElement
 
 	public Type returnType;
 
-	public ArrayList parameters;
+	public List parameters;
 
 	public Type parent;
 
-	private HashSet callsToOtherMethods;
+	private Set<CallToOtherMethod> callsToOtherMethods;
 
-	private HashSet reifiedMessageBehavior;
+	private Set reifiedMessageBehavior;
 
-	private HashSet resourceUsage;
+	private Set resourceUsage;
 
 	/**
 	 * @param dummy if true don't register this language unit, should be used
@@ -59,7 +60,7 @@ public abstract class MethodInfo extends ProgramElement
 	public MethodInfo()
 	{
 		parameters = new ArrayList();
-		callsToOtherMethods = new HashSet();
+		callsToOtherMethods = new HashSet<CallToOtherMethod>();
 		reifiedMessageBehavior = new HashSet();
 		resourceUsage = new HashSet();
 	}
@@ -114,12 +115,12 @@ public abstract class MethodInfo extends ProgramElement
 	 * 
 	 * @return java.util.List
 	 */
-	public HashSet getCallsToOtherMethods()
+	public Set<CallToOtherMethod> getCallsToOtherMethods()
 	{
 		return callsToOtherMethods;
 	}
 
-	public void setCallsToOtherMethods(HashSet value)
+	public void setCallsToOtherMethods(Set<CallToOtherMethod> value)
 	{
 		callsToOtherMethods = value;
 	}
@@ -140,12 +141,12 @@ public abstract class MethodInfo extends ProgramElement
 	 * 
 	 * @return
 	 */
-	public HashSet getResourceUsage()
+	public Set getResourceUsage()
 	{
 		return resourceUsage;
 	}
 
-	public void setResourceUsage(HashSet value)
+	public void setResourceUsage(Set value)
 	{
 		resourceUsage = value;
 	}
@@ -165,12 +166,12 @@ public abstract class MethodInfo extends ProgramElement
 	 * 
 	 * @return java.util.List
 	 */
-	public HashSet getReifiedMessageBehavior()
+	public Set getReifiedMessageBehavior()
 	{
 		return reifiedMessageBehavior;
 	}
 
-	public void setReifiedMessageBehavior(HashSet value)
+	public void setReifiedMessageBehavior(Set value)
 	{
 		reifiedMessageBehavior = value;
 	}

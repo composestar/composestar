@@ -30,7 +30,7 @@ import java.util.Set;
 import Composestar.Core.INLINE.CodeGen.CodeGenerator;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.CwC.Filters.ExtraFilters;
 
 /**
@@ -47,7 +47,7 @@ public class CTimerActionCodeGenerator implements FilterActionCodeGenerator<Stri
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generate(CodeGenerator<String> codeGen, FilterAction action)
+	public String generate(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		if (action.getType().equals(ExtraFilters.TIMER_START_ACTION))
 		{
@@ -74,7 +74,7 @@ public class CTimerActionCodeGenerator implements FilterActionCodeGenerator<Stri
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		if (action.getType().equals(ExtraFilters.TIMER_START_ACTION))
 		{

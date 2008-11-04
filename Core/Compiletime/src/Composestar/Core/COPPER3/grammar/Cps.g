@@ -713,9 +713,14 @@ substitutionPart
 		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'", $n1.start) }))
 			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
 		)
-	| ASTERISK PERIOD n3=literalOrFmParam // *.bar
-	-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n3))
-		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
+	| ASTERISK PERIOD 
+		(n3=literalOrFmParam // *.bar
+		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n3))
+			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
+		| ASTERISK // *.*
+		-> ^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
+			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND ^(FQN IDENTIFIER["selector"])))
+		)
 	| (COMMA|RCURLY) =>
 	-> ^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
 		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND ^(FQN IDENTIFIER["selector"])))

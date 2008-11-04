@@ -19,7 +19,7 @@ public class FilterElementAST extends ContextRepositoryEntity
 
 	private static final long serialVersionUID = -6524966819127558665L;
 
-	public ConditionExpression conditionPart;
+	public MatchingExpression conditionPart;
 
 	public EnableOperatorType enableOperatorType;
 
@@ -36,7 +36,7 @@ public class FilterElementAST extends ContextRepositoryEntity
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpr
 	 *         ession
 	 */
-	public ConditionExpression getConditionPart()
+	public MatchingExpression getConditionPart()
 	{
 		return conditionPart;
 	}
@@ -44,7 +44,7 @@ public class FilterElementAST extends ContextRepositoryEntity
 	/**
 	 * @param conditionValue
 	 */
-	public void setConditionPart(ConditionExpression conditionValue)
+	public void setConditionPart(MatchingExpression conditionValue)
 	{
 		this.conditionPart = conditionValue;
 	}

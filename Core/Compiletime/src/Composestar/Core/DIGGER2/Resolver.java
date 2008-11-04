@@ -13,7 +13,7 @@ package Composestar.Core.DIGGER2;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
@@ -132,7 +132,7 @@ public class Resolver
 			if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE))
 			{
 				// needed for certainty checks
-				ConditionExpression cond = (ConditionExpression) flowNode.getRepositoryLink();
+				MatchingExpression cond = (MatchingExpression) flowNode.getRepositoryLink();
 				trail.setCondition(cond);
 			}
 			else if (flowNode.containsName(FlowNode.FILTER_ELEMENT_NODE))

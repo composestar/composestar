@@ -308,11 +308,19 @@ methodReference[FilterModule fm] returns [MethodReference mref]
 				}
 				if (lst.size() == 2)
 				{
-					FilterModuleVariable fmvar = fm.getVariable(lst.get(0));
-					if (fmvar instanceof CpsObject)
+					if (PropertyNames.INNER.equals(lst.get(0)))
 					{
-						CpsObject ctx = (CpsObject) fmvar;
-						mref = references.getInstanceMethodReference(lst.get(1), ctx, jpca);
+						CpsObject innerObj = new CpsObjectImpl(new InnerTypeReference(), true);
+						mref = references.getInstanceMethodReference(lst.get(1), innerObj, jpca);
+						repository.add(innerObj);
+					}
+					else {
+						FilterModuleVariable fmvar = fm.getVariable(lst.get(0));
+						if (fmvar instanceof CpsObject)
+						{
+							CpsObject ctx = (CpsObject) fmvar;
+							mref = references.getInstanceMethodReference(lst.get(1), ctx, jpca);
+						}
 					}
 				}
 				if (mref == null)

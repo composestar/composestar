@@ -26,11 +26,9 @@ package Composestar.Core.INLINE.CodeGen;
 
 import java.util.List;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
@@ -59,29 +57,15 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @seeComposestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generate(CodeGenerator<String> codeGen, FilterAction action)
+	public String generate(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		MethodInfo currentMethod = codeGen.getCurrentMethod();
-		Target target = action.getSubstitutedMessage().getTarget();
 
-		Type targetType = null;
-		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
-		{
-			targetType = currentMethod.parent();
-		}
-		else
-		{
-			Concern crn = target.getRefToConcern();
-			if (crn != null)
-			{
-				targetType = (Type) crn.getPlatformRepresentation();
-			}
-		}
-
+		Type targetType = action.getMessage().getTarget().getTypeReference().getReference();
 		if (targetType == null)
 		{
 			throw new RuntimeException("Could not resolve the type of the target of the dispatch action");
@@ -94,7 +78,7 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 			ParameterInfo pi = paramInfo.get(i);
 			params[i] = pi.getParameterTypeString();
 		}
-		MethodInfo method = targetType.getMethod(action.getSubstitutedMessage().getSelector(), params);
+		MethodInfo method = targetType.getMethod(action.getMessage().getSelector().getName(), params);
 		List<String> args = getJpcArguments(paramInfo);
 		Object context = null;
 		String prefix = "";
@@ -102,7 +86,7 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 		// TODO: resolve target and context (i.e. the variable that was created,
 		// which would be the name of the DeclaredPbjectReference)
 
-		if (Target.INNER.equals(target.getName()))
+		if (action.getMessage().getTarget().isInnerObject())
 		{
 			prefix = codeGen.emitSetInnerCall(inlinerResources.getMethodId(method));
 		}
@@ -111,22 +95,24 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes()
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes
+	 * ()
 	 */
 	public String[] supportedTypes()
 	{
-		String[] types = { FilterActionNames.DISPATCH_ACTION };
+		String[] types = { FilterActionNames.DISPATCH_ACTION, FilterActionNames.SEND_ACTION };
 		return types;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		return null;
 	}

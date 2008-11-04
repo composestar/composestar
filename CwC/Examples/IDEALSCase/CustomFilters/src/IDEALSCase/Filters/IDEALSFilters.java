@@ -33,15 +33,14 @@ import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterActionException;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
+import Composestar.Core.COPPER3.FilterTypeFactory;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2Impl.Filters.FilterActionImpl;
+import Composestar.Core.CpsRepository2Impl.Filters.PrimitiveFilterTypeImpl;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.CodeGen.VoidFilterActionCodeGen;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.CwC.Filters.CustomCwCFilters;
 
 /**
@@ -59,15 +58,14 @@ public class IDEALSFilters implements CustomCwCFilters
 
 	public static final String ERROR_PROPAGATION_ACTION = "ErrorPropagationAction";
 
-	private FilterAction paramCheckPreAction;
+	private FilterActionImpl paramCheckPreAction;
 
-	private FilterAction paramCheckPostAction;
+	private FilterActionImpl paramCheckPostAction;
 
-	private FilterAction errorPropagationAction;
+	private FilterActionImpl errorPropagationAction;
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.CwC.Filters.CustomCwCFilters#getCodeGenerators()
 	 */
 	public Collection<FilterActionCodeGenerator<String>> getCodeGenerators()
@@ -80,26 +78,22 @@ public class IDEALSFilters implements CustomCwCFilters
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.CwC.Filters.CustomCwCFilters#registerFilters(Composestar.Core.RepositoryImplementation.DataStore,
-	 *      Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory)
+	 * @see
+	 * Composestar.CwC.Filters.CustomCwCFilters#registerFilters(Composestar.
+	 * Core.RepositoryImplementation.DataStore,
+	 * Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory)
 	 */
-	public void registerFilters(DataStore repository, DefaultFilterFactory factory)
+	public void registerFilters(Repository repository, FilterTypeFactory factory)
 	{
-		try
-		{
-			addParameterChecking(repository, factory);
-			addErrorPropagation(repository, factory);
-		}
-		catch (UnsupportedFilterTypeException e)
-		{
-		}
+		addParameterChecking(repository, factory);
+		addErrorPropagation(repository, factory);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.CwC.Filters.CustomCwCFilters#registerSecretResources(Composestar.Core.CKRET.SECRETResources)
+	 * @see
+	 * Composestar.CwC.Filters.CustomCwCFilters#registerSecretResources(Composestar
+	 * .Core.CKRET.SECRETResources)
 	 */
 	public void registerSecretResources(SECRETResources resources)
 	{
@@ -121,102 +115,61 @@ public class IDEALSFilters implements CustomCwCFilters
 		}
 	}
 
-	public FilterAction getParamCheckPreAction(DataStore repository)
+	public FilterAction getParamCheckPreAction(Repository repository)
 	{
 		if (paramCheckPreAction != null)
 		{
 			return paramCheckPreAction;
 		}
-		paramCheckPreAction = new FilterAction();
-		paramCheckPreAction.setName(PARAM_PRE_CHECK_ACTION);
-		paramCheckPreAction.setFullName(PARAM_PRE_CHECK_ACTION);
-		paramCheckPreAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		paramCheckPreAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		paramCheckPreAction = new FilterActionImpl(PARAM_PRE_CHECK_ACTION);
 		paramCheckPreAction.setResourceOperations("errorvariable.read;errorvariable.write");
-		paramCheckPreAction.setCreateJPC(false);
-		repository.addObject(paramCheckPreAction);
+		repository.add(paramCheckPreAction);
 		return paramCheckPreAction;
 	}
 
-	public FilterAction getParamCheckPostAction(DataStore repository)
+	public FilterAction getParamCheckPostAction(Repository repository)
 	{
 		if (paramCheckPostAction != null)
 		{
 			return paramCheckPostAction;
 		}
-		paramCheckPostAction = new FilterAction();
-		paramCheckPostAction.setName(PARAM_POST_CHECK_ACTION);
-		paramCheckPostAction.setFullName(PARAM_POST_CHECK_ACTION);
-		paramCheckPostAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		paramCheckPostAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		paramCheckPostAction = new FilterActionImpl(PARAM_POST_CHECK_ACTION);
 		paramCheckPostAction.setResourceOperations("errorvariable.read;errorvariable.write");
-		paramCheckPostAction.setCreateJPC(false);
-		repository.addObject(paramCheckPostAction);
+		repository.add(paramCheckPostAction);
 		return paramCheckPostAction;
 	}
 
-	public void addParameterChecking(DataStore repository, DefaultFilterFactory factory)
-			throws UnsupportedFilterTypeException
+	public void addParameterChecking(Repository repository, FilterTypeFactory factory)
 	{
-		FilterType type = new FilterType();
-		type.setType(PARAMETER_CHECKING_FILTER);
-		try
-		{
-			type.setAcceptCallAction(getParamCheckPreAction(repository));
-			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(factory.getContinueAction());
-			// type.setAcceptReturnAction(getParamCheckPostAction(repository));
-			type.setRejectReturnAction(factory.getContinueAction());
-		}
-		catch (UnsupportedFilterActionException e)
-		{
-			throw new UnsupportedFilterTypeException(PARAMETER_CHECKING_FILTER, e);
-		}
-		repository.addObject(type);
-		if (factory.getTypeMapping() != null)
-		{
-			factory.getTypeMapping().registerFilterType(type);
-		}
+		PrimitiveFilterTypeImpl type = new PrimitiveFilterTypeImpl(PARAMETER_CHECKING_FILTER);
+		type.setAcceptCallAction(getParamCheckPreAction(repository));
+		type.setRejectCallAction(factory.getContinueAction());
+		type.setAcceptReturnAction(factory.getContinueAction());
+		// type.setAcceptReturnAction(getParamCheckPostAction(repository));
+		type.setRejectReturnAction(factory.getContinueAction());
+		repository.add(type);
 	}
 
-	public FilterAction getErrorPropagationAction(DataStore repository)
+	public FilterAction getErrorPropagationAction(Repository repository)
 	{
 		if (errorPropagationAction != null)
 		{
 			return errorPropagationAction;
 		}
-		errorPropagationAction = new FilterAction();
-		errorPropagationAction.setName(ERROR_PROPAGATION_ACTION);
-		errorPropagationAction.setFullName(ERROR_PROPAGATION_ACTION);
-		errorPropagationAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		errorPropagationAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		errorPropagationAction = new FilterActionImpl(ERROR_PROPAGATION_ACTION);
 		errorPropagationAction
 				.setResourceOperations("errorvariable.read;errorvariable.write;errorvariable.read;errorvariable.read");
-		errorPropagationAction.setCreateJPC(false);
-		repository.addObject(errorPropagationAction);
+		repository.add(errorPropagationAction);
 		return errorPropagationAction;
 	}
 
-	public void addErrorPropagation(DataStore repository, DefaultFilterFactory factory)
-			throws UnsupportedFilterTypeException
+	public void addErrorPropagation(Repository repository, FilterTypeFactory factory)
 	{
-		FilterType type = new FilterType();
-		type.setType(ERROR_PROPAGATION_FILTER);
-		try
-		{
-			type.setAcceptCallAction(getErrorPropagationAction(repository));
-			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(factory.getContinueAction());
-			type.setRejectReturnAction(factory.getContinueAction());
-		}
-		catch (UnsupportedFilterActionException e)
-		{
-			throw new UnsupportedFilterTypeException(ERROR_PROPAGATION_FILTER, e);
-		}
-		repository.addObject(type);
-		if (factory.getTypeMapping() != null)
-		{
-			factory.getTypeMapping().registerFilterType(type);
-		}
+		PrimitiveFilterTypeImpl type = new PrimitiveFilterTypeImpl(ERROR_PROPAGATION_FILTER);
+		type.setAcceptCallAction(getErrorPropagationAction(repository));
+		type.setRejectCallAction(factory.getContinueAction());
+		type.setAcceptReturnAction(factory.getContinueAction());
+		type.setRejectReturnAction(factory.getContinueAction());
+		repository.add(type);
 	}
 }

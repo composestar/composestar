@@ -27,12 +27,13 @@ package Composestar.Core.INLINE.CodeGen;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
+import Composestar.Core.CpsRepository2.FilterElements.MELiteral;
+import Composestar.Core.CpsRepository2.FilterElements.UnaryMEOperator;
+import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Visitor;
 import Composestar.Core.LAMA.CallToOtherMethod;
@@ -164,7 +165,7 @@ public interface CodeGenerator<T> extends Visitor
 	 * @param filterAction
 	 * @return
 	 */
-	T emitDefaultFilterAction(FilterAction filterAction);
+	T emitDefaultFilterAction(FilterActionInstruction filterAction);
 
 	/**
 	 * Emit the execution of the filter action. This can be either an on-call or
@@ -173,7 +174,7 @@ public interface CodeGenerator<T> extends Visitor
 	 * @param filterAction the filteraction instruction to emit the code for
 	 * @return
 	 */
-	T emitFilterAction(FilterAction filterAction);
+	T emitFilterAction(FilterActionInstruction filterAction);
 
 	/**
 	 * Emit the JPC initialization code for a filter action. This will be called
@@ -181,10 +182,11 @@ public interface CodeGenerator<T> extends Visitor
 	 * to contain correct values for the current target/selector and
 	 * substitution target/selector.
 	 * 
-	 * @param filterActio
+	 * @param filterAction
+	 * @param jpc The desired join point context
 	 * @return
 	 */
-	T emitJpcInitialization(FilterAction filterAction);
+	T emitJpcInitialization(FilterActionInstruction filterAction, JoinPointContextArgument jpc);
 
 	/**
 	 * Emit the code to enqueue a 'return filter action' to the list of filter
@@ -194,7 +196,7 @@ public interface CodeGenerator<T> extends Visitor
 	 * @param filterAction the filter action
 	 * @return
 	 */
-	T emitReturnFilterAction(int idx, FilterAction filterAction);
+	T emitReturnFilterAction(int idx, FilterActionInstruction filterAction);
 
 	/**
 	 * Emit a boolean literal
@@ -202,7 +204,7 @@ public interface CodeGenerator<T> extends Visitor
 	 * @param literal
 	 * @return
 	 */
-	T emitCondLiteral(CondLiteral literal);
+	T emitCondLiteral(MELiteral literal);
 
 	/**
 	 * Emit a unary boolean operation expression
@@ -211,7 +213,7 @@ public interface CodeGenerator<T> extends Visitor
 	 * @param expr the expression
 	 * @return
 	 */
-	T emitUnaryOperator(UnaryOperator op, T expr);
+	T emitUnaryOperator(UnaryMEOperator op, T expr);
 
 	/**
 	 * Emit a binary boolean operator expression
@@ -221,7 +223,7 @@ public interface CodeGenerator<T> extends Visitor
 	 * @param rhs the right hand side of the operation
 	 * @return
 	 */
-	T emitBinaryOperator(BinaryOperator op, T lhs, T rhs);
+	T emitBinaryOperator(BinaryMEOperator op, T lhs, T rhs);
 
 	/**
 	 * Emit a code block
@@ -280,7 +282,7 @@ public interface CodeGenerator<T> extends Visitor
 	 * @param cond
 	 * @return
 	 */
-	T emitCondition(Condition cond);
+	T emitMethodReference(MethodReference method);
 
 	/**
 	 * Emit the filter code block
@@ -309,7 +311,7 @@ public interface CodeGenerator<T> extends Visitor
 	 * of the JPC even though the original filter action defined that it did not
 	 * need a JPC.
 	 */
-	void needJPC();
+	void updateCreateJPC(JoinPointContextArgument value);
 
 	/**
 	 * Return the string representation of the JoinPointContext type.

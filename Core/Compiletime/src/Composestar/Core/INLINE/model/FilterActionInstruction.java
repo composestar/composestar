@@ -4,6 +4,11 @@
  */
 package Composestar.Core.INLINE.model;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 
 /**
@@ -11,8 +16,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
  * 
  * @author Arjan
  */
-// TODO: filter arguments
-public class FilterAction extends Instruction
+public class FilterActionInstruction extends Instruction
 {
 	/**
 	 * The type of the filteraction
@@ -36,6 +40,11 @@ public class FilterAction extends Instruction
 	private boolean returning;
 
 	/**
+	 * Collection of filter arguments
+	 */
+	private Collection<CanonAssignment> arguments;
+
+	/**
 	 * If true perform resource operation bookkeeping for this action.
 	 * BookKeeping in the FilterAction is subject to the bookkeeping of the
 	 * parent FilterCode.
@@ -51,7 +60,7 @@ public class FilterAction extends Instruction
 	/**
 	 * Should a JointPointContext be created for this filter action?
 	 */
-	private boolean createJPC = true;
+	private JoinPointContextArgument neededJPC = JoinPointContextArgument.UNUSED;
 
 	/**
 	 * The constructor
@@ -65,12 +74,14 @@ public class FilterAction extends Instruction
 	 * @param returning Indicates whether the action returns the flow (only when
 	 *            the action is on call).
 	 */
-	public FilterAction(String type, CpsMessage message, boolean onCall, boolean returning)
+	public FilterActionInstruction(String type, CpsMessage message, Collection<CanonAssignment> arguments,
+			boolean onCall, boolean returning)
 	{
 		this.type = type;
 		this.message = message;
 		this.onCall = onCall;
 		this.returning = returning;
+		this.arguments = arguments;
 	}
 
 	/**
@@ -87,6 +98,14 @@ public class FilterAction extends Instruction
 	public String getType()
 	{
 		return type;
+	}
+
+	/**
+	 * @return the arguments
+	 */
+	public Collection<CanonAssignment> getArguments()
+	{
+		return Collections.unmodifiableCollection(arguments);
 	}
 
 	/**
@@ -156,17 +175,17 @@ public class FilterAction extends Instruction
 	/**
 	 * @return the createJPC
 	 */
-	public boolean getCreateJPC()
+	public JoinPointContextArgument getNeededJPC()
 	{
-		return createJPC;
+		return neededJPC;
 	}
 
 	/**
-	 * @param createJPC the createJPC to set
+	 * @param jpc the createJPC to set
 	 */
-	public void setCreateJPC(boolean createJPC)
+	public void setCreateJPC(JoinPointContextArgument jpc)
 	{
-		this.createJPC = createJPC;
+		neededJPC = jpc;
 	}
 
 }

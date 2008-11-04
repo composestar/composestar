@@ -37,7 +37,7 @@ import weavec.cmodel.type.TypedefType;
 import Composestar.Core.INLINE.CodeGen.CodeGenerator;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.CwC.Filters.ExtraFilters;
@@ -80,7 +80,7 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generate(CodeGenerator<String> codeGen, FilterAction action)
+	public String generate(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append("printf(\"");
@@ -276,7 +276,7 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		return null;
 	}

@@ -14,7 +14,7 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 /**
  * composite pattern
  */
-public abstract class ConditionExpression extends ContextRepositoryEntity
+public abstract class MatchingExpression extends ContextRepositoryEntity
 {
 	public static final int RESULT_FALSE = -1;
 
@@ -23,7 +23,7 @@ public abstract class ConditionExpression extends ContextRepositoryEntity
 	/**
 	 * @roseuid 401FAA580095
 	 */
-	public ConditionExpression()
+	public MatchingExpression()
 	{
 		super();
 	}

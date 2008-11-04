@@ -17,7 +17,7 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
  * 
  * @author Michiel Hendriks
  */
-public abstract class CondLiteral extends ConditionExpression
+public abstract class CondLiteral extends MatchingExpression
 {
 	public CondLiteral()
 	{

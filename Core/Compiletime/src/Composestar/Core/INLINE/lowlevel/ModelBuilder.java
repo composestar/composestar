@@ -1,12 +1,32 @@
 /*
- * Created on 6-sep-2006
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
  *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
  */
 package Composestar.Core.INLINE.lowlevel;
 
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
@@ -16,10 +36,12 @@ import Composestar.Core.CKRET.ConcernAnalysis;
 import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
 import Composestar.Core.CpsRepository2.Signatures.Signature;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
@@ -72,7 +94,7 @@ public class ModelBuilder implements CTCommonModule
 	/**
 	 * All filtermodules in the filterset.
 	 */
-	private FilterModuleOrder modules;
+	private List<ImposedFilterModule> modules;
 
 	/**
 	 * The FireModel of the inputfilters in the filterset.
@@ -92,7 +114,7 @@ public class ModelBuilder implements CTCommonModule
 	/**
 	 * The current selector being processed.
 	 */
-	private String currentSelector;
+	private CpsSelector currentSelector;
 
 	@ResourceManager
 	private FIRE2Resources f2res;
@@ -176,11 +198,13 @@ public class ModelBuilder implements CTCommonModule
 
 		logger.debug("Processing concern " + concern.getName());
 
+		modules = concern.getSuperimposed().getFilterModuleOrder();
+
 		// initialize:
 		inlinedMethodSet = new HashSet<Integer>();
 
 		// get filtermodules:
-		currentFireModelIF = f2res.getFireModel(concern, concern.getSuperimposed().getFilterModuleOrder());
+		currentFireModelIF = f2res.getFireModel(concern, modules);
 		currentFireModelOF = currentFireModelIF;
 
 		ConcernAnalysis ca = secretRes.getConcernAnalysis(concern);
@@ -210,7 +234,7 @@ public class ModelBuilder implements CTCommonModule
 		// Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + methodInfo);
 
 		// set current selector:
-		currentSelector = methodInfo.getName();
+		currentSelector = new CpsSelectorMethodInfo(methodInfo);
 
 		// create executionmodel:
 		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FilterDirection.Input, methodInfo,
@@ -243,7 +267,7 @@ public class ModelBuilder implements CTCommonModule
 	private void processCall(CallToOtherMethod call)
 	{
 		// set current selector:
-		currentSelector = call.getMethodName();
+		currentSelector = new CpsSelectorMethodInfo(call.getCalledMethod());
 
 		// retrieve target methodinfo:
 		MethodInfo methodInfo = call.getCalledMethod();
@@ -276,7 +300,7 @@ public class ModelBuilder implements CTCommonModule
 	/**
 	 * @return The current selector being processed.
 	 */
-	protected String getCurrentSelector()
+	protected CpsSelector getCurrentSelector()
 	{
 		return currentSelector;
 	}

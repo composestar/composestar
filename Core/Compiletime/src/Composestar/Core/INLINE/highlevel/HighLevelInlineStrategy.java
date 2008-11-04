@@ -4,7 +4,7 @@
  */
 package Composestar.Core.INLINE.highlevel;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.LAMA.MethodInfo;
@@ -19,7 +19,7 @@ public interface HighLevelInlineStrategy
 
 	public void endFilterModule();
 
-	public void openBranchTrue(ConditionExpression condition);
+	public void openBranchTrue(MatchingExpression condition);
 
 	public void closeBranchTrue();
 

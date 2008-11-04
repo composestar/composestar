@@ -12,7 +12,7 @@ package Composestar.Core.DIGGER2;
 
 import java.io.Serializable;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
@@ -34,7 +34,7 @@ public class Trail implements Serializable
 	/**
 	 * Condition expression that must be true. Used during recursion checking
 	 */
-	protected ConditionExpression condition;
+	protected MatchingExpression condition;
 
 	/**
 	 * most valuable repository entity, this is used to refer to a repository
@@ -120,7 +120,7 @@ public class Trail implements Serializable
 	 * 
 	 * @param inCondition
 	 */
-	public void setCondition(ConditionExpression inCondition)
+	public void setCondition(MatchingExpression inCondition)
 	{
 		condition = inCondition;
 	}
@@ -128,7 +128,7 @@ public class Trail implements Serializable
 	/**
 	 * @return the condition that caused this trail
 	 */
-	public ConditionExpression getCondition()
+	public MatchingExpression getCondition()
 	{
 		return condition;
 	}
