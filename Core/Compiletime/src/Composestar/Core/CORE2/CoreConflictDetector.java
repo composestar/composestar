@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -253,67 +251,81 @@ public class CoreConflictDetector
 			}
 
 			// TODO: unverified conflicts
-			else if (unreachableTransition.getStartNode().containsName(FlowNode.CONDITION_EXPRESSION_NODE))
-			{
-				// Condition expression
-				CoreConflict conflict1 = new CoreConflict(ConflictType.CONDITION_EXPRESSION_FALSE,
-						unreachableTransition.getStartNode().getRepositoryLink());
-				conflicts.add(conflict1);
-
-				CoreConflict conflict2 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
-						currentFilterElementNode.getRepositoryLink(), conflict1);
-				conflicts.add(conflict2);
-				rejectingFilterElementCounter++;
-
-				CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
-						currentFilterElementNode.getRepositoryLink(), conflict2);
-				conflicts.add(conflict3);
-			}
-			else
-			{
-				// Matching part
-				CoreConflict conflict1 = new CoreConflict(ConflictType.MATCHING_PART_NEVER_MATCHES,
-						unreachableTransition.getStartNode().getRepositoryLink());
-				conflicts.add(conflict1);
-
-				if (currentMatchingExpressionNode.containsName(FlowNode.ENABLE_OPERATOR_NODE))
-				{
-					CoreConflict conflict2 = new CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_REJECTS,
-							currentMatchingPatternNode.getRepositoryLink(), conflict1);
-
-					conflicts.add(conflict2);
-
-					// TODO: add always rejecting filter element check
-					CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
-							currentFilterElementNode.getRepositoryLink(), conflict2);
-					conflicts.add(conflict3);
-					rejectingFilterElementCounter++;
-
-					CoreConflict conflict4 = new CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
-							currentFilterElementNode.getRepositoryLink(), conflict3);
-					conflicts.add(conflict4);
-				}
-				else
-				{
-					CoreConflict conflict2 = new CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_ACCEPTS,
-							currentMatchingPatternNode.getRepositoryLink(), conflict1);
-					conflicts.add(conflict2);
-
-					FilterElement filterElement = (FilterElement) currentFilterElementNode.getRepositoryLink();
-					if (filterElement.getConditionPart() instanceof True)
-					{
-						CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_ACCEPTS,
-								currentFilterElementNode.getRepositoryLink(), conflict2);
-						acceptingFilterElementConflict = conflict3;
-						conflicts.add(conflict3);
-
-						CoreConflict conflict4 = new CoreConflict(ConflictType.FILTER_ALWAYS_ACCEPTS,
-								currentFilterElementNode.getRepositoryLink(), conflict3);
-						accRejFilterConflict = conflict4;
-						conflicts.add(conflict4);
-					}
-				}
-			}
+			// else if
+			// (unreachableTransition.getStartNode().containsName(FlowNode
+			// .CONDITION_EXPRESSION_NODE))
+			// {
+			// // Condition expression
+			// CoreConflict conflict1 = new
+			// CoreConflict(ConflictType.CONDITION_EXPRESSION_FALSE,
+			// unreachableTransition.getStartNode().getRepositoryLink());
+			// conflicts.add(conflict1);
+			//
+			// CoreConflict conflict2 = new
+			// CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
+			// currentFilterElementNode.getRepositoryLink(), conflict1);
+			// conflicts.add(conflict2);
+			// rejectingFilterElementCounter++;
+			//
+			// CoreConflict conflict3 = new
+			// CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
+			// currentFilterElementNode.getRepositoryLink(), conflict2);
+			// conflicts.add(conflict3);
+			// }
+			// else
+			// {
+			// // Matching part
+			// CoreConflict conflict1 = new
+			// CoreConflict(ConflictType.MATCHING_PART_NEVER_MATCHES,
+			// unreachableTransition.getStartNode().getRepositoryLink());
+			// conflicts.add(conflict1);
+			//
+			// if (currentMatchingExpressionNode.containsName(FlowNode.
+			// ENABLE_OPERATOR_NODE))
+			// {
+			// CoreConflict conflict2 = new
+			// CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_REJECTS,
+			// currentMatchingPatternNode.getRepositoryLink(), conflict1);
+			//
+			// conflicts.add(conflict2);
+			//
+			// // TODO: add always rejecting filter element check
+			// CoreConflict conflict3 = new
+			// CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
+			// currentFilterElementNode.getRepositoryLink(), conflict2);
+			// conflicts.add(conflict3);
+			// rejectingFilterElementCounter++;
+			//
+			// CoreConflict conflict4 = new
+			// CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
+			// currentFilterElementNode.getRepositoryLink(), conflict3);
+			// conflicts.add(conflict4);
+			// }
+			// else
+			// {
+			// CoreConflict conflict2 = new
+			// CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_ACCEPTS,
+			// currentMatchingPatternNode.getRepositoryLink(), conflict1);
+			// conflicts.add(conflict2);
+			//
+			// FilterElement filterElement = (FilterElement)
+			// currentFilterElementNode.getRepositoryLink();
+			// if (filterElement.getConditionPart() instanceof True)
+			// {
+			// CoreConflict conflict3 = new
+			// CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_ACCEPTS,
+			// currentFilterElementNode.getRepositoryLink(), conflict2);
+			// acceptingFilterElementConflict = conflict3;
+			// conflicts.add(conflict3);
+			//
+			// CoreConflict conflict4 = new
+			// CoreConflict(ConflictType.FILTER_ALWAYS_ACCEPTS,
+			// currentFilterElementNode.getRepositoryLink(), conflict3);
+			// accRejFilterConflict = conflict4;
+			// conflicts.add(conflict4);
+			// }
+			// }
+			// }
 
 		}
 		else if (unreachableTransition.getType() == FlowTransition.FLOW_FALSE_TRANSITION)
@@ -331,50 +343,59 @@ public class CoreConflictDetector
 			// // Condition expression
 			// // No conflict
 			// }
-			else
-			{
-				// Matching part
-				CoreConflict conflict1 = new CoreConflict(ConflictType.MATCHING_PART_ALWAYS_MATCHES,
-						unreachableTransition.getStartNode().getRepositoryLink());
-				conflicts.add(conflict1);
-
-				if (currentMatchingExpressionNode.containsName(FlowNode.DISABLE_OPERATOR_NODE))
-				{
-					CoreConflict conflict2 = new CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_REJECTS,
-							currentMatchingPatternNode.getRepositoryLink(), conflict1);
-					conflicts.add(conflict2);
-
-					// TODO: add always rejecting filter element check
-					CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
-							currentFilterElementNode.getRepositoryLink(), conflict2);
-					conflicts.add(conflict3);
-					rejectingFilterElementCounter++;
-
-					CoreConflict conflict4 = new CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
-							currentFilterElementNode.getRepositoryLink(), conflict3);
-					conflicts.add(conflict4);
-				}
-				else
-				{
-					CoreConflict conflict2 = new CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_ACCEPTS,
-							currentMatchingPatternNode.getRepositoryLink(), conflict1);
-					conflicts.add(conflict2);
-
-					FilterElement filterElement = (FilterElement) currentFilterElementNode.getRepositoryLink();
-					if (filterElement.getConditionPart() instanceof True)
-					{
-						CoreConflict conflict3 = new CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_ACCEPTS,
-								currentFilterElementNode.getRepositoryLink(), conflict2);
-						acceptingFilterElementConflict = conflict3;
-						conflicts.add(conflict3);
-
-						CoreConflict conflict4 = new CoreConflict(ConflictType.FILTER_ALWAYS_ACCEPTS,
-								currentFilterElementNode.getRepositoryLink(), conflict3);
-						accRejFilterConflict = conflict4;
-						conflicts.add(conflict4);
-					}
-				}
-			}
+			// else
+			// {
+			// // Matching part
+			// CoreConflict conflict1 = new
+			// CoreConflict(ConflictType.MATCHING_PART_ALWAYS_MATCHES,
+			// unreachableTransition.getStartNode().getRepositoryLink());
+			// conflicts.add(conflict1);
+			//
+			// if (currentMatchingExpressionNode.containsName(FlowNode.
+			// DISABLE_OPERATOR_NODE))
+			// {
+			// CoreConflict conflict2 = new
+			// CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_REJECTS,
+			// currentMatchingPatternNode.getRepositoryLink(), conflict1);
+			// conflicts.add(conflict2);
+			//
+			// // TODO: add always rejecting filter element check
+			// CoreConflict conflict3 = new
+			// CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_REJECTS,
+			// currentFilterElementNode.getRepositoryLink(), conflict2);
+			// conflicts.add(conflict3);
+			// rejectingFilterElementCounter++;
+			//
+			// CoreConflict conflict4 = new
+			// CoreConflict(ConflictType.FILTER_ELEMENT_REDUNDANT,
+			// currentFilterElementNode.getRepositoryLink(), conflict3);
+			// conflicts.add(conflict4);
+			// }
+			// else
+			// {
+			// CoreConflict conflict2 = new
+			// CoreConflict(ConflictType.MATCHING_PATTERN_ALWAYS_ACCEPTS,
+			// currentMatchingPatternNode.getRepositoryLink(), conflict1);
+			// conflicts.add(conflict2);
+			//
+			// FilterElement filterElement = (FilterElement)
+			// currentFilterElementNode.getRepositoryLink();
+			// if (filterElement.getConditionPart() instanceof True)
+			// {
+			// CoreConflict conflict3 = new
+			// CoreConflict(ConflictType.FILTER_ELEMENT_ALWAYS_ACCEPTS,
+			// currentFilterElementNode.getRepositoryLink(), conflict2);
+			// acceptingFilterElementConflict = conflict3;
+			// conflicts.add(conflict3);
+			//
+			// CoreConflict conflict4 = new
+			// CoreConflict(ConflictType.FILTER_ALWAYS_ACCEPTS,
+			// currentFilterElementNode.getRepositoryLink(), conflict3);
+			// accRejFilterConflict = conflict4;
+			// conflicts.add(conflict4);
+			// }
+			// }
+			// }
 		}
 
 		return conflicts;

@@ -94,7 +94,7 @@ public class CpsSelectorMethodInfo extends AbstractRepositoryEntity implements C
 			{
 				return ((CpsSelectorMethodInfo) other).getMethodInfo() == null;
 			}
-			return getMethodInfo().equals(((CpsSelectorMethodInfo) other).getMethodInfo());
+			return getMethodInfo().checkEquals(((CpsSelectorMethodInfo) other).getMethodInfo());
 		}
 		CpsSelector o = (CpsSelector) other;
 		if (getName() == null)

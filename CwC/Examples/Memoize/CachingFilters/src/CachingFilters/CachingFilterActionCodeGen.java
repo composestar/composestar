@@ -30,7 +30,7 @@ import java.util.Set;
 import Composestar.Core.INLINE.CodeGen.CodeGenerator;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
-import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 
@@ -45,11 +45,11 @@ public class CachingFilterActionCodeGen implements FilterActionCodeGenerator<Str
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @seeComposestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generate(CodeGenerator<String> codeGen, FilterAction action)
+	public String generate(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		MethodInfo mi = codeGen.getCurrentMethod();
 		if (!codeGen.hasReturnValue(mi))
@@ -85,20 +85,21 @@ public class CachingFilterActionCodeGen implements FilterActionCodeGenerator<Str
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generateMethodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generateMethodInit
+	 * (Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#getDependencies(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      java.lang.String)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#getDependencies
+	 * (Composestar.Core.INLINE.CodeGen.CodeGenerator, java.lang.String)
 	 */
 	public Set<String> getDependencies(CodeGenerator<String> codeGen, String action)
 	{
@@ -108,9 +109,9 @@ public class CachingFilterActionCodeGen implements FilterActionCodeGenerator<Str
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#getImports(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      java.lang.String)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#getImports(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator, java.lang.String)
 	 */
 	public Set<String> getImports(CodeGenerator<String> codeGen, String action)
 	{
@@ -121,16 +122,18 @@ public class CachingFilterActionCodeGen implements FilterActionCodeGenerator<Str
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources(Composestar.Core.INLINE.lowlevel.InlinerResources)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources
+	 * (Composestar.Core.INLINE.lowlevel.InlinerResources)
 	 */
 	public void setInlinerResources(InlinerResources resources)
 	{}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes()
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes
+	 * ()
 	 */
 	public String[] supportedTypes()
 	{

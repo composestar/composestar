@@ -33,14 +33,13 @@ import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterActionException;
-import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
+import Composestar.Core.COPPER3.FilterTypeFactory;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2Impl.Filters.FilterActionImpl;
+import Composestar.Core.CpsRepository2Impl.Filters.PrimitiveFilterTypeImpl;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.CwC.Filters.CustomCwCFilters;
 
 /**
@@ -58,15 +57,14 @@ public class Caching implements CustomCwCFilters
 
 	public static final String INVALIDATE_ACTION = "InvalidateAction";
 
-	private FilterAction cacheAction;
+	private FilterActionImpl cacheAction;
 
-	private FilterAction cacheReturnAction;
+	private FilterActionImpl cacheReturnAction;
 
-	private FilterAction invalidateAction;
+	private FilterActionImpl invalidateAction;
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.CwC.Filters.CustomCwCFilters#getCodeGenerators()
 	 */
 	public Collection<FilterActionCodeGenerator<String>> getCodeGenerators()
@@ -78,26 +76,22 @@ public class Caching implements CustomCwCFilters
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.CwC.Filters.CustomCwCFilters#registerFilters(Composestar.Core.RepositoryImplementation.DataStore,
-	 *      Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory)
+	 * @see
+	 * Composestar.CwC.Filters.CustomCwCFilters#registerFilters(Composestar.
+	 * Core.RepositoryImplementation.DataStore,
+	 * Composestar.Core.CpsProgramRepository.Filters.FilterTypeFactory)
 	 */
-	public void registerFilters(DataStore repository, DefaultFilterFactory factory)
+	public void registerFilters(Repository repository, FilterTypeFactory factory)
 	{
-		try
-		{
-			addCache(repository, factory);
-			addInvalidate(repository, factory);
-		}
-		catch (UnsupportedFilterTypeException e)
-		{
-		}
+		addCache(repository, factory);
+		addInvalidate(repository, factory);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.CwC.Filters.CustomCwCFilters#registerSecretResources(Composestar.Core.CKRET.SECRETResources)
+	 * @see
+	 * Composestar.CwC.Filters.CustomCwCFilters#registerSecretResources(Composestar
+	 * .Core.CKRET.SECRETResources)
 	 */
 	public void registerSecretResources(SECRETResources resources)
 	{
@@ -116,100 +110,60 @@ public class Caching implements CustomCwCFilters
 		}
 	}
 
-	public FilterAction getCacheAction(DataStore repository)
+	public FilterAction getCacheAction(Repository repository)
 	{
 		if (cacheAction != null)
 		{
 			return cacheAction;
 		}
-		cacheAction = new FilterAction();
-		cacheAction.setName(CACHE_ACTION);
-		cacheAction.setFullName(CACHE_ACTION);
-		// does exit when cached
-		cacheAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		cacheAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		cacheAction = new FilterActionImpl(CACHE_ACTION);
 		cacheAction.setResourceOperations("target.read;selector.read;arg.read;cache.read;return.write");
-		cacheAction.setCreateJPC(false);
-		repository.addObject(cacheAction);
+		repository.add(cacheAction);
 		return cacheAction;
 	}
 
-	public FilterAction getCacheReturnAction(DataStore repository)
+	public FilterAction getCacheReturnAction(Repository repository)
 	{
 		if (cacheReturnAction != null)
 		{
 			return cacheReturnAction;
 		}
-		cacheReturnAction = new FilterAction();
-		cacheReturnAction.setName(CACHE_RETURN_ACTION);
-		cacheReturnAction.setFullName(CACHE_RETURN_ACTION);
-		cacheReturnAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		cacheReturnAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		cacheReturnAction = new FilterActionImpl(CACHE_RETURN_ACTION);
 		cacheReturnAction.setResourceOperations("target.read;selector.read;arg.read;cache.write");
-		cacheReturnAction.setCreateJPC(false);
-		repository.addObject(cacheReturnAction);
+		repository.add(cacheReturnAction);
 		return cacheReturnAction;
 	}
 
-	public void addCache(DataStore repository, DefaultFilterFactory factory) throws UnsupportedFilterTypeException
+	public void addCache(Repository repository, FilterTypeFactory factory)
 	{
-		FilterType type = new FilterType();
-		type.setType(CACHE_FILTER);
-		try
-		{
-			type.setAcceptCallAction(getCacheAction(repository));
-			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(factory.getContinueAction());
-			type.setAcceptReturnAction(getCacheReturnAction(repository));
-			type.setRejectReturnAction(factory.getContinueAction());
-		}
-		catch (UnsupportedFilterActionException e)
-		{
-			throw new UnsupportedFilterTypeException(CACHE_FILTER, e);
-		}
-		repository.addObject(type);
-		if (factory.getTypeMapping() != null)
-		{
-			factory.getTypeMapping().registerFilterType(type);
-		}
+		PrimitiveFilterTypeImpl type = new PrimitiveFilterTypeImpl(CACHE_FILTER);
+		type.setAcceptCallAction(getCacheAction(repository));
+		type.setRejectCallAction(factory.getContinueAction());
+		type.setAcceptReturnAction(factory.getContinueAction());
+		type.setAcceptReturnAction(getCacheReturnAction(repository));
+		type.setRejectReturnAction(factory.getContinueAction());
+		repository.add(type);
 	}
 
-	public FilterAction getInvalidateAction(DataStore repository)
+	public FilterAction getInvalidateAction(Repository repository)
 	{
 		if (invalidateAction != null)
 		{
 			return invalidateAction;
 		}
-		invalidateAction = new FilterAction();
-		invalidateAction.setName(INVALIDATE_ACTION);
-		invalidateAction.setFullName(INVALIDATE_ACTION);
-		invalidateAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		invalidateAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		invalidateAction = new FilterActionImpl(INVALIDATE_ACTION);
 		invalidateAction.setResourceOperations("target.read;selector.read;arg.read;cache.write");
-		invalidateAction.setCreateJPC(false);
-		repository.addObject(invalidateAction);
+		repository.add(invalidateAction);
 		return invalidateAction;
 	}
 
-	public void addInvalidate(DataStore repository, DefaultFilterFactory factory) throws UnsupportedFilterTypeException
+	public void addInvalidate(Repository repository, FilterTypeFactory factory)
 	{
-		FilterType type = new FilterType();
-		type.setType(INVALIDATE_FILTER);
-		try
-		{
-			type.setAcceptCallAction(factory.getContinueAction());
-			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(getInvalidateAction(repository));
-			type.setRejectReturnAction(factory.getContinueAction());
-		}
-		catch (UnsupportedFilterActionException e)
-		{
-			throw new UnsupportedFilterTypeException(INVALIDATE_FILTER, e);
-		}
-		repository.addObject(type);
-		if (factory.getTypeMapping() != null)
-		{
-			factory.getTypeMapping().registerFilterType(type);
-		}
+		PrimitiveFilterTypeImpl type = new PrimitiveFilterTypeImpl(INVALIDATE_FILTER);
+		type.setAcceptCallAction(factory.getContinueAction());
+		type.setRejectCallAction(factory.getContinueAction());
+		type.setAcceptReturnAction(getInvalidateAction(repository));
+		type.setRejectReturnAction(factory.getContinueAction());
+		repository.add(type);
 	}
 }
