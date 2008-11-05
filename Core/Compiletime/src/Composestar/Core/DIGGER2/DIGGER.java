@@ -106,7 +106,7 @@ public class DIGGER implements CTCommonModule
 		{
 			logger
 					.warn("DIGGER has been disabled because it has not been (properly) updated to the canonical filter model");
-			return ModuleReturnValue.Error;
+			return ModuleReturnValue.Ok;
 		}
 		// initialize
 		graph = new DispatchGraph(mode);

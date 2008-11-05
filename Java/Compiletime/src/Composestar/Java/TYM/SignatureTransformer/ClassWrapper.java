@@ -1,6 +1,6 @@
 package Composestar.Java.TYM.SignatureTransformer;
 
-import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsRepository2.Concern;
 
 /**
  * Helper Class. It contains a <code>class</code> instance, a

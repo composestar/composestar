@@ -56,6 +56,15 @@ import Composestar.Core.FIRE2.model.FlowTransition;
  */
 public final class ExpressionResolver
 {
+	/**
+	 * Create a copy of a MatchingExpression by replacing non-branching
+	 * expressions with constants.
+	 * 
+	 * @param start
+	 * @param accept
+	 * @param reject
+	 * @return
+	 */
 	public static final MatchingExpression createExpression(ExecutionState start, ExecutionState accept,
 			ExecutionState reject)
 	{
@@ -80,6 +89,13 @@ public final class ExpressionResolver
 		return consolidateExpression(baseExpr, replacements);
 	}
 
+	/**
+	 * Create the actual clone of the expression.
+	 * 
+	 * @param baseExpr
+	 * @param replacements
+	 * @return
+	 */
 	private static MatchingExpression consolidateExpression(MatchingExpression baseExpr,
 			Map<MatchingExpression, MatchingExpression> replacements)
 	{

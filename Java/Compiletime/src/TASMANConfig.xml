@@ -20,10 +20,8 @@
 	<module class="Composestar.Core.CORE2.Core" />
 	<module class="Composestar.Core.SIGN2.Sign" />
 	<parallel perprocessor="1">
-		<!-- 
 		<module class="Composestar.Core.DIGGER2.DIGGER" />
 		<module class="Composestar.Core.SECRET3.SECRET" />
-	 -->
 		<sequential>
 			<module class="Composestar.Java.TYM.SignatureTransformer.JavaSignatureTransformer" />
 			<module class="Composestar.Core.RECOMA.RealSourceManager" />

@@ -4,14 +4,14 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
-import java.util.List;
+import java.util.EnumSet;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
+import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Java.LAMA.JavaMethodInfo;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Java.TYM.TypeHarvester.JarHelper;
 import Composestar.Utils.FileUtils;
 
@@ -44,7 +44,7 @@ public class JarTransformer
 	 * @throws ModuleException - when an error occurs while transforming the
 	 *             classes.
 	 */
-	public void run(DataStore ds) throws ModuleException
+	public void run(Repository repos) throws ModuleException
 	{
 		File tempJar = null;
 		try
@@ -58,13 +58,13 @@ public class JarTransformer
 			{
 				String className = c.getName();
 
-				Concern concern = (Concern) ds.getObjectByID(className);
+				Concern concern = repos.get(className, Concern.class);
 				Signature signature = concern.getSignature();
 				if (signature != null)
 				{
-					List<JavaMethodInfo> methodsAdded = signature.getMethods(MethodWrapper.ADDED);
-					List<JavaMethodInfo> methodsRemoved = signature.getMethods(MethodWrapper.REMOVED);
-					if (methodsAdded.size() > 0 || methodsRemoved.size() > 0)
+					Collection<MethodInfo> sigChanges = signature.getMethods(EnumSet.of(MethodRelation.ADDED,
+							MethodRelation.REMOVED));
+					if (sigChanges.size() > 0)
 					{
 						ClassWrapper cw = new ClassWrapper(c, concern, null);
 

@@ -18,12 +18,12 @@ import javassist.expr.Instanceof;
 import javassist.expr.MethodCall;
 import javassist.expr.NewArray;
 import javassist.expr.NewExpr;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -42,13 +42,13 @@ public class MethodBodyTransformer extends ExprEditor
 
 	private HookDictionary hd;
 
-	private DataStore ds;
+	private Repository repos;
 
-	public MethodBodyTransformer(ClassPool classpool, HookDictionary hookdict, DataStore repository)
+	public MethodBodyTransformer(ClassPool classpool, HookDictionary hookdict, Repository repository)
 	{
 		this.classpool = classpool;
 		hd = hookdict;
-		ds = repository;
+		repos = repository;
 	}
 
 	/**
@@ -287,14 +287,14 @@ public class MethodBodyTransformer extends ExprEditor
 		}
 
 		// second try: lookup in concern's Signature (it could be added by SIGN)
-		Concern c = (Concern) ds.getObjectByID(m.getClassName());
+		Concern c = repos.get(m.getClassName(), Concern.class);
 		if (c != null)
 		{
 			Signature s = c.getSignature();
-			Iterator<JavaMethodInfo> methods = s.getMethods().iterator();
+			Iterator<MethodInfo> methods = s.getMethods().iterator();
 			if (methods.hasNext())
 			{
-				JavaMethodInfo method = methods.next();
+				JavaMethodInfo method = (JavaMethodInfo) methods.next();
 				if (method.getName().equals(m.getMethodName()))
 				{
 					// equal parameters?

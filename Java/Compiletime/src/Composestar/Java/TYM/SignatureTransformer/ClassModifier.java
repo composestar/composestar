@@ -1,16 +1,19 @@
 package Composestar.Java.TYM.SignatureTransformer;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
+import Composestar.Core.CpsRepository2.Signatures.Signature;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -44,11 +47,12 @@ public class ClassModifier
 	 * @throws Exception - when an error occurs while trying to add the methods
 	 *             to the class.
 	 */
-	public void addMethods(List<JavaMethodInfo> methods, CtClass ct) throws Exception
+	public void addMethods(Collection<MethodInfo> methods, CtClass ct) throws Exception
 	{
-		for (JavaMethodInfo m : methods)
+		for (MethodInfo m : methods)
 		{
-			int modifiers = m.theMethod.getModifiers();
+			Method theMethod = ((JavaMethodInfo) m).theMethod;
+			int modifiers = theMethod.getModifiers();
 			CtClass returnClass = null;
 			if (!m.returnTypeString.equals(""))
 			{
@@ -58,7 +62,7 @@ public class ClassModifier
 			CtClass[] parameters = new CtClass[m.parameters.size()];
 			if (m.parameters.size() > 0)
 			{
-				Class<?>[] params = m.theMethod.getParameterTypes();
+				Class<?>[] params = theMethod.getParameterTypes();
 				for (int i = 0; i < params.length; i++)
 				{
 					String name = params[i].getName();
@@ -149,7 +153,7 @@ public class ClassModifier
 
 		if (signature != null)
 		{
-			List<JavaMethodInfo> methods = signature.getMethods(MethodWrapper.ADDED);
+			Collection<MethodInfo> methods = signature.getMethods(MethodRelation.ADDED);
 			if (methods.size() > 0)
 			{
 				addMethods(methods, ct);

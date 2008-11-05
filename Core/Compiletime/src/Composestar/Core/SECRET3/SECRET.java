@@ -125,7 +125,7 @@ public class SECRET implements CTCommonModule
 		{
 			logger
 					.warn("SECRET has been disabled because it has not been (properly) updated to the canonical filter model");
-			return ModuleReturnValue.Error;
+			return ModuleReturnValue.Ok;
 		}
 		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
 		loadConfiguration(resources);

@@ -2,27 +2,22 @@ package Composestar.Java.WEAVER;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Config.Project;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
+import Composestar.Core.CpsRepository2.FilterModules.Internal;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.FILTH.InnerDispatcher;
+import Composestar.Core.FILTH2.DefaultInnerDispatchNames;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.FilterModuleSuperImposition;
-import Composestar.Core.SANE.SIinfo;
 import Composestar.Java.COMP.CStarJavaCompiler;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -48,7 +43,7 @@ public class JavaWeaver implements CTCommonModule
 
 	protected HookDictionary hd;
 
-	protected DataStore ds;
+	protected Repository repos;
 
 	/**
 	 * Constructor
@@ -72,7 +67,7 @@ public class JavaWeaver implements CTCommonModule
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		hd = new HookDictionary();
-		ds = resources.repository();
+		repos = resources.repository();
 
 		// create the hook dictionary...
 		createHookDictionary(resources);
@@ -98,34 +93,33 @@ public class JavaWeaver implements CTCommonModule
 
 	public void getAfterInstantationInterceptions()
 	{
-		Iterator<CompiledImplementation> it = ds.getAllInstancesOf(CompiledImplementation.class);
-		while (it.hasNext())
+		// Iterator<CompiledImplementation> it =
+		// repos.getAllInstancesOf(CompiledImplementation.class);
+		// while (it.hasNext())
+		// {
+		// CompiledImplementation ci = it.next();
+		// String className = ci.getClassName();
+		// if (className != null)
+		// {
+		// hd.addAfterInstantationInterception(className);
+		// }
+		// }
+		// Iterator<CpsConcern> it2 = repos.getAllInstancesOf(CpsConcern.class);
+		// while (it2.hasNext())
+		// {
+		// CpsConcern c = it2.next();
+		// Object impl = c.getDynObject("IMPLEMENTATION");
+		// if (impl != null)
+		// {
+		// PrimitiveConcern pc = (PrimitiveConcern) impl;
+		// hd.addAfterInstantationInterception(pc.getFullyQualifiedName());
+		// }
+		// }
+		for (Concern c : repos.getAll(Concern.class))
 		{
-			CompiledImplementation ci = it.next();
-			String className = ci.getClassName();
-			if (className != null)
+			if (c.getSuperimposed() != null)
 			{
-				hd.addAfterInstantationInterception(className);
-			}
-		}
-		Iterator<CpsConcern> it2 = ds.getAllInstancesOf(CpsConcern.class);
-		while (it2.hasNext())
-		{
-			CpsConcern c = it2.next();
-			Object impl = c.getDynObject("IMPLEMENTATION");
-			if (impl != null)
-			{
-				PrimitiveConcern pc = (PrimitiveConcern) impl;
-				hd.addAfterInstantationInterception(pc.getQualifiedName());
-			}
-		}
-		Iterator<Concern> it3 = ds.getAllInstancesOf(Concern.class);
-		while (it3.hasNext())
-		{
-			Concern c = it3.next();
-			if (c.getDynObject(SIinfo.DATAMAP_KEY) != null && !(c instanceof CpsConcern))
-			{
-				hd.addAfterInstantationInterception(c.getQualifiedName());
+				hd.addAfterInstantationInterception(c.getFullyQualifiedName());
 			}
 		}
 	}
@@ -133,22 +127,23 @@ public class JavaWeaver implements CTCommonModule
 	public void getCastInterceptions()
 	{
 		Set<String> qns = new HashSet<String>();
-		Iterator<Concern> iterConcerns = ds.getAllInstancesOf(Concern.class);
-		while (iterConcerns.hasNext())
+		for (Concern c : repos.getAll(Concern.class))
 		{
-			Concern c = iterConcerns.next();
 			boolean castConcern = false;
-			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
+			if (c.getSuperimposed() != null)
 			{
-				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-				for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) fmo.filterModuleSIList())
+				List<ImposedFilterModule> fmo = c.getSuperimposed().getFilterModuleOrder();
+				for (ImposedFilterModule fmsi : fmo)
 				{
-					FilterModule fm = fmsi.getFilterModule().getRef();
-					Iterator<Internal> iterInternals = fm.getInternalIterator();
-					while (iterInternals.hasNext())
+					FilterModule fm = fmsi.getFilterModule();
+					for (FilterModuleVariable fmvar : fm.getVariables())
 					{
-						Internal internal = iterInternals.next();
-						String internalQN = internal.getType().getQualifiedName();
+						if (!(fmvar instanceof Internal))
+						{
+							continue;
+						}
+						Internal internal = (Internal) fmvar;
+						String internalQN = internal.getTypeReference().getReference().getFullName();
 						castConcern = true;
 						if (!qns.contains(internalQN))
 						{
@@ -158,10 +153,10 @@ public class JavaWeaver implements CTCommonModule
 					}
 				}
 			}
-			if (castConcern && !qns.contains(c.getQualifiedName()))
+			if (castConcern && !qns.contains(c.getFullyQualifiedName()))
 			{
-				qns.add(c.getQualifiedName());
-				hd.addCastInterception(c.getQualifiedName());
+				qns.add(c.getFullyQualifiedName());
+				hd.addCastInterception(c.getFullyQualifiedName());
 			}
 		}
 
@@ -169,38 +164,35 @@ public class JavaWeaver implements CTCommonModule
 
 	public void getMethodInterceptions(CommonResources resources) throws ModuleException
 	{
-		Iterator<Concern> iterConcerns = ds.getAllInstancesOf(Concern.class);
-		while (iterConcerns.hasNext())
+		for (Concern c : repos.getAll(Concern.class))
 		{
-			Concern c = iterConcerns.next();
-			FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-			if (fmo == null)
+			if (c.getSuperimposed() == null)
 			{
 				continue;
 			}
-			List<FilterModuleSuperImposition> list = fmo.filterModuleSIList();
+			List<ImposedFilterModule> list = c.getSuperimposed().getFilterModuleOrder();
 			if (!list.isEmpty())
 			{
 				if (hasInputFilters(list))
 				{
-					logger.debug(" method calls to " + c.getQualifiedName() + " added to hook dictionary...");
-					hd.addIncomingMethodInterception(c.getQualifiedName());
+					logger.debug(" method calls to " + c.getFullyQualifiedName() + " added to hook dictionary...");
+					hd.addIncomingMethodInterception(c.getFullyQualifiedName());
 				}
 				if (hasOutputFilters(list))
 				{
-					logger.debug(" method calls from " + c.getQualifiedName() + " added to hook dictionary...");
-					hd.addOutgoingMethodInterception(c.getQualifiedName());
+					logger.debug(" method calls from " + c.getFullyQualifiedName() + " added to hook dictionary...");
+					hd.addOutgoingMethodInterception(c.getFullyQualifiedName());
 				}
 			}
 		}
 	}
 
-	private boolean hasInputFilters(List<FilterModuleSuperImposition> iterFilterModules)
+	private boolean hasInputFilters(List<ImposedFilterModule> iterFilterModules)
 	{
-		for (FilterModuleSuperImposition fmsi : iterFilterModules)
+		for (ImposedFilterModule fmsi : iterFilterModules)
 		{
-			FilterModule fm = fmsi.getFilterModule().getRef();
-			if (fm.getInputFilterIterator().hasNext())
+			FilterModule fm = fmsi.getFilterModule();
+			if (fm.getInputFilterExpression() != null)
 			{
 				return true;
 			}
@@ -208,16 +200,16 @@ public class JavaWeaver implements CTCommonModule
 		return false;
 	}
 
-	private boolean hasOutputFilters(List<FilterModuleSuperImposition> iterFilterModules)
+	private boolean hasOutputFilters(List<ImposedFilterModule> iterFilterModules)
 	{
-		for (FilterModuleSuperImposition fmsi : iterFilterModules)
+		for (ImposedFilterModule fmsi : iterFilterModules)
 		{
-			FilterModule fm = fmsi.getFilterModule().getRef();
-			if (InnerDispatcher.isDefaultDispatch(fm))
+			FilterModule fm = fmsi.getFilterModule();
+			if (DefaultInnerDispatchNames.FILTER_MODULE.equals(fm.getFullyQualifiedName()))
 			{
 				continue;
 			}
-			if (!fm.getOutputFilters().isEmpty())
+			if (fm.getOutputFilterExpression() != null)
 			{
 				return true;
 			}
