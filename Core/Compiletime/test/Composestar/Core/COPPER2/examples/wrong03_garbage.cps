@@ -1,4 +1,0 @@
-concern foo
-{
-	garbage data
-}

@@ -10,7 +10,7 @@
 	</target>
 
 	<target name="init_local" depends="init">
-		<property name="copper.version" value="2" />
+		<property name="copper.version" value="3" />
 		
 		<property name="antlr3.classpath" location="${basedir}/../lib/antlr/antlr.jar;${basedir}/../lib/antlr/antlr-3.jar;${basedir}/../lib/antlr/stringtemplate-3.jar" />
 		
