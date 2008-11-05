@@ -12,7 +12,6 @@ package Composestar.Core.Config;
 
 import junit.framework.TestCase;
 import Composestar.Core.Exception.ConfigurationException;
-import Composestar.Core.INCRE.INCREModule;
 
 /**
  * @author Michiel Hendriks
@@ -87,15 +86,6 @@ public class ModuleInfoTest extends TestCase
 		}
 	}
 
-	public void testIncre()
-	{
-		INCREModule m = mi.getIncreModule();
-		assertNotNull(m);
-		assertEquals("test", m.getName());
-		assertEquals(mi.getModuleClass(), m.getModuleClass());
-		assertEquals(false, m.isIncremental());
-	}
-
 	public void testNestedLoading()
 	{
 		try
@@ -111,12 +101,6 @@ public class ModuleInfoTest extends TestCase
 			{
 				fail("emi.settings.anInteger should not be equal to mi.settings.anInteger");
 			}
-
-			INCREModule m = emi.getIncreModule();
-			assertNotNull(m);
-			assertEquals("test", m.getName());
-			assertEquals(false, m.isIncremental());
-			assertEquals(m.getModuleClass(), emi.getModuleClass());
 		}
 		catch (ConfigurationException e)
 		{

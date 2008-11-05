@@ -33,8 +33,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ConfigurationException;
-import Composestar.Core.INCRE.INCREModule;
-import Composestar.Core.INCRE.Config.ModulesHandler;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -89,11 +87,6 @@ public class ModuleInfoHandler extends CpsBaseHandler
 	protected ModuleSettingHandler moduleSetting;
 
 	/**
-	 * The INCRE configuration XML handler
-	 */
-	protected ModulesHandler increHandler;
-
-	/**
 	 * @param inReader
 	 * @param inParent
 	 */
@@ -143,9 +136,9 @@ public class ModuleInfoHandler extends CpsBaseHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
-	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 * @see
+	 * Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 * java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
@@ -229,8 +222,10 @@ public class ModuleInfoHandler extends CpsBaseHandler
 			else if (state == STATE_MODULEINFO && "incre".equals(name))
 			{
 				state = STATE_INCRE;
-				increHandler = new ModulesHandler(reader, this);
-				reader.setContentHandler(increHandler);
+			}
+			else if (state == STATE_INCRE)
+			{
+				// ignore all old INCRE stuff
 			}
 			else
 			{
@@ -245,9 +240,9 @@ public class ModuleInfoHandler extends CpsBaseHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
-	 *      java.lang.String, java.lang.String)
+	 * @see
+	 * Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
@@ -257,13 +252,6 @@ public class ModuleInfoHandler extends CpsBaseHandler
 			super.endElement(uri, localName, name);
 			if (state == STATE_MODULEINFO && "moduleinfo".equals(name))
 			{
-				if (currentMi.getIncreModule() == null)
-				{
-					INCREModule increModule = new INCREModule(currentMi.getId());
-					increModule.setModuleClass(currentMi.getModuleClass());
-					increModule.setEnabled(true);
-					currentMi.setIncreModule(increModule);
-				}
 				returnHandler(uri, localName, name);
 			}
 			else if (state == STATE_NAME && "name".equals(name))
@@ -309,11 +297,10 @@ public class ModuleInfoHandler extends CpsBaseHandler
 			else if (state == STATE_INCRE && "incre".equals(name))
 			{
 				state = STATE_MODULEINFO;
-				INCREModule increModule = increHandler.getModule();
-				increModule.setName(currentMi.getId());
-				increModule.setModuleClass(currentMi.getModuleClass());
-				currentMi.setIncreModule(increModule);
-				increHandler = null;
+			}
+			else if (state == STATE_INCRE)
+			{
+				// otherwise ignore all incre stuff
 			}
 			else
 			{

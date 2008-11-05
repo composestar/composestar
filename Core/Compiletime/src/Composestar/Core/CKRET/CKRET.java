@@ -121,6 +121,12 @@ public class CKRET implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
+		if (true)
+		{
+			logger
+					.warn("SECRET has been disabled because it has not been (properly) updated to the canonical filter model");
+			return ModuleReturnValue.Error;
+		}
 		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
 		loadConfiguration(resources);
 

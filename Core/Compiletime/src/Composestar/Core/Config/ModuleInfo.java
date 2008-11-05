@@ -25,15 +25,14 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import Composestar.Core.Exception.ConfigurationException;
-import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Encapsulates the data in the module's moduleinfo.xml <br />
- * Create an instance of this class using the <code>ModuleInfo.load()</code>
- * static method. To use this information in a module request the instance
- * through the Configuration class.
+ * Encapsulates the data in the module's moduleinfo.xml <br /> Create an
+ * instance of this class using the <code>ModuleInfo.load()</code> static
+ * method. To use this information in a module request the instance through the
+ * Configuration class.
  * 
  * @author Michiel Hendriks
  */
@@ -70,11 +69,6 @@ public class ModuleInfo implements Serializable
 	 * List of modules this module depends on;
 	 */
 	protected Set<String> dependson;
-
-	/**
-	 * The incre module settings
-	 */
-	protected INCREModule increModule;
 
 	protected transient CPSLogger moduleLogger;
 
@@ -141,10 +135,6 @@ public class ModuleInfo implements Serializable
 			throw new IllegalArgumentException("Module class can not be null");
 		}
 		moduleClass = cls;
-		if (increModule != null)
-		{
-			increModule.setModuleClass(cls);
-		}
 	}
 
 	/**
@@ -223,26 +213,6 @@ public class ModuleInfo implements Serializable
 			desc = "";
 		}
 		description = desc;
-	}
-
-	/**
-	 * Get the INCRE configuration
-	 * 
-	 * @return
-	 */
-	public INCREModule getIncreModule()
-	{
-		return increModule;
-	}
-
-	/**
-	 * Set the INCRE configuration
-	 * 
-	 * @param inModule
-	 */
-	public void setIncreModule(INCREModule inModule)
-	{
-		increModule = inModule;
 	}
 
 	/**
@@ -568,17 +538,10 @@ public class ModuleInfo implements Serializable
 			// copy back data
 			// id = copy.id; // don't copy Id
 			description = copy.description;
-			increModule = copy.increModule;
 			moduleClass = copy.moduleClass;
 			name = copy.name;
 			settings = copy.settings;
 			dependson = copy.dependson;
-
-			if (increModule != null)
-			{
-				increModule.setName(id);
-				increModule.setModuleClass(moduleClass);
-			}
 		}
 		catch (IOException e)
 		{

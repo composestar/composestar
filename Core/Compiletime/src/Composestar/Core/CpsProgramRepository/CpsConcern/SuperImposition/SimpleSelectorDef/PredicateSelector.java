@@ -13,8 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-import Composestar.Core.INCRE.MethodNode;
-
 public class PredicateSelector extends SimpleSelExpression
 {
 	private static final long serialVersionUID = 5921852132415178944L;
@@ -53,8 +51,8 @@ public class PredicateSelector extends SimpleSelExpression
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SimpleSelExpression#interpret()
+	 * @seeComposestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.
+	 * SimpleSelectorDef.SimpleSelExpression#interpret()
 	 */
 	public Vector interpret()
 	{
@@ -129,22 +127,22 @@ public class PredicateSelector extends SimpleSelExpression
 		annotations.add(value);
 	}
 
-	/**
-	 * @param key - FullName of a class
-	 * @param obj - Type information represented FieldNode,MethodNode or Path
-	 * @param method
-	 */
-	public void addTYMInfo(String key, MethodNode method)
-	{
-
-		HashMap list = new HashMap();
-		if (this.tymInfo.containsKey(key))
-		{
-			list = (HashMap) tymInfo.get(key);
-		}
-
-		list.put(method.getReference(), method);
-		this.tymInfo.put(key, list);
-	}
+	// /**
+	// * @param key - FullName of a class
+	// * @param obj - Type information represented FieldNode,MethodNode or Path
+	// * @param method
+	// */
+	// public void addTYMInfo(String key, MethodNode method)
+	// {
+	//
+	// HashMap list = new HashMap();
+	// if (this.tymInfo.containsKey(key))
+	// {
+	// list = (HashMap) tymInfo.get(key);
+	// }
+	//
+	// list.put(method.getReference(), method);
+	// this.tymInfo.put(key, list);
+	// }
 
 }

@@ -10,15 +10,12 @@
 
 package Composestar.Core.LOLA.metamodel;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.LangNamespace;
 import Composestar.Core.LAMA.MethodInfo;
@@ -914,65 +911,75 @@ public abstract class LanguageModel
 		this.relationPredicates = relationPredicates;
 	}
 
-	/**
-	 * Returns path of unitrelations between two languageunits
-	 * 
-	 * @param from Type of languageunit
-	 * @param to Type of languageunit
-	 */
-	public Map<String, MethodNode> getPathOfUnitRelations(String from, String to)
-	{
-		Map<String, MethodNode> relations = new HashMap<String, MethodNode>();
-		List<String> params = new ArrayList<String>();
-		MethodNode m = new MethodNode("getUnitRelation");
-
-		try
-		{
-			if (from.equals(to))
-			{
-				return relations;
-			}
-			else if (from.equals(getLanguageUnitType("Class").getImplementingClass().getName()))
-			{
-				if (to.equals(getLanguageUnitType("Method").getImplementingClass().getName()))
-				{
-					// From Class to Method
-					// Directly with relation ChildMethods
-					params.add("ChildMethods");
-					m.setParameters(params);
-					relations.put(from, m);
-					return relations;
-				}
-				else if (to.equals(getLanguageUnitType("Parameter").getImplementingClass().getName()))
-				{
-					// From Class to Parameter
-					// Class -> Method -> Parameter
-					// By relations ChildMethods and ChildParameters
-					params.add("ChildMethods");
-					m.setParameters(params);
-					relations.put(from, m);
-
-					params.clear();
-					params.add("ChildParameters");
-					m.setParameters(params);
-					relations.put(getLanguageUnitType("Method").getImplementingClass().getName(), m);
-					return relations;
-				}
-				else
-				{
-					// TODO: add more cases
-				}
-			}
-		}
-		catch (ModelClashException mce)
-		{
-			logger
-					.warn("Unable to generate map of relations from " + from + " to " + to + ": " + mce.getMessage(),
-							mce);
-		}
-
-		return null;
-	}
+	// OLD INCRE stuff
+	// /**
+	// * Returns path of unitrelations between two languageunits
+	// *
+	// * @param from Type of languageunit
+	// * @param to Type of languageunit
+	// */
+	// public Map<String, MethodNode> getPathOfUnitRelations(String from, String
+	// to)
+	// {
+	// Map<String, MethodNode> relations = new HashMap<String, MethodNode>();
+	// List<String> params = new ArrayList<String>();
+	// MethodNode m = new MethodNode("getUnitRelation");
+	//
+	// try
+	// {
+	// if (from.equals(to))
+	// {
+	// return relations;
+	// }
+	// else if
+	// (from.equals(getLanguageUnitType("Class").getImplementingClass().getName
+	// ()))
+	// {
+	// if
+	// (to.equals(getLanguageUnitType("Method").getImplementingClass().getName
+	// ()))
+	// {
+	// // From Class to Method
+	// // Directly with relation ChildMethods
+	// params.add("ChildMethods");
+	// m.setParameters(params);
+	// relations.put(from, m);
+	// return relations;
+	// }
+	// else if
+	// (to.equals(getLanguageUnitType("Parameter").getImplementingClass()
+	// .getName()))
+	// {
+	// // From Class to Parameter
+	// // Class -> Method -> Parameter
+	// // By relations ChildMethods and ChildParameters
+	// params.add("ChildMethods");
+	// m.setParameters(params);
+	// relations.put(from, m);
+	//
+	// params.clear();
+	// params.add("ChildParameters");
+	// m.setParameters(params);
+	//relations.put(getLanguageUnitType("Method").getImplementingClass().getName
+	// (), m);
+	// return relations;
+	// }
+	// else
+	// {
+	// // TODO: add more cases
+	// }
+	// }
+	// }
+	// catch (ModelClashException mce)
+	// {
+	// logger
+	// .warn("Unable to generate map of relations from " + from + " to " + to +
+	// ": " + mce.getMessage(),
+	// mce);
+	// }
+	//
+	// return null;
+	// }
 
 	/**
 	 * Because namespaces do not exist as 'standalone' language units as such,

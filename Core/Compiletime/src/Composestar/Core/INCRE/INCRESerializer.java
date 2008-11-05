@@ -25,9 +25,8 @@ public class INCRESerializer implements CTCommonModule
 
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		ModuleInfo increMi = ModuleInfoManager.get(INCRE.MODULE_NAME);
 		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
-		if (increMi.getBooleanSetting("enabled") || mi.getBooleanSetting("force"))
+		if (mi.getBooleanSetting("force"))
 		{
 			CPSTimer timer = CPSTimer.getTimer("INCRESerializer", "Creation of INCRE history");
 
