@@ -280,25 +280,12 @@
 	<target name="all" depends="clean,install,test,qa" description="Recompile, install and test the whole system." />
 
 	<target name="integration">
-		<!-- remove the next couple of lines to re-enable full builds -->
-		<antcall target="clean" inheritRefs="true" />
-		<echo level="error">
-			Integration builds disabled.
-			Edit the Core/Development/build_total.xml file
-		</echo>
-		
-		<!--
 		<antcall target="required" inheritRefs="true" />
 		<antcall target="qa" inheritRefs="true" />
-		-->
 	</target>
 
 	<target name="integration_publish">
-		<echo level="error">
-			Integration builds disabled.
-			Edit the Core/Development/build_total.xml file
-		</echo>
-		<!--<antcall target="publish" inheritRefs="true" />-->
+		<antcall target="publish" inheritRefs="true" />
 	</target>
 
 	<!-- fancy selection -->
