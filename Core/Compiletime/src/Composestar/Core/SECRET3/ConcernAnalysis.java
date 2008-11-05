@@ -7,7 +7,7 @@
  *
  * $Id$
  */
-package Composestar.Core.CKRET;
+package Composestar.Core.SECRET3;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET.Config.Xml;
+package Composestar.Core.SECRET3.Config.Xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -30,11 +30,11 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.OperationSequence;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.OperationSequence;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.ResourceType;
 
 /**
  * Processes the &lt;action&gt; element in the SECRET configuration.

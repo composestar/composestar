@@ -41,11 +41,11 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.Xml.Legacy.ConvertBuildConfig;
 import Composestar.Core.Exception.ConfigurationException;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.Xml.XmlConfiguration;
 import Composestar.Utils.IOStream;
 
 /**

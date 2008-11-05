@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET.Report;
+package Composestar.Core.SECRET3.Report;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,14 +46,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
-import Composestar.Core.CKRET.ConcernAnalysis;
-import Composestar.Core.CKRET.Conflict;
-import Composestar.Core.CKRET.FilterSetAnalysis;
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.OperationSequence;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
@@ -63,6 +55,14 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SECRET3.ConcernAnalysis;
+import Composestar.Core.SECRET3.Conflict;
+import Composestar.Core.SECRET3.FilterSetAnalysis;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Config.OperationSequence;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.OperationSequence.GraphLabel;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -90,8 +90,8 @@ public class XMLReport implements SECRETReport
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CKRET.Report.SECRETReport#report(Composestar.Core.Resources
-	 * .CommonResources, Composestar.Core.CKRET.SECRETResources)
+	 * Composestar.Core.SECRET3.Report.SECRETReport#report(Composestar.Core.Resources
+	 * .CommonResources, Composestar.Core.SECRET3.SECRETResources)
 	 */
 	public void report(CommonResources resources, SECRETResources secretResources)
 	{

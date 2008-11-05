@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import Composestar.Core.CKRET.SECRETResources;
+import Composestar.Core.SECRET3.SECRETResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

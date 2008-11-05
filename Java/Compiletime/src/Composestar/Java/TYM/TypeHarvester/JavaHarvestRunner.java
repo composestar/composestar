@@ -12,14 +12,14 @@ import java.util.jar.JarEntry;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.CKRET.CKRET;
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SECRET3.SECRET;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.Xml.XmlConfiguration;
 import Composestar.Java.COMP.CStarJavaCompiler;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -70,7 +70,7 @@ public class JavaHarvestRunner implements CTCommonModule
 				classes.addAll(jarh.getClasses());
 				for (JarEntry je : jarh.getResources())
 				{
-					if (je.getName().equalsIgnoreCase(CKRET.CONFIG_NAME))
+					if (je.getName().equalsIgnoreCase(SECRET.CONFIG_NAME))
 					{
 						logger.info(String.format("Loading secret config from %s", jarFile.toString()));
 						try

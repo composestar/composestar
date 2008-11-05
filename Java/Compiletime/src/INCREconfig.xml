@@ -42,7 +42,7 @@
 	<module fulltype="Composestar.Core.CORE2.Core" />
 	<module fulltype="Composestar.Core.SIGN2.Sign" />
 	<module fulltype="Composestar.Core.DIGGER2.DIGGER" />
-	<module fulltype="Composestar.Core.CKRET.CKRET" />
+	<module fulltype="Composestar.Core.SECRET3.SECRET" />
 	<module name="ASTRA" fulltype="Composestar.Java.TYM.SignatureTransformer.JavaSignatureTransformer" enabled="true"
 		incremental="false" summary="">
 		<dependencies></dependencies>

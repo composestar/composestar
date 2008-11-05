@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET;
+package Composestar.Core.SECRET3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,10 +33,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import Composestar.Core.CKRET.Config.OperationSequence;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
-import Composestar.Core.CKRET.Config.OperationSequence.LabelType;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;
@@ -46,6 +42,10 @@ import Composestar.Core.FIRE2.util.regex.LabelSequence;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.MatcherEx;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.SECRET3.Config.OperationSequence;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.OperationSequence.GraphLabel;
+import Composestar.Core.SECRET3.Config.OperationSequence.LabelType;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

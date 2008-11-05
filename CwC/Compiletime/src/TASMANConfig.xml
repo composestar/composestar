@@ -18,6 +18,6 @@
 	<module class="Composestar.Core.DIGGER2.DIGGER" />
 	<module class="Composestar.Core.INLINE.lowlevel.ModelBuilder" />
 	<module class="Composestar.CwC.WEAVER.CwCWeaver" />
-	<module class="Composestar.Core.CKRET.CKRET" />
+	<module class="Composestar.Core.SECRET3.SECRET" />
 	<!-- CwC.LAMA is not very serializable <module class="Composestar.Core.INCRE.INCRESerializer" />-->
 </tasks>

@@ -21,7 +21,7 @@
  *
  * $Id$
  */
-package Composestar.Core.CKRET.Config;
+package Composestar.Core.SECRET3.Config;
 
 /**
  * The resource type.

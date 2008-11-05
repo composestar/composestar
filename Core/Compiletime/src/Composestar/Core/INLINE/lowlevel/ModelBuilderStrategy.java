@@ -30,9 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import Composestar.Core.CKRET.ConcernAnalysis;
-import Composestar.Core.CKRET.Conflict;
-import Composestar.Core.CKRET.FilterSetAnalysis;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
 import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
@@ -56,6 +53,9 @@ import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.SECRET3.ConcernAnalysis;
+import Composestar.Core.SECRET3.Conflict;
+import Composestar.Core.SECRET3.FilterSetAnalysis;
 import Composestar.Utils.StringUtils;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy

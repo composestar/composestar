@@ -19,8 +19,6 @@ import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
@@ -42,6 +40,8 @@ import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.ConflictRule;
 import Composestar.DotNET2.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET2.LAMA.DotNETMethodInfo;
 import Composestar.DotNET2.LAMA.DotNETType;

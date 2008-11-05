@@ -26,10 +26,10 @@ package Composestar.CwC.Filters;
 
 import java.util.Collection;
 
-import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.COPPER3.FilterTypeFactory;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
+import Composestar.Core.SECRET3.SECRETResources;
 
 /**
  * Interface for custom CFilters. This class will be used to register

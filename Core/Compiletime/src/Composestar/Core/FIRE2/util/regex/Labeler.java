@@ -7,9 +7,9 @@ package Composestar.Core.FIRE2.util.regex;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.SECRET3.Config.Resource;
 
 /**
  * Interface used by SECRET to label nodes in the FIRE execution model for

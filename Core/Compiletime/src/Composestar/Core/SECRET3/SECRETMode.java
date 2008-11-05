@@ -21,24 +21,25 @@
  *
  * $Id$
  */
-
-package Composestar.Core.CKRET.Report;
-
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.Resources.CommonResources;
+package Composestar.Core.SECRET3;
 
 /**
- * Generic interface for SECRET Report generators
- * 
- * @author Michiel Hendriks
+ * The module SECRET performs its analysis in
  */
-public interface SECRETReport
+public enum SECRETMode
 {
+
 	/**
-	 * Produce the report for the provided SECRET resources.
-	 * 
-	 * @param resources
-	 * @param secretResources
+	 * Only check the selected filter module
 	 */
-	void report(CommonResources resources, SECRETResources secretResources);
+	Normal,
+	/**
+	 * Also check all other filter module orders
+	 */
+	Redundant,
+	/**
+	 * Like Redundant but this will also update the current filter module order
+	 * to the one that does not contain a conflict.
+	 */
+	Progressive
 }

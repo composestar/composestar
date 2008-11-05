@@ -32,8 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
@@ -56,6 +54,8 @@ import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.ResourceType;
 
 /**
  * The inlining engine which also uses lowlevel constructs like jumps. This

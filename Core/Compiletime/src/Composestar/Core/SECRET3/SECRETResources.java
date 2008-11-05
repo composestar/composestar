@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET;
+package Composestar.Core.SECRET3;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,18 +38,18 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.MetaResource;
-import Composestar.Core.CKRET.Config.OperationSequence;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
-import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.ModuleResourceManager;
+import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Config.MetaResource;
+import Composestar.Core.SECRET3.Config.OperationSequence;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.ResourceType;
+import Composestar.Core.SECRET3.Config.OperationSequence.GraphLabel;
 
 /**
  * Resource manager for SECRET

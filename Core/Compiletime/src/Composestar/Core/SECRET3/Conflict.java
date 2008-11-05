@@ -7,15 +7,15 @@
  *
  * $Id$
  */
-package Composestar.Core.CKRET;
+package Composestar.Core.SECRET3;
 
 import java.io.Serializable;
 import java.util.List;
 
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Config.Resource;
 
 /**
  * A detected conflict. Conflicts are associated with a selector to a filterset,

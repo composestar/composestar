@@ -22,7 +22,7 @@
 	<parallel perprocessor="1">
 		<!-- 
 		<module class="Composestar.Core.DIGGER2.DIGGER" />
-		<module class="Composestar.Core.CKRET.CKRET" />
+		<module class="Composestar.Core.SECRET3.SECRET" />
 	 -->
 		<sequential>
 			<module class="Composestar.Java.TYM.SignatureTransformer.JavaSignatureTransformer" />

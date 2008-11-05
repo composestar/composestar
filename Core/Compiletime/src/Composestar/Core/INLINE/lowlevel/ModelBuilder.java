@@ -32,8 +32,6 @@ import java.util.Set;
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.CKRET.ConcernAnalysis;
-import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
@@ -52,6 +50,8 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SECRET3.ConcernAnalysis;
+import Composestar.Core.SECRET3.SECRETResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

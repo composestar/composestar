@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET.Config;
+package Composestar.Core.SECRET3.Config;
 
 import java.util.Collection;
 import java.util.Set;
@@ -52,7 +52,7 @@ public final class MetaResource extends Resource
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.CKRET.Config.Resource#addVocabulary(java.util.Collection)
+	 * @see Composestar.Core.SECRET3.Config.Resource#addVocabulary(java.util.Collection)
 	 */
 	@Override
 	public void addVocabulary(Collection<String> words)
@@ -63,7 +63,7 @@ public final class MetaResource extends Resource
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.CKRET.Config.Resource#addVocabulary(java.lang.String)
+	 * @see Composestar.Core.SECRET3.Config.Resource#addVocabulary(java.lang.String)
 	 */
 	@Override
 	public void addVocabulary(String word)
@@ -74,7 +74,7 @@ public final class MetaResource extends Resource
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.CKRET.Config.Resource#clearVocabulary()
+	 * @see Composestar.Core.SECRET3.Config.Resource#clearVocabulary()
 	 */
 	@Override
 	public void clearVocabulary()
@@ -85,7 +85,7 @@ public final class MetaResource extends Resource
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.CKRET.Config.Resource#equals(java.lang.Object)
+	 * @see Composestar.Core.SECRET3.Config.Resource#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj)
@@ -120,7 +120,7 @@ public final class MetaResource extends Resource
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.CKRET.Config.Resource#getVocabulary()
+	 * @see Composestar.Core.SECRET3.Config.Resource#getVocabulary()
 	 */
 	@Override
 	public Set<String> getVocabulary()
@@ -131,7 +131,7 @@ public final class MetaResource extends Resource
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.CKRET.Config.Resource#hashCode()
+	 * @see Composestar.Core.SECRET3.Config.Resource#hashCode()
 	 */
 	@Override
 	public int hashCode()
@@ -142,7 +142,7 @@ public final class MetaResource extends Resource
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.CKRET.Config.Resource#toString()
+	 * @see Composestar.Core.SECRET3.Config.Resource#toString()
 	 */
 	@Override
 	public String toString()

@@ -7,7 +7,7 @@
  *
  * $Id$
  */
-package Composestar.Core.CKRET;
+package Composestar.Core.SECRET3;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,9 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator;
@@ -38,6 +35,9 @@ import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.MatcherEx;
 import Composestar.Core.FIRE2.util.regex.AbstractMatcher.MatchTrace;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.ResourceType;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

@@ -34,13 +34,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.COPPER3.FilterTypeFactory;
 import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.CpsRepository2.Filters.FilterTypeNames;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SECRET3.SECRETResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

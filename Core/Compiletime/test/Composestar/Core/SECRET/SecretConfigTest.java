@@ -28,11 +28,11 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.BasicConfigurator;
 
-import Composestar.Core.CKRET.CKRET;
-import Composestar.Core.CKRET.ResourceOperationLabelerEx;
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.Exception.ConfigurationException;
+import Composestar.Core.SECRET3.SECRET;
+import Composestar.Core.SECRET3.ResourceOperationLabelerEx;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.Xml.XmlConfiguration;
 
 /**
  * @author Michiel Hendriks
@@ -67,7 +67,7 @@ public class SecretConfigTest extends TestCase
 
 	public void testLoading() throws ConfigurationException
 	{
-		XmlConfiguration.loadBuildConfig(CKRET.class.getResourceAsStream("SECRETConfig.xml"), resources);
+		XmlConfiguration.loadBuildConfig(SECRET.class.getResourceAsStream("SECRETConfig.xml"), resources);
 		resources.setLabeler(new ResourceOperationLabelerEx(resources));
 	}
 

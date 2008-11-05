@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET.Config;
+package Composestar.Core.SECRET3.Config;
 
 import java.io.Serializable;
 import java.util.ArrayList;

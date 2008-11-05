@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET.Config.Xml;
+package Composestar.Core.SECRET3.Config.Xml;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,10 +38,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.SECRET3.SECRETResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

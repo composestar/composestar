@@ -28,11 +28,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
-import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
 import Composestar.Core.COPPER3.FilterTypeFactory;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
@@ -40,6 +35,11 @@ import Composestar.Core.CpsRepository2Impl.Filters.FilterActionImpl;
 import Composestar.Core.CpsRepository2Impl.Filters.PrimitiveFilterTypeImpl;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.ResourceType;
+import Composestar.Core.SECRET3.Config.ConflictRule.RuleType;
 import Composestar.CwC.Filters.CustomCwCFilters;
 
 /**

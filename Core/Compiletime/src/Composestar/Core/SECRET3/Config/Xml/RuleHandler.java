@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET.Config.Xml;
+package Composestar.Core.SECRET3.Config.Xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -30,13 +30,13 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
-import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.ResourceType;
+import Composestar.Core.SECRET3.Config.ConflictRule.RuleType;
 
 /**
  * Processes XML &lt;rule&gt; declarations in the SECRET configuration

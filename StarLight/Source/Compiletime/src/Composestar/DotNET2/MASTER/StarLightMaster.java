@@ -14,11 +14,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Map.Entry;
 
-import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
-import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
@@ -26,6 +21,11 @@ import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SECRET3.SECRETResources;
+import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.ResourceType;
+import Composestar.Core.SECRET3.Config.ConflictRule.RuleType;
 
 import composestar.dotNET2.tym.entities.ArrayOfKeyValueSetting;
 import composestar.dotNET2.tym.entities.ConfigurationContainer;

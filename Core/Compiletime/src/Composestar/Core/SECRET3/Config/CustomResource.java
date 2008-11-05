@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET.Config;
+package Composestar.Core.SECRET3.Config;
 
 import java.util.Collection;
 
@@ -76,7 +76,7 @@ public class CustomResource extends Resource
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.CKRET.Config.Resource#getName()
+	 * @see Composestar.Core.SECRET3.Config.Resource#getName()
 	 */
 	@Override
 	public String getName()

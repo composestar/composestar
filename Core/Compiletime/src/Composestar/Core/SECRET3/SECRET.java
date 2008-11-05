@@ -7,7 +7,7 @@
  *
  * $Id$
  */
-package Composestar.Core.CKRET;
+package Composestar.Core.SECRET3;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,13 +23,6 @@ import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Annotations.ComposestarModule.Importance;
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.OperationSequence;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
-import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
-import Composestar.Core.CKRET.Report.SECRETReport;
-import Composestar.Core.CKRET.Report.XMLReport;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
@@ -41,6 +34,13 @@ import Composestar.Core.FIRE2.util.regex.RegularTransition;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Config.OperationSequence;
+import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Config.ResourceType;
+import Composestar.Core.SECRET3.Config.Xml.XmlConfiguration;
+import Composestar.Core.SECRET3.Report.SECRETReport;
+import Composestar.Core.SECRET3.Report.XMLReport;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
 import Composestar.Utils.Perf.CPSTimer;
@@ -68,7 +68,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * matches against the sequences of operations performed on the resources.
  */
 @ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE }, importance = Importance.ADVISING)
-public class CKRET implements CTCommonModule
+public class SECRET implements CTCommonModule
 {
 	public static final String CONFIG_NAME = "SECRETConfig.xml";
 
@@ -219,7 +219,7 @@ public class CKRET implements CTCommonModule
 		else
 		{
 			logger.debug("Loading internal SECRET configuration");
-			XmlConfiguration.loadBuildConfig(CKRET.class.getResourceAsStream(CONFIG_NAME), secretResources);
+			XmlConfiguration.loadBuildConfig(SECRET.class.getResourceAsStream(CONFIG_NAME), secretResources);
 		}
 
 		if (resources.configuration().getSecretResources() != null)
