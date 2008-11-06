@@ -24,7 +24,8 @@
 package Composestar.Core.CpsRepository2.Signatures;
 
 /**
- * TODO description
+ * The status of the method in the signature. Used by SIGN and FIRE for
+ * signature matching
  */
 public enum MethodStatus
 {

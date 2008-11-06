@@ -185,8 +185,8 @@ public class FireModel
 			// TODO: error
 		}
 		// TODO: needs to be improved
-		selfObject = new CpsObjectImpl(concern.getTypeReference());
-		innerObject = new CpsObjectImpl(concern.getTypeReference(), true);
+		selfObject = new CpsObjectImpl(concern.getTypeReference(), CpsObjectImpl.CpsObjectType.SELF);
+		innerObject = new CpsObjectImpl(concern.getTypeReference(), CpsObjectImpl.CpsObjectType.INNER);
 		initialize(order.toArray(new ImposedFilterModule[order.size()]), resources);
 	}
 

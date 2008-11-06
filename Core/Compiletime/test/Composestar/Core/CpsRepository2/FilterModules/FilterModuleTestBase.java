@@ -676,6 +676,16 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 		{
 			return false;
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isSelfObject()
+		 */
+		public boolean isSelfObject()
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -768,6 +778,16 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 		 * (Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
 		 */
 		public boolean compatible(CpsVariable other) throws UnsupportedOperationException
+		{
+			return false;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isSelfObject()
+		 */
+		public boolean isSelfObject()
 		{
 			return false;
 		}

@@ -1,3 +1,26 @@
+/*
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
+ */
 package Composestar.DotNET2.TYM.RepositoryCollector;
 
 import java.io.File;
@@ -15,11 +38,19 @@ import java.util.zip.GZIPInputStream;
 import org.apache.xmlbeans.XmlException;
 
 import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.CpsConcern;
+import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2.Filters.FilterAction.FlowBehavior;
+import Composestar.Core.CpsRepository2.Meta.FileInformation;
+import Composestar.Core.CpsRepository2.Meta.SourceInformation;
+import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
+import Composestar.Core.CpsRepository2Impl.Filters.FilterActionImpl;
+import Composestar.Core.CpsRepository2Impl.Filters.PrimitiveFilterTypeImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.CallToOtherMethod;
@@ -60,6 +91,9 @@ import composestar.dotNET2.tym.entities.MethodElement;
 import composestar.dotNET2.tym.entities.ParameterElement;
 import composestar.dotNET2.tym.entities.TypeElement;
 
+/**
+ * Reads the type information from the XML files
+ */
 @ComposestarModule(ID = ModuleNames.COLLECTOR)
 public class StarLightCollectorRunner implements CTCommonModule
 {
@@ -79,9 +113,12 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 	protected Map<String, Type> typeMap;
 
+	protected ReferenceManager refman;
+
 	public ModuleReturnValue run(CommonResources resc) throws ModuleException
 	{
 		resources = resc;
+		refman = resc.get(ReferenceManager.RESOURCE_KEY);
 		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
 		if (register == null)
 		{
@@ -110,6 +147,57 @@ public class StarLightCollectorRunner implements CTCommonModule
 		return ModuleReturnValue.Ok;
 	}
 
+	/**
+	 * Convert the integer to a flow behavior value
+	 * 
+	 * @param value
+	 * @return
+	 */
+	private FlowBehavior getFlowBehavior(int value)
+	{
+		// see Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute.
+		// FilterFlowBehavior
+		switch (value)
+		{
+			case 1:
+				return FlowBehavior.EXIT;
+			case 2:
+				return FlowBehavior.RETURN;
+			default:
+				return FlowBehavior.CONTINUE;
+		}
+	}
+
+	/**
+	 * @param value
+	 * @return
+	 */
+	private FlowBehavior getFlowBehavior(String value)
+	{
+		if ("exit".equalsIgnoreCase(value))
+		{
+			return FlowBehavior.EXIT;
+		}
+		else if ("return".equalsIgnoreCase(value))
+		{
+			return FlowBehavior.RETURN;
+		}
+		else
+		{
+			return FlowBehavior.CONTINUE;
+		}
+	}
+
+	/**
+	 * @param value
+	 * @return
+	 */
+	private JoinPointContextArgument getJPCA(boolean value)
+	{
+		if (value) return JoinPointContextArgument.FULL;
+		else return JoinPointContextArgument.UNUSED;
+	}
+
 	private void collectFilterTypesAndActions() throws ModuleException
 	{
 		long starttime = System.currentTimeMillis();
@@ -122,12 +210,12 @@ public class StarLightCollectorRunner implements CTCommonModule
 		List<FilterActionElement> storedActions = configContainer.getFilterActions().getFilterActionList();
 		for (FilterActionElement storedAction : storedActions)
 		{
-			FilterAction filterAction = new FilterAction();
-			filterAction.setName(storedAction.getName());
-			filterAction.setFullName(storedAction.getFullName());
-			filterAction.setFlowBehaviour(storedAction.getFlowBehavior());
-			filterAction.setMessageChangeBehaviour(storedAction.getMessageChangeBehavior());
+			FilterActionImpl filterAction = new FilterActionImpl(storedAction.getName(), storedAction.getFullName());
+			filterAction.setFlowBehavior(getFlowBehavior(storedAction.getFlowBehavior()));
+			// filterAction.setMessageChangeBehaviour(storedAction.
+			// getMessageChangeBehavior());
 			filterAction.setResourceOperations(storedAction.getResourceOperations());
+			filterAction.setJoinPointContextArgument(getJPCA(storedAction.getCreateJPC()));
 
 			actionMapping.put(filterAction.getName(), filterAction);
 		}
@@ -136,8 +224,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 		List<FilterTypeElement> storedTypes = configContainer.getFilterTypes().getFilterTypeList();
 		for (FilterTypeElement storedType : storedTypes)
 		{
-			FilterType filterType = new FilterType();
-			filterType.setType(storedType.getName());
+			PrimitiveFilterTypeImpl filterType = new PrimitiveFilterTypeImpl(storedType.getName());
 
 			// get acceptCallAction:
 			FilterAction acceptCallAction = actionMapping.get(storedType.getAcceptCallAction());
@@ -294,33 +381,36 @@ public class StarLightCollectorRunner implements CTCommonModule
 			}
 
 			// Add type to repository as primitive concern
+
+			TypeReference tref = refman.getTypeReference(type.getFullName());
+			tref.setReference(type);
+
 			Concern pc = null;
-			Object o = resources.repository().getObjectByID(type.getFullName());
+			RepositoryEntity o = resources.repository().get(type.getFullName(), Concern.class);
 			if (o instanceof CpsConcern)
 			{
 				pc = (Concern) o;
-				if (pc.getPlatformRepresentation() != null)
+				if (pc.getTypeReference() != null)
 				{
-					type.setParentConcern(pc);
+					type.setConcern(pc);
 					logger.error(String.format("CpsConcern %s is already bound to a platform representation", pc
-							.getQualifiedName()));
+							.getFullyQualifiedName()));
 					continue;
 				}
 			}
 			if (pc == null)
 			{
-				pc = new PrimitiveConcern();
+				pc = new PrimitiveConcern(type.getFullName().split("\\."));
 				Composestar.Core.Config.Source typeSource = resources.configuration().getProject().getTypeMapping()
 						.getSource(type.getFullName());
 				if (typeSource != null)
 				{
-					pc.setDescriptionFileName(typeSource.getFile().toString());
+					pc.setSourceInformation(new SourceInformation(new FileInformation(typeSource.getFile())));
 				}
-				pc.setName(type.getFullName());
-				resources.repository().addObject(type.getFullName(), pc);
+				resources.repository().add(pc);
 			}
-			pc.setPlatformRepresentation(type);
-			type.setParentConcern(pc);
+			pc.setTypeReference(tref);
+			type.setConcern(pc);
 
 			// logger.debug("Adding primitive concern '" + pc.getName() + "'");
 		}
@@ -358,25 +448,26 @@ public class StarLightCollectorRunner implements CTCommonModule
 			// Add this attribute type to the repository as a primitive
 			// concern
 			Concern pc_attribute = null;
-			Object o = resources.repository().getObjectByID(attributeType.getFullName());
+			RepositoryEntity o = resources.repository().get(attributeType.getFullName());
 			if (o instanceof CpsConcern)
 			{
 				pc_attribute = (Concern) o;
-				if (pc_attribute.getPlatformRepresentation() != null)
+				if (pc_attribute.getTypeReference() != null)
 				{
-					attributeType.setParentConcern(pc_attribute);
+					attributeType.setConcern(pc_attribute);
 					logger.error(String.format("CpsConcern %s is already bound to a platform representation",
-							pc_attribute.getQualifiedName()));
+							pc_attribute.getFullyQualifiedName()));
 				}
 			}
 			if (pc_attribute == null)
 			{
-				pc_attribute = new PrimitiveConcern();
-				pc_attribute.setName(attributeType.getFullName());
-				resources.repository().addObject(attributeType.getFullName(), pc_attribute);
+				pc_attribute = new PrimitiveConcern(attributeType.getFullName().split("\\."));
+				resources.repository().add(pc_attribute);
 			}
-			pc_attribute.setPlatformRepresentation(attributeType);
-			attributeType.setParentConcern(pc_attribute);
+			TypeReference tref = refman.getTypeReference(annotation.getTypeName());
+			tref.setReference(attributeType);
+			pc_attribute.setTypeReference(tref);
+			attributeType.setConcern(pc_attribute);
 
 			// Add this attribute type to the list of added types
 			newAttributeTypes.put(attributeType.getFullName(), attributeType);
@@ -485,7 +576,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 			// Set value for this attribute
 			// if (ae.getValues().sizeOfValueArray() >= 1)
 			// {
-			// attribute.setStringValue(ae.getValues().getValueArray(0).getValue());
+			//attribute.setStringValue(ae.getValues().getValueArray(0).getValue(
+			// ));
 			// }
 
 			for (AttributeValueElement val : ae.getValues().getValueList())

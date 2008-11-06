@@ -17,9 +17,9 @@ import java.util.Map.Entry;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
+import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.Master.Master;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SECRET3.SECRETResources;
 import Composestar.Core.SECRET3.Config.ConflictRule;
@@ -69,7 +69,6 @@ public class StarLightMaster extends Master
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Master.Master#loadConfiguration()
 	 */
 	@Override
@@ -102,7 +101,7 @@ public class StarLightMaster extends Master
 		setLogLevel(getSettingValue("buildDebugLevel"));
 
 		resources = new CommonResources();
-		resources.setRepository(DataStore.instance());
+		resources.setRepository(new RepositoryImpl());
 		resources.put(RESOURCE_CONFIGFILE, configFilename);
 		resources.put(RESOURCE_CONFIGCONTAINER, configContainer);
 		resources.setPathResolver(getPathResolver());
@@ -208,7 +207,6 @@ public class StarLightMaster extends Master
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Master.Master#postBuild()
 	 */
 	@Override

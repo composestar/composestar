@@ -13,7 +13,8 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
  * This represents one single possible set of filtermodules as they may be
  * superimposed.
  */
-public class FilterModSIinfo extends ContextRepositoryEntity implements AbstractSIinfo
+@Deprecated
+public class FilterModSIinfo extends ContextRepositoryEntity
 {
 	private static final long serialVersionUID = -4721833069236805491L;
 
@@ -37,7 +38,8 @@ public class FilterModSIinfo extends ContextRepositoryEntity implements Abstract
 	 * get a superimposed filter module through its name
 	 * 
 	 * @param name
-	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.
+	 *         FilterModule
 	 * @roseuid 405986F50195
 	 */
 	public FilterModuleSuperImposition getByName(String name)

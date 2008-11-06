@@ -155,4 +155,13 @@ public class InternalImpl extends AbstractQualifiedRepositoryEntity implements I
 		}
 		return getProgramElement().equals(o.getProgramElement());
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isSelfObject()
+	 */
+	public boolean isSelfObject()
+	{
+		return false;
+	}
 }

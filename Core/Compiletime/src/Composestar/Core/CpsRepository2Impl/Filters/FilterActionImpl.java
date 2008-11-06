@@ -43,6 +43,11 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 	protected String name;
 
 	/**
+	 * The system name
+	 */
+	protected String systemName;
+
+	/**
 	 * The flow behavior
 	 */
 	protected FlowBehavior flowBehavior = FlowBehavior.CONTINUE;
@@ -60,11 +65,14 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 	protected JoinPointContextArgument joinPointContextArgument = JoinPointContextArgument.UNUSED;
 
 	/**
+	 * Create a filter action with a set system name
+	 * 
 	 * @param actionName
-	 * @throws NullPointerException
+	 * @param sysName
+	 * @throws NullPointerException Throw when the action name is null
 	 * @throws IllegalArgumentException
 	 */
-	public FilterActionImpl(String actionName) throws NullPointerException, IllegalArgumentException
+	public FilterActionImpl(String actionName, String sysName) throws NullPointerException, IllegalArgumentException
 	{
 		super();
 		if (actionName == null)
@@ -76,6 +84,17 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 			throw new IllegalArgumentException("filter action name cannot be empty");
 		}
 		name = actionName;
+		systemName = sysName;
+	}
+
+	/**
+	 * @param actionName
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
+	 */
+	public FilterActionImpl(String actionName) throws NullPointerException, IllegalArgumentException
+	{
+		this(actionName, null);
 	}
 
 	/*
@@ -105,6 +124,15 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 	public String getName()
 	{
 		return name;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.Filters.FilterAction#getSystemName()
+	 */
+	public String getSystemName()
+	{
+		return systemName;
 	}
 
 	/*

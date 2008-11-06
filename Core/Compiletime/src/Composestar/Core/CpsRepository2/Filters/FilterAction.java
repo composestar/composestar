@@ -45,6 +45,13 @@ public interface FilterAction extends RepositoryEntity
 	String getName();
 
 	/**
+	 * @return The full- or system name of this filter action. This is often a
+	 *         fully qualified class named. Returns null when no system name is
+	 *         defined.
+	 */
+	String getSystemName();
+
+	/**
 	 * @return the flow behavior of the filter
 	 */
 	FlowBehavior getFlowBehavior();

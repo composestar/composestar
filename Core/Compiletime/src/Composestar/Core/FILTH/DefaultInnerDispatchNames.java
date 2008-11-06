@@ -23,6 +23,7 @@ package Composestar.Core.FILTH;
  * 
  * @author Michiel Hendriks
  */
+@Deprecated
 public final class DefaultInnerDispatchNames
 {
 	public static final String CONCERN = "CpsDefaultInnerDispatchConcern";

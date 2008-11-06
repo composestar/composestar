@@ -181,12 +181,8 @@
 			</copy>
 
 			<copy todir="@{todir}/Binaries">
-				<fileset dir="${build.core}/Compiletime/lib/groove">
-					<include name="groove-1_2_0.jar" />
-					<include name="castor-0_9_5_2-xml.jar" />
-					<include name="jgraph.jar" />
-					<include name="xerces-2_6_0-xercesImpl.jar" />
-					<include name="xerces-2_6_0-xml-apis.jar" />
+				<fileset dir="${build.core}/Compiletime/lib/groove3">
+					<include name="*.jar" />
 				</fileset>
 			</copy>
 		</sequential>

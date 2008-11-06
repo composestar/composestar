@@ -22,8 +22,9 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.References;
+package Composestar.Core.CpsRepository2Impl.References;
 
+import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.LAMA.Type;
 
 /**

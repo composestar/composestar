@@ -69,5 +69,10 @@ namespace Composestar.StarLight.CpsParser
         {
             return ta.Create(token, text);
         }
+
+        protected Object adaptorCreate(ITreeAdaptor ta, int token, String text, IToken baset)
+        {
+            return ta.Create(token, baset, text);
+        }
     }
 }

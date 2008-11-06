@@ -21,7 +21,7 @@ import Composestar.Core.SANE.FilterModuleSuperImposition;
 // This class is referenced in the Compose* Runtime for .NET 1.1
 // Do not use Java features added after Java 2.0
 //
-
+@Deprecated
 public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
 {
 	private static final long serialVersionUID = 4642012441159613281L;
@@ -85,8 +85,8 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	 * Returns a list of the filter modules in this FilterModuleOrder as a list
 	 * of qualified names.
 	 * 
-	 * @deprecated The method <code>filterModuleSIList()</code> should be
-	 *             used, which returns a list of FilterModuleSuperImpositions.
+	 * @deprecated The method <code>filterModuleSIList()</code> should be used,
+	 *             which returns a list of FilterModuleSuperImpositions.
 	 */
 	public List orderAsList()
 	{
@@ -106,7 +106,6 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode()
@@ -116,7 +115,6 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o)
@@ -132,7 +130,6 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()

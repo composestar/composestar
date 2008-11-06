@@ -635,7 +635,8 @@ public class Sign implements CTCommonModule
 									CanonProperty prop = (CanonProperty) var;
 									if (PropertyNames.INNER.equals(prop.getName()))
 									{
-										matchTarget = new CpsObjectImpl(concern.getTypeReference(), true);
+										matchTarget = new CpsObjectImpl(concern.getTypeReference(),
+												CpsObjectImpl.CpsObjectType.INNER);
 									}
 									else if (PropertyPrefix.MESSAGE == prop.getPrefix())
 									{

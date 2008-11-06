@@ -156,6 +156,20 @@ tokens {
 @lexer::namespace {Composestar.StarLight.CpsParser}
 @parser::namespace {Composestar.StarLight.CpsParser}
 
+@lexer::members {
+	int hereDocStart;
+	void startHereDoc()
+	{
+		@Java@hereDocStart = getCharIndex();
+		@CSharp@hereDocStart = CharIndex;
+	}
+	void endHereDoc()
+	{
+		@Java@setText(input.substring(hereDocStart, getCharIndex()));
+		@CSharp@Text = input.Substring(hereDocStart, CharIndex);
+	}
+}
+
 
 /**
  * Start of a CPS source file. It will always start with a concern declaration.
@@ -989,7 +1003,7 @@ fragment LIT_INTERNAL 	: (LIT_ESC | '\t' | '\r' | '\n' | ~('\u0000'..'\u001f' | 
 fragment LIT_ESC 		: '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\');
 
 // not really heredoc, but almost
-HEREDOC : '<<ASIS' {int mystart = getCharIndex();} (' '|'\n'|'\r') .* ('\n'|'\r') { setText(input.substring(mystart, getCharIndex())); } 'ASIS;';
+HEREDOC : '<<ASIS' {startHereDoc();} (' '|'\n'|'\r') .* ('\n'|'\r') { endHereDoc(); } 'ASIS;';
 
 // Whitespace
 WS : (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};

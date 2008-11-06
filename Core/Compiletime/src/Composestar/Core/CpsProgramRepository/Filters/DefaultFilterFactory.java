@@ -10,7 +10,6 @@
 
 package Composestar.Core.CpsProgramRepository.Filters;
 
-import Composestar.Core.COPPER2.FilterTypeMapping;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -42,20 +41,12 @@ public class DefaultFilterFactory
 
 	protected FilterAction metaAction;
 
-	protected FilterTypeMapping mapping;
-
 	protected DataStore repository;
 
 	protected boolean allowLegacyCustom;
 
 	public DefaultFilterFactory(DataStore repo)
 	{
-		repository = repo;
-	}
-
-	public DefaultFilterFactory(FilterTypeMapping ftm, DataStore repo)
-	{
-		mapping = ftm;
 		repository = repo;
 	}
 
@@ -69,16 +60,6 @@ public class DefaultFilterFactory
 	{
 		allowLegacyCustom = true;
 		createFilterTypes(LEGACY);
-	}
-
-	public void setTypeMapping(FilterTypeMapping tm)
-	{
-		mapping = tm;
-	}
-
-	public FilterTypeMapping getTypeMapping()
-	{
-		return mapping;
 	}
 
 	public void setAllowLegacyCustomFilters(boolean value)
@@ -176,10 +157,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.CUSTOM, e);
 		}
 		repository.addObject(custom);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(custom);
-		}
 		return custom;
 	}
 
@@ -333,10 +310,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.DISPATCH, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 
 	public void addSendFilterType() throws UnsupportedFilterTypeException
@@ -355,10 +328,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.SEND, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 
 	public void addMetaFilterType() throws UnsupportedFilterTypeException
@@ -377,10 +346,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.META, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 
 	public void addErrorFilterType() throws UnsupportedFilterTypeException
@@ -399,10 +364,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.ERROR, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 
 	public void addBeforeFilterType() throws UnsupportedFilterTypeException
@@ -421,10 +382,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.BEFORE, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 
 	public void addAfterFilterType() throws UnsupportedFilterTypeException
@@ -443,10 +400,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.AFTER, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 
 	public void addSubstitutionFilterType() throws UnsupportedFilterTypeException
@@ -465,10 +418,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.SUBSTITUTION, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 
 	public void addPrependFilterType() throws UnsupportedFilterTypeException
@@ -487,10 +436,6 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.PREPEND, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 
 	public void addAppendFilterType() throws UnsupportedFilterTypeException
@@ -509,9 +454,5 @@ public class DefaultFilterFactory
 			throw new UnsupportedFilterTypeException(FilterTypeNames.APPEND, e);
 		}
 		repository.addObject(type);
-		if (mapping != null)
-		{
-			mapping.registerFilterType(type);
-		}
 	}
 }

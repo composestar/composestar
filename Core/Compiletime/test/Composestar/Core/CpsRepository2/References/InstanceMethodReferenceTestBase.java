@@ -167,5 +167,15 @@ public abstract class InstanceMethodReferenceTestBase extends MethodReferenceTes
 		{
 			return false;
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isSelfObject()
+		 */
+		public boolean isSelfObject()
+		{
+			return false;
+		}
 	}
 }

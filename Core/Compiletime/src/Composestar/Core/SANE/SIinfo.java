@@ -12,6 +12,7 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 /**
  * [this aggregate is necessary to enable the inclusion of alternatives]
  */
+@Deprecated
 public class SIinfo extends ContextRepositoryEntity
 {
 	public static final String DATAMAP_KEY = "superImpInfo";

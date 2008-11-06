@@ -183,4 +183,13 @@ public class ExternalImpl extends AbstractQualifiedRepositoryEntity implements E
 		}
 		return getProgramElement().equals(o.getProgramElement());
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isSelfObject()
+	 */
+	public boolean isSelfObject()
+	{
+		return false;
+	}
 }

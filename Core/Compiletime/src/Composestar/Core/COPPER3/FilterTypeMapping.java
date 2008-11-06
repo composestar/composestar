@@ -40,7 +40,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-// FIXME: create default filter stuff ...
 public class FilterTypeMapping
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER + ".FilterTypes");

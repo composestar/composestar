@@ -36,10 +36,15 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 {
 	private static final long serialVersionUID = -5151470511518075199L;
 
+	public enum CpsObjectType
+	{
+		NORMAL, INNER, SELF
+	}
+
 	/**
-	 * If true this object represents an inner object
+	 * The type of object this is
 	 */
-	protected boolean innerObject;
+	protected CpsObjectType objectType = CpsObjectType.NORMAL;
 
 	/**
 	 * @param type
@@ -47,18 +52,18 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 	 */
 	public CpsObjectImpl(Type type) throws NullPointerException
 	{
-		this(type, false);
+		this(type, CpsObjectType.NORMAL);
 	}
 
 	/**
 	 * @param type
-	 * @param isInner TODO
+	 * @param objType The type of object this is
 	 * @throws NullPointerException
 	 */
-	public CpsObjectImpl(Type type, boolean isInner) throws NullPointerException
+	public CpsObjectImpl(Type type, CpsObjectType objType) throws NullPointerException
 	{
 		super(type);
-		innerObject = isInner;
+		objectType = objType;
 	}
 
 	/**
@@ -67,18 +72,18 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 	 */
 	public CpsObjectImpl(TypeReference ref) throws NullPointerException
 	{
-		this(ref, false);
+		this(ref, CpsObjectType.NORMAL);
 	}
 
 	/**
 	 * @param ref
-	 * @param isInner TODO
+	 * @param objType The type of object to create
 	 * @throws NullPointerException
 	 */
-	public CpsObjectImpl(TypeReference ref, boolean isInner) throws NullPointerException
+	public CpsObjectImpl(TypeReference ref, CpsObjectType objType) throws NullPointerException
 	{
 		super(ref);
-		innerObject = isInner;
+		objectType = objType;
 	}
 
 	/*
@@ -87,7 +92,16 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 	 */
 	public boolean isInnerObject()
 	{
-		return innerObject;
+		return objectType == CpsObjectType.INNER;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isSelfObject()
+	 */
+	public boolean isSelfObject()
+	{
+		return objectType == CpsObjectType.SELF;
 	}
 
 	/*
@@ -107,13 +121,24 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 		return super.compatible(other);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.TypeSystem.CpsTypeProgramElementImpl
+	 * #toString()
+	 */
 	@Override
 	public String toString()
 	{
-		if (innerObject)
+		if (objectType == CpsObjectType.INNER)
 		{
 			return "[inner] " + super.toString();
 		}
+		if (objectType == CpsObjectType.SELF)
+		{
+			return "[self] " + super.toString();
+		}
 		return super.toString();
 	}
+
 }

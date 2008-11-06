@@ -1,23 +1,45 @@
+/*
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
+ */
 package Composestar.DotNET2.TYM.RepositoryEmitter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
+import Composestar.Core.CpsRepository2.PropertyNames;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.FilterElements.MECondition;
+import Composestar.Core.CpsRepository2.FilterElements.MELiteral;
+import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2Impl.FilterElements.AndMEOper;
+import Composestar.Core.CpsRepository2Impl.FilterElements.NotMEOper;
+import Composestar.Core.CpsRepository2Impl.FilterElements.OrMEOper;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.FilterActionInstruction;
@@ -26,8 +48,6 @@ import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.INLINE.model.Visitor;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 
 import composestar.dotNET2.tym.entities.AndCondition;
 import composestar.dotNET2.tym.entities.ConditionLiteral;
@@ -42,63 +62,29 @@ class InstructionTranslator implements Visitor
 {
 	private Map<String, String> fullNameMap = new HashMap<String, String>();
 
-	public InstructionTranslator(DataStore dataStore)
+	public InstructionTranslator(Repository repos)
 	{
-		Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction filterAction;
-
-		Iterator<Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction> it = dataStore
-				.getAllInstancesOf(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.class);
-
-		while (it.hasNext())
+		for (FilterAction filterAction : repos.getAll(FilterAction.class))
 		{
-			filterAction = it.next();
-			fullNameMap.put(filterAction.getName(), filterAction.getFullName());
+			fullNameMap.put(filterAction.getName(), filterAction.getSystemName());
 		}
 	}
 
-	public static String getSafeTargetName(DeclaredObjectReference doref)
+	public static String getSafeTargetName(CpsObject target)
 	{
-		StringBuffer sb = new StringBuffer();
-		TypedDeclaration typeDecl = doref.getRef();
-		if (typeDecl == null)
+		if (target.isInnerObject())
 		{
-			return null;
+			return PropertyNames.INNER;
 		}
-		else
+		if (target.isSelfObject())
 		{
-			if (typeDecl.getParent() instanceof FilterModule)
-			{
-				sb.append(((FilterModule) typeDecl.getParent()).getOriginalQualifiedName().replace(".", "_"));
-			}
-			else if (typeDecl.getParent() instanceof FilterModuleAST)
-			{
-				sb.append(((FilterModuleAST) typeDecl.getParent()).getQualifiedName().replace(".", "_"));
-			}
-			sb.append("_");
-			sb.append(typeDecl.getName());
+			return PropertyNames.SELF;
 		}
-		return sb.toString();
-	}
-
-	public static String getSafeTargetName(Target target)
-	{
-		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
+		if (target instanceof FilterModuleVariable)
 		{
-			return target.getName();
+			return StarLightEmitterRunner.getUniqueName((FilterModuleVariable) target);
 		}
-		if (target.getRef() != null)
-		{
-			DeclaredObjectReference doref = (DeclaredObjectReference) target.getRef();
-			if (doref != null && doref.getResolved())
-			{
-				String result = getSafeTargetName(doref);
-				if (result != null)
-				{
-					return result;
-				}
-			}
-		}
-		return target.getName();
+		throw new RuntimeException(String.format("Unnamed target: %s", target));
 	}
 
 	/**
@@ -116,12 +102,12 @@ class InstructionTranslator implements Visitor
 		weaveFilterCode.setInstructions(instruction);
 
 		// Check conditions
-		List<Condition> condIter = filterCode.getCheckConditionsEx();
+		List<MethodReference> condIter = filterCode.getCheckConditionsEx();
 		composestar.dotNET2.tym.entities.ConditionExpression condExpr = null;
 		composestar.dotNET2.tym.entities.ConditionExpression condExpr2;
-		for (Condition condition : condIter)
+		for (MethodReference condMeth : condIter)
 		{
-			condExpr2 = translateCondition(condition);
+			condExpr2 = translateCondition(condMeth);
 
 			if (condExpr == null)
 			{
@@ -200,17 +186,18 @@ class InstructionTranslator implements Visitor
 
 		weaveAction.setFullName(fullNameMap.get(filterAction.getType()));
 
-		weaveAction.setSelector(filterAction.getMessage().getSelector());
+		weaveAction.setSelector(filterAction.getMessage().getSelector().getName());
 		weaveAction.setTarget(getSafeTargetName(filterAction.getMessage().getTarget()));
 
-		weaveAction.setSubstitutionSelector(filterAction.getSubstitutedMessage().getSelector());
-		weaveAction.setSubstitutionTarget(getSafeTargetName(filterAction.getSubstitutedMessage().getTarget()));
+		// TODO other arguments
 
 		weaveAction.setOnCall(filterAction.isOnCall());
 		weaveAction.setReturning(filterAction.isReturning());
 
 		weaveAction.setBookKeeping(filterAction.getBookKeeping());
 		weaveAction.setResourceOperations(filterAction.getResourceOperations());
+
+		// FIXME arguments ....
 
 		return weaveAction;
 	}
@@ -226,11 +213,12 @@ class InstructionTranslator implements Visitor
 		return weaveJump;
 	}
 
-	private composestar.dotNET2.tym.entities.ConditionExpression translateCondition(Condition condition)
+	private composestar.dotNET2.tym.entities.ConditionExpression translateCondition(MethodReference condition)
 	{
 		composestar.dotNET2.tym.entities.ConditionLiteral conditionLiteral = composestar.dotNET2.tym.entities.ConditionLiteral.Factory
 				.newInstance();
-		conditionLiteral.setName(condition.getName());
+		conditionLiteral
+				.setName(String.format("%s_%d", condition.getReferenceId(), System.identityHashCode(condition)));
 
 		return conditionLiteral;
 	}
@@ -238,51 +226,51 @@ class InstructionTranslator implements Visitor
 	private composestar.dotNET2.tym.entities.ConditionExpression translateConditionExpression(
 			MatchingExpression expression)
 	{
-		if (expression instanceof And)
+		if (expression instanceof AndMEOper)
 		{
-			And and = (And) expression;
+			AndMEOper and = (AndMEOper) expression;
 			AndCondition weaveAnd = AndCondition.Factory.newInstance();
 
-			weaveAnd.setLeft(translateConditionExpression(and.getLeft()));
-			weaveAnd.setRight(translateConditionExpression(and.getRight()));
+			weaveAnd.setLeft(translateConditionExpression(and.getLHS()));
+			weaveAnd.setRight(translateConditionExpression(and.getRHS()));
 
 			return weaveAnd;
 		}
-		else if (expression instanceof Or)
+		else if (expression instanceof OrMEOper)
 		{
-			Or or = (Or) expression;
+			OrMEOper or = (OrMEOper) expression;
 			OrCondition weaveOr = OrCondition.Factory.newInstance();
 
-			weaveOr.setLeft(translateConditionExpression(or.getLeft()));
-			weaveOr.setRight(translateConditionExpression(or.getRight()));
+			weaveOr.setLeft(translateConditionExpression(or.getLHS()));
+			weaveOr.setRight(translateConditionExpression(or.getRHS()));
 
 			return weaveOr;
 		}
-		else if (expression instanceof Not)
+		else if (expression instanceof NotMEOper)
 		{
-			Not not = (Not) expression;
+			NotMEOper not = (NotMEOper) expression;
 			NotCondition weaveNot = NotCondition.Factory.newInstance();
 
 			weaveNot.setOperand(translateConditionExpression(not.getOperand()));
 
 			return weaveNot;
 		}
-		else if (expression instanceof ConditionVariable)
+		else if (expression instanceof MECondition)
 		{
-			ConditionVariable literal = (ConditionVariable) expression;
 			ConditionLiteral weaveLiteral = ConditionLiteral.Factory.newInstance();
-
-			weaveLiteral.setName(literal.getCondition().getRef().getName());
-
+			weaveLiteral.setName(StarLightEmitterRunner.getUniqueName(((MECondition) expression).getCondition()));
 			return weaveLiteral;
 		}
-		else if (expression instanceof True)
+		else if (expression instanceof MELiteral)
 		{
-			return TrueCondition.Factory.newInstance();
-		}
-		else if (expression instanceof False)
-		{
-			return FalseCondition.Factory.newInstance();
+			if (((MELiteral) expression).getLiteralValue())
+			{
+				return TrueCondition.Factory.newInstance();
+			}
+			else
+			{
+				return FalseCondition.Factory.newInstance();
+			}
 		}
 		else
 		{

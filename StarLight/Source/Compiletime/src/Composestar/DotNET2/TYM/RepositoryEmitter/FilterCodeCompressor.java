@@ -4,11 +4,16 @@
  */
 package Composestar.DotNET2.TYM.RepositoryEmitter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
-import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.FilterActionInstruction;
@@ -21,7 +26,7 @@ import Composestar.Core.INLINE.model.Visitor;
 
 public class FilterCodeCompressor
 {
-	private final static String GENERALIZATION_SELECTOR = "+";
+	private final static CpsSelector GENERALIZATION_SELECTOR = new CpsSelectorImpl("+");
 
 	private HashMap<EqualizedFilterCode, Integer> generalizedIdMap;
 
@@ -39,7 +44,7 @@ public class FilterCodeCompressor
 	 * @param startSelector
 	 * @return
 	 */
-	public int addFilterCode(FilterCode filterCode, String startSelector)
+	public int addFilterCode(FilterCode filterCode, CpsSelector startSelector)
 	{
 		// Create the generalization
 		FilterCode generalizedFilterCode = generalize(filterCode, startSelector);
@@ -61,7 +66,7 @@ public class FilterCodeCompressor
 		}
 	}
 
-	private FilterCode generalize(FilterCode filterCode, String startSelector)
+	private FilterCode generalize(FilterCode filterCode, CpsSelector startSelector)
 	{
 		return (FilterCode) filterCode.accept(new GeneralizeVisitor(startSelector));
 	}
@@ -152,8 +157,8 @@ public class FilterCodeCompressor
 			}
 
 			// Iterate the checkConditions to check whether they are equal
-			Iterator<Condition> iter1 = filterCode.getCheckConditions();
-			Iterator<Condition> iter2 = filterCode2.getCheckConditions();
+			Iterator<MethodReference> iter1 = filterCode.getCheckConditions();
+			Iterator<MethodReference> iter2 = filterCode2.getCheckConditions();
 			while (iter1.hasNext())
 			{
 				if (!iter2.hasNext())
@@ -162,8 +167,8 @@ public class FilterCodeCompressor
 				}
 				else
 				{
-					Condition cond1 = iter1.next();
-					Condition cond2 = iter2.next();
+					MethodReference cond1 = iter1.next();
+					MethodReference cond2 = iter2.next();
 					if (cond1 != cond2)
 					{
 						return Boolean.FALSE;
@@ -303,12 +308,9 @@ public class FilterCodeCompressor
 				return Boolean.FALSE;
 			}
 
+			// TODO messages can be different, but actually be identical
+			// messages
 			if (!filterAction.getMessage().equals(checkFilterAction.getMessage()))
-			{
-				return Boolean.FALSE;
-			}
-
-			if (!filterAction.getSubstitutedMessage().equals(checkFilterAction.getSubstitutedMessage()))
 			{
 				return Boolean.FALSE;
 			}
@@ -324,6 +326,13 @@ public class FilterCodeCompressor
 			}
 
 			if (!checkFilterAction.getResourceOperations().equals(filterAction.getResourceOperations()))
+			{
+				return Boolean.FALSE;
+			}
+
+			// TODO not completely correct, different argument instances could
+			// have similar values
+			if (!filterAction.getArguments().equals(checkFilterAction.getArguments()))
 			{
 				return Boolean.FALSE;
 			}
@@ -401,11 +410,8 @@ public class FilterCodeCompressor
 			int value = 0;
 
 			// Check whether instructions within block equal
-			Iterator<Instruction> blockEnum = block.getInstructions();
-
-			while (blockEnum.hasNext())
+			for (Instruction nextInstruction : block.getInstructionsEx())
 			{
-				Instruction nextInstruction = blockEnum.next();
 				value += ((Integer) nextInstruction.accept(this)).intValue();
 			}
 
@@ -450,9 +456,11 @@ public class FilterCodeCompressor
 				value = 1;
 			}
 			value += filterAction.getType().hashCode();
+			// TODO is stricter than it should be
 			value += filterAction.getMessage().hashCode();
-			value += filterAction.getSubstitutedMessage().hashCode();
 			value += filterAction.getResourceOperations().hashCode();
+			// TODO is stricter than it should be
+			value += filterAction.getArguments().hashCode();
 
 			return value;
 		}
@@ -470,9 +478,9 @@ public class FilterCodeCompressor
 
 	private static class GeneralizeVisitor implements Visitor
 	{
-		private String selector;
+		private CpsSelector selector;
 
-		public GeneralizeVisitor(String selector)
+		public GeneralizeVisitor(CpsSelector selector)
 		{
 			this.selector = selector;
 		}
@@ -485,10 +493,8 @@ public class FilterCodeCompressor
 			FilterCode copy = new FilterCode();
 
 			// Check conditions
-			Iterator<Condition> condIter = filterCode.getCheckConditions();
-			while (condIter.hasNext())
+			for (MethodReference condition : filterCode.getCheckConditionsEx())
 			{
-				Condition condition = condIter.next();
 				copy.addCheckCondition(condition);
 			}
 
@@ -511,11 +517,8 @@ public class FilterCodeCompressor
 			copyLabel(block, copy);
 
 			// Instructions in block
-			Iterator<Instruction> blockEnum = block.getInstructions();
-
-			while (blockEnum.hasNext())
+			for (Instruction nextInstruction : block.getInstructionsEx())
 			{
-				Instruction nextInstruction = blockEnum.next();
 				Instruction copyInstruction = (Instruction) nextInstruction.accept(this);
 				copy.addInstruction(copyInstruction);
 			}
@@ -557,14 +560,14 @@ public class FilterCodeCompressor
 		 */
 		public Object visitFilterAction(FilterActionInstruction filterAction)
 		{
-			Message message = filterAction.getMessage();
-			Message genMessage = generalize(message);
+			CpsMessage message = filterAction.getMessage();
+			CpsMessage genMessage = generalize(message);
 
-			Message substMessage = filterAction.getSubstitutedMessage();
-			Message genSubstMessage = generalize(substMessage);
+			// TODO not a deep clone
+			Collection<CanonAssignment> args = new ArrayList<CanonAssignment>(filterAction.getArguments());
 
-			FilterActionInstruction copy = new FilterActionInstruction(filterAction.getType(), genMessage, genSubstMessage, filterAction
-					.isOnCall(), filterAction.isReturning());
+			FilterActionInstruction copy = new FilterActionInstruction(filterAction.getType(), genMessage, args,
+					filterAction.isOnCall(), filterAction.isReturning());
 
 			copyLabel(filterAction, copy);
 			copy.setBookKeeping(filterAction.getBookKeeping());
@@ -599,11 +602,23 @@ public class FilterCodeCompressor
 			}
 		}
 
-		private Message generalize(Message message)
+		private CpsMessage generalize(CpsMessage message)
 		{
-			return new Message(message.getTarget(), message.getSelector().equals(selector) ? GENERALIZATION_SELECTOR
-					: message.getSelector());
-
+			CpsMessage newMessage;
+			try
+			{
+				newMessage = (CpsMessage) message.clone();
+			}
+			catch (CloneNotSupportedException e)
+			{
+				// TODO error
+				return message;
+			}
+			if (newMessage.getSelector().compatible(selector))
+			{
+				newMessage.setSelector(GENERALIZATION_SELECTOR);
+			}
+			return newMessage;
 		}
 
 	}

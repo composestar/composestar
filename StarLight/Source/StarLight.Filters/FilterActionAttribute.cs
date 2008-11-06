@@ -245,17 +245,17 @@ namespace Composestar.StarLight.Filters.FilterTypes
 			/// <summary>
 			/// To indicate that flow continues to the next filter.
 			/// </summary>
-			Continue,
+			Continue = 0,
 			/// <summary>
 			/// To indicate that flow exits the filterset without a return,
 			/// for example with an <c>Error</c> action.
 			/// </summary>
-			Exit,
+			Exit = 1,
 			/// <summary>
 			/// To indicate that flow changes from call to return, 
 			/// for example with a <c>Dispatch</c> action.
 			/// </summary>
-			Return
+			Return = 2
 		}
 
 		#endregion
@@ -281,11 +281,11 @@ namespace Composestar.StarLight.Filters.FilterTypes
 			/// <summary>
 			/// The message is not changed.
 			/// </summary>
-			Original,
+			Original = 0,
 			/// <summary>
 			/// The message is changed according to the substitutionpart.
 			/// </summary>
-			Substituted,
+			Substituted = 1,
 			/// <summary>
 			/// The message can change into any other message. 
 			/// </summary>
@@ -293,7 +293,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
 			/// Be careful when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
 			/// Only use this option when you cannot use a following substitution filter.
 			/// </remarks> 
-			Any
+			Any = 2
 		}
 
 		#endregion

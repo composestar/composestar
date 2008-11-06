@@ -60,6 +60,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 
 		private string _namespace;
 		private string _target;
+        private string _type;
 		private string _assembly;
 		private string _selector;
 		private int _innerCallContext;
@@ -76,7 +77,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		}
 
 		/// <summary>
-		/// Gets or sets the target.
+		/// Gets or sets the target. The target is the name of a local variable to use. 
+        /// If it is empty or null then the reference is a static reference. "inner" and "self" are
+        /// special target names.
 		/// </summary>
 		/// <value>The target.</value>
 		[XmlAttribute]
@@ -93,8 +96,19 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		[XmlIgnore]
 		public string FullName
 		{
-			get { return string.Concat(_namespace, ".", _target); }
+            get { return string.Concat(_namespace, ".", _type); }
 		}
+
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        [XmlAttribute]
+        public string Type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
 
 		/// <summary>
 		/// Gets or sets the assembly containing the type of the reference.

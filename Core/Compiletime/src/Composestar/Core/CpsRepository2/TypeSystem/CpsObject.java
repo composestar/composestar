@@ -36,4 +36,10 @@ public interface CpsObject extends CpsTypeProgramElement
 	 * @return True when this is an inner object.
 	 */
 	boolean isInnerObject();
+
+	/**
+	 * @return True when this is a "self" CpsObject, meaning this concern. An
+	 *         CpsObject can not be both inner and self.
+	 */
+	boolean isSelfObject();
 }

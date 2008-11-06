@@ -295,8 +295,7 @@ methodReference[FilterModule fm] returns [MethodReference mref]
 // throws CpsSemanticException
 @init {
 	Tree errTok = (Tree) input.LT(1);
-	JoinPointContextArgument jpca = JoinPointContextArgument.NONE;
-	// FIXME: handle "inner" references 
+	JoinPointContextArgument jpca = JoinPointContextArgument.NONE; 
 }
 	: lst=fqnAsList (jpca1=joinPointContext {jpca = jpca1;})?
 		{
@@ -310,7 +309,7 @@ methodReference[FilterModule fm] returns [MethodReference mref]
 				{
 					if (PropertyNames.INNER.equals(lst.get(0)))
 					{
-						CpsObject innerObj = new CpsObjectImpl(new InnerTypeReference(), true);
+						CpsObject innerObj = new CpsObjectImpl(new InnerTypeReference(), CpsObjectImpl.CpsObjectType.INNER);
 						mref = references.getInstanceMethodReference(lst.get(1), innerObj, jpca);
 						repository.add(innerObj);
 					}
@@ -544,17 +543,6 @@ filterType returns [FilterType ft]
 				{
 					// lazy custom filter type creation
 					ft = filterTypeFactory.createCustomFilterType(ftName);
-					// TODO: do something with custom filters
-					/*
-					logger.info(String.format("Creating legacy custom filter with name: \%s", ftName));
-					try {
-						ft = filterFactory.createLegacyCustomFilterType(ftName);
-					}
-					catch (UnsupportedFilterTypeException e)
-					{
-						logger.info(String.format("Error creating custom filter type: \%s", ftName));
-					}
-					*/
 				}
 				if (ft == null)
 				{

@@ -345,5 +345,15 @@ public abstract class ReferenceManagerTestBase extends TestCase
 		{
 			return false;
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.TypeSystem.CpsObject#isSelfObject()
+		 */
+		public boolean isSelfObject()
+		{
+			return false;
+		}
 	}
 }

@@ -1,6 +1,25 @@
 /*
- * Created on 21-sep-2006
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2006-2008 University of Twente.
  *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
  */
 package Composestar.DotNET2.TYM.RepositoryEmitter;
 
@@ -9,9 +28,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,35 +39,37 @@ import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.Signature;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ExternalConcernReference;
+import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.PropertyNames;
+import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.FilterModules.Condition;
+import Composestar.Core.CpsRepository2.FilterModules.External;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
+import Composestar.Core.CpsRepository2.FilterModules.Internal;
+import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
+import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
+import Composestar.Core.CpsRepository2.Signatures.Signature;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2Impl.References.InnerTypeReference;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
+import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SECRET3.SECRETResources;
 import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.DotNET2.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET2.LAMA.DotNETMethodInfo;
 import Composestar.DotNET2.LAMA.DotNETType;
 import Composestar.DotNET2.MASTER.StarLightMaster;
 import Composestar.Utils.FileUtils;
-import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 import composestar.dotNET2.tym.entities.ArrayOfAssemblyConfig;
@@ -65,7 +87,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WESPEM);
 
-	private DataStore dataStore;
+	private Repository repository;
 
 	private Map<String, WeaveSpecification> weaveSpecs;
 
@@ -91,8 +113,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 	public ModuleReturnValue run(CommonResources resc) throws ModuleException
 	{
 		resources = resc;
-		dataStore = resc.repository();
-		instructionTranslater = new InstructionTranslator(dataStore);
+		repository = resc.repository();
+		instructionTranslater = new InstructionTranslator(repository);
 		// Emit all types to persistent repository
 		try
 		{
@@ -234,32 +256,38 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private void processConcerns() throws ModuleException
 	{
-		Iterator<Concern> concernIterator = dataStore.getAllInstancesOf(Concern.class);
-		while (concernIterator.hasNext())
+		for (Concern concern : repository.getAll(Concern.class))
 		{
-			Concern concern = concernIterator.next();
 			processConcern(concern);
 		}
 	}
 
+	public static String getUniqueName(FilterModuleVariable fmvar)
+	{
+		StringBuffer sb = new StringBuffer(fmvar.getName());
+		sb.append('_');
+		sb.append(System.identityHashCode(fmvar));
+		return sb.toString();
+	}
+
 	private void processConcern(Concern concern) throws ModuleException
 	{
-		DotNETType type = (DotNETType) concern.getPlatformRepresentation();
+		DotNETType type = (DotNETType) concern.getTypeReference().getReference();
 		if (type == null)
 		{
 			return;
 		}
 
-		if (concern.getDynObject("superImpInfo") != null)
+		if (concern.getSuperimposed() != null)
 		{
 			// HashSet to prevent the same condition from being stored twice.
-			Set<Condition> storedConditions = new HashSet<Condition>();
+			Set<MethodReference> storedConditions = new HashSet<MethodReference>();
 
 			// get weavespec:
 			WeaveSpecification weaveSpec = getWeaveSpec(type.assemblyName());
 
 			// get filtermodules:
-			FilterModuleOrder order = (FilterModuleOrder) concern.getDynObject("SingleOrder");
+			List<ImposedFilterModule> order = concern.getSuperimposed().getFilterModuleOrder();
 
 			WeaveType weaveType = weaveSpec.getWeaveTypes().addNewWeaveType();
 			weaveType.addNewConditions();
@@ -268,83 +296,59 @@ public class StarLightEmitterRunner implements CTCommonModule
 			weaveType.addNewMethods();
 			weaveType.setName(type.getFullName());
 
-			Iterator<FilterModuleSuperImposition> filterModules = order.filterModuleSIList().iterator();
-			while (filterModules.hasNext())
+			for (ImposedFilterModule ifm : order)
 			{
-				FilterModuleSuperImposition fmsi = filterModules.next();
-				FilterModule filterModule = fmsi.getFilterModule().getRef();
+				FilterModule filterModule = ifm.getFilterModule();
 
-				// internals:
-				Iterator<Internal> internals = filterModule.getInternalIterator();
-				while (internals.hasNext())
+				for (FilterModuleVariable fmvar : filterModule.getVariables())
 				{
-					// store internal:
-					Internal internal = internals.next();
-					composestar.dotNET2.tym.entities.Internal storedInternal = weaveType.getInternals()
-							.addNewInternal();
-
-					// name:
-					storedInternal.setName(String.format("%s_%s", filterModule.getOriginalQualifiedName().replace(".",
-							"_"), internal.getName()));
-
-					// namespace:
-					String namespace = StringUtils.join(internal.getType().getPackage(), ".");
-					storedInternal.setNamespace(namespace);
-
-					// typename:
-					storedInternal.setType(internal.getType().getName());
-
-					// assembly:
-					DotNETType dnt = (DotNETType) internal.getType().getRef().getPlatformRepresentation();
-					storedInternal.setAssembly(dnt.assemblyName());
-				}
-
-				// externals:
-				Iterator<External> externals = filterModule.getExternalIterator();
-				while (externals.hasNext())
-				{
-					// store external
-					External external = externals.next();
-					composestar.dotNET2.tym.entities.External storedExternal = weaveType.getExternals()
-							.addNewExternal();
-
-					// name:
-					storedExternal.setName(String.format("%s_%s", filterModule.getOriginalQualifiedName().replace(".",
-							"_"), external.getName()));
-
-					// reference:
-					ExternalConcernReference reference = external.getShortinit();
-					DotNETType refType = (DotNETType) reference.getRef().getPlatformRepresentation();
-					Reference storedReference = createReference(type, refType.assemblyName(), reference.getPackage(),
-							reference.getName(), reference.getInitSelector());
-					storedExternal.setReference(storedReference);
-
-					// type:
-					storedExternal.setType(external.getType().getQualifiedName());
-
-					// assembly:
-					DotNETType dnt = (DotNETType) external.getType().getRef().getPlatformRepresentation();
-					storedExternal.setAssembly(dnt.assemblyName());
-				}
-
-				// conditions:
-				// filter module condition:
-				Condition condition = fmsi.getCondition();
-				if (condition != null && !storedConditions.contains(condition))
-				{
-					storeCondition(weaveType, type, condition);
-					storedConditions.add(condition);
-				}
-				Iterator<Condition> conditions = filterModule.getConditionIterator();
-				while (conditions.hasNext())
-				{
-					// store condition:
-					condition = conditions.next();
-					if (!storedConditions.contains(condition))
+					if (fmvar instanceof Internal)
 					{
-						storeCondition(weaveType, type, condition);
-						storedConditions.add(condition);
+						composestar.dotNET2.tym.entities.Internal storedInternal = weaveType.getInternals()
+								.addNewInternal();
+						storedInternal.setName(getUniqueName(fmvar));
+
+						Internal intern = (Internal) fmvar;
+						DotNETType itype = (DotNETType) intern.getTypeReference().getReference();
+
+						storedInternal.setNamespace(itype.namespace());
+						storedInternal.setType(itype.getFullName());
+						storedInternal.setAssembly(itype.assemblyName());
 					}
+					else if (fmvar instanceof External)
+					{
+						composestar.dotNET2.tym.entities.External storedExternal = weaveType.getExternals()
+								.addNewExternal();
+						storedExternal.setName(getUniqueName(fmvar));
+
+						External extern = (External) fmvar;
+						DotNETType itype = (DotNETType) extern.getTypeReference().getReference();
+
+						// storedExternal.setNamespace(itype.namespace());
+						storedExternal.setType(itype.getFullName());
+						storedExternal.setAssembly(itype.assemblyName());
+
+						storedExternal.setReference(createReference(extern.getMethodReference(), type));
+					}
+					else if (fmvar instanceof Condition)
+					{
+						composestar.dotNET2.tym.entities.Condition storedCondition = weaveType.getConditions()
+								.addNewCondition();
+						storedCondition.setName(getUniqueName(fmvar));
+
+						storedCondition.setReference(createReference(((Condition) fmvar).getMethodReference(), type));
+					}
+				}
+
+				if (ifm.getCondition() != null && !storedConditions.contains(ifm.getCondition()))
+				{
+					composestar.dotNET2.tym.entities.Condition storedCondition = weaveType.getConditions()
+							.addNewCondition();
+					storedCondition.setName(String.format("%s_%d", ifm.getCondition().getReferenceId(), System
+							.identityHashCode(ifm.getCondition())));
+					storedCondition.setReference(createReference(ifm.getCondition(), null));
+
+					storedConditions.add(ifm.getCondition());
 				}
 			}
 
@@ -353,109 +357,70 @@ public class StarLightEmitterRunner implements CTCommonModule
 		}
 	}
 
-	private void storeCondition(WeaveType weaveType, DotNETType type, Condition condition)
-	{
-
-		composestar.dotNET2.tym.entities.Condition storedCondition = weaveType.getConditions().addNewCondition();
-
-		// name:
-		storedCondition.setName(condition.getName());
-
-		// reference:
-		DotNETType refType;
-		String refname;
-
-		Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference condRef = condition.getShortref();
-		if (condRef instanceof DeclaredObjectReference)
-		{
-			DeclaredObjectReference dor = (DeclaredObjectReference) condRef;
-			if (dor.getName().equals("inner") || dor.getName().equals("self"))
-			{
-				refType = type;
-				refname = condition.getShortref().getName();
-			}
-			else
-			{
-				refType = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
-				refname = InstructionTranslator.getSafeTargetName(dor);
-			}
-		}
-		else if (condRef instanceof ConcernReference)
-		{
-			ConcernReference cor = (ConcernReference) condRef;
-			refType = (DotNETType) cor.getRef().getPlatformRepresentation();
-			refname = condition.getShortref().getName();
-		}
-		else
-		{
-			throw new RuntimeException("Unknown reference type");
-		}
-
-		Reference reference = createReference(type, refType.assemblyName(), condition.getShortref().getPackage(),
-				refname, (String) condition.getDynObject("selector"));
-
-		storedCondition.setReference(reference);
-	}
-
 	/**
-	 * Creates the reference used by the external and condition to retrieve its
-	 * instance/value
+	 * @param mref
+	 * @param concernType
+	 * @return
 	 */
-	private Reference createReference(Type type, String assembly, List<String> pack, String target, String selector)
+	private Reference createReference(MethodReference mref, Type concernType)
 	{
 		Reference storedRef = Reference.Factory.newInstance();
+		storedRef.setInnerCallContext(-1);
 
-		// namespace:
-		storedRef.setNamespace(StringUtils.join(pack, "."));
-
-		// selector:
-		storedRef.setSelector(selector);
-
-		// target:
-		storedRef.setTarget(target);
-
-		// innercall context:
-		if (target.equals("inner"))
+		Type type = mref.getTypeReference().getReference();
+		if (mref.getTypeReference() instanceof InnerTypeReference)
 		{
-			MethodInfo methodInfo = type.getMethod(selector, new String[0]);
-			if (methodInfo != null)
-			{
-				storedRef.setInnerCallContext(inlinerRes.getMethodId(methodInfo));
-			}
-			else
-			{
-				storedRef.setInnerCallContext(-1);
-			}
-		}
-		else
-		{
-			storedRef.setInnerCallContext(-1);
+			type = concernType;
 		}
 
-		// assembly:
-		storedRef.setAssembly(assembly);
+		MethodInfo mi = mref.getReference();
+		if (mi == null)
+		{
+			// TODO doesn't take into account the possible JPC
+			mi = type.getMethod(mref.getReferenceId(), new String[0]);
+		}
 
+		if (mref instanceof InstanceMethodReference)
+		{
+			InstanceMethodReference imref = (InstanceMethodReference) mref;
+			CpsObject ctx = imref.getCpsObject();
+			if (ctx instanceof FilterModuleVariable)
+			{
+				storedRef.setTarget(getUniqueName((FilterModuleVariable) ctx));
+			}
+			else if (ctx != null && ctx.isInnerObject())
+			{
+				storedRef.setTarget(PropertyNames.INNER);
+				storedRef.setInnerCallContext(inlinerRes.getMethodId(mi));
+			}
+			else if (ctx != null && ctx.isSelfObject())
+			{
+				storedRef.setTarget(PropertyNames.SELF);
+			}
+		}
+		storedRef.setNamespace(type.namespace());
+		storedRef.setType(type.getName());
+		storedRef.setAssembly(((DotNETType) type).assemblyName());
+		storedRef.setSelector(mi.getName());
 		return storedRef;
 	}
 
 	private void processMethods(Concern concern, WeaveType weaveType) throws ModuleException
 	{
 		Signature sig = concern.getSignature();
-		List<DotNETMethodInfo> methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
+		Collection<MethodInfo> methods = sig.getMethods(EnumSet.of(MethodRelation.NORMAL, MethodRelation.ADDED));
 
 		boolean hasFilters;
 		List<WeaveMethod> weaveMethods = new ArrayList<WeaveMethod>();
 
 		logger.debug("Processing concern: " + concern);
 
-		Iterator<DotNETMethodInfo> methodIter = methods.iterator();
-		while (methodIter.hasNext())
+		for (MethodInfo method : methods)
 		{
 			hasFilters = false;
-			DotNETMethodInfo method = methodIter.next();
 			WeaveMethod weaveMethod = WeaveMethod.Factory.newInstance();
 			weaveMethod.addNewWeaveCalls();
-			weaveMethod.setSignature(method.getSignature());
+			weaveMethod.setSignature(((DotNETMethodInfo) method).getSignature());
 
 			// get the block containing the filterinstructions:
 			FilterCode filterCode = inlinerRes.getInputFilterCode(method);
@@ -465,7 +430,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				hasFilters = true;
 
 				// add inputfilter code:
-				int id = currentCompressor.addFilterCode(filterCode, method.getName());
+				int id = currentCompressor.addFilterCode(filterCode, new CpsSelectorMethodInfo(method));
 				weaveMethod.setFilterCodeId(id);
 			}
 
@@ -489,12 +454,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 	private boolean processCalls(MethodInfo method, WeaveMethod weaveMethod)
 	{
 		boolean hasFilters = false;
-		Iterator<DotNETCallToOtherMethod> calls = method.getCallsToOtherMethods().iterator();
 
-		while (calls.hasNext())
+		for (CallToOtherMethod call : method.getCallsToOtherMethods())
 		{
-			DotNETCallToOtherMethod call = calls.next();
-
 			// add outputfilter code:
 			FilterCode filterCode = inlinerRes.getOutputFilterCode(call);
 			if (filterCode != null)
@@ -505,7 +467,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				weaveCall.setMethodName(call.getMethodName());
 
 				// set filtercode
-				int id = currentCompressor.addFilterCode(filterCode, call.getMethodName());
+				int id = currentCompressor.addFilterCode(filterCode, new CpsSelectorMethodInfo(call.getCalledMethod()));
 				weaveCall.setFilterCodeId(id);
 
 				logger.debug("Storing call" + weaveCall.toString());

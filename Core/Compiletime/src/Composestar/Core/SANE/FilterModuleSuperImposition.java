@@ -17,6 +17,7 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  * 
  * @author Arjan
  */
+@Deprecated
 public class FilterModuleSuperImposition extends RepositoryEntity
 {
 	private static final long serialVersionUID = -7267957969500237784L;

@@ -36,7 +36,6 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.FMParams.Parameterized;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
-import Composestar.Core.CpsRepository2.References.InnerTypeReference;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.Reference;
@@ -51,6 +50,7 @@ import Composestar.Core.CpsRepository2Impl.FMParams.ParameterizedCpsVariableColl
 import Composestar.Core.CpsRepository2Impl.FMParams.ParameterizedMethodReference;
 import Composestar.Core.CpsRepository2Impl.FMParams.ParameterizedTypeReference;
 import Composestar.Core.CpsRepository2Impl.FilterModules.FilterModuleImpl;
+import Composestar.Core.CpsRepository2Impl.References.InnerTypeReference;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsVariableCollectionImpl;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
