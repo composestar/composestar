@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/AssemblyInfo.java|Composestar/Core/COPPER2/grammar/build/|bin/|obj/" including="**/*.gpr|**/*.java|**/*.pro|**/*.properties|**/*.xslt|**/MANIFEST|**/moduleinfo.xml|Composestar/Core/CKRET/SECRETConfig.xml|MANIFEST.MF" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/AssemblyInfo.java|Composestar/Core/COPPER2/grammar/build/|bin/|obj/" including="**/*.gpr|**/*.java|**/*.pro|**/*.properties|**/*.xml|**/*.xsd|**/*.xslt|**/MANIFEST|**/moduleinfo.xml|MANIFEST.MF" kind="src" path="src"/>
 	<classpathentry excluding="**/.svn/|TEST-*.txt" kind="src" output="test" path="test"/>
 	<classpathentry kind="lib" path="lib/antlr/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit/junit.jar"/>

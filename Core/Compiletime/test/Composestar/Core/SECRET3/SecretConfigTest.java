@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.SECRET;
+package Composestar.Core.SECRET3;
 
 import junit.framework.TestCase;
 

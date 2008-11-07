@@ -128,7 +128,8 @@
 				<include name="**/MANIFEST" />
 				<include name="**/moduleinfo.xml" />
 				<include name="**/*.xslt" />
-				<include name="**/SECRETConfig.xml" />
+				<include name="**/*.xml" />
+				<include name="**/*.xsd" />
 			</fileset>
 		</copy>
 		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
