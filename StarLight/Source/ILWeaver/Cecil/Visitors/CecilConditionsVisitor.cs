@@ -314,7 +314,7 @@ namespace Composestar.StarLight.ILWeaver
 			{
 				method = CecilUtilities.ResolveMethod(
 					con.Reference.Selector,
-					(con.Reference.Namespace.Length > 0 ? con.Reference.Namespace + "." : String.Empty) + con.Reference.Target,
+					con.Reference.FullTypeName,
 					con.Reference.Assembly, String.Empty);
 			}
 
@@ -323,7 +323,7 @@ namespace Composestar.StarLight.ILWeaver
 				throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
 					Properties.Resources.MethodNotFound,
 					con.Reference.Selector,
-					con.Reference.FullName,
+					con.Reference.FullTypeName,
 					con.Reference.Assembly));
 
 			// If it is an inner or self call, we set the InnerCall context

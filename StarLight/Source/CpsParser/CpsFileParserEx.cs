@@ -175,24 +175,24 @@ namespace Composestar.StarLight.CpsParser
                         }
                         break;
                     case CpsParser.INTERNAL:
-                        // ^(INTERNAL fqnOrSingleFmParam  ^(NAMES IDENTIFIER+))
-                        if (current.ChildCount > 1)
+                        // ^(INTERNAL[$start] fqnOrSingleFmParam  ^(NAMES IDENTIFIER+))
+                        if (current.ChildCount >= 1)
                         {
                             ITree tp = ((ITree)current.GetChild(0));
                             if (tp.Type == CpsParser.FQN)
                             {
-                                _types.Add(tp.Text);
+                                _types.Add(fqnToString(tp));
                             }
                         }
                         break;
                     case CpsParser.EXTERNAL:
-                        //^(EXTERNAL IDENTIFIER $type ^(INIT[$eq] $init /* params */)?)
-                        if (current.ChildCount > 2)
+                        // ^(EXTERNAL[$start] IDENTIFIER $type ^(INIT[$eq] $init joinPointContext?)?)
+                        if (current.ChildCount >= 2)
                         {
                             ITree tp = ((ITree)current.GetChild(1));
                             if (tp.Type == CpsParser.FQN)
                             {
-                                _types.Add(tp.Text);
+                                _types.Add(fqnToString(tp));
                             }
                         }
                         break;
@@ -201,6 +201,17 @@ namespace Composestar.StarLight.CpsParser
                         break;
                 }
             }
+        }
+
+        public string fqnToString(ITree fqnt)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < fqnt.ChildCount; i++)
+            {
+                if (i > 0) sb.Append('.');
+                sb.Append(fqnt.GetChild(i).Text);
+            }
+            return sb.ToString();
         }
 
         #region IDisposable

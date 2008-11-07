@@ -94,9 +94,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		/// </summary>
 		/// <value>The fullname.</value>
 		[XmlIgnore]
-		public string FullName
+		public string FullTypeName
 		{
-            get { return string.Concat(_namespace, ".", _type); }
+            get
+            {
+                if (_type.IndexOf('.') > -1) return _type;
+                return string.Concat(_namespace, ".", _type);
+            }
 		}
 
         /// <summary>

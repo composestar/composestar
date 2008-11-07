@@ -685,7 +685,7 @@ namespace Composestar.StarLight.ILWeaver
 			{
                 foreach (Condition c in weaveType.Conditions)
                 {
-                    if (c.Reference.Target.Equals(Reference.InnerTarget))
+                    if (c.Reference.Target.Equals(Reference.InnerTarget) || c.Reference.Target.Equals(Reference.SelfTarget))
                     {
                         hasNonStaticConditions = true;
                         break;
