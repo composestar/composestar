@@ -34,66 +34,29 @@
 */
 #endregion
 
-#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
-#endregion
+using Composestar.StarLight.Filters.FilterTypes;
+using Composestar.StarLight.ContextInfo;
 
-namespace Composestar.StarLight.Filters.FilterTypes
+namespace Composestar.StarLight.Filters.BuiltIn
 {
 	/// <summary>
-	/// The base class of every FilterType. Each subclass should be annotated with the FilterTypeAnnotation
-	/// custom attribute, to provide information to the StarLight compiler about the actions in this filtertype.
+	///  Dispatches to another method.
 	/// </summary>
-	/// <example>
-	/// The following code examples shows how a filtertype can be defined.
-	/// <code>
-	/// [FilterTypeAttribute("Tracing", "TracingInAction", "ContinueAction", "TracingOutAction", "ContinueAction")]
-	/// public class TracingFilterType : FilterType
-	/// {
-	/// }
-	/// </code>
-	/// </example> 
-	/// <remarks>
-	/// This class does not need any implementation and currently provides only a way to declare filtertypes. 
-	/// In future releases this class can be extended with more functionality.
-	/// </remarks> 
-	public abstract class FilterType
+	[FilterActionAttribute(FilterAction.SendAction, FilterActionAttribute.FilterFlowBehavior.Return,
+	   FilterActionAttribute.MessageSubstitutionBehavior.Substituted)]
+    [ResourceOperation("arg.read;message.dispatch;return.read")]
+	public class SendAction : FilterAction
 	{
-
-		#region BuiltIn FilterTypes
-
 		/// <summary>
-		/// Specifies an After filter type.
+		/// Implements the behavior of the FilterAction.
 		/// </summary>
-		public const string AfterFilter = "After";
-
-		/// <summary>
-		/// Specifies a Before filter type.
-		/// </summary>
-		public const string BeforeFilter = "Before";
-
-		/// <summary>
-		/// Specifies a Dispatch filter type.
-		/// </summary>
-		public const string DispatchFilter = "Dispatch";
-
-        /// <summary>
-        /// Specifies a Send filter type.
-        /// </summary>
-        public const string SendFilter = "Send";
-
-		/// <summary>
-		/// Specifies an Error filter type.
-		/// </summary>
-		public const string ErrorFilter = "Error";
-
-		/// <summary>
-		/// Specifies a Substitution filter type.
-		/// </summary>
-		public const string SubstitutionFilter = "Substitution";
-
-		#endregion
+		/// <param name="context">Context information</param>
+		[FilterActionSpecificationAttribute("target.write(inner)")]
+		public override void Execute(JoinPointContext context)
+		{
+		}
 	}
 }

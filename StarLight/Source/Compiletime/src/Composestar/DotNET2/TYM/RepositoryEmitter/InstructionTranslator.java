@@ -30,13 +30,18 @@ import java.util.Map;
 
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
 import Composestar.Core.CpsRepository2.FilterElements.MECondition;
 import Composestar.Core.CpsRepository2.FilterElements.MELiteral;
 import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
 import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.AndMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.NotMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.OrMEOper;
@@ -48,6 +53,8 @@ import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.INLINE.model.Visitor;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ProgramElement;
 
 import composestar.dotNET2.tym.entities.AndCondition;
 import composestar.dotNET2.tym.entities.ConditionLiteral;
@@ -198,6 +205,46 @@ class InstructionTranslator implements Visitor
 		weaveAction.setResourceOperations(filterAction.getResourceOperations());
 
 		// FIXME arguments ....
+		// this is a dirty hack
+		for (CanonAssignment asgn : filterAction.getArguments())
+		{
+			if (PropertyNames.TARGET.equalsIgnoreCase(asgn.getProperty().getBaseName()))
+			{
+				CpsVariable var = asgn.getValue();
+				if (var instanceof CpsObject)
+				{
+					weaveAction.setSubstitutionTarget(getSafeTargetName(filterAction.getMessage().getTarget()));
+				}
+				else
+				{
+					// TODO: error
+				}
+			}
+			else if (PropertyNames.SELECTOR.equalsIgnoreCase(asgn.getProperty().getBaseName()))
+			{
+				CpsVariable var = asgn.getValue();
+				if (var instanceof CpsSelector)
+				{
+					weaveAction.setSubstitutionSelector((((CpsSelector) var)).getName());
+				}
+				else if (var instanceof CpsLiteral)
+				{
+					weaveAction.setSubstitutionSelector(((CpsLiteral) var).getLiteralValue());
+				}
+				else if (var instanceof CpsProgramElement)
+				{
+					ProgramElement pe = ((CpsProgramElement) var).getProgramElement();
+					if (pe instanceof MethodInfo)
+					{
+						weaveAction.setSubstitutionSelector(((MethodInfo) pe).getName());
+					}
+				}
+				else
+				{
+					// TODO: error
+				}
+			}
+		}
 
 		return weaveAction;
 	}

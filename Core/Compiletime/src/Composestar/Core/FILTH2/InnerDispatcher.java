@@ -65,7 +65,7 @@ public final class InnerDispatcher
 		fm.setInputFilterExpression(createFilter(repository, fm, DefaultInnerDispatchNames.INPUT_FILTER, filterTypes
 				.getFilterType(FilterTypeNames.DISPATCH)));
 		fm.setOutputFilterExpression(createFilter(repository, fm, DefaultInnerDispatchNames.OUTPUT_FILTER, filterTypes
-				.getFilterType(FilterTypeNames.DISPATCH)));
+				.getFilterType(FilterTypeNames.SEND)));
 		return fm;
 	}
 

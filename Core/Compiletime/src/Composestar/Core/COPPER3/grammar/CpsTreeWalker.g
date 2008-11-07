@@ -1002,7 +1002,7 @@ conditionalSi [SISpecification si]
 				}
 				
 				StringBuilder sb = new StringBuilder();
-				for (String s : expr.subList(0, expr.size()-2))
+				for (String s : expr.subList(0, expr.size()-1))
 				{
 					if (sb.length() > 0)
 					{

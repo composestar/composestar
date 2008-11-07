@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
 import Composestar.Core.CpsRepository2.References.MethodReference;
@@ -79,13 +80,9 @@ public class FilterCodeCompressor
 	public FilterCode[] getGeneralizedFilterCodes()
 	{
 		FilterCode[] result = new FilterCode[generalizedIdMap.size()];
-
-		Iterator<EqualizedFilterCode> filterCodeIter = generalizedIdMap.keySet().iterator();
-		while (filterCodeIter.hasNext())
+		for (Entry<EqualizedFilterCode, Integer> entry : generalizedIdMap.entrySet())
 		{
-			EqualizedFilterCode equalizedFilterCode = filterCodeIter.next();
-			Integer id = generalizedIdMap.get(equalizedFilterCode);
-			result[id.intValue()] = equalizedFilterCode.filterCode;
+			result[entry.getValue()] = entry.getKey().filterCode;
 		}
 
 		return result;

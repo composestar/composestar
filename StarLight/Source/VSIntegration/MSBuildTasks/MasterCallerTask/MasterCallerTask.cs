@@ -53,6 +53,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using Composestar.StarLight.CoreServices.Settings.Providers;
+using System.Text.RegularExpressions;
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -325,6 +326,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			return sb.ToString();
 		}
 
+        // filename(line:colum) priority [module]: description
+        Regex pattern = new Regex("^(.*)\\(([0-9]+):([0-9]+)\\) ([\\w]+) \\[([\\w+._]+)\\]: (.*)$");
+
 		/// <summary>
 		/// Parses the master output.
 		/// </summary>
@@ -335,14 +339,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				return;
 
 			// Parse the message
-			string[] parsed = message.Split("~".ToCharArray(), 5);
-			if (parsed.Length == 5)
+
+            Match m = pattern.Match(message);
+			if (m.Success)
 			{
-				string module = parsed[0];
-				string level = parsed[1];
-				string filename = parsed[2];
-				string line = parsed[3];
-				string msg = parsed[4];
+				string module = m.Groups[4].Value;
+                string level = m.Groups[3].Value;
+                string filename = m.Groups[0].Value;
+                string line = m.Groups[1].Value;
+                string col = m.Groups[2].Value;
+                string msg = m.Groups[5].Value;
 
                 DebugLevel mode;
 				switch (level.ToLower())
@@ -374,13 +380,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 				int linenumber = 0;
 				int.TryParse(line, out linenumber);
+                int colnumber = 0;
+                int.TryParse(col, out colnumber);
 
 				if (BuildErrorsEncountered && string.IsNullOrEmpty(message))
 				{
 					BuildErrorsEncountered = false;
 				}
 
-				this.LogMessage(mode, module, msg, filename, linenumber);
+				this.LogMessage(mode, module, msg, filename, linenumber, colnumber);
 			}
 			else
 			{
@@ -396,7 +404,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="message">The message.</param>
 		/// <param name="filename">The filename.</param>
 		/// <param name="line">The line.</param>
-        private void LogMessage(DebugLevel debugMode, string module, string message, string filename, int line)
+        private void LogMessage(DebugLevel debugMode, string module, string message, string filename, int line, int col)
 		{
 			if (CurrentDebugMode >= debugMode)
 			{
@@ -406,10 +414,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				switch (debugMode)
 				{
                     case DebugLevel.Error:
-						Log.LogError(module, "", "", filename, line, 0, 0, 0, message);
+						Log.LogError(module, "", "", filename, line, col, 0, 0, message);
 						break;
                     case DebugLevel.Warning:
-						Log.LogWarning(module, "", "", filename, line, 0, 0, 0, message);
+						Log.LogWarning(module, "", "", filename, line, col, 0, 0, message);
 						break;
                     case DebugLevel.Crucial:
 						Log.LogMessage(MessageImportance.Normal, fm);

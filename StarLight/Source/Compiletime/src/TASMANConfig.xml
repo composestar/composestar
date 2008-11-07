@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tasks xmlns="http://composestar.sourceforge.net/schema/TASMAN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://composestar.sourceforge.net/schema/TASMAN ../../ComposestarCORE/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd ">
-	<module class="Composestar.Core.COPPER3.COPPER" />
 	<module class="Composestar.DotNET2.TYM.RepositoryCollector.StarLightCollectorRunner" />
+	<module class="Composestar.Core.COPPER3.COPPER" />
 	<module class="Composestar.Core.REXREF2.RexRef" />
 	<module class="Composestar.DotNET2.LOLA.DotNETLOLA" />
 	<module class="Composestar.Core.CHKREP2.Check" />

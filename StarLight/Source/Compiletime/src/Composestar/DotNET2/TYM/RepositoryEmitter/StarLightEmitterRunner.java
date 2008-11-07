@@ -272,6 +272,10 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private void processConcern(Concern concern) throws ModuleException
 	{
+		if (concern.getTypeReference() == null)
+		{
+			return;
+		}
 		DotNETType type = (DotNETType) concern.getTypeReference().getReference();
 		if (type == null)
 		{
@@ -312,7 +316,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 						DotNETType itype = (DotNETType) intern.getTypeReference().getReference();
 
 						storedInternal.setNamespace(itype.namespace());
-						storedInternal.setType(itype.getFullName());
+						storedInternal.setType(itype.getName());
 						storedInternal.setAssembly(itype.assemblyName());
 					}
 					else if (fmvar instanceof External)
@@ -325,7 +329,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 						DotNETType itype = (DotNETType) extern.getTypeReference().getReference();
 
 						// storedExternal.setNamespace(itype.namespace());
-						storedExternal.setType(itype.getFullName());
+						storedExternal.setType(itype.getName());
 						storedExternal.setAssembly(itype.assemblyName());
 
 						storedExternal.setReference(createReference(extern.getMethodReference(), type));

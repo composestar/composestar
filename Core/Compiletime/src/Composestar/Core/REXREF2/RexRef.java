@@ -88,6 +88,8 @@ public class RexRef implements CTCommonModule
 	 */
 	protected int passes;
 
+	protected ModuleReturnValue result;
+
 	public RexRef()
 	{}
 
@@ -99,6 +101,7 @@ public class RexRef implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
+		result = ModuleReturnValue.Ok;
 		Integer ipass = resources.get(PASSES_KEY);
 		if (ipass == null)
 		{
@@ -165,7 +168,7 @@ public class RexRef implements CTCommonModule
 		}
 		timer.stop();
 		logger.debug(String.format("Resolved %d instance method references", cnt));
-		return ModuleReturnValue.Ok;
+		return result;
 	}
 
 	/**
@@ -210,6 +213,7 @@ public class RexRef implements CTCommonModule
 			if (use.isRequired())
 			{
 				loglev = Level.ERROR;
+				result = ModuleReturnValue.Error;
 			}
 			logger.log(loglev, msg, use.getUser());
 		}

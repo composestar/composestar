@@ -166,6 +166,10 @@ namespace Composestar.StarLight.CpsParser
                             _embeddedCode.Language = ((ITree)current.GetChild(0)).Text;
                             _embeddedCode.FileName = ((ITree)current.GetChild(2)).Text;
                             _embeddedCode.Code = ((ITree)current.GetChild(3)).Text;
+                            if (_embeddedCode.FileName.IndexOf('"') == 0)
+                            {
+                                _embeddedCode.FileName = _embeddedCode.FileName.Substring(1, _embeddedCode.FileName.Length - 2);
+                            }
                         }
                         break;
                     case CpsParser.FILTER_MODULE:

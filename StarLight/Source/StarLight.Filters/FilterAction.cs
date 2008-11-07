@@ -126,6 +126,11 @@ namespace Composestar.StarLight.Filters.FilterTypes
 		/// </summary>
 		public const string DispatchAction = "DispatchAction";
 
+        /// <summary>
+        /// Send action constant value.
+        /// </summary>
+        public const string SendAction = "SendAction";
+
 		/// <summary>
 		/// Error action constant value.
 		/// </summary>

@@ -51,6 +51,7 @@ import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
 import Composestar.Core.CpsRepository2Impl.Filters.FilterActionImpl;
 import Composestar.Core.CpsRepository2Impl.Filters.PrimitiveFilterTypeImpl;
+import Composestar.Core.CpsRepository2Impl.References.ReferenceManagerImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.CallToOtherMethod;
@@ -119,6 +120,11 @@ public class StarLightCollectorRunner implements CTCommonModule
 	{
 		resources = resc;
 		refman = resc.get(ReferenceManager.RESOURCE_KEY);
+		if (refman == null)
+		{
+			refman = new ReferenceManagerImpl();
+			resources.put(ReferenceManager.RESOURCE_KEY, refman);
+		}
 		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
 		if (register == null)
 		{
@@ -155,13 +161,12 @@ public class StarLightCollectorRunner implements CTCommonModule
 	 */
 	private FlowBehavior getFlowBehavior(int value)
 	{
-		// see Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute.
-		// FilterFlowBehavior
+		// see Composestar.StarLight.Entities.Configuration.FilterActionElement
 		switch (value)
 		{
-			case 1:
-				return FlowBehavior.EXIT;
 			case 2:
+				return FlowBehavior.EXIT;
+			case 3:
 				return FlowBehavior.RETURN;
 			default:
 				return FlowBehavior.CONTINUE;
@@ -218,6 +223,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			filterAction.setJoinPointContextArgument(getJPCA(storedAction.getCreateJPC()));
 
 			actionMapping.put(filterAction.getName(), filterAction);
+			resources.repository().add(filterAction);
 		}
 
 		// get FilterTypes:
@@ -261,6 +267,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 						+ "' not found for FilterType '" + storedType.getName() + "'.", ModuleNames.COLLECTOR);
 			}
 			filterType.setRejectReturnAction(rejectReturnAction);
+
+			resources.repository().add(filterType);
 		}
 
 		logger.debug(storedTypes.size() + " filters with " + actionMapping.size()

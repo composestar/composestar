@@ -42,6 +42,8 @@
     <Compile Include="BuiltIn\AfterFilterType.cs" />
     <Compile Include="BuiltIn\BeforeFilterType.cs" />
     <Compile Include="BuiltIn\ContinueAction.cs" />
+    <Compile Include="BuiltIn\SendAction.cs" />
+    <Compile Include="BuiltIn\SendFilterType.cs" />
     <Compile Include="BuiltIn\DispatchAction.cs" />
     <Compile Include="BuiltIn\DispatchFilterType.cs" />
     <Compile Include="BuiltIn\ErrorAction.cs" />
