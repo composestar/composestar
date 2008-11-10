@@ -259,7 +259,7 @@ public class CwCWeaver implements CTCommonModule
 			}
 		}
 		// TODO return error when weaving failed somewhere
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	protected void cleanPreprocessorInfoChannel(PreprocessorInfoChannel ppic)

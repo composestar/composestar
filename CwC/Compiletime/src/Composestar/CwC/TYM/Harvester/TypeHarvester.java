@@ -82,7 +82,7 @@ public class TypeHarvester implements CTCommonModule
 		{
 			harvest(src);
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	protected void initWeaveC()

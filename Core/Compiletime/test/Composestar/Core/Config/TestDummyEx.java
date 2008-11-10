@@ -8,6 +8,6 @@ public class TestDummyEx implements CTCommonModule
 {
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 }

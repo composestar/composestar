@@ -84,7 +84,7 @@ public class PreProcess implements CTCommonModule
 							ppdir.toString().length() + File.pathSeparator.length())));
 				}
 			}
-			return ModuleReturnValue.Ok;
+			return ModuleReturnValue.OK;
 		}
 		Language lang = proj.getPlatform().getLanguage(proj.getLanguage());
 		if (lang == null)
@@ -107,6 +107,6 @@ public class PreProcess implements CTCommonModule
 		{
 			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 }

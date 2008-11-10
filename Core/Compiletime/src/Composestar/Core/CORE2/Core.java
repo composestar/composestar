@@ -65,7 +65,7 @@ public class Core implements CTCommonModule
 			findConflicts((Concern) si.getOwner());
 		}
 		// TODO return Error when conflicts are detected
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

@@ -151,7 +151,7 @@ public class FILTH implements CTCommonModule
 			throw new ModuleException(String.format("One or more concerns did not have a valid filter module order."),
 					ModuleNames.FILTH);
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

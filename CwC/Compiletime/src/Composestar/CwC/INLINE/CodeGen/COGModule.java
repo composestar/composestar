@@ -63,6 +63,6 @@ public class COGModule implements CTCommonModule
 			Object result = cg.generate(entry.getValue(), entry.getKey(), inlinerResc.getMethodId(entry.getKey()));
 			logger.info(result);
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 }

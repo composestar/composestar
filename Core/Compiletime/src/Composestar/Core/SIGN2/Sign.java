@@ -157,7 +157,7 @@ public class Sign implements CTCommonModule
 			if (error)
 			{
 				logger.fatal("Sign encountered errors");
-				return ModuleReturnValue.Error;
+				return ModuleReturnValue.ERROR;
 			}
 
 			logger.debug("Final signatures");
@@ -170,7 +170,7 @@ public class Sign implements CTCommonModule
 			{
 				logger.fatal("Sign encountered errors");
 				cleanProbes();
-				return ModuleReturnValue.Error;
+				return ModuleReturnValue.ERROR;
 			}
 
 			logger.debug("Finishing");
@@ -183,9 +183,9 @@ public class Sign implements CTCommonModule
 		catch (Exception exc)
 		{
 			logger.error(exc, exc);
-			return ModuleReturnValue.Error;
+			return ModuleReturnValue.ERROR;
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	protected void runLight(CommonResources resources) throws ModuleException

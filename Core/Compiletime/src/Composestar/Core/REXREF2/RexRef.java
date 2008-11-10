@@ -101,7 +101,7 @@ public class RexRef implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		result = ModuleReturnValue.Ok;
+		result = ModuleReturnValue.OK;
 		Integer ipass = resources.get(PASSES_KEY);
 		if (ipass == null)
 		{
@@ -116,7 +116,7 @@ public class RexRef implements CTCommonModule
 		if (refman == null)
 		{
 			// no reference manager means nothing has to be resolved
-			return ModuleReturnValue.Ok;
+			return ModuleReturnValue.OK;
 		}
 		int cnt = 0;
 		repository = resources.repository();
@@ -213,7 +213,7 @@ public class RexRef implements CTCommonModule
 			if (use.isRequired())
 			{
 				loglev = Level.ERROR;
-				result = ModuleReturnValue.Error;
+				result = ModuleReturnValue.ERROR;
 			}
 			logger.log(loglev, msg, use.getUser());
 		}

@@ -54,7 +54,7 @@ public class DummyManager implements CTCommonModule
 		config = resources.configuration();
 		createDummies();
 		// TODO return error when dummies failed
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

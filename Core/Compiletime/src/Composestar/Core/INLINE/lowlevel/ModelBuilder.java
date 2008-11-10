@@ -152,7 +152,7 @@ public class ModelBuilder implements CTCommonModule
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		startInliner();
 		// TODO return error when model building failed
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

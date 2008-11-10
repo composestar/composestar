@@ -129,7 +129,6 @@ public class ModuleTask extends Task
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.TASMAN.Task#execute()
 	 */
 	@Override
@@ -142,6 +141,7 @@ public class ModuleTask extends Task
 		if (!manager.canExecute(moduleClass))
 		{
 			logger.info(String.format("Skipping execution of %s (dependencies are not met)", moduleClass.getName()));
+			manager.reportModuleResult(CTCommonModule.ModuleReturnValue.NO_EXECUTION, module, false);
 			return;
 		}
 		if (module == null)
@@ -174,7 +174,7 @@ public class ModuleTask extends Task
 		}
 		catch (ModuleException e)
 		{
-			manager.reportModuleResult(CTCommonModule.ModuleReturnValue.Fatal, module, false);
+			manager.reportModuleResult(CTCommonModule.ModuleReturnValue.FATAL, module, false);
 			throw e;
 		}
 		finally

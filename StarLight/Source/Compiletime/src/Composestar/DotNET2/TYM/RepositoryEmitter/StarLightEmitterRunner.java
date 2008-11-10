@@ -127,7 +127,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			throw new ModuleException("NullPointerException in emitter", ModuleNames.WESPEM);
 		}
 
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

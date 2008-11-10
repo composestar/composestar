@@ -59,7 +59,7 @@ public class AnnotationCollector implements CTCommonModule
 		{
 			throw new ModuleException(e.getMessage(), MODULE_NAME);
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

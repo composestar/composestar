@@ -196,33 +196,45 @@ public class Manager
 	}
 
 	/**
+	 * @param result
+	 * @param module
+	 * @param throwOnFatal
+	 * @throws ModuleException
+	 */
+	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result, CTCommonModule module,
+			boolean throwOnFatal) throws ModuleException
+	{
+		reportModuleResult(result, module.getClass(), throwOnFatal);
+	}
+
+	/**
 	 * Method to call to report the result of a module.
 	 * 
 	 * @param result
 	 * @param module
 	 * @throws ModuleException
 	 */
-	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result, CTCommonModule module,
-			boolean throwOnFatal) throws ModuleException
+	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result,
+			Class<? extends CTCommonModule> module, boolean throwOnFatal) throws ModuleException
 	{
 		if (module == null)
 		{
 			return;
 		}
-		String moduleid = getModuleID(module.getClass());
+		String moduleid = getModuleID(module);
 		if (moduleid == null)
 		{
 			// Panic! No module name
 			logger.warn(String.format("Module %s does not have an ID, switching to always execute modules", module
-					.getClass().getName()));
+					.getName()));
 			undeterministic = true;
-			moduleid = module.getClass().getName();
+			moduleid = module.getName();
 		}
 		else
 		{
 			moduleResults.put(moduleid, result);
 		}
-		if (result == CTCommonModule.ModuleReturnValue.Fatal && throwOnFatal)
+		if (result == CTCommonModule.ModuleReturnValue.FATAL && throwOnFatal)
 		{
 			throw new ModuleException("Module execution was fatal", moduleid);
 		}
@@ -255,7 +267,7 @@ public class Manager
 				// check if everything executed
 				for (CTCommonModule.ModuleReturnValue res : moduleResults.values())
 				{
-					if (res != CTCommonModule.ModuleReturnValue.Ok)
+					if (res != CTCommonModule.ModuleReturnValue.OK)
 					{
 						// one failed
 						logger.info(String.format("Module %s depends on module %s which did not return Ok", annot.ID(),
@@ -280,7 +292,7 @@ public class Manager
 								dep));
 						return false || undeterministic;
 					}
-					else if (moduleResults.get(dep) != CTCommonModule.ModuleReturnValue.Ok)
+					else if (moduleResults.get(dep) != CTCommonModule.ModuleReturnValue.OK)
 					{
 						// no valid execution
 						logger.info(String.format("Module %s depends on module %s which did not return Ok", annot.ID(),

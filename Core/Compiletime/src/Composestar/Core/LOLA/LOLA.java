@@ -265,7 +265,7 @@ public abstract class LOLA implements CTCommonModule
 		 * printed by the prolog interpreter will be visible
 		 */
 
-		ModuleReturnValue result = ModuleReturnValue.Ok;
+		ModuleReturnValue result = ModuleReturnValue.OK;
 
 		CPSTimer timer = CPSTimer.getTimer(ModuleNames.LOLA);
 

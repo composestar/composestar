@@ -73,11 +73,11 @@ public class EMBEX implements CTCommonModule
 		}
 		if (success)
 		{
-			return ModuleReturnValue.Ok;
+			return ModuleReturnValue.OK;
 		}
 		else
 		{
-			return ModuleReturnValue.Error;
+			return ModuleReturnValue.ERROR;
 		}
 	}
 

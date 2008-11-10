@@ -30,7 +30,7 @@ public interface CTCommonModule
 		/**
 		 * The module completed successfully.
 		 */
-		Ok,
+		OK,
 		/**
 		 * This module encountered non-fatal errors during its operation.
 		 * However, this module's result is not sound, therefore depending
@@ -38,7 +38,7 @@ public interface CTCommonModule
 		 * modules that have a (transitive) dependency on this module will not
 		 * be executed, all other modules will still be executed.
 		 */
-		Error,
+		ERROR,
 		/**
 		 * The module encountered a fatal error. The whole compilation process
 		 * should be aborted. Throwing a ModuleException is identical to
@@ -48,7 +48,11 @@ public interface CTCommonModule
 		 * unhandled state, not when the user input constains an error of some
 		 * sort.
 		 */
-		Fatal
+		FATAL,
+		/**
+		 * This module did not execute
+		 */
+		NO_EXECUTION
 	}
 
 	/**

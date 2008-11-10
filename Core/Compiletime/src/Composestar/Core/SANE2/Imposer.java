@@ -76,9 +76,9 @@ public class Imposer implements CTCommonModule
 		}
 		if (!res)
 		{
-			return ModuleReturnValue.Error;
+			return ModuleReturnValue.ERROR;
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	protected boolean superImpose(FilterModuleBinding fmb)

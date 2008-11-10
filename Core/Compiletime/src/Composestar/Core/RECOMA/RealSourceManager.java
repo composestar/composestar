@@ -93,7 +93,7 @@ public class RealSourceManager implements CTCommonModule
 		// TODO where is this used
 		// resources.add("CompiledSources", compiledSources);
 
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	// /**

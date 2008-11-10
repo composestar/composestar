@@ -94,6 +94,6 @@ public class JavaRepositorySerializer extends CONE
 			DataMap.setRtSerialization(false);
 			FileUtils.close(oos);
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 }

@@ -15,6 +15,6 @@ public class SignLite implements CTCommonModule
 		// No lite version of sign yet.
 		Sign sign = new Sign();
 		sign.run(resources);
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 }

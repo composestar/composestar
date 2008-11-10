@@ -90,7 +90,7 @@ public class AnnotationSuperImposition
 		doDependencyAlgorithm();
 		timer.stop();
 		logger.debug("Annotation superimposition dependency algorithm finished");
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

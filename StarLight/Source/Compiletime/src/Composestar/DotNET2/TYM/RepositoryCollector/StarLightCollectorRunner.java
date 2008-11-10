@@ -150,7 +150,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 		// resolve the MethodInfo reference in the calls within a method
 		resolveCallsToOtherMethods();
 
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

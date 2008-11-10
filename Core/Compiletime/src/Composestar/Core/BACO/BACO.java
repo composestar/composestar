@@ -69,7 +69,7 @@ public abstract class BACO implements CTCommonModule
 
 		copyFiles(filesToCopy, false);
 
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

@@ -79,7 +79,7 @@ public class Check implements CTCommonModule
 		runCheckers(resources);
 		checkers = null;
 		// TODO return Error when checkers report errors
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

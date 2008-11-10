@@ -125,7 +125,7 @@ public class SECRET implements CTCommonModule
 		{
 			logger
 					.warn("SECRET has been disabled because it has not been (properly) updated to the canonical filter model");
-			return ModuleReturnValue.Ok;
+			return ModuleReturnValue.NO_EXECUTION;
 		}
 		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
 		loadConfiguration(resources);
@@ -180,7 +180,7 @@ public class SECRET implements CTCommonModule
 				logger.warn(String.format("Unable to create report class %s", reportClass));
 			}
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

@@ -52,7 +52,7 @@ public class Compile implements CTCommonModule
 		if (nocompile)
 		{
 			// logger.info("nocompile = true, skipping compiling");
-			return ModuleReturnValue.Ok;
+			return ModuleReturnValue.OK;
 		}
 		throw new ModuleException("Internal compiler for Compose*/CWC is not implemented", "COMP");
 	}

@@ -42,6 +42,6 @@ public class JavaSignatureTransformer implements CTCommonModule
 			JarTransformer transformer = new JarTransformer(dummies);
 			transformer.run(resources.repository());
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 }

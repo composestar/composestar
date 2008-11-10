@@ -216,7 +216,7 @@ public class LangModelConverter implements CTCommonModule
 		{
 			logger.debug(String.format("Detected %d duplicate type declarations", duplicateTypeCtr));
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

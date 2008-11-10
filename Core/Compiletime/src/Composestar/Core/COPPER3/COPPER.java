@@ -139,9 +139,9 @@ public class COPPER implements CTCommonModule
 		if (errorCnt > 0)
 		{
 			logger.error(String.format("%d error(s) detected in the concern sources.", errorCnt));
-			return ModuleReturnValue.Error;
+			return ModuleReturnValue.ERROR;
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

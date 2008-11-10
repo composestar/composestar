@@ -77,7 +77,7 @@ public class FITER implements CTCommonModule
 		}
 		// Return error when filters could not be resolved (instead of
 		// exception)
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**
@@ -137,9 +137,9 @@ public class FITER implements CTCommonModule
 			// throw new
 			// ModuleException("Unable to resolve custom filter types",
 			// ModuleNames.FITER);
-			return ModuleReturnValue.Error;
+			return ModuleReturnValue.ERROR;
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

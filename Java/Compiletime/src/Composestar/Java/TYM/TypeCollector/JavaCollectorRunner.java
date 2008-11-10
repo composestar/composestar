@@ -211,7 +211,7 @@ public class JavaCollectorRunner implements CTCommonModule
 		}
 
 		register.resolveTypes(new JavaTypeResolver());
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	/**

@@ -100,7 +100,7 @@ public class Preprocessor implements CTCommonModule
 		// preprocessMP(resources, filterModules);
 
 		// TODO return error if something failed
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	public void preprocess(Set<FilterModule> filterModules)

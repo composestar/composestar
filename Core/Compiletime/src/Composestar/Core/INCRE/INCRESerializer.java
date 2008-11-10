@@ -41,13 +41,13 @@ public class INCRESerializer implements CTCommonModule
 			catch (IOException e)
 			{
 				logger.error("Unable to save compile history. Received exception: " + e, e);
-				return ModuleReturnValue.Error;
+				return ModuleReturnValue.ERROR;
 			}
 			finally
 			{
 				timer.stop();
 			}
 		}
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 }

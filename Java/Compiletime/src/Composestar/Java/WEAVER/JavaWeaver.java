@@ -81,7 +81,7 @@ public class JavaWeaver implements CTCommonModule
 		c.addClasspath((File) resources.get(CStarJavaCompiler.SOURCE_OUT));
 		// weave
 		c.weave(project);
-		return ModuleReturnValue.Ok;
+		return ModuleReturnValue.OK;
 	}
 
 	public void createHookDictionary(CommonResources resources) throws ModuleException
