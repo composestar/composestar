@@ -134,50 +134,51 @@ namespace Composestar.StarLight.Weaving.Strategies
 
 
 			// Store substitution target
-			if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
-				filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
-			{
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
-					CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
-						CachedMethodDefinition.JoinPointContextGetStartTarget)));
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
-					CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
-						CachedMethodDefinition.JoinPointContextGetSubstitutionTarget)));
-			}
-			else if (visitor.Method.HasThis)
-			{
-				TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(visitor.Method.DeclaringType);
-				FieldDefinition field = parentType.Fields.GetField(filterAction.SubstitutionTarget);
-				if (field == null)
-				{
-					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-						Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
-				}
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, field));
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
-					CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
-						CachedMethodDefinition.JoinPointContextSetSubstitutionTarget)));
-			}
-			else
-			{
-				// set to null for static methods
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
-				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
-					CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
-						CachedMethodDefinition.JoinPointContextSetSubstitutionTarget)));
-			}
+            //if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
+            //    filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
+            //{
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
+            //        CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+            //            CachedMethodDefinition.JoinPointContextGetStartTarget)));
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
+            //        CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+            //            CachedMethodDefinition.JoinPointContextGetSubstitutionTarget)));
+            //}
+            //else if (visitor.Method.HasThis)
+            //{
+            //    TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(visitor.Method.DeclaringType);
+            //    FieldDefinition field = parentType.Fields.GetField(filterAction.SubstitutionTarget);
+            //    if (field == null)
+            //    {
+            //        throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+            //            Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
+            //    }
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, field));
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
+            //        CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+            //            CachedMethodDefinition.JoinPointContextSetSubstitutionTarget)));
+            //}
+            //else
+            //{
+            //    // set to null for static methods
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
+            //    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
+            //        CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+            //            CachedMethodDefinition.JoinPointContextSetSubstitutionTarget)));
+            //}
 
 			// store substitution selector
-			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.SubstitutionSelector));
-			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
-				CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
-					CachedMethodDefinition.JoinPointContextSetSubstitutionSelector)));
+            // TODO no longer relevant
+			//visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+			//visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.SubstitutionSelector));
+			//visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
+			//	CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+			//		CachedMethodDefinition.JoinPointContextSetSubstitutionSelector)));
 		}
 
 		/// <summary>

@@ -99,14 +99,14 @@ namespace Composestar.StarLight.Weaving.Strategies
 			if (methodToCall == null)
 			{
 				throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-						Properties.Resources.AdviceMethodNotFound, filterAction.SubstitutionSelector, filterAction.SubstitutionTarget));
+						Properties.Resources.AdviceMethodNotFound, filterAction.FilterArgumentSelector, filterAction.FilterArgumentTarget));
 			}
 
 			// Set JoinPointContext
 			WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
 
 			// Check if it is an innercall and set innercall context:
-			if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget))
+			if (filterAction.FilterArgumentTarget.Equals(FilterAction.InnerTarget))
 			{
 				WeaveStrategyUtilities.SetInnerCall(visitor, methodToCall);
 			}
@@ -133,18 +133,18 @@ namespace Composestar.StarLight.Weaving.Strategies
 			// Place target on the stack:
 			if (methodToCall.HasThis)
 			{
-				if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
-					filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
+				if (filterAction.FilterArgumentTarget.Equals(FilterAction.InnerTarget) ||
+					filterAction.FilterArgumentTarget.Equals(FilterAction.SelfTarget))
 				{
 					WeaveStrategyUtilities.LoadSelfObject(visitor, jpcVar);
 				}
 				else
 				{
-					FieldDefinition target = parentType.Fields.GetField(filterAction.SubstitutionTarget);
+					FieldDefinition target = parentType.Fields.GetField(filterAction.FilterArgumentTarget);
 					if (target == null)
 					{
 						throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-							Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
+							Properties.Resources.FieldNotFound, filterAction.FilterArgumentTarget));
 					}
 
 					visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
@@ -160,7 +160,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             else if (methodToCall.Parameters.Count != 0)
             {
                 throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                    Properties.Resources.AdviceMethodNotFound, filterAction.SubstitutionSelector, filterAction.SubstitutionTarget));
+                    Properties.Resources.AdviceMethodNotFound, filterAction.FilterArgumentSelector, filterAction.FilterArgumentTarget));
             }
 
 			// We can safely emit a callvirt here. The JITter will make the right call.
@@ -181,46 +181,46 @@ namespace Composestar.StarLight.Weaving.Strategies
 			FilterAction filterAction, TypeDefinition parentType)
 		{
             MethodReference result = null;
-			if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
-				filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
+			if (filterAction.FilterArgumentTarget.Equals(FilterAction.InnerTarget) ||
+				filterAction.FilterArgumentTarget.Equals(FilterAction.SelfTarget))
 			{
-				result = CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_JpcTypes);
+				result = CecilUtilities.ResolveMethod(parentType, filterAction.FilterArgumentSelector, m_JpcTypes);
                 if (result == null)
                 {
-                    result = CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_ObjectTypes);
+                    result = CecilUtilities.ResolveMethod(parentType, filterAction.FilterArgumentSelector, m_ObjectTypes);
                 }
                 if (result == null)
                 {
-                    result = CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_NoneTypes);
+                    result = CecilUtilities.ResolveMethod(parentType, filterAction.FilterArgumentSelector, m_NoneTypes);
                 }
 			}
 			else
 			{
-				FieldDefinition target = parentType.Fields.GetField(filterAction.SubstitutionTarget);
+				FieldDefinition target = parentType.Fields.GetField(filterAction.FilterArgumentTarget);
 				if (target == null)
 				{
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-						Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
+						Properties.Resources.FieldNotFound, filterAction.FilterArgumentTarget));
 				}
 
 				MethodDefinition method = CecilUtilities.ResolveMethod(target.FieldType,
-					filterAction.SubstitutionSelector, m_JpcTypes);
+					filterAction.FilterArgumentSelector, m_JpcTypes);
 
                 if (method == null)
                 {
                     // try func(Object)
-                    method = CecilUtilities.ResolveMethod(target.FieldType, filterAction.SubstitutionSelector, m_ObjectTypes);
+                    method = CecilUtilities.ResolveMethod(target.FieldType, filterAction.FilterArgumentSelector, m_ObjectTypes);
                 }
                 if (method == null)
                 {
                     // try func()
-                    method = CecilUtilities.ResolveMethod(target.FieldType, filterAction.SubstitutionSelector, m_NoneTypes);
+                    method = CecilUtilities.ResolveMethod(target.FieldType, filterAction.FilterArgumentSelector, m_NoneTypes);
                 }
 
 				if (method == null)
 				{
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-						Properties.Resources.MethodNotFound, target.FieldType, filterAction.SubstitutionSelector));
+						Properties.Resources.MethodNotFound, target.FieldType, filterAction.FilterArgumentSelector));
 				}
 
 				return visitor.TargetAssemblyDefinition.MainModule.Import(method);

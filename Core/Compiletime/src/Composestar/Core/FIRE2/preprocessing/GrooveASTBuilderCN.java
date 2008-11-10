@@ -225,10 +225,10 @@ public class GrooveASTBuilderCN
 		fex = null;
 		switch (dir)
 		{
-			case Output:
+			case OUTPUT:
 				fex = fm.getOutputFilterExpression();
 				break;
-			case Input:
+			case INPUT:
 			default:
 				fex = fm.getInputFilterExpression();
 				break;

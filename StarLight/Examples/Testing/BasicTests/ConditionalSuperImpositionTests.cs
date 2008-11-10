@@ -20,21 +20,21 @@ namespace BasicTests
 			report("Executing CondSIFunc1...");
 		}
 
-		//[Composestar.StarLight.SkipWeaving]
+		[Composestar.StarLight.SkipWeaving]
 		[Composestar.StarLight.Weaving.ConditionParameters.ConditionParameterEmpty]
 		public static Boolean LoggingEnabled()
 		{
 			return loggingEnabled;
 		}
 
-		//[Composestar.StarLight.SkipWeaving]
+		[Composestar.StarLight.SkipWeaving]
 		[Composestar.StarLight.Weaving.ConditionParameters.ConditionParameterMethodInfo]
 		public static Boolean TimingEnabled(System.Reflection.MethodBase methodInfo)
 		{
 			return timingEnabled && methodInfo.Name.Equals("Test");
 		}
 
-		//[Composestar.StarLight.SkipWeaving]
+		[Composestar.StarLight.SkipWeaving]
 		[Composestar.StarLight.Weaving.ConditionParameters.ConditionParameterFQN]
 		public static Boolean ShouldLog(String fqn)
 		{
@@ -42,7 +42,7 @@ namespace BasicTests
 			return loggingEnabled;
 		}
 
-		//[Composestar.StarLight.SkipWeaving]
+		[Composestar.StarLight.SkipWeaving]
 		[Composestar.StarLight.Weaving.ConditionParameters.ConditionParameterNS]
 		public static Boolean ShouldLogExt(String ns, String type)
 		{

@@ -186,7 +186,7 @@ public class FilterSetAnalysis implements Serializable
 		{
 			FilterModule fm = fmsi.getFilterModule();
 
-			if (filterDirection == FilterDirection.Output)
+			if (filterDirection == FilterDirection.OUTPUT)
 			{
 				getFilterList(fm.getOutputFilterExpression());
 			}

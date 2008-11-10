@@ -90,8 +90,8 @@ public class XMLReport implements SECRETReport
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.SECRET3.Report.SECRETReport#report(Composestar.Core.Resources
-	 * .CommonResources, Composestar.Core.SECRET3.SECRETResources)
+	 * Composestar.Core.SECRET3.Report.SECRETReport#report(Composestar.Core.
+	 * Resources .CommonResources, Composestar.Core.SECRET3.SECRETResources)
 	 */
 	public void report(CommonResources resources, SECRETResources secretResources)
 	{
@@ -313,7 +313,8 @@ public class XMLReport implements SECRETReport
 				Element orderElm = xmlDoc.createElement("order");
 				for (ImposedFilterModule fmsi : fsa.getOrder())
 				{
-					if (DefaultInnerDispatchNames.FILTER_MODULE.equals(fmsi.getFilterModule().getFullyQualifiedName()))
+					if (DefaultInnerDispatchNames.FQN_FILTER_MODULE.equals(fmsi.getFilterModule()
+							.getFullyQualifiedName()))
 					{
 						continue;
 					}

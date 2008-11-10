@@ -458,8 +458,11 @@ namespace Composestar.StarLight.ILAnalyzer
 					foreach (MethodDefinition method in type.Methods)
 					{
 						// check if we have to skip this method
-						if (SkipWeaving(method.CustomAttributes))
-							continue;
+
+                        // don't skip analysing methods because we need all the info
+                        // weaving is skipped by the actual weaver anyway
+						//if (SkipWeaving(method.CustomAttributes))
+						//	continue;
 
 						// skip unmanaged code
 						if (method.ImplAttributes == Mono.Cecil.MethodImplAttributes.Unmanaged)

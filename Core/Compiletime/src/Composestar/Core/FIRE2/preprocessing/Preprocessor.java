@@ -141,17 +141,17 @@ public class Preprocessor implements CTCommonModule
 		GraphMetaData outputMeta = new GraphMetaData();
 
 		timer.start("Create input AST %s", module.getFullyQualifiedName());
-		Graph grooveAstIF = buildAst(module, FilterDirection.Input, inputMeta);
+		Graph grooveAstIF = buildAst(module, FilterDirection.INPUT, inputMeta);
 		timer.stop();
 		timer.start("Create output AST %s", module.getFullyQualifiedName());
-		Graph grooveAstOF = buildAst(module, FilterDirection.Output, outputMeta);
+		Graph grooveAstOF = buildAst(module, FilterDirection.OUTPUT, outputMeta);
 		timer.stop();
 
 		if (GROOVE_DEBUG)
 		{
-			dumpGraphToFile(grooveAstIF, new File("./ast-" + FilterDirection.Input + "_"
+			dumpGraphToFile(grooveAstIF, new File("./ast-" + FilterDirection.INPUT + "_"
 					+ module.getFullyQualifiedName() + ".gst"));
-			dumpGraphToFile(grooveAstOF, new File("./ast-" + FilterDirection.Output + "_"
+			dumpGraphToFile(grooveAstOF, new File("./ast-" + FilterDirection.OUTPUT + "_"
 					+ module.getFullyQualifiedName() + ".gst"));
 		}
 
@@ -165,9 +165,9 @@ public class Preprocessor implements CTCommonModule
 
 		if (GROOVE_DEBUG)
 		{
-			dumpGraphToFile(grooveFlowModelIF, new File("./flow-" + FilterDirection.Input + "_"
+			dumpGraphToFile(grooveFlowModelIF, new File("./flow-" + FilterDirection.INPUT + "_"
 					+ module.getFullyQualifiedName() + ".gst"));
-			dumpGraphToFile(grooveFlowModelOF, new File("./flow-" + FilterDirection.Output + "_"
+			dumpGraphToFile(grooveFlowModelOF, new File("./flow-" + FilterDirection.OUTPUT + "_"
 					+ module.getFullyQualifiedName() + ".gst"));
 		}
 

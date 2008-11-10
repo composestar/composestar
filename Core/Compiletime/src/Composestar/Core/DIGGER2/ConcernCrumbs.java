@@ -58,7 +58,7 @@ public class ConcernCrumbs implements Serializable
 	{
 		switch (crumb.getFilterPosition())
 		{
-			case Output:
+			case OUTPUT:
 				// TODO:
 				throw new UnsupportedOperationException();
 			default:

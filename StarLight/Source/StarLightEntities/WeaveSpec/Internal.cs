@@ -54,7 +54,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	public class Internal
 	{
 		private string _name;
-		private string _namespace;
 		private string _type;
 		private string _assembly;
 		private string _concern;
@@ -68,17 +67,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		{
 			get { return _name; }
 			set { _name = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the name space.
-		/// </summary>
-		/// <value>The name space.</value>
-		[XmlAttribute]
-		public string Namespace
-		{
-			get { return _namespace; }
-			set { _namespace = value; }
 		}
 
 		/// <summary>

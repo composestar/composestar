@@ -52,15 +52,15 @@ public class CoreConflictDetector
 	public List<CoreConflict> findConflicts(FireModel fireModel)
 	{
 		// Input filters:
-		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input);
-		FlowModel flowModel = fireModel.getFlowModel(FilterDirection.Input);
+		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.INPUT);
+		FlowModel flowModel = fireModel.getFlowModel(FilterDirection.INPUT);
 		// Set contains FlowNode and FlowTransition elements
 		Set<Object> reachableParts = findReachableParts(execModel);
 		List<CoreConflict> conflicts = checkForConflicts(flowModel, reachableParts);
 
 		// Output filters:
-		execModel = fireModel.getExecutionModel(FilterDirection.Output);
-		flowModel = fireModel.getFlowModel(FilterDirection.Output);
+		execModel = fireModel.getExecutionModel(FilterDirection.OUTPUT);
+		flowModel = fireModel.getFlowModel(FilterDirection.OUTPUT);
 		reachableParts = findReachableParts(execModel);
 		conflicts.addAll(checkForConflicts(flowModel, reachableParts));
 		return conflicts;

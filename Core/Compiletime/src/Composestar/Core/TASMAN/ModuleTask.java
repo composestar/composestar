@@ -141,7 +141,7 @@ public class ModuleTask extends Task
 		if (!manager.canExecute(moduleClass))
 		{
 			logger.info(String.format("Skipping execution of %s (dependencies are not met)", moduleClass.getName()));
-			manager.reportModuleResult(CTCommonModule.ModuleReturnValue.NO_EXECUTION, module, false);
+			manager.reportModuleResult(CTCommonModule.ModuleReturnValue.NO_EXECUTION, moduleClass, false);
 			return;
 		}
 		if (module == null)

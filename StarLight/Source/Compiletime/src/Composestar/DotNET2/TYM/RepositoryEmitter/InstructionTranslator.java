@@ -213,7 +213,7 @@ class InstructionTranslator implements Visitor
 				CpsVariable var = asgn.getValue();
 				if (var instanceof CpsObject)
 				{
-					weaveAction.setSubstitutionTarget(getSafeTargetName(filterAction.getMessage().getTarget()));
+					weaveAction.setFilterArgumentTarget(getSafeTargetName((CpsObject) var));
 				}
 				else
 				{
@@ -225,18 +225,18 @@ class InstructionTranslator implements Visitor
 				CpsVariable var = asgn.getValue();
 				if (var instanceof CpsSelector)
 				{
-					weaveAction.setSubstitutionSelector((((CpsSelector) var)).getName());
+					weaveAction.setFilterArgumentSelector((((CpsSelector) var)).getName());
 				}
 				else if (var instanceof CpsLiteral)
 				{
-					weaveAction.setSubstitutionSelector(((CpsLiteral) var).getLiteralValue());
+					weaveAction.setFilterArgumentSelector(((CpsLiteral) var).getLiteralValue());
 				}
 				else if (var instanceof CpsProgramElement)
 				{
 					ProgramElement pe = ((CpsProgramElement) var).getProgramElement();
 					if (pe instanceof MethodInfo)
 					{
-						weaveAction.setSubstitutionSelector(((MethodInfo) pe).getName());
+						weaveAction.setFilterArgumentSelector(((MethodInfo) pe).getName());
 					}
 				}
 				else

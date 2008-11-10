@@ -204,7 +204,10 @@ public class Manager
 	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result, CTCommonModule module,
 			boolean throwOnFatal) throws ModuleException
 	{
-		reportModuleResult(result, module.getClass(), throwOnFatal);
+		if (module != null)
+		{
+			reportModuleResult(result, module.getClass(), throwOnFatal);
+		}
 	}
 
 	/**
@@ -264,21 +267,25 @@ public class Manager
 		{
 			if (ComposestarModule.DEPEND_ALL.equals(dep))
 			{
-				// check if everything executed
-				for (CTCommonModule.ModuleReturnValue res : moduleResults.values())
+				synchronized (moduleResults)
 				{
-					if (res != CTCommonModule.ModuleReturnValue.OK)
+					// check if everything executed
+					for (CTCommonModule.ModuleReturnValue res : moduleResults.values())
 					{
-						// one failed
-						logger.info(String.format("Module %s depends on module %s which did not return Ok", annot.ID(),
-								dep));
-						return false || undeterministic;
+						if (res != CTCommonModule.ModuleReturnValue.OK
+								&& res != CTCommonModule.ModuleReturnValue.NO_EXECUTION)
+						{
+							// one failed
+							logger.info(String.format("Module %s depends on module %s which did not return Ok", annot
+									.ID(), dep));
+							return false || undeterministic;
+						}
 					}
 				}
 			}
 			else if (ComposestarModule.DEPEND_PREVIOUS.equals(dep))
 			{
-				// check previously executed module
+				// TODO check previously executed module
 			}
 			else
 			{

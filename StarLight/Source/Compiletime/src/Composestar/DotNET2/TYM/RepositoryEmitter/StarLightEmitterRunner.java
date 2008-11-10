@@ -315,8 +315,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 						Internal intern = (Internal) fmvar;
 						DotNETType itype = (DotNETType) intern.getTypeReference().getReference();
 
-						storedInternal.setNamespace(itype.namespace());
-						storedInternal.setType(itype.getName());
+						storedInternal.setType(itype.getFullName());
 						storedInternal.setAssembly(itype.assemblyName());
 					}
 					else if (fmvar instanceof External)
@@ -328,8 +327,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 						External extern = (External) fmvar;
 						DotNETType itype = (DotNETType) extern.getTypeReference().getReference();
 
-						// storedExternal.setNamespace(itype.namespace());
-						storedExternal.setType(itype.getName());
+						storedExternal.setType(itype.getFullName());
 						storedExternal.setAssembly(itype.assemblyName());
 
 						storedExternal.setReference(createReference(extern.getMethodReference(), type));

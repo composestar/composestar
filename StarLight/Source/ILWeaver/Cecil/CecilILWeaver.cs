@@ -115,6 +115,8 @@ namespace Composestar.StarLight.ILWeaver
 		/// </summary>
 		private WeaveSpecification _currentWeaveSpec;
 
+        private string _skipWeavingAttribute = typeof(SkipWeavingAttribute).FullName;
+
 		#endregion
 
 		/// <summary>
@@ -226,6 +228,8 @@ namespace Composestar.StarLight.ILWeaver
 				TypeDefinition type = targetAssembly.MainModule.Types[weaveType.Name];
 				if (type == null)
 					continue;
+
+                if (SkipWeaving(type.CustomAttributes)) continue;
 
 				_typeChanged = false;
 
@@ -440,6 +444,8 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ArgumentNullException("targetAssembly");
             #endregion
 
+            if (SkipWeaving(targetAssembly.CustomAttributes)) return;
+
             MethodReference tr = targetAssembly.MainModule.Import(typeof(ConflictRuleAttribute).GetConstructor(new Type[] { typeof(string), typeof(string), typeof(bool), typeof(string) }));
 
             foreach (ConflictRuleElement rule in _currentWeaveSpec.ConflictRules)
@@ -483,11 +489,9 @@ namespace Composestar.StarLight.ILWeaver
 
 			foreach (Internal inter in weaveType.Internals)
 			{
-				string internalTypeString = string.Concat(inter.Namespace, ".", inter.Type);
-
-				TypeReference internalTypeRef = CecilUtilities.ResolveType(internalTypeString, inter.Assembly, "");
+                TypeReference internalTypeRef = CecilUtilities.ResolveType(inter.Type, inter.Assembly, "");
 				if (internalTypeRef == null)
-					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, inter.Type + " (step 2)"));
 
 				internalTypeRef = targetAssembly.MainModule.Import(internalTypeRef);
 
@@ -514,8 +518,8 @@ namespace Composestar.StarLight.ILWeaver
 
 				if (internalConstructor == null)
 				{
-					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
-						Properties.Resources.NoSuitableInternalConstructor, internalTypeString));
+					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                        Properties.Resources.NoSuitableInternalConstructor, inter.Type));
 				}
 
 				// Initialize internal in every constructor of the inner type 
@@ -616,7 +620,7 @@ namespace Composestar.StarLight.ILWeaver
 
 				// Get the method referenced by the external
 				MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector,
-					string.Concat(external.Reference.Namespace, ".", external.Reference.Target),
+                    external.Reference.FullTypeName,
 					external.Assembly, "");
 
 				if (initMethodDef == null)
@@ -655,6 +659,33 @@ namespace Composestar.StarLight.ILWeaver
 
 		}
 
+        /// <summary>
+        /// Skip weaving based on the SkipWeavingAttribute specified in the CustomAttributeCollection.
+        /// </summary>
+        /// <param name="attributes">The Custom Attribute Collection of an element.</param>
+        /// <returns>Return <see langword="true"/> when one of the custom attributes indicates it should not be weaved on.</returns>
+        private bool SkipWeaving(CustomAttributeCollection attributes)
+        {
+            if (attributes == null || attributes.Count == 0)
+                return false;
+
+            foreach (CustomAttribute attribute in attributes)
+            {
+                if (attribute.Constructor.DeclaringType.FullName.Equals(_skipWeavingAttribute))
+                {
+                    if (attribute.ConstructorParameters.Count == 1 && attribute.ConstructorParameters[0] != null)
+                        return (Convert.ToBoolean(attribute.ConstructorParameters[0], CultureInfo.InvariantCulture));
+
+                    if (attribute.Properties["Enabled"] != null)
+                        return Convert.ToBoolean(attribute.Properties["Enabled"], CultureInfo.InvariantCulture);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 		/// <summary>
 		/// Weaves the code into the method.
 		/// </summary>
@@ -679,12 +710,18 @@ namespace Composestar.StarLight.ILWeaver
 
 			#endregion
 
+            if (SkipWeaving(method.CustomAttributes)) return;
+
             // Do not add filter code to static methods when internals, externals or non-static conditions are used 
             bool hasNonStaticConditions = false;
             if (weaveType.HasConditions)
 			{
                 foreach (Condition c in weaveType.Conditions)
                 {
+                    if (c.Reference.Target == null)
+                    {
+                        continue;
+                    }
                     if (c.Reference.Target.Equals(Reference.InnerTarget) || c.Reference.Target.Equals(Reference.SelfTarget))
                     {
                         hasNonStaticConditions = true;
@@ -777,6 +814,8 @@ namespace Composestar.StarLight.ILWeaver
 			}
 			catch (Exception ex)
 			{
+                Console.Out.WriteLine(ex);
+                Console.Out.WriteLine(ex.StackTrace);
 				// The error wrapped in an ILWeaverException
 				throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException,
 											_configuration.OutputImagePath, ex);

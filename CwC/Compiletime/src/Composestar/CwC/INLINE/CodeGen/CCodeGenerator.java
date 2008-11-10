@@ -168,7 +168,7 @@ public class CCodeGenerator extends StringCodeGenerator
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append("\n{ /* start filter code */\n");
-		if (filterDirection == FilterDirection.Input)
+		if (filterDirection == FilterDirection.INPUT)
 		{
 			sb.append(String.format("if ( !CSTAR_is_inner_call(%d) ) { \n", methodId));
 		}
@@ -257,7 +257,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append(indent(onReturn, 2));
 			sb.append("\t}\n");
 		}
-		if (filterDirection == FilterDirection.Input)
+		if (filterDirection == FilterDirection.INPUT)
 		{
 			if (hasReturnValue(method))
 			{
@@ -273,7 +273,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append("} /* end filter module condition check */\n");
 		}
 		sb.append("} /* end filter code */\n");
-		if (filterDirection == FilterDirection.Input)
+		if (filterDirection == FilterDirection.INPUT)
 		{
 			sb.append(String.format("CSTAR_reset_inner_call(%d);\n}\n", methodId));
 		}

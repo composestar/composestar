@@ -105,7 +105,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 		ctom = null;
 		calledFromMethod = null;
 		calledFromMethodId = -1;
-		filterDirection = FilterDirection.Input;
+		filterDirection = FilterDirection.INPUT;
 		return generate(code);
 	}
 
@@ -124,7 +124,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 		methodId = currentMethodId;
 		calledFromMethod = fromMethod;
 		calledFromMethodId = fromMethodId;
-		filterDirection = FilterDirection.Output;
+		filterDirection = FilterDirection.OUTPUT;
 		return generate(code);
 	}
 

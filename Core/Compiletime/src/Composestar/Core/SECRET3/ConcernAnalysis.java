@@ -100,7 +100,7 @@ public class ConcernAnalysis implements Serializable
 	 */
 	protected boolean analyseOrder(List<ImposedFilterModule> order, boolean isSelected)
 	{
-		FilterSetAnalysis oa = new FilterSetAnalysis(concern, order, FilterDirection.Input, isSelected);
+		FilterSetAnalysis oa = new FilterSetAnalysis(concern, order, FilterDirection.INPUT, isSelected);
 		oa.analyze(resources);
 		analysis.add(oa);
 		return !oa.hasConflicts();

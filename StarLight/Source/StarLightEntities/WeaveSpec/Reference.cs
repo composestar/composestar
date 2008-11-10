@@ -86,7 +86,11 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		public string Target
 		{
 			get { return _target; }
-			set { _target = value; }
+            set
+            {
+                _target = value;
+                if (String.IsNullOrEmpty(_target)) { _target = null; }
+            }
 		}
 
 		/// <summary>

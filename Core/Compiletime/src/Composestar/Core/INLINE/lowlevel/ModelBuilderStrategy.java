@@ -43,6 +43,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
+import Composestar.Core.FILTH2.DefaultInnerDispatchNames;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
@@ -212,6 +213,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		boolean hasCheckConditions = true;
 		for (ImposedFilterModule fmsi : filterSet)
 		{
+			if (DefaultInnerDispatchNames.FQN_FILTER_MODULE.equals(fmsi.getFilterModule().getFullyQualifiedName()))
+			{
+				continue;
+			}
 			hasCheckConditions = hasCheckConditions && fmsi.getCondition() != null;
 		}
 
@@ -219,7 +224,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		{
 			for (ImposedFilterModule fmsi : filterSet)
 			{
-				filterCode.addCheckCondition(fmsi.getCondition());
+				if (fmsi.getCondition() != null)
+				{
+					filterCode.addCheckCondition(fmsi.getCondition());
+				}
 			}
 		}
 	}
@@ -229,7 +237,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	public void endInline()
 	{
-		if (filterSetType == FilterDirection.Input)
+		if (filterSetType == FilterDirection.INPUT)
 		{
 			endInlineIF();
 		}

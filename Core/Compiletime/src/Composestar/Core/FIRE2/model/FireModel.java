@@ -59,7 +59,7 @@ public class FireModel
 	 */
 	public enum FilterDirection
 	{
-		Input, Output;
+		INPUT, OUTPUT;
 
 		/**
 		 * Return the index value for this direction. Use this value instead of
@@ -71,9 +71,9 @@ public class FireModel
 		{
 			switch (this)
 			{
-				case Input:
+				case INPUT:
 					return INPUT_FILTERS;
-				case Output:
+				case OUTPUT:
 					return OUTPUT_FILTERS;
 			}
 			throw new IllegalStateException(String.format("No index value of FilterDirection value %s", this));

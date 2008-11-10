@@ -244,7 +244,7 @@ public class Sign implements CTCommonModule
 				fireModels.put(concern, model);
 
 				// initialize distinguishable set:
-				distinguishableSets.put(concern, model.getDistinguishableSelectors(FilterDirection.Input));
+				distinguishableSets.put(concern, model.getDistinguishableSelectors(FilterDirection.INPUT));
 
 				superimposedConcerns.add(concern);
 			}
@@ -303,7 +303,7 @@ public class Sign implements CTCommonModule
 
 		for (CpsSelector sel : new HashSet<CpsSelector>(distinguishableSets.get(concern)))
 		{
-			ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, sel);
+			ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.INPUT, sel);
 
 			Map<ExecutionState, List<MethodInfo>> typeSet = createTypeSet(concern, execModel);
 
@@ -387,7 +387,7 @@ public class Sign implements CTCommonModule
 	{
 		FireModel fireModel = fireModels.get(concern);
 		CpsSelector sel = null;
-		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, sel);
+		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.INPUT, sel);
 
 		Map<ExecutionState, List<MethodInfo>> signatureSets = createSignatureSet(concern, execModel);
 		Map<ExecutionState, List<MethodInfo>> typeSets = createTypeSet(concern, execModel);
@@ -782,7 +782,7 @@ public class Sign implements CTCommonModule
 	private void checkDispatchable(MethodInfoWrapper method, Concern concern)
 	{
 		FireModel fireModel = fireModels.get(concern);
-		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, method.getMethodInfo(),
+		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.INPUT, method.getMethodInfo(),
 				FireModel.STRICT_SIGNATURE_CHECK);
 
 		// Check whether it can be marked EXISTING
@@ -797,7 +797,7 @@ public class Sign implements CTCommonModule
 		}
 
 		// Check whether it can keep the marking UNKNOWN
-		execModel = fireModel.getExecutionModel(FilterDirection.Input, method.getMethodInfo(),
+		execModel = fireModel.getExecutionModel(FilterDirection.INPUT, method.getMethodInfo(),
 				FireModel.LOOSE_SIGNATURE_CHECK);
 
 		for (ExecutionState state : dispatchStates(execModel))
@@ -836,7 +836,7 @@ public class Sign implements CTCommonModule
 				if (method.getStatus() == MethodStatus.UNKNOWN)
 				{
 					error("Cyclic dependency conflict found in concern '" + concern.getFullyQualifiedName()
-							+ "' on method '" + methodInfoString(method.getMethodInfo()) + "'!");
+							+ "' on method '" + methodInfoString(method.getMethodInfo()));
 				}
 			}
 		}
@@ -855,7 +855,7 @@ public class Sign implements CTCommonModule
 					continue;
 				}
 
-				ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, method.getMethodInfo());
+				ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.INPUT, method.getMethodInfo());
 
 				for (ExecutionState state : dispatchStates(execModel))
 				{
@@ -921,7 +921,7 @@ public class Sign implements CTCommonModule
 				for (MethodInfoWrapper wrapper : methods(concern))
 				{
 					boolean cyclDisp = false;
-					ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, wrapper
+					ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.INPUT, wrapper
 							.getMethodInfo());
 					MethodInfo methodInfo = wrapper.getMethodInfo();
 					for (ExecutionState state : dispatchStates(execModel))
@@ -957,7 +957,7 @@ public class Sign implements CTCommonModule
 				if (cyclicDispatchSet.contains(method))
 				{
 					warning("Cyclic dispatch conflict found in concern '" + concern.getFullyQualifiedName()
-							+ "' on method '" + methodInfoString(method.getMethodInfo()) + "'!");
+							+ "' on method '" + methodInfoString(method.getMethodInfo()));
 					break;
 				}
 			}
@@ -1268,7 +1268,7 @@ public class Sign implements CTCommonModule
 		// }
 
 		Set<CpsSelector> distinguishableSelectors = fireModels.get(concern).getDistinguishableSelectors(
-				FilterDirection.Input);
+				FilterDirection.INPUT);
 
 		ArrayList<MethodInfo> targetMethods = new ArrayList<MethodInfo>();
 		for (MethodInfo method : methods)

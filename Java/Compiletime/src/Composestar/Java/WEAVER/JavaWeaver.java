@@ -205,7 +205,7 @@ public class JavaWeaver implements CTCommonModule
 		for (ImposedFilterModule fmsi : iterFilterModules)
 		{
 			FilterModule fm = fmsi.getFilterModule();
-			if (DefaultInnerDispatchNames.FILTER_MODULE.equals(fm.getFullyQualifiedName()))
+			if (DefaultInnerDispatchNames.FQN_FILTER_MODULE.equals(fm.getFullyQualifiedName()))
 			{
 				continue;
 			}

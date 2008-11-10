@@ -95,10 +95,10 @@ namespace Composestar.StarLight.Weaving.Strategies
 			}
 
 			// Get the called method
-			if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
-				filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
+			if (filterAction.Target.Equals(FilterAction.InnerTarget) ||
+				filterAction.Target.Equals(FilterAction.SelfTarget))
 			{
-				if (filterAction.SubstitutionSelector.Equals(originalCall.Name))
+				if (filterAction.Selector.Equals(originalCall.Name))
 				{
 					if (parentTypeReference is GenericInstanceType)
 					{
@@ -137,27 +137,27 @@ namespace Composestar.StarLight.Weaving.Strategies
 				else
 				{
 					methodReference = CecilUtilities.ResolveMethod(parentTypeDefinition,
-						filterAction.SubstitutionSelector, originalCall);
+						filterAction.Selector, originalCall);
 
 				}
 			}
 			else
 			{
-				target = parentTypeDefinition.Fields.GetField(filterAction.SubstitutionTarget);
+				target = parentTypeDefinition.Fields.GetField(filterAction.Target);
 				if (target == null)
 				{
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-						Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
+						Properties.Resources.FieldNotFound, filterAction.Target));
 				}
 
 				TypeDefinition fieldType = CecilUtilities.ResolveTypeDefinition(target.FieldType);
 				MethodDefinition md = CecilUtilities.ResolveMethod(fieldType,
-					filterAction.SubstitutionSelector, originalCall);
+					filterAction.Selector, originalCall);
 
                 if (md == null)
                 {
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                        "Method {0} not found in {1}", filterAction.SubstitutionSelector, fieldType.FullName));
+                        "Method {0} not found in {1}", filterAction.Selector, fieldType.FullName));
                 }
 
 				methodReference = visitor.TargetAssemblyDefinition.MainModule.Import(md);
@@ -167,12 +167,12 @@ namespace Composestar.StarLight.Weaving.Strategies
 			if (methodReference == null)
 			{
 				throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-											Properties.Resources.MethodNotFound, parentTypeReference.ToString(), filterAction.SubstitutionSelector));
+											Properties.Resources.MethodNotFound, parentTypeReference.ToString(), filterAction.Selector));
 			}
 
 
 			// Check if it is an innercall and set innercall context:
-			if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget))
+			if (filterAction.Target.Equals(FilterAction.InnerTarget))
 			{
 				WeaveStrategyUtilities.SetInnerCall(visitor, methodReference);
 			}
@@ -195,8 +195,8 @@ namespace Composestar.StarLight.Weaving.Strategies
 			// Place target on the stack
 			if (methodReference.HasThis)
 			{
-				if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
-					filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
+				if (filterAction.Target.Equals(FilterAction.InnerTarget) ||
+					filterAction.Target.Equals(FilterAction.SelfTarget))
 				{
 					WeaveStrategyUtilities.LoadSelfObject(visitor, jpcVar);
 				}
@@ -211,8 +211,8 @@ namespace Composestar.StarLight.Weaving.Strategies
 			WeaveStrategyUtilities.LoadArguments(visitor, originalCall, jpcVar);
 
 			// Call the method         
-			if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) &&
-				filterAction.SubstitutionSelector.Equals(originalCall.Name))
+			if (filterAction.Target.Equals(FilterAction.InnerTarget) &&
+				filterAction.Selector.Equals(originalCall.Name))
 			{
 				// Because it is an inner call targeting the method itself, we must call the method
 				// in the class itself. Therefore we do a Call instead of a Callvirt, to prevent that

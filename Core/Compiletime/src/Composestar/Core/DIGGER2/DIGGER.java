@@ -171,11 +171,11 @@ public class DIGGER implements CTCommonModule
 
 						if (SHOW_GRAPH)
 						{
-							new Composestar.Core.FIRE2.util.viewer.Viewer(fm.getExecutionModel(FilterDirection.Input));
+							new Composestar.Core.FIRE2.util.viewer.Viewer(fm.getExecutionModel(FilterDirection.INPUT));
 						}
 
-						processFireModel(concern, fm.getExecutionModel(FilterDirection.Input).getEntranceStates(),
-								FilterDirection.Input);
+						processFireModel(concern, fm.getExecutionModel(FilterDirection.INPUT).getEntranceStates(),
+								FilterDirection.INPUT);
 						// no output filter support
 						// processFireModel(concern, fm,
 						// FireModel.OUTPUT_FILTERS);
@@ -324,7 +324,7 @@ public class DIGGER implements CTCommonModule
 		while (it.hasNext())
 		{
 			MethodInfo methodInfo = it.next();
-			FilterDirection filterPosition = FilterDirection.Input;
+			FilterDirection filterPosition = FilterDirection.INPUT;
 
 			ExecutionModel em = fm.getExecutionModel(filterPosition, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
 			if (em.getEntranceMessages().size() > 1)

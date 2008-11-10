@@ -50,7 +50,9 @@ public interface CTCommonModule
 		 */
 		FATAL,
 		/**
-		 * This module did not execute
+		 * This module did not execute. Modules with hard dependencies will not
+		 * be executed either, modules with wildcard dependencies will still be
+		 * executed.
 		 */
 		NO_EXECUTION
 	}

@@ -241,12 +241,12 @@ public class Resolver
 	{
 		if (target.isInnerObject())
 		{
-			if (filterPosition == FilterDirection.Input)
+			if (filterPosition == FilterDirection.INPUT)
 			{
 				// actual method is executed
 				return null;
 			}
-			else if (filterPosition == FilterDirection.Output)
+			else if (filterPosition == FilterDirection.OUTPUT)
 			{
 				// like *+INPUT
 				return concern;

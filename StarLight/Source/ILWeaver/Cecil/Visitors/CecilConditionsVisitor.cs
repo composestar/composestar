@@ -277,14 +277,18 @@ namespace Composestar.StarLight.ILWeaver
 			FieldDefinition target = null;
 
 			// Check if this is an inner or self target.
-			if (con.Reference.Target.Equals(Reference.InnerTarget) ||
-				con.Reference.Target.Equals(Reference.SelfTarget))
+			if (con.Reference.Target != null &&
+                (con.Reference.Target.Equals(Reference.InnerTarget) ||
+				con.Reference.Target.Equals(Reference.SelfTarget)
+                ))
 			{
 				method = CecilUtilities.ResolveMethod(
 					con.Reference.Selector, WeaveType.Name,
 					con.Reference.Assembly, String.Empty);
 			}
-			else if (IsInternal(con.Reference.Target) || IsExternal(con.Reference.Target))
+            else if (con.Reference.Target != null && 
+                (IsInternal(con.Reference.Target) || IsExternal(con.Reference.Target))
+                )
 			{
 				if (!Method.HasThis)
 				{
@@ -327,8 +331,10 @@ namespace Composestar.StarLight.ILWeaver
 					con.Reference.Assembly));
 
 			// If it is an inner or self call, we set the InnerCall context
-			if (con.Reference.Target.Equals(Reference.InnerTarget) ||
-				con.Reference.Target.Equals(Reference.SelfTarget))
+			if (con.Reference.Target != null &&
+                (con.Reference.Target.Equals(Reference.InnerTarget) ||
+				con.Reference.Target.Equals(Reference.SelfTarget)
+                ))
 			{
 				// Set innercall context
 				if (con.Reference.InnerCallContext >= 0)
@@ -495,6 +501,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// </returns>
 		private bool IsInternal(string target)
 		{
+            if (String.IsNullOrEmpty(target)) return false;
 			foreach (Internal i in _visitor.WeaveType.Internals)
 				if (i.Name.Equals(target))
 					return true;
@@ -512,6 +519,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// </returns>
 		private bool IsExternal(string target)
 		{
+            if (String.IsNullOrEmpty(target)) return false;
 			foreach (External e in _visitor.WeaveType.Externals)
 				if (e.Name.Equals(target))
 					return true;

@@ -80,8 +80,10 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		private string _fullName;
 		private string _selector;
 		private string _target;
-		private string _substitutionSelector;
-		private string _substitutionTarget;
+
+        // filter arguments
+		private string _fargSelector;
+		private string _fargTarget;
 
         private bool _bookkeeping;
         private string _resourceOperations;
@@ -138,10 +140,10 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// </summary>
 		/// <value>The substitution selector.</value>
 		[XmlAttribute]
-		public string SubstitutionSelector
+		public string FilterArgumentSelector
 		{
-			get { return _substitutionSelector; }
-			set { _substitutionSelector = value; }
+			get { return _fargSelector; }
+			set { _fargSelector = value; }
 		}
 
 		/// <summary>
@@ -149,10 +151,10 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// </summary>
 		/// <value>The substitution target.</value>
 		[XmlAttribute]
-		public string SubstitutionTarget
+		public string FilterArgumentTarget
 		{
-			get { return _substitutionTarget; }
-			set { _substitutionTarget = value; }
+			get { return _fargTarget; }
+			set { _fargTarget = value; }
 		}
 
 		/// <summary>
@@ -233,8 +235,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 			_fullName = fullName;
 			_selector = selector;
 			_target = target;
-			_substitutionSelector = substitutionSelector;
-			_substitutionTarget = substitutionTarget;
+			_fargSelector = substitutionSelector;
+			_fargTarget = substitutionTarget;
 		}
 
 		#endregion
@@ -278,14 +280,14 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 				fa.Selector = this.Selector;
 			}
 
-			fa.SubstitutionTarget = this.SubstitutionTarget;
-			if (this.SubstitutionSelector.Equals(GeneralizeSelector))
+			fa.FilterArgumentTarget = this.FilterArgumentTarget;
+            if (GeneralizeSelector.Equals(this.FilterArgumentSelector))
 			{
-				fa.SubstitutionSelector = selector;
+				fa.FilterArgumentSelector = selector;
 			}
 			else
 			{
-				fa.SubstitutionSelector = this.SubstitutionSelector;
+				fa.FilterArgumentSelector = this.FilterArgumentSelector;
 			}
 
 			fa.OnCall = this.OnCall;

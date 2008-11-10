@@ -143,9 +143,9 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.Input, bkmode);
+		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.INPUT, bkmode);
 		inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy, resources);
-		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.Output, bkmode);
+		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.OUTPUT, bkmode);
 		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy, resources);
 
 		repository = resources.repository();
@@ -237,7 +237,7 @@ public class ModelBuilder implements CTCommonModule
 		currentSelector = new CpsSelectorMethodInfo(methodInfo);
 
 		// create executionmodel:
-		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FilterDirection.Input, methodInfo,
+		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FilterDirection.INPUT, methodInfo,
 				FireModel.STRICT_SIGNATURE_CHECK);
 
 		// create inlineModel:
@@ -276,12 +276,12 @@ public class ModelBuilder implements CTCommonModule
 		ExecutionModel execModel;
 		if (methodInfo != null)
 		{
-			execModel = currentFireModelOF.getExecutionModel(FilterDirection.Output, methodInfo,
+			execModel = currentFireModelOF.getExecutionModel(FilterDirection.OUTPUT, methodInfo,
 					FireModel.STRICT_SIGNATURE_CHECK);
 		}
 		else
 		{
-			execModel = currentFireModelOF.getExecutionModel(FilterDirection.Output, call.getCalledMethod());
+			execModel = currentFireModelOF.getExecutionModel(FilterDirection.OUTPUT, call.getCalledMethod());
 		}
 
 		// create inlineModel:
