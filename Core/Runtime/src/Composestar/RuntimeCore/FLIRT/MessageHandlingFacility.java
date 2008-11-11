@@ -1,3 +1,26 @@
+/*
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2005-2008 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
+ */
 package Composestar.RuntimeCore.FLIRT;
 
 import java.util.HashMap;
@@ -9,7 +32,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcernReference;
-import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.CpsRepository2.Repository;
 import Composestar.RuntimeCore.CODER.DebuggerRuntime;
 import Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException;
 import Composestar.RuntimeCore.FLIRT.Exception.ErrorFilterException;
@@ -21,15 +44,12 @@ import Composestar.RuntimeCore.Utils.Invoker;
 import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
 
 /**
- * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
- * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
- * MessageHandlingFacility.java 2072 2006-10-15 12:44:56Z elmuerte $ This class
- * handles the intercepted messages and directs them to the rest of FLIRT
+ * This class handles the intercepted messages and directs them to the rest of
+ * FLIRT
  */
 public abstract class MessageHandlingFacility
 {
-	protected static DataStore datastore = null;
+	protected static Repository datastore = null;
 
 	private static final Object[] EmptyObjectArray = {};
 
@@ -54,7 +74,9 @@ public abstract class MessageHandlingFacility
 		// class
 		// name
 		// only
-		Message msg = new Message(shortname /* createdObject.GetType().get_Name() */, args);
+		Message msg = new Message(shortname /*
+											 * createdObject.GetType().get_Name()
+											 */, args);
 		msg.setSender(creator);
 		msg.setTarget(createdObject);
 		handleInstanceCreation(msg, creator, createdObject, args);

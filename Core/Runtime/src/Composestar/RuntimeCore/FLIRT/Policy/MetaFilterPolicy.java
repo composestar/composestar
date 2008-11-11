@@ -1,10 +1,11 @@
 package Composestar.RuntimeCore.FLIRT.Policy;
 
-import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.RuntimeCore.CODER.DebuggerRuntime;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
@@ -18,7 +19,6 @@ import Composestar.RuntimeCore.FLIRT.Reflection.JoinPointInfoProxy;
 import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfoProxy;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.Invoker;
-import Composestar.RuntimeCore.CODER.DebuggerRuntime;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -37,7 +37,7 @@ class MetaFilterPolicy extends FilterPolicy
 	 * @return Composestar.Runtime.FLIRT.policy.PolicyExecutionResult
 	 * @roseuid 40DFDB7902FB
 	 */
-	public PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList, MessageList aMessage)
+	public PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, List filterList, MessageList aMessage)
 	{
 		boolean messageWasFiltered = false;
 		boolean exit = false;
@@ -56,7 +56,8 @@ class MetaFilterPolicy extends FilterPolicy
 						aMessage.getFirstMessage().getSelector()));
 		JoinPointInfoProxy.updateJoinPoint(jp);
 
-		DebuggerRuntime.messageSent(aMessage.getSender(),aMessage.getOrgMessage().getSelector(),aMessage.getArguments(),aMessage.getOrgMessage().getTarget(),filterList);
+		DebuggerRuntime.messageSent(aMessage.getSender(), aMessage.getOrgMessage().getSelector(), aMessage
+				.getArguments(), aMessage.getOrgMessage().getTarget(), filterList);
 		if (Debug.SHOULD_DEBUG)
 		{
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tProcessing meta filter policy...");
@@ -82,12 +83,14 @@ class MetaFilterPolicy extends FilterPolicy
 
 			if (eval)
 			{
-				DebuggerRuntime.filterAcceptedMessage(aMessage.getSender(),aMessage.getOrgMessage().getSelector(),aMessage.getArguments(),aMessage.getOrgMessage().getTarget(),f);
+				DebuggerRuntime.filterAcceptedMessage(aMessage.getSender(), aMessage.getOrgMessage().getSelector(),
+						aMessage.getArguments(), aMessage.getOrgMessage().getTarget(), f);
 				csa = f.getAcceptAction(originalMessage, modifiedMessage, context);
 			}
 			else
 			{
-				DebuggerRuntime.filterRejectedMessage(aMessage.getSender(),aMessage.getOrgMessage().getSelector(),aMessage.getArguments(),aMessage.getOrgMessage().getTarget(),f);
+				DebuggerRuntime.filterRejectedMessage(aMessage.getSender(), aMessage.getOrgMessage().getSelector(),
+						aMessage.getArguments(), aMessage.getOrgMessage().getTarget(), f);
 				csa = f.getRejectAction(originalMessage, modifiedMessage, context);
 			}
 
@@ -102,9 +105,9 @@ class MetaFilterPolicy extends FilterPolicy
 			/*
 			 * // TODO: remove this dirty hack to skip
 			 * CpsDefaultInnerDispatchFilters // when a message is outgoing if(
-			 * csa instanceof DispatchToInnerAction && aMessage.getDirection() ==
-			 * Message.OUTGOING) { if(Debug.SHOULD_DEBUG)
-			 * Debug.out(Debug.MODE_INFORMATION,"FLIRT","*** Skipping
+			 * csa instanceof DispatchToInnerAction && aMessage.getDirection()
+			 * == Message.OUTGOING) { if(Debug.SHOULD_DEBUG)
+			 * Debug.out(Debug.MODE_INFORMATION,"FLIRT"," Skipping
 			 * DispatchToInner for outgoing messages"); continue; }
 			 */
 
@@ -142,7 +145,8 @@ class MetaFilterPolicy extends FilterPolicy
 
 			// aMessage = csa.getMessageToContinueWith();
 			// aMessage.setTarget(csa.getMessageToContinueWith().getTarget());
-			// aMessage.setSelector(csa.getMessageToContinueWith().getSelector());
+			//aMessage.setSelector(csa.getMessageToContinueWith().getSelector())
+			// ;
 			// csa.updateMessage( aMessage );
 			aMessage.copyFromMessageList(csa.getMessageToContinueWith());
 

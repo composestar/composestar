@@ -1,3 +1,26 @@
+/*
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2005-2008 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
+ */
 package Composestar.RuntimeJava.Utils;
 
 import java.io.BufferedInputStream;
@@ -9,14 +32,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 
-import Composestar.Core.RepositoryImplementation.DataMap;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Repository;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
 
 public class JavaRepositoryDeserializer extends RepositoryDeserializer
 {
+	private static final long serialVersionUID = 1731463901506487997L;
+
 	protected Class<?> mainclass;
 
 	public JavaRepositoryDeserializer(Class<?> mclass)
@@ -24,11 +47,9 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 		mainclass = mclass;
 	}
 
-	public DataStore deserialize(String file)
+	@Override
+	public Repository deserialize(String file)
 	{
-		DataMap.setRtSerialization(true);
-		DataStore ds = DataStore.instance();
-
 		ObjectInputStream ois = null;
 		try
 		{
@@ -39,23 +60,7 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 			}
 			BufferedInputStream bis = new BufferedInputStream(is);
 			ois = new ObjectInputStream(bis);
-
-			while (true /* fis.available() != 0 */) // available() isn't
-			// reliable
-			{
-				Object o = ois.readObject();
-				// System.err.println("Adding object '"+o+"'");
-				if (o instanceof RepositoryEntity)
-				{
-					// System.err.println("Adding RE with key: " +
-					// ((RepositoryEntity) o).repositoryKey);
-					ds.addObject(((RepositoryEntity) o).repositoryKey, o);
-				}
-				else
-				{
-					ds.addObject(o);
-				}
-			}
+			return (Repository) ois.readObject();
 		}
 		catch (EOFException eof)
 		{
@@ -71,7 +76,6 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 		}
 		finally
 		{
-			DataMap.setRtSerialization(false);
 			try
 			{
 				if (ois != null)
@@ -87,7 +91,7 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 
 		// fixing not needed for native serialization
 		// RepositoryFixer.fixRepository(ds);
-		return ds;
+		return null;
 	}
 
 }

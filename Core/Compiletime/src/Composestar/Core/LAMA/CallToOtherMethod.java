@@ -26,13 +26,12 @@ package Composestar.Core.LAMA;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
+import java.io.Serializable;
 
 /**
  * @author Michiel van Oudheusden
  */
-public class CallToOtherMethod implements SerializableRepositoryEntity
+public class CallToOtherMethod implements Serializable
 {
 	private static final long serialVersionUID = 1718642064472551590L;
 

@@ -1,6 +1,6 @@
 package Composestar.RuntimeCore.FLIRT.Policy;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
@@ -46,6 +46,6 @@ public abstract class FilterPolicy
 	 * @return Composestar.Runtime.FLIRT.policy.PolicyExecutionResult
 	 * @roseuid 3F36533000D8
 	 */
-	public abstract PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList,
+	public abstract PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, List filterList,
 			MessageList aMessage);
 }

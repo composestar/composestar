@@ -6,6 +6,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 
 public class JoinPoint
 {
@@ -17,7 +18,7 @@ public class JoinPoint
 
 	private Dictionary externals = new Hashtable();
 
-	private ArrayList attributelist = new ArrayList();
+	private List attributelist = new ArrayList();
 
 	public JoinPoint()
 	{}
@@ -27,7 +28,7 @@ public class JoinPoint
 		this.joinPointInstance = new WeakReference(instance);
 	}
 
-	public JoinPoint(Object instance, Dictionary internals, Dictionary externals, ArrayList atributesList)
+	public JoinPoint(Object instance, Dictionary internals, Dictionary externals, List atributesList)
 	{
 		this(instance);
 		this.internals = internals;
@@ -50,7 +51,7 @@ public class JoinPoint
 	 * 
 	 * @return ArrayList The list of attributes.
 	 */
-	public ArrayList getAttributeList()
+	public List getAttributeList()
 	{
 		return this.attributelist;
 	}

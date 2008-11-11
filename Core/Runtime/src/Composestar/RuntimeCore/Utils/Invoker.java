@@ -1,7 +1,7 @@
 package Composestar.RuntimeCore.Utils;
 
-import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.List;
 
 public abstract class Invoker
 {
@@ -36,7 +36,7 @@ public abstract class Invoker
 		return null;
 	}
 
-	public ArrayList getAttributesFor(Object target, String selector)
+	public List getAttributesFor(Object target, String selector)
 	{
 		return null;
 	}

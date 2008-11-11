@@ -1,8 +1,8 @@
 package Composestar.RuntimeCore.FLIRT.Policy;
 
-import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
@@ -28,8 +28,7 @@ class DefaultFilterPolicy extends FilterPolicy
 	 * @return Composestar.Runtime.FLIRT.policy.PolicyExecutionResult
 	 * @roseuid 40DFDB790369
 	 */
-	public PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList,
-			MessageList aSingleMessage)
+	public PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, List filterList, MessageList aSingleMessage)
 	{
 		boolean messageWasFiltered = false;
 		boolean exit = false;
@@ -43,7 +42,8 @@ class DefaultFilterPolicy extends FilterPolicy
 		aMessage.setInternals(fm.getInternals());
 		aMessage.setExternals(fm.getExternals());
 
-//		Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START, null, aMessage, null);
+		// Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START, null,
+		// aMessage, null);
 		if (Debug.SHOULD_DEBUG)
 		{
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tProcessing default filter policy...");
@@ -54,7 +54,8 @@ class DefaultFilterPolicy extends FilterPolicy
 			FilterRuntime f = (FilterRuntime) filterList.get(j);
 			MessageList originalMessage = new MessageList(aMessage);
 
-			//Debugger.getInstance().event(Debugger.FILTER_EVALUATION_START, null, aMessage, null);
+			// Debugger.getInstance().event(Debugger.FILTER_EVALUATION_START,
+			// null, aMessage, null);
 			if (Debug.SHOULD_DEBUG)
 			{
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tEvaluating filter '"
@@ -67,12 +68,14 @@ class DefaultFilterPolicy extends FilterPolicy
 
 			if (eval)
 			{
-				//Debugger.getInstance().event(Debugger.FILTER_ACCEPTED, f, modifiedMessage, null);
+				// Debugger.getInstance().event(Debugger.FILTER_ACCEPTED, f,
+				// modifiedMessage, null);
 				csa = f.getAcceptAction(originalMessage, modifiedMessage, context);
 			}
 			else
 			{
-				//Debugger.getInstance().event(Debugger.FILTER_REJECTED, f, modifiedMessage, null);
+				// Debugger.getInstance().event(Debugger.FILTER_REJECTED, f,
+				// modifiedMessage, null);
 				csa = f.getRejectAction(originalMessage, modifiedMessage, context);
 			}
 

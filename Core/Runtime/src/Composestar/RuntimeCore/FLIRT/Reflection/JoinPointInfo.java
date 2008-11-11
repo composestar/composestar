@@ -1,7 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Reflection;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.WeakHashMap;
 
 public class JoinPointInfo
@@ -28,7 +28,7 @@ public class JoinPointInfo
 	 * 
 	 * @return java.lang.Object[]
 	 */
-	public static ArrayList getAttributes()
+	public static List getAttributes()
 	{
 		return JoinPointInfo.getJoinPointInfo().getAttributeList();
 	}
