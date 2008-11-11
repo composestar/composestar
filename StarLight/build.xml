@@ -350,9 +350,7 @@
 		<ant dir="Examples" target="versioncheck" inheritRefs="true" />
 
 		<ant dir="Source/VSIntegration" target="test" inheritRefs="true" />
-		<!--		
 		<antcall target="systemtest" inheritRefs="true" />
--->
 	</target>
 
 	<target name="init_test">

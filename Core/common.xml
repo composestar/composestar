@@ -250,7 +250,7 @@
 			</not>
 		</condition>
 
-		<condition property="findbugs.jvmargs" value="-Xms64M -Xmx256M">
+		<condition property="findbugs.jvmargs" value="-Xms64M -Xmx512M">
 			<not>
 				<isset property="findbugs.jvmargs" />
 			</not>

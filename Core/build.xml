@@ -10,7 +10,7 @@
 		</and>
 	</condition>
 	<import file="common.xml" />
-	
+
 	<description>The main functionality of Compose*</description>
 
 	<target name="clean" depends="init">
@@ -20,42 +20,40 @@
 		<ant target="clean" dir="Plugin" inheritRefs="true" />
 		<ant target="clean" dir="Visualization" inheritRefs="true" />
 	</target>
-	
-	
+
+
 	<target name="build">
 		<ant target="build" dir="Compiletime" inheritRefs="true" />
 		<ant target="build" dir="Runtime" inheritRefs="true" />
 		<!--<ant target="build" dir="Visualization" inheritRefs="true" />-->
 	</target>
-	
+
 	<target name="plugin">
 		<ant target="build" dir="Plugin" inheritRefs="true" />
 	</target>
-	
+
 	<target name="install">
 		<ant target="install" dir="Compiletime" inheritRefs="true" />
 		<ant target="install" dir="Runtime" inheritRefs="true" />
 		<ant target="install" dir="Plugin" inheritRefs="true" />
 		<!--<ant target="install" dir="Visualization" inheritRefs="true" />-->
 	</target>
-	
+
 	<target name="init_qa" depends="init">
 		<mkdir dir="${out.qa}" />
 	</target>
-	
+
 	<target name="findbugs" depends="init_qa">
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.core}${file.separator}Compiletime${file.separator}${out.build}" />
 			<class location="${build.core}${file.separator}Runtime${file.separator}${out.build}" />
-			<!--<class location="${build.core}${file.separator}Visualization${file.separator}${out.build}" />-->
 			<sourcePath path="${build.core}${file.separator}Compiletime${file.separator}src" />
 			<sourcePath path="${build.core}${file.separator}Runtime${file.separator}src" />
-      <!--<sourcePath path="${build.core}${file.separator}Visualization${file.separator}src" />-->
 			<auxClasspath refid="lib.core" />
 		</findbugs>
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />
 	</target>
-	
+
 	<target name="checkstyle" depends="init_qa">
 		<path id="lib.qa">
 			<path refid="lib.core" />
@@ -63,13 +61,13 @@
 			<fileset dir="${build.core}${file.separator}Runtime${file.separator}${out.build}" includes="**/*.class" />
 			<!--<fileset dir="${build.core}${file.separator}Visualization" includes="${out.jar.visualization}" />-->
 		</path>
-		
+
 		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.qa">
 			<formatter type="xml" toFile="${out.qa}${file.separator}checkstyle-result.xml" />
 			<property key="config_loc" value="${bin.checkstyle}" />
 			<FileSet dir="${build.core}${file.separator}Compiletime${file.separator}src">
 				<include name="**/*.java" />
-				
+
 				<exclude name="Composestar/Core/COPPER3/CpsLexer.java" />
 				<exclude name="Composestar/Core/COPPER3/CpsParser.java" />
 				<exclude name="Composestar/Core/COPPER3/CpsTokenTypes.java" />
@@ -92,7 +90,7 @@
 	<target name="test" description="Runs tests.">
 		<ant target="test" dir="Compiletime" inheritRefs="true" />
 	</target>
-	
+
 	<target name="documentation">
 		<mkdir dir="doc" />
 		<!--
@@ -105,13 +103,13 @@
 		-->
 		<xslt basedir="Compiletime" destdir="doc" style="Development/xs3p.xsl">
 			<mapper>
-        <chainedmapper>
-					<mapper type="flatten"/>
+				<chainedmapper>
+					<mapper type="flatten" />
 					<mapper type="glob" from="*.xsd" to="schema/*/index.html" />
 				</chainedmapper>
 			</mapper>
 			<include name="**/*.xsd" />
 		</xslt>
 	</target>
-	
+
 </project>

@@ -550,6 +550,7 @@ filterElementOperator
 filterElement
 scope
 {
+	// used to copy the matching part to the substitution part when it is missing 
 	Object mpTarget;
 	Object mpSelector;
 }
@@ -661,7 +662,7 @@ identifierOrFmParam
 literalOrFmParam
 	: v=legacyIdentifier
 	-> { adaptorCreate(adaptor, LITERAL, "'"+ $v.text + "'", $v.start) } 
-	| singleFmParam | fmParamList
+	| singleFmParam | fmParamList {$matchingPattern::isplist = 1;}
 	;
 
 /** 
@@ -669,55 +670,97 @@ literalOrFmParam
  * statement (Legacy notation).
  */
 matchingPattern
+scope
+{
+	// used to communicate the fact that a parameter list is used
+	// parameter lists may not be used in the substitution part
+	int isplist;
+}
 	: (LSQUARE // name compare
 		(n1=identifierOrFmParam
 			(PERIOD 
-				(n2=literalOrFmParam // foo.bar
-				{ $filterElement::mpTarget = $n1.tree; $filterElement::mpSelector = $n2.tree; }
+				(n2=literalOrFmParam bs=bogusHelperSelector  // foo.bar
+				{ if($filterElement::mpTarget == null){
+					$filterElement::mpTarget = $n1.tree; 
+					if ($matchingPattern::isplist != 0) $filterElement::mpSelector = $bs.tree;
+					else $filterElement::mpSelector = $n2.tree;  
+				} }
 				-> ^(AND
 						^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
 						^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n2))
 					)
 				| ASTERISK bs=bogusHelperSelector // foo.*
-				{ $filterElement::mpTarget = $n1.tree; $filterElement::mpSelector = $bs.tree; }
+				{ if($filterElement::mpTarget == null){
+					$filterElement::mpTarget = $n1.tree; 
+					$filterElement::mpSelector = $bs.tree; 
+				} }
 				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["target"]) ^(OPERAND $n1))
 				)
-			| b=bogusHelperTarget // bar
-			{ $filterElement::mpSelector = $n1.tree; $filterElement::mpTarget = $b.tree; }
+			| b=bogusHelperTarget bs=bogusHelperSelector  // bar
+			{ if($filterElement::mpTarget == null){
+				if ($matchingPattern::isplist != 0) $filterElement::mpSelector = $bs.tree;
+				else $filterElement::mpSelector = $n1.tree; 
+				$filterElement::mpTarget = $b.tree; 
+			} }
 			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'", $n1.start) }))
 			)
 		| ASTERISK PERIOD 
-			(n3=literalOrFmParam b=bogusHelperTarget // *.bar
-			{ $filterElement::mpSelector = $n3.tree; $filterElement::mpTarget = $b.tree; }
+			(n3=literalOrFmParam b=bogusHelperTarget bs=bogusHelperSelector  // *.bar
+			{ if($filterElement::mpTarget == null){
+				if ($matchingPattern::isplist != 0) $filterElement::mpSelector = $bs.tree;
+				else $filterElement::mpSelector = $n3.tree; 
+				$filterElement::mpTarget = $b.tree; 
+			} }
 			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_INSTANCE) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $n3))
 			| ASTERISK b=bogusHelperTarget bs=bogusHelperSelector // *.*
-			{ $filterElement::mpSelector = $bs.tree; $filterElement::mpTarget = $b.tree; }
+			{ if($filterElement::mpTarget == null){
+				$filterElement::mpSelector = $bs.tree; 
+				$filterElement::mpTarget = $b.tree; 
+			} }
 			-> IDENTIFIER["true"]
 			)
 		) RSQUARE)
 	| (LANGLE // signature compare
 		(s1=identifierOrFmParam 
 			(PERIOD 
-				(s2=literalOrFmParam // foo.bar -> selector $= foo /\ selector $= bar (where bar is a "selector") -> warn?
-				{ $filterElement::mpTarget = $s1.tree; $filterElement::mpSelector = $s2.tree; }
+				(s2=literalOrFmParam bs=bogusHelperSelector  // foo.bar -> selector $= foo /\ selector $= bar (where bar is a "selector") -> warn?
+				{ if($filterElement::mpTarget == null){
+					$filterElement::mpTarget = $s1.tree; 
+					if ($matchingPattern::isplist != 0) $filterElement::mpSelector = $bs.tree;
+					else $filterElement::mpSelector = $s2.tree; 
+				} }
 				-> ^(AND
 						^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s1))
 						^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s2))
 					)
 				| ASTERISK bs=bogusHelperSelector // foo.* -> selector $= foo
-				{ $filterElement::mpTarget = $s1.tree; $filterElement::mpSelector = $bs.tree; }
+				{ if($filterElement::mpTarget == null){
+					$filterElement::mpTarget = $s1.tree; 
+					$filterElement::mpSelector = $bs.tree; 
+				} }
 				-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s1))
 				)
-			| b=bogusHelperTarget // bar -> selector $= bar (where bar is a "selector") -> warn?
-			{ $filterElement::mpSelector = $s1.tree; $filterElement::mpTarget = $b.tree; }
+			| b=bogusHelperTarget bs=bogusHelperSelector  // bar -> selector $= bar (where bar is a "selector") -> warn?
+			{ if($filterElement::mpTarget == null){
+				if ($matchingPattern::isplist != 0) $filterElement::mpSelector = $bs.tree;
+				else $filterElement::mpSelector = $s2.tree; 
+				$filterElement::mpTarget = $b.tree; 
+			} }
 			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $s1.text +"'", $n1.start) } ))
 			)
 		| ASTERISK PERIOD 
 			(s3=literalOrFmParam b=bogusHelperTarget // *.bar -> selector $= bar (where bar is a "selector") -> warn?
-			{ $filterElement::mpSelector = $s3.tree; $filterElement::mpTarget = $b.tree; }
+			{ if($filterElement::mpTarget == null){
+				if ($matchingPattern::isplist != 0) $filterElement::mpSelector = $bs.tree;
+				else $filterElement::mpSelector = $s3.tree; 
+				$filterElement::mpTarget = $b.tree; 
+			} }
 			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND $s3))
 			| ASTERISK b=bogusHelperTarget bs=bogusHelperSelector // *.*
-			{ $filterElement::mpSelector = $bs.tree; $filterElement::mpTarget = $b.tree; }
+			{ if($filterElement::mpTarget == null){
+				$filterElement::mpSelector = $bs.tree; 
+				$filterElement::mpTarget = $b.tree; 
+			} }
 			-> IDENTIFIER["true"]
 			)
 		) RANGLE)
