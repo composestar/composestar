@@ -31,7 +31,6 @@ import java.util.List;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 
 /**
  * Abstract implementation for the Concern interface
@@ -56,11 +55,6 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 	 * The associated type reference
 	 */
 	protected TypeReference typeReference;
-
-	/**
-	 * The signature for this concern
-	 */
-	protected Signature signature;
 
 	/**
 	 * Create a new concern concern
@@ -170,29 +164,5 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 		{
 			superimposed.setOwner(this);
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.Concern#setSignature(Composestar.Core
-	 * .CpsRepository2.Signatures.Signature)
-	 */
-	public void setSignature(Signature sig)
-	{
-		signature = sig;
-		if (signature != null)
-		{
-			signature.setOwner(this);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see Composestar.Core.CpsRepository2.Concern#getSignature()
-	 */
-	public Signature getSignature()
-	{
-		return signature;
 	}
 }

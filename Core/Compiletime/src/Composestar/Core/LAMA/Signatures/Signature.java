@@ -21,14 +21,12 @@
  *
  * $Id$
  */
-package Composestar.Core.CpsRepository2.Signatures;
+package Composestar.Core.LAMA.Signatures;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.EnumSet;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
-import Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapperImpl;
-import Composestar.Core.CpsRepository2Impl.Signatures.SignatureImpl;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
@@ -38,7 +36,7 @@ import Composestar.Core.LAMA.MethodInfo;
  * 
  * @author Michiel Hendriks
  */
-public interface Signature extends RepositoryEntity
+public interface Signature extends Serializable
 {
 	/**
 	 * Add a method info wrapper to the list

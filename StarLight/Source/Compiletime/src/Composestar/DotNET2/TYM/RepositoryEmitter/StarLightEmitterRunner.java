@@ -50,8 +50,6 @@ import Composestar.Core.CpsRepository2.FilterModules.Internal;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
-import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2Impl.References.InnerTypeReference;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
@@ -61,6 +59,8 @@ import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.Signatures.MethodRelation;
+import Composestar.Core.LAMA.Signatures.Signature;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
@@ -409,7 +409,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private void processMethods(Concern concern, WeaveType weaveType) throws ModuleException
 	{
-		Signature sig = concern.getSignature();
+		Signature sig = concern.getTypeReference().getReference().getSignature();
 		Collection<MethodInfo> methods = sig.getMethods(EnumSet.of(MethodRelation.NORMAL, MethodRelation.ADDED));
 
 		boolean hasFilters;

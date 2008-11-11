@@ -28,10 +28,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.LAMA.Signatures.Signature;
 
 public abstract class Type extends ProgramElement
 {
-
 	private static final long serialVersionUID = 670886830455938414L;
 
 	// note: it must be an implemented type and not an interface (for .net 1.1
@@ -52,6 +52,11 @@ public abstract class Type extends ProgramElement
 	 * The Concern counter part of this type
 	 */
 	protected Concern concern;
+
+	/**
+	 * The optional update signature
+	 */
+	protected Signature signature;
 
 	public Type()
 	{
@@ -125,6 +130,25 @@ public abstract class Type extends ProgramElement
 	public List getMethods()
 	{
 		return methods;
+	}
+
+	/**
+	 * @return The updated signature of this type. Can be null when this type
+	 *         does not have an updated signature.
+	 */
+	public Signature getSignature()
+	{
+		return signature;
+	}
+
+	/**
+	 * Set the signature record for this type
+	 * 
+	 * @param value
+	 */
+	public void setSignature(Signature value)
+	{
+		signature = value;
 	}
 
 	/**

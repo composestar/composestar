@@ -22,11 +22,8 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.Signatures;
+package Composestar.Core.LAMA.Signatures;
 
-import Composestar.Core.CpsRepository2.Signatures.MethodInfoWrapper;
-import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
-import Composestar.Core.CpsRepository2.Signatures.MethodStatus;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**

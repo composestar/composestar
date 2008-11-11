@@ -92,6 +92,12 @@ public class Imposer implements CTCommonModule
 				Concern concern = repository.get(tp.getFullName(), Concern.class);
 				if (concern != null)
 				{
+					if (concern.getTypeReference() == null || concern.getTypeReference().getReference() != tp)
+					{
+						logger.error(String.format("Concern %s does not reference type %s", concern
+								.getFullyQualifiedName(), tp.getFullName()), concern);
+						continue;
+					}
 					Superimposed si = concern.getSuperimposed();
 					if (si == null)
 					{

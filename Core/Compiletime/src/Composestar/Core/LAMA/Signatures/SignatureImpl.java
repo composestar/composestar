@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.Signatures;
+package Composestar.Core.LAMA.Signatures;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,10 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import Composestar.Core.CpsRepository2.Signatures.MethodInfoWrapper;
-import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
-import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
@@ -44,7 +40,7 @@ import Composestar.Core.LAMA.MethodInfo;
  * 
  * @author Michiel Hendriks
  */
-public class SignatureImpl extends AbstractRepositoryEntity implements Signature
+public class SignatureImpl implements Signature
 {
 	private static final long serialVersionUID = 4483989831726824465L;
 

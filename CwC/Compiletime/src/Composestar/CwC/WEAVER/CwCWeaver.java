@@ -69,8 +69,6 @@ import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.CpsRepository2.Concern;
-import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INLINE.CodeGen.AdviceActionCodeGen;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
@@ -79,6 +77,8 @@ import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.Signatures.MethodRelation;
+import Composestar.Core.LAMA.Signatures.Signature;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
@@ -469,7 +469,7 @@ public class CwCWeaver implements CTCommonModule
 		HeaderFileGenerator extraFuncDecls = new HeaderFileGenerator(tunit);
 		codeGen.setHeaderGenerator(extraFuncDecls);
 
-		Signature sig = concern.getSignature();
+		Signature sig = type.getSignature();
 		for (MethodInfo method : sig.getMethods(MethodRelation.NORMAL))
 		{
 			CwCFunctionInfo func = (CwCFunctionInfo) method;
@@ -580,7 +580,15 @@ public class CwCWeaver implements CTCommonModule
 			methodLookup = new HashMap<String, MethodInfo>();
 			for (Concern concern : resources.repository().getAll(Concern.class))
 			{
-				Signature sign = concern.getSignature();
+				if (concern.getTypeReference() == null)
+				{
+					continue;
+				}
+				if (concern.getTypeReference().getReference() == null)
+				{
+					continue;
+				}
+				Signature sign = concern.getTypeReference().getReference().getSignature();
 				if (sign != null)
 				{
 					for (MethodInfo mi : (Collection<MethodInfo>) sign.getMethods(MethodRelation.ADDED))

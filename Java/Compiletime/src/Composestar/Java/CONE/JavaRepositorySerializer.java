@@ -6,13 +6,10 @@ import java.io.FileOutputStream;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.CpsRepository2.Repository;
-import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.References.ReferenceManager;
 import Composestar.Core.CpsRepository2.References.ReferenceUsage;
 import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
@@ -49,7 +46,6 @@ public class JavaRepositorySerializer extends CONE
 		logger.debug(String.format("Repository size before: %d", ds.size()));
 		ReferenceManager refman = resources.get(ReferenceManager.RESOURCE_KEY);
 		Iterator<PrimitiveConcern> it = ds.getAllIterator(PrimitiveConcern.class);
-		Set<RepositoryEntity> extraRemove = new HashSet<RepositoryEntity>();
 		while (it.hasNext())
 		{
 			PrimitiveConcern pc = it.next();
@@ -58,11 +54,9 @@ public class JavaRepositorySerializer extends CONE
 			{
 				logger.trace(String.format("PrimitiveConcern %s not used", pc.getFullyQualifiedName()));
 				// delayed remove of the signatures
-				extraRemove.add(pc.getSignature());
 				it.remove();
 			}
 		}
-		ds.removeAll(extraRemove);
 		logger.debug(String.format("Repository size after: %d", ds.size()));
 
 		ObjectOutputStream oos = null;

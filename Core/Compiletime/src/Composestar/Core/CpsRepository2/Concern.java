@@ -28,7 +28,6 @@ import java.util.List;
 
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 
 /**
  * The base interface for all concern types. A concern is a root element in the
@@ -89,18 +88,4 @@ public interface Concern extends QualifiedRepositoryEntity
 	 *         has no platform representation in the form of a type.
 	 */
 	TypeReference getTypeReference();
-
-	/**
-	 * Sets the signature for this concern. This could be an update signature.
-	 * After setting the signature, setOwner(this) is called on the signature
-	 * object.
-	 * 
-	 * @param sig
-	 */
-	void setSignature(Signature sig);
-
-	/**
-	 * @return the signature for this concern, can be null
-	 */
-	Signature getSignature();
 }

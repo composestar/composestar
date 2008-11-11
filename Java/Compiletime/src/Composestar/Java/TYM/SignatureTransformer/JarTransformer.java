@@ -8,10 +8,10 @@ import java.util.EnumSet;
 
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
-import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Signatures.MethodRelation;
+import Composestar.Core.LAMA.Signatures.Signature;
 import Composestar.Java.TYM.TypeHarvester.JarHelper;
 import Composestar.Utils.FileUtils;
 
@@ -59,7 +59,11 @@ public class JarTransformer
 				String className = c.getName();
 
 				Concern concern = repos.get(className, Concern.class);
-				Signature signature = concern.getSignature();
+				if (concern.getTypeReference() == null || concern.getTypeReference().getReference() == null)
+				{
+					continue;
+				}
+				Signature signature = concern.getTypeReference().getReference().getSignature();
 				if (signature != null)
 				{
 					Collection<MethodInfo> sigChanges = signature.getMethods(EnumSet.of(MethodRelation.ADDED,

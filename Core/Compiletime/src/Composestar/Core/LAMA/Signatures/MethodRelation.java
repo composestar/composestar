@@ -21,44 +21,25 @@
  *
  * $Id$
  */
-package Composestar.Core.CpsRepository2.Signatures;
-
-import java.io.Serializable;
-
-import Composestar.Core.LAMA.MethodInfo;
+package Composestar.Core.LAMA.Signatures;
 
 /**
- * A wrapper for the MethodInfo structure, it contains relational information
- * about what has happened to the method.
- * 
- * @author Michiel Hendriks
+ * The relation of this method to the concern
  */
-public interface MethodInfoWrapper extends Serializable
+public enum MethodRelation
 {
-
 	/**
-	 * @return the methodInfo
+	 * The method exists in the base class
 	 */
-	MethodInfo getMethodInfo();
-
+	NORMAL,
 	/**
-	 * @return the relation
+	 * The method was added due to filter behavior, it did not exist in the base
+	 * class
 	 */
-	MethodRelation getRelation();
-
+	ADDED,
 	/**
-	 * @param value the relation to set
+	 * The method was removed due to filter behavior, but it did exist in the
+	 * base class
 	 */
-	void setRelation(MethodRelation value);
-
-	/**
-	 * @return the status
-	 */
-	MethodStatus getStatus();
-
-	/**
-	 * @param value the status to set
-	 */
-	void setStatus(MethodStatus value);
-
+	REMOVED
 }

@@ -22,18 +22,12 @@ import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
 import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
-import Composestar.Core.CpsRepository2.Signatures.MethodInfoWrapper;
-import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
-import Composestar.Core.CpsRepository2.Signatures.MethodStatus;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
-import Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapperImpl;
-import Composestar.Core.CpsRepository2Impl.Signatures.SignatureImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsObjectImpl;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -54,6 +48,12 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LAMA.Signatures.MethodInfoWrapper;
+import Composestar.Core.LAMA.Signatures.MethodInfoWrapperImpl;
+import Composestar.Core.LAMA.Signatures.MethodRelation;
+import Composestar.Core.LAMA.Signatures.MethodStatus;
+import Composestar.Core.LAMA.Signatures.Signature;
+import Composestar.Core.LAMA.Signatures.SignatureImpl;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
@@ -257,14 +257,22 @@ public class Sign implements CTCommonModule
 	 * @param concern
 	 * @return
 	 */
-	private Signature getSignature(Concern concern)
+	private static Signature getSignature(Concern concern)
 	{
-		Signature sig = concern.getSignature();
+		if (concern.getTypeReference() == null)
+		{
+			return null;
+		}
+		if (concern.getTypeReference().getReference() == null)
+		{
+			return null;
+		}
+		Type type = concern.getTypeReference().getReference();
+		Signature sig = type.getSignature();
 		if (sig == null)
 		{
 			sig = new SignatureImpl();
-			concern.setSignature(sig);
-			repository.add(sig);
+			type.setSignature(sig);
 		}
 		return sig;
 	}
@@ -1405,12 +1413,11 @@ public class Sign implements CTCommonModule
 		}
 
 		// get the method wrapper
-		Concern c = target.getTypeReference().getReference().getConcern();
-		if (c == null)
+		Signature signature = target.getTypeReference().getReference().getSignature();
+		if (signature == null)
 		{
 			return MethodStatus.NOT_EXISTING;
 		}
-		Signature signature = c.getSignature();
 		MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(dispatchMethod);
 		if (wrapper == null)
 		{

@@ -35,8 +35,6 @@ import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
-import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.Exception.ModuleException;
@@ -47,6 +45,8 @@ import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Signatures.MethodRelation;
+import Composestar.Core.LAMA.Signatures.Signature;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
@@ -215,7 +215,18 @@ public class ModelBuilder implements CTCommonModule
 		inputFilterBuilderStrategy.setConcernAnalysis(ca);
 
 		// iterate methods:
-		Signature sig = concern.getSignature();
+		Signature sig = null;
+		if (concern.getTypeReference() != null && concern.getTypeReference().getReference() != null)
+		{
+			sig = concern.getTypeReference().getReference().getSignature();
+		}
+		if (sig == null)
+		{
+			logger.error(String.format("Concern with suporimposition, but without a signature: %s", concern
+					.getFullyQualifiedName()), concern);
+			return;
+		}
+
 		Collection<MethodInfo> methods = sig.getMethods(EnumSet.of(MethodRelation.NORMAL, MethodRelation.ADDED));
 
 		for (MethodInfo method : methods)

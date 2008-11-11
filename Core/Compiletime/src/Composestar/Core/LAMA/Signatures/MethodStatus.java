@@ -21,25 +21,13 @@
  *
  * $Id$
  */
-package Composestar.Core.CpsRepository2.Signatures;
+package Composestar.Core.LAMA.Signatures;
 
 /**
- * The relation of this method to the concern
+ * The status of the method in the signature. Used by SIGN and FIRE for
+ * signature matching
  */
-public enum MethodRelation
+public enum MethodStatus
 {
-	/**
-	 * The method exists in the base class
-	 */
-	NORMAL,
-	/**
-	 * The method was added due to filter behavior, it did not exist in the base
-	 * class
-	 */
-	ADDED,
-	/**
-	 * The method was removed due to filter behavior, but it did exist in the
-	 * base class
-	 */
-	REMOVED
+	EXISTING, NOT_EXISTING, UNKNOWN
 }

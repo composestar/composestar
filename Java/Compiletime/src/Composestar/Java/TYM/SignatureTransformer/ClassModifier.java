@@ -11,9 +11,9 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
 import Composestar.Core.CpsRepository2.Concern;
-import Composestar.Core.CpsRepository2.Signatures.MethodRelation;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Signatures.MethodRelation;
+import Composestar.Core.LAMA.Signatures.Signature;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -149,14 +149,18 @@ public class ClassModifier
 
 		// make adjustments
 		Concern concern = c.getConcern();
-		Signature signature = concern.getSignature();
 
-		if (signature != null)
+		if (concern.getTypeReference() != null && concern.getTypeReference().getReference() != null)
 		{
-			Collection<MethodInfo> methods = signature.getMethods(MethodRelation.ADDED);
-			if (methods.size() > 0)
+			Signature signature = concern.getTypeReference().getReference().getSignature();
+
+			if (signature != null)
 			{
-				addMethods(methods, ct);
+				Collection<MethodInfo> methods = signature.getMethods(MethodRelation.ADDED);
+				if (methods.size() > 0)
+				{
+					addMethods(methods, ct);
+				}
 			}
 		}
 

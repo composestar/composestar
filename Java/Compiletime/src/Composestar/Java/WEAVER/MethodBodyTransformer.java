@@ -20,9 +20,9 @@ import javassist.expr.NewArray;
 import javassist.expr.NewExpr;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
-import Composestar.Core.CpsRepository2.Signatures.Signature;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.Signatures.Signature;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Utils.Logging.CPSLogger;
@@ -290,7 +290,7 @@ public class MethodBodyTransformer extends ExprEditor
 		Concern c = repos.get(m.getClassName(), Concern.class);
 		if (c != null)
 		{
-			Signature s = c.getSignature();
+			Signature s = c.getTypeReference().getReference().getSignature();
 			Iterator<MethodInfo> methods = s.getMethods().iterator();
 			if (methods.hasNext())
 			{
