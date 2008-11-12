@@ -34,7 +34,7 @@
 
 	<target name="install">
 		<ant target="install" dir="Compiletime" inheritRefs="true" />
-		<ant target="install" dir="Runtime" inheritRefs="true" />
+		<!--<ant target="install" dir="Runtime" inheritRefs="true" />-->
 		<ant target="install" dir="Plugin" inheritRefs="true" />
 		<!--<ant target="install" dir="Visualization" inheritRefs="true" />-->
 	</target>
