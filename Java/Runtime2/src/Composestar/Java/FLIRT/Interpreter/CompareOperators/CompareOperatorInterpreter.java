@@ -1,0 +1,63 @@
+/*
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2008 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
+ */
+
+package Composestar.Java.FLIRT.Interpreter.CompareOperators;
+
+import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
+import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
+
+/**
+ * Interface for all compare operator interpreters
+ * 
+ * @author Michiel Hendriks
+ */
+public abstract class CompareOperatorInterpreter<T extends MECompareStatement>
+{
+	/**
+	 * Returns true if the compare operator statement is true within the given
+	 * context
+	 * 
+	 * @param expr
+	 * @param context
+	 * @return
+	 */
+	public boolean interpret(MECompareStatement expr, FilterExecutionContext context)
+	{
+		return matches(acceptsClass().cast(expr), context);
+	}
+
+	/**
+	 * @return the class thie interpreter accepts
+	 */
+	public abstract Class<T> acceptsClass();
+
+	/**
+	 * Implement this method
+	 * 
+	 * @param expr
+	 * @param context
+	 * @return
+	 */
+	public abstract boolean matches(T expr, FilterExecutionContext context);
+}

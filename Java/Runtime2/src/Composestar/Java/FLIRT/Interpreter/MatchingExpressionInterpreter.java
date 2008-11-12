@@ -24,18 +24,112 @@
 
 package Composestar.Java.FLIRT.Interpreter;
 
+import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
+import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
+import Composestar.Core.CpsRepository2.FilterElements.MECondition;
+import Composestar.Core.CpsRepository2.FilterElements.MELiteral;
 import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
+import Composestar.Core.CpsRepository2.FilterElements.UnaryMEOperator;
+import Composestar.Core.CpsRepository2Impl.FilterElements.AndMEOper;
+import Composestar.Core.CpsRepository2Impl.FilterElements.NotMEOper;
+import Composestar.Core.CpsRepository2Impl.FilterElements.OrMEOper;
 
 /**
+ * Interpret the matching expression
+ * 
  * @author Michiel Hendriks
  */
 public class MatchingExpressionInterpreter
 {
-
-	public static boolean interpret(MatchingExpression matchingExpression, FilterExecutionContext context)
+	/**
+	 * @param expr
+	 * @param context
+	 * @return True when the message is accepted
+	 */
+	public static boolean interpret(MatchingExpression expr, FilterExecutionContext context)
 	{
-		// TODO Auto-generated method stub
+		if (expr instanceof BinaryMEOperator)
+		{
+			return interpretBinOper((BinaryMEOperator) expr, context);
+		}
+		else if (expr instanceof UnaryMEOperator)
+		{
+			return interpretUnOper((UnaryMEOperator) expr, context);
+		}
+		else if (expr instanceof BinaryMEOperator)
+		{
+			return ((MELiteral) expr).getLiteralValue();
+		}
+		else if (expr instanceof MECondition)
+		{
+			return interpretCondition((MECondition) expr, context);
+		}
+		else if (expr instanceof MECompareStatement)
+		{
+			return CompareStatementInterpreter.interpret((MECompareStatement) expr, context);
+		}
+		else
+		{
+			// TODO error
+		}
 		return false;
 	}
 
+	/**
+	 * @param expr
+	 * @param context
+	 * @return
+	 */
+	public static boolean interpretBinOper(BinaryMEOperator expr, FilterExecutionContext context)
+	{
+		if (expr instanceof AndMEOper)
+		{
+			if (!interpret(expr.getLHS(), context))
+			{
+				return false;
+			}
+			else interpret(expr.getRHS(), context);
+		}
+		else if (expr instanceof OrMEOper)
+		{
+			if (interpret(expr.getLHS(), context))
+			{
+				return true;
+			}
+			else interpret(expr.getRHS(), context);
+		}
+		else
+		{
+			// TODO error
+		}
+		return false;
+	}
+
+	/**
+	 * @param expr
+	 * @param context
+	 * @return
+	 */
+	public static boolean interpretUnOper(UnaryMEOperator expr, FilterExecutionContext context)
+	{
+		if (expr instanceof NotMEOper)
+		{
+			return !interpret(expr.getOperand(), context);
+		}
+		else
+		{
+			// TODO error
+		}
+		return false;
+	}
+
+	/**
+	 * @param expr
+	 * @param context
+	 * @return
+	 */
+	public static boolean interpretCondition(MECondition expr, FilterExecutionContext context)
+	{
+		return MethodReferenceInterpreter.boolEval(expr.getCondition().getMethodReference(), context);
+	}
 }

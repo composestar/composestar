@@ -85,7 +85,7 @@ public class FilterArguments
 	}
 
 	/**
-	 * A set filter argument
+	 * A get filter argument value using the name
 	 * 
 	 * @param baseName
 	 * @return
