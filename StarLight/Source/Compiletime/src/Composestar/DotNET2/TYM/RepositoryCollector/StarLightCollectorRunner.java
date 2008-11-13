@@ -375,8 +375,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 			}
 
 			// Collect method attributes
-			List<DotNETMethodInfo> methods = type.getMethods();
-			for (DotNETMethodInfo method : methods)
+			List<MethodInfo> methods = type.getMethods();
+			for (MethodInfo method : methods)
 			{
 				List<Annotation> methodAnnos = method.getAnnotations();
 				if (methodAnnos != null)

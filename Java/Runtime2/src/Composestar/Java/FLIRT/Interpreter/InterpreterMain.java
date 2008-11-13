@@ -24,7 +24,10 @@
 
 package Composestar.Java.FLIRT.Interpreter;
 
+import java.util.logging.Logger;
+
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
+import Composestar.Java.FLIRT.FLIRTConstants;
 
 /**
  * The main entry point for the interpreter
@@ -33,6 +36,8 @@ import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
  */
 public class InterpreterMain
 {
+	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER);
+
 	/**
 	 * Entry point for the interpreter. This will execute the provided context
 	 * 
@@ -49,6 +54,7 @@ public class InterpreterMain
 				break;
 			}
 			fex = context.getNextFilterExpression();
+			FilterExpressionInterpreter.interpret(fex, context);
 		}
 		// TODO ...
 	}

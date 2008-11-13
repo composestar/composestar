@@ -25,10 +25,12 @@
 package Composestar.Java.FLIRT.Interpreter.CompareOperators;
 
 import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Java.FLIRT.Interpreter.FEExpressionInterpreter;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 
 /**
- * Interface for all compare operator interpreters
+ * Interface for all compare operator interpreters.
  * 
  * @author Michiel Hendriks
  */
@@ -48,7 +50,7 @@ public abstract class CompareOperatorInterpreter<T extends MECompareStatement>
 	}
 
 	/**
-	 * @return the class thie interpreter accepts
+	 * @return the class this interpreter accepts
 	 */
 	public abstract Class<T> acceptsClass();
 
@@ -59,5 +61,31 @@ public abstract class CompareOperatorInterpreter<T extends MECompareStatement>
 	 * @param context
 	 * @return
 	 */
-	public abstract boolean matches(T expr, FilterExecutionContext context);
+	public boolean matches(T expr, FilterExecutionContext context)
+	{
+		CpsVariable lhs = FEExpressionInterpreter.getValue(expr.getLHS(), context.getMessage(), null);
+		if (lhs == null)
+		{
+			return false;
+		}
+		for (CpsVariable rhs : expr.getRHS())
+		{
+			if ((rhs != null) && matches(lhs, rhs, context))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Matches two variables.
+	 * 
+	 * @param lhs This should be either an CpsSelector or an CpsObject, other
+	 *            values are currently not allowed on the left hand side of
+	 *            compare statements
+	 * @param rhs
+	 * @return true when they match according to the rules.
+	 */
+	public abstract boolean matches(CpsVariable lhs, CpsVariable rhs, FilterExecutionContext context);
 }

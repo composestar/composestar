@@ -24,10 +24,13 @@
 
 package Composestar.Java.FLIRT.Interpreter;
 
+import java.util.logging.Logger;
+
 import Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Core.CpsRepository2Impl.FilterModules.SequentialFilterOper;
+import Composestar.Java.FLIRT.FLIRTConstants;
 
 /**
  * Filter expression interpreter
@@ -36,6 +39,8 @@ import Composestar.Core.CpsRepository2Impl.FilterModules.SequentialFilterOper;
  */
 public class FilterExpressionInterpreter
 {
+	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".FilterExpr");
+
 	/**
 	 * Execute filter expressions
 	 * 
@@ -44,6 +49,10 @@ public class FilterExpressionInterpreter
 	 */
 	public static void interpret(FilterExpression fex, FilterExecutionContext context)
 	{
+		if (fex == null)
+		{
+			return;
+		}
 		if (fex instanceof Filter)
 		{
 			interpretFilter((Filter) fex, context);
@@ -54,7 +63,7 @@ public class FilterExpressionInterpreter
 		}
 		else
 		{
-			// TODO error
+			logger.severe(String.format("Unknown filter expression type: %s", fex.getClass().getName()));
 		}
 	}
 
@@ -76,7 +85,7 @@ public class FilterExpressionInterpreter
 		}
 		else
 		{
-			// TODO error
+			logger.severe(String.format("Unknown binary filter operator", fex.getClass().getName()));
 		}
 	}
 

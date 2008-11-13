@@ -24,6 +24,8 @@
 
 package Composestar.Java.FLIRT.Interpreter;
 
+import java.util.logging.Logger;
+
 import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
 import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
 import Composestar.Core.CpsRepository2.FilterElements.MECondition;
@@ -33,6 +35,7 @@ import Composestar.Core.CpsRepository2.FilterElements.UnaryMEOperator;
 import Composestar.Core.CpsRepository2Impl.FilterElements.AndMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.NotMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.OrMEOper;
+import Composestar.Java.FLIRT.FLIRTConstants;
 
 /**
  * Interpret the matching expression
@@ -41,6 +44,8 @@ import Composestar.Core.CpsRepository2Impl.FilterElements.OrMEOper;
  */
 public class MatchingExpressionInterpreter
 {
+	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".MatchExpr");
+
 	/**
 	 * @param expr
 	 * @param context
@@ -48,6 +53,10 @@ public class MatchingExpressionInterpreter
 	 */
 	public static boolean interpret(MatchingExpression expr, FilterExecutionContext context)
 	{
+		if (expr == null)
+		{
+			return false;
+		}
 		if (expr instanceof BinaryMEOperator)
 		{
 			return interpretBinOper((BinaryMEOperator) expr, context);
@@ -70,7 +79,7 @@ public class MatchingExpressionInterpreter
 		}
 		else
 		{
-			// TODO error
+			logger.severe(String.format("Unknown matching expression type: %s", expr.getClass().getName()));
 		}
 		return false;
 	}
@@ -100,7 +109,7 @@ public class MatchingExpressionInterpreter
 		}
 		else
 		{
-			// TODO error
+			logger.severe(String.format("Unknwon binary matching operator type: %s", expr.getClass().getName()));
 		}
 		return false;
 	}
@@ -118,7 +127,7 @@ public class MatchingExpressionInterpreter
 		}
 		else
 		{
-			// TODO error
+			logger.severe(String.format("Unknown unary matching operator type: %s", expr.getClass().getName()));
 		}
 		return false;
 	}

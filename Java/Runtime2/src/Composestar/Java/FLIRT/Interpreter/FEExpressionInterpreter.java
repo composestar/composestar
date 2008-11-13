@@ -24,6 +24,9 @@
 
 package Composestar.Java.FLIRT.Interpreter;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.PropertyPrefix;
 import Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator;
@@ -40,6 +43,7 @@ import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Env.RTMessage;
 
 /**
@@ -49,6 +53,8 @@ import Composestar.Java.FLIRT.Env.RTMessage;
  */
 public class FEExpressionInterpreter
 {
+	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".FEExpr");
+
 	/**
 	 * Interpret this filter element
 	 * 
@@ -58,6 +64,10 @@ public class FEExpressionInterpreter
 	 */
 	public static boolean interpret(FilterElementExpression fex, FilterExecutionContext context)
 	{
+		if (fex == null)
+		{
+			return false;
+		}
 		if (fex instanceof FilterElement)
 		{
 			return interpretFilterElement((FilterElement) fex, context);
@@ -68,7 +78,7 @@ public class FEExpressionInterpreter
 		}
 		else
 		{
-			// TODO error
+			logger.severe(String.format("Unknown filter element expression type %s", fex.getClass().getName()));
 		}
 		return false;
 	}
@@ -92,7 +102,7 @@ public class FEExpressionInterpreter
 		}
 		else
 		{
-			// TODO error
+			logger.severe(String.format("Unknown binary filter element operators type: %s", fex.getClass().getName()));
 		}
 		return false;
 	}
@@ -126,7 +136,11 @@ public class FEExpressionInterpreter
 
 				if (value == null)
 				{
-					// TODO warn
+					logger.warning(String.format("Assignment fo %s without a value", asg.getProperty().getName()));
+					if (asg.getSourceInformation() != null)
+					{
+						logger.info(asg.getSourceInformation().toString());
+					}
 					continue;
 				}
 
@@ -161,12 +175,21 @@ public class FEExpressionInterpreter
 					}
 					catch (IllegalArgumentException e)
 					{
-						// TODO error
+						logger.log(Level.SEVERE, String.format("Illegal assignment of %s with a value of type %s", asg
+								.getProperty().getName(), value.getClass().getName()), e);
+						if (asg.getSourceInformation() != null)
+						{
+							logger.info(asg.getSourceInformation().toString());
+						}
 					}
 				}
 				else
 				{
-					// TODO warning, unknown property
+					logger.warning(String.format("Assignment of an unknown property", asg.getProperty().getName()));
+					if (asg.getSourceInformation() != null)
+					{
+						logger.info(asg.getSourceInformation().toString());
+					}
 				}
 			}
 			return true;
@@ -189,6 +212,10 @@ public class FEExpressionInterpreter
 			CanonProperty prop = (CanonProperty) result;
 			if (prop.getPrefix() == PropertyPrefix.FILTER)
 			{
+				if (farg == null)
+				{
+					return null;
+				}
 				result = farg.get(prop.getBaseName());
 			}
 			else if (prop.getPrefix() == PropertyPrefix.MESSAGE)
@@ -201,7 +228,7 @@ public class FEExpressionInterpreter
 			}
 			else
 			{
-				result = null;
+				return null;
 			}
 		}
 		return result;

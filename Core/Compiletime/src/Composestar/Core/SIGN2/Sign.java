@@ -93,7 +93,7 @@ public class Sign implements CTCommonModule
 
 	private Map<Concern, Set<CpsSelector>> distinguishableSets;
 
-	private Set<MethodInfoWrapperImpl> cyclicDispatchSet;
+	private Set<MethodInfoWrapper> cyclicDispatchSet;
 
 	private boolean change;
 
@@ -904,10 +904,10 @@ public class Sign implements CTCommonModule
 
 	private void cyclicDispatchConflictCheckInit()
 	{
-		cyclicDispatchSet = new HashSet<MethodInfoWrapperImpl>();
+		cyclicDispatchSet = new HashSet<MethodInfoWrapper>();
 		for (Concern concern : superimposedConcerns)
 		{
-			for (MethodInfoWrapperImpl method : methods(concern))
+			for (MethodInfoWrapper method : methods(concern))
 			{
 				if (method.getStatus() == MethodStatus.EXISTING)
 				{
@@ -1045,7 +1045,7 @@ public class Sign implements CTCommonModule
 
 			for (MethodInfo methodInfo : dnmi)
 			{
-				MethodInfoWrapperImpl wrapper = signature.getMethodInfoWrapper(methodInfo);
+				MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(methodInfo);
 
 				if (wrapper == null)
 				{
@@ -1360,10 +1360,10 @@ public class Sign implements CTCommonModule
 		return false;
 	}
 
-	private Collection<MethodInfoWrapperImpl> methods(Concern concern)
+	private Collection<MethodInfoWrapper> methods(Concern concern)
 	{
 		Signature signature = getSignature(concern);
-		return new ArrayList<MethodInfoWrapperImpl>(signature.getMethodInfoWrappers());
+		return new ArrayList<MethodInfoWrapper>(signature.getMethodInfoWrappers());
 	}
 
 	/**

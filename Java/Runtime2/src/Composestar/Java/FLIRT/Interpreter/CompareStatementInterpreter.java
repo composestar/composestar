@@ -26,8 +26,10 @@ package Composestar.Java.FLIRT.Interpreter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
+import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Interpreter.CompareOperators.AnnotationMatchingInterp;
 import Composestar.Java.FLIRT.Interpreter.CompareOperators.CompareOperatorInterpreter;
 import Composestar.Java.FLIRT.Interpreter.CompareOperators.CompatibilityMatchingInterp;
@@ -41,6 +43,11 @@ import Composestar.Java.FLIRT.Interpreter.CompareOperators.SignatureMatchingInte
  */
 public class CompareStatementInterpreter
 {
+	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".CmpStmt");
+
+	/**
+	 * Registered matching interpreters
+	 */
 	private static Map<Class<? extends MECompareStatement>, CompareOperatorInterpreter<?>> interps;
 
 	static
@@ -69,11 +76,16 @@ public class CompareStatementInterpreter
 	 */
 	public static boolean interpret(MECompareStatement expr, FilterExecutionContext context)
 	{
+		if (expr == null)
+		{
+			return false;
+		}
 		CompareOperatorInterpreter<? extends MECompareStatement> interp = interps.get(expr.getClass());
 		if (interp != null)
 		{
 			return interp.interpret(expr, context);
 		}
+		logger.severe(String.format("Unhandled compare statement type: %s", expr.getClass().getName()));
 		return false;
 	}
 }

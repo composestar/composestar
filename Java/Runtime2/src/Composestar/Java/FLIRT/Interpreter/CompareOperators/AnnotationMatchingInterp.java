@@ -24,7 +24,11 @@
 
 package Composestar.Java.FLIRT.Interpreter.CompareOperators;
 
+import java.util.logging.Logger;
+
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.AnnotationMatching;
+import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 
 /**
@@ -32,6 +36,8 @@ import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
  */
 public class AnnotationMatchingInterp extends CompareOperatorInterpreter<AnnotationMatching>
 {
+	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".MatchAnnot");
+
 	/*
 	 * (non-Javadoc)
 	 * @seeComposestar.Java.FLIRT.Interpreter.CompareOperators.
@@ -47,13 +53,14 @@ public class AnnotationMatchingInterp extends CompareOperatorInterpreter<Annotat
 	 * (non-Javadoc)
 	 * @seeComposestar.Java.FLIRT.Interpreter.CompareOperators.
 	 * CompareOperatorInterpreter
-	 * #matches(Composestar.Core.CpsRepository2.FilterElements
-	 * .MECompareStatement,
+	 * #matches(Composestar.Core.CpsRepository2.TypeSystem.CpsVariable,
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable,
 	 * Composestar.Java.FLIRT.Interpreter.FilterExecutionContext)
 	 */
 	@Override
-	public boolean matches(AnnotationMatching expr, FilterExecutionContext context)
+	public boolean matches(CpsVariable lhs, CpsVariable rhs, FilterExecutionContext context)
 	{
+		// TODO Auto-generated method stub
 		return false;
 	}
 }

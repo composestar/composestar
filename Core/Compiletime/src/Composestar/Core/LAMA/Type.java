@@ -36,7 +36,7 @@ public abstract class Type extends ProgramElement
 
 	// note: it must be an implemented type and not an interface (for .net 1.1
 	// deserialization)
-	public ArrayList methods;
+	public List<MethodInfo> methods;
 
 	public ArrayList fields;
 
@@ -60,7 +60,7 @@ public abstract class Type extends ProgramElement
 
 	public Type()
 	{
-		methods = new ArrayList();
+		methods = new ArrayList<MethodInfo>();
 		fields = new ArrayList();
 	}
 
@@ -113,7 +113,7 @@ public abstract class Type extends ProgramElement
 	 */
 	public MethodInfo getMethod(String name, String[] types)
 	{
-		for (Iterator it = methods.iterator(); it.hasNext();)
+		for (Iterator<MethodInfo> it = methods.iterator(); it.hasNext();)
 		{
 			MethodInfo mi = (MethodInfo) it.next();
 			if (mi.getName().equals(name) && mi.hasParameters(types))
@@ -127,7 +127,7 @@ public abstract class Type extends ProgramElement
 	/**
 	 * @return java.util.List
 	 */
-	public List getMethods()
+	public List<MethodInfo> getMethods()
 	{
 		return methods;
 	}

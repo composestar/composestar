@@ -46,7 +46,7 @@ public interface Signature extends Serializable
 	 * @throws NullPointerException Thrown when the wrapper is null or when it
 	 *             doesn't have a MethodInfo object assigned.
 	 */
-	boolean addMethodInfoWrapper(MethodInfoWrapperImpl miw) throws NullPointerException;
+	boolean addMethodInfoWrapper(MethodInfoWrapper miw) throws NullPointerException;
 
 	/**
 	 * @param relation
@@ -73,7 +73,7 @@ public interface Signature extends Serializable
 	 * @return
 	 * @see SignatureImpl#getMethodInfoWrappers(EnumSet)
 	 */
-	Collection<MethodInfoWrapperImpl> getMethodInfoWrappers(MethodRelation relation);
+	Collection<MethodInfoWrapper> getMethodInfoWrappers(MethodRelation relation);
 
 	/**
 	 * Get all methodinfowrapper objects with a certain relation
@@ -81,12 +81,12 @@ public interface Signature extends Serializable
 	 * @param relations
 	 * @return
 	 */
-	Collection<MethodInfoWrapperImpl> getMethodInfoWrappers(EnumSet<MethodRelation> relations);
+	Collection<MethodInfoWrapper> getMethodInfoWrappers(EnumSet<MethodRelation> relations);
 
 	/**
 	 * @return All method info wrappers
 	 */
-	Collection<MethodInfoWrapperImpl> getMethodInfoWrappers();
+	Collection<MethodInfoWrapper> getMethodInfoWrappers();
 
 	/**
 	 * Get a method info wrapper for a given method info object (using its
@@ -96,7 +96,15 @@ public interface Signature extends Serializable
 	 * @return
 	 * @throws NullPointerException
 	 */
-	MethodInfoWrapperImpl getMethodInfoWrapper(MethodInfo mi) throws NullPointerException;
+	MethodInfoWrapper getMethodInfoWrapper(MethodInfo mi) throws NullPointerException;
+
+	/**
+	 * Return the methodinfo wrappers with the given name
+	 * 
+	 * @param mi
+	 * @return
+	 */
+	Collection<MethodInfoWrapper> getMethodInfoWrapper(String mi);
 
 	/**
 	 * Remove a methodinfo wrapper

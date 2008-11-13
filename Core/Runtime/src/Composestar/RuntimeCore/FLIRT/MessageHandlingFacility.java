@@ -32,7 +32,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcernReference;
-import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.RuntimeCore.CODER.DebuggerRuntime;
 import Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException;
 import Composestar.RuntimeCore.FLIRT.Exception.ErrorFilterException;
@@ -49,7 +49,7 @@ import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
  */
 public abstract class MessageHandlingFacility
 {
-	protected static Repository datastore = null;
+	protected static DataStore datastore = null;
 
 	private static final Object[] EmptyObjectArray = {};
 
@@ -837,7 +837,7 @@ public abstract class MessageHandlingFacility
 		}
 
 		RepositoryDeserializer rd = provider.getRepositoryDeserializer();
-		datastore = rd.deserialize(filename);
+		// datastore = rd.deserialize(filename);
 		if (Debug.SHOULD_DEBUG)
 		{
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Linking compile time structure...");

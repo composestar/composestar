@@ -15,6 +15,7 @@ import java.util.Set;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -211,10 +212,10 @@ public class JavaType extends Type
 	 * @param in - a set of <code>MethodInfo</code> or <code>FieldInfo</code>.
 	 * @return a <code>HashSet</code> containing objects declared in this class.
 	 */
-	private Set<ProgramElement> filterDeclaredHere(Collection<ProgramElement> in)
+	private Set<MethodInfo> filterMethodInfo(Collection<MethodInfo> in)
 	{
-		Set<ProgramElement> out = new HashSet<ProgramElement>();
-		for (ProgramElement obj : in)
+		Set<MethodInfo> out = new HashSet<MethodInfo>();
+		for (MethodInfo obj : in)
 		{
 			if (obj instanceof JavaMethodInfo)
 			{
@@ -223,7 +224,20 @@ public class JavaType extends Type
 					out.add(obj);
 				}
 			}
-			else if (obj instanceof JavaFieldInfo)
+			else
+			{
+				out.add(obj); // No filtering on other kinds of objects
+			}
+		}
+		return out;
+	}
+
+	private Set<FieldInfo> filterFieldInfo(Collection<FieldInfo> in)
+	{
+		Set<FieldInfo> out = new HashSet<FieldInfo>();
+		for (FieldInfo obj : in)
+		{
+			if (obj instanceof JavaFieldInfo)
 			{
 				if (((JavaFieldInfo) obj).isDeclaredHere())
 				{
@@ -347,11 +361,11 @@ public class JavaType extends Type
 		}
 		else if (argumentName.equals("ChildMethods"))
 		{
-			return new UnitResult(filterDeclaredHere(methods));
+			return new UnitResult(filterMethodInfo(methods));
 		}
 		else if (argumentName.equals("ChildFields"))
 		{
-			return new UnitResult(filterDeclaredHere(fields));
+			return new UnitResult(filterFieldInfo(fields));
 		}
 		else if (argumentName.equals("ParameterClass"))
 		{
@@ -399,7 +413,7 @@ public class JavaType extends Type
 		}
 		else if (argumentName.equals("ChildMethods"))
 		{
-			return new UnitResult(filterDeclaredHere(methods));
+			return new UnitResult(filterMethodInfo(methods));
 		}
 		else if (argumentName.equals("ParameterInterface"))
 		{

@@ -47,12 +47,12 @@ public class SignatureImpl implements Signature
 	/**
 	 * All method registered, the key is a generated key through MethodInfo
 	 */
-	protected Map<String, MethodInfoWrapperImpl> methods;
+	protected Map<String, MethodInfoWrapper> methods;
 
 	/**
 	 * The methods by name
 	 */
-	protected Map<String, List<MethodInfoWrapperImpl>> methodsByName;
+	protected Map<String, List<MethodInfoWrapper>> methodsByName;
 
 	/**
 	 * Create a new signature for a concern
@@ -60,8 +60,8 @@ public class SignatureImpl implements Signature
 	public SignatureImpl()
 	{
 		super();
-		methods = new HashMap<String, MethodInfoWrapperImpl>();
-		methodsByName = new HashMap<String, List<MethodInfoWrapperImpl>>();
+		methods = new HashMap<String, MethodInfoWrapper>();
+		methodsByName = new HashMap<String, List<MethodInfoWrapper>>();
 	}
 
 	/*
@@ -70,7 +70,7 @@ public class SignatureImpl implements Signature
 	 * Composestar.Core.CpsRepository2Impl.Signatures.Signature#addMethodInfoWrapper
 	 * (Composestar.Core.CpsRepository2Impl.Signatures.MethodInfoWrapper)
 	 */
-	public boolean addMethodInfoWrapper(MethodInfoWrapperImpl miw) throws NullPointerException
+	public boolean addMethodInfoWrapper(MethodInfoWrapper miw) throws NullPointerException
 	{
 		if (miw == null)
 		{
@@ -85,10 +85,10 @@ public class SignatureImpl implements Signature
 		{
 			methods.put(key, miw);
 			String name = miw.getMethodInfo().getName();
-			List<MethodInfoWrapperImpl> wrappersByName = methodsByName.get(name);
+			List<MethodInfoWrapper> wrappersByName = methodsByName.get(name);
 			if (wrappersByName == null)
 			{
-				wrappersByName = new ArrayList<MethodInfoWrapperImpl>();
+				wrappersByName = new ArrayList<MethodInfoWrapper>();
 				methodsByName.put(name, wrappersByName);
 			}
 			wrappersByName.add(miw);
@@ -147,7 +147,7 @@ public class SignatureImpl implements Signature
 	 * getMethodInfoWrappers
 	 * (Composestar.Core.CpsRepository2.Signatures.MethodRelation)
 	 */
-	public Collection<MethodInfoWrapperImpl> getMethodInfoWrappers(MethodRelation relation)
+	public Collection<MethodInfoWrapper> getMethodInfoWrappers(MethodRelation relation)
 	{
 		return getMethodInfoWrappers(EnumSet.of(relation));
 	}
@@ -157,10 +157,10 @@ public class SignatureImpl implements Signature
 	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.Signature#
 	 * getMethodInfoWrappers(java.util.EnumSet)
 	 */
-	public Collection<MethodInfoWrapperImpl> getMethodInfoWrappers(EnumSet<MethodRelation> relations)
+	public Collection<MethodInfoWrapper> getMethodInfoWrappers(EnumSet<MethodRelation> relations)
 	{
-		List<MethodInfoWrapperImpl> result = new ArrayList<MethodInfoWrapperImpl>();
-		for (MethodInfoWrapperImpl miw : methods.values())
+		List<MethodInfoWrapper> result = new ArrayList<MethodInfoWrapper>();
+		for (MethodInfoWrapper miw : methods.values())
 		{
 			if (relations.contains(miw.getRelation()))
 			{
@@ -175,7 +175,7 @@ public class SignatureImpl implements Signature
 	 * @seeComposestar.Core.CpsRepository2Impl.Signatures.Signature#
 	 * getMethodInfoWrappers()
 	 */
-	public Collection<MethodInfoWrapperImpl> getMethodInfoWrappers()
+	public Collection<MethodInfoWrapper> getMethodInfoWrappers()
 	{
 		return Collections.unmodifiableCollection(methods.values());
 	}
@@ -186,7 +186,7 @@ public class SignatureImpl implements Signature
 	 * Composestar.Core.CpsRepository2Impl.Signatures.Signature#getMethodInfoWrapper
 	 * (Composestar.Core.LAMA.MethodInfo)
 	 */
-	public MethodInfoWrapperImpl getMethodInfoWrapper(MethodInfo mi) throws NullPointerException
+	public MethodInfoWrapper getMethodInfoWrapper(MethodInfo mi) throws NullPointerException
 	{
 		if (mi == null)
 		{
@@ -194,6 +194,21 @@ public class SignatureImpl implements Signature
 		}
 		String key = mi.getHashKey();
 		return methods.get(key);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.LAMA.Signatures.Signature#getMethodInfoWrapper(java.
+	 * lang.String)
+	 */
+	public Collection<MethodInfoWrapper> getMethodInfoWrapper(String mi)
+	{
+		if (methodsByName.containsKey(mi))
+		{
+			return Collections.unmodifiableCollection(methodsByName.get(mi));
+		}
+		return Collections.emptyList();
 	}
 
 	/*
@@ -215,7 +230,7 @@ public class SignatureImpl implements Signature
 			methods.remove(key);
 
 			String name = mi.getName();
-			List<MethodInfoWrapperImpl> wrappers = methodsByName.get(name);
+			List<MethodInfoWrapper> wrappers = methodsByName.get(name);
 			if (wrappers != null)
 			{
 				wrappers.remove(miw);

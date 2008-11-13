@@ -24,7 +24,14 @@
 
 package Composestar.Java.FLIRT.Interpreter.CompareOperators;
 
+import java.util.logging.Logger;
+
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.InstanceMatching;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
+import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 
 /**
@@ -32,6 +39,13 @@ import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
  */
 public class InstanceMatchingInterp extends CompareOperatorInterpreter<InstanceMatching>
 {
+	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".MatchInst");
+
+	/*
+	 * (non-Javadoc)
+	 * @seeComposestar.Java.FLIRT.Interpreter.CompareOperators.
+	 * CompareOperatorInterpreter#acceptsClass()
+	 */
 	@Override
 	public Class<InstanceMatching> acceptsClass()
 	{
@@ -42,13 +56,35 @@ public class InstanceMatchingInterp extends CompareOperatorInterpreter<InstanceM
 	 * (non-Javadoc)
 	 * @seeComposestar.Java.FLIRT.Interpreter.CompareOperators.
 	 * CompareOperatorInterpreter
-	 * #matches(Composestar.Core.CpsRepository2.FilterElements
-	 * .MECompareStatement,
-	 * Composestar.Java.FLIRT.Interpreter.FilterExecutionContext)
+	 * #matches(Composestar.Core.CpsRepository2.TypeSystem.CpsVariable,
+	 * Composestar.Core.CpsRepository2.TypeSystem.CpsVariable)
 	 */
 	@Override
-	public boolean matches(InstanceMatching expr, FilterExecutionContext context)
+	public boolean matches(CpsVariable lhs, CpsVariable rhs, FilterExecutionContext context)
 	{
+		if (lhs instanceof CpsObject)
+		{
+			// must be same objects
+			return lhs == rhs;
+		}
+		else if (lhs instanceof CpsSelector && rhs instanceof CpsSelector)
+		{
+			if (lhs instanceof CpsSelectorMethodInfo && rhs instanceof CpsSelectorMethodInfo)
+			{
+				// special case, if both selectors are method info selectors,
+				// compare the method infos
+				if (((CpsSelectorMethodInfo) lhs).getMethodInfo().checkEquals(
+						((CpsSelectorMethodInfo) rhs).getMethodInfo()))
+				{
+					return true;
+				}
+			}
+			// name matching on CpsSelector
+			if (((CpsSelector) lhs).getName().equals(((CpsSelector) rhs).getName()))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 }

@@ -22,6 +22,7 @@ import java.util.Set;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -30,9 +31,9 @@ import Composestar.Core.LAMA.UnitResult;
 /**
  * Corresponds to the Type class in the .NET framework. For more information on
  * the methods and their meaning please refer to the microsoft documentation:
- * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
- * fsystemtypeclasstopic.asp note that the name may be redundant, but should be
- * consistent with the name of the concern.
+ * http ://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/
+ * frlr fsystemtypeclasstopic.asp note that the name may be redundant, but
+ * should be consistent with the name of the concern.
  */
 public class DotNETType extends Type
 {
@@ -288,10 +289,10 @@ public class DotNETType extends Type
 	public List<DotNETMethodInfo> getConstructors()
 	{
 		List<DotNETMethodInfo> constructors = new ArrayList<DotNETMethodInfo>();
-		Iterator<DotNETMethodInfo> it = methods.iterator();
+		Iterator<MethodInfo> it = methods.iterator();
 		while (it.hasNext())
 		{
-			DotNETMethodInfo method = it.next();
+			DotNETMethodInfo method = (DotNETMethodInfo) it.next();
 			if (method.isConstructor())
 			{
 				constructors.add(method);
@@ -302,10 +303,10 @@ public class DotNETType extends Type
 
 	public DotNETMethodInfo getConstructor(String[] types)
 	{
-		Iterator<DotNETMethodInfo> it = methods.iterator();
+		Iterator<MethodInfo> it = methods.iterator();
 		while (it.hasNext())
 		{
-			DotNETMethodInfo method = it.next();
+			DotNETMethodInfo method = (DotNETMethodInfo) it.next();
 			if (method.isConstructor() && method.hasParameters(types))
 			{
 				return method;
@@ -359,6 +360,28 @@ public class DotNETType extends Type
 		return out;
 	}
 
+	private HashSet<MethodInfo> filterMethodInfo(Collection<MethodInfo> in)
+	{
+		HashSet<MethodInfo> out = new HashSet<MethodInfo>();
+		Iterator<MethodInfo> iter = in.iterator();
+		while (iter.hasNext())
+		{
+			MethodInfo obj = iter.next();
+			if (obj instanceof DotNETMethodInfo)
+			{
+				if (((DotNETMethodInfo) obj).isDeclaredHere())
+				{
+					out.add(obj);
+				}
+			}
+			else
+			{
+				out.add(obj); // No filtering on other kinds of objects
+			}
+		}
+		return out;
+	}
+
 	public UnitResult getUnitRelationForClass(String argumentName)
 	{
 		if (argumentName.equals("ParentNamespace"))
@@ -375,7 +398,7 @@ public class DotNETType extends Type
 		}
 		else if (argumentName.equals("ChildMethods"))
 		{
-			return new UnitResult(filterDeclaredHere(methods));
+			return new UnitResult(filterMethodInfo(methods));
 		}
 		else if (argumentName.equals("ChildFields"))
 		{
@@ -427,7 +450,7 @@ public class DotNETType extends Type
 		}
 		else if (argumentName.equals("ChildMethods"))
 		{
-			return new UnitResult(filterDeclaredHere(methods));
+			return new UnitResult(filterMethodInfo(methods));
 		}
 		else if (argumentName.equals("ParameterInterface"))
 		{

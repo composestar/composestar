@@ -30,4 +30,9 @@ package Composestar.Java.FLIRT;
 public final class FLIRTConstants
 {
 	public static final String MODULE_NAME = "FLIRT";
+
+	/**
+	 * Logger base name for all interpreter classes
+	 */
+	public static final String INTERPRETER = MODULE_NAME + ".Interp";
 }

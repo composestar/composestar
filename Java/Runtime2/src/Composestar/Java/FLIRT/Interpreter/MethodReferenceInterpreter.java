@@ -24,10 +24,13 @@
 
 package Composestar.Java.FLIRT.Interpreter;
 
+import java.util.logging.Logger;
+
 import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Env.RTCpsObject;
 import Composestar.Java.FLIRT.Utils.Invoker;
 
@@ -36,6 +39,8 @@ import Composestar.Java.FLIRT.Utils.Invoker;
  */
 public class MethodReferenceInterpreter
 {
+	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".MethodRef");
+
 	private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
 	/**
@@ -63,7 +68,7 @@ public class MethodReferenceInterpreter
 			}
 			else
 			{
-				// TODO error
+				logger.severe(String.format("Unknown/handled CpsObject in the instance method reference: %s", obj));
 			}
 			if (rtobj != null)
 			{
