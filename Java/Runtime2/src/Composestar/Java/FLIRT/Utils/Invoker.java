@@ -29,9 +29,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Java.FLIRT.FLIRTConstants;
 
 /**
@@ -42,6 +45,25 @@ import Composestar.Java.FLIRT.FLIRTConstants;
 public class Invoker
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.MODULE_NAME + ".Invoker");
+
+	private static WeakHashMap<Class<?>, MethodFinder> methodFinders = new WeakHashMap<Class<?>, MethodFinder>();
+
+	/**
+	 * Get the method finder for a specific class
+	 * 
+	 * @param forClass
+	 * @return
+	 */
+	private static MethodFinder getMethodFinder(Class<?> forClass)
+	{
+		MethodFinder res = methodFinders.get(forClass);
+		if (res == null)
+		{
+			res = new MethodFinder(forClass);
+			methodFinders.put(forClass, res);
+		}
+		return res;
+	}
 
 	// TODO what is this for?
 	public static List<Object> getAttributesFor(Object target, String selector)
@@ -75,12 +97,17 @@ public class Invoker
 
 	public static Object invoke(String target, String selector, Object[] args)
 	{
+		return invoke(target, selector, args, null);
+	}
+
+	public static Object invoke(String target, String selector, Object[] args, MethodInfo methodInfo)
+	{
 		Class<?> type = getType(target);
-		Class<?>[] newArgs = convertToJavaArgs(args);
+		Class<?>[] newArgs = convertToJavaArgs(args, methodInfo);
 
 		try
 		{
-			MethodFinder m = new MethodFinder(type);
+			MethodFinder m = getMethodFinder(type);
 			Method method = m.findMethod(selector, newArgs);
 			method.setAccessible(true);
 			Object result = method.invoke(target, args);
@@ -104,11 +131,16 @@ public class Invoker
 
 	public static Object invoke(Object target, String selector, Object[] args)
 	{
+		return invoke(target, selector, args, null);
+	}
+
+	public static Object invoke(Object target, String selector, Object[] args, MethodInfo methodInfo)
+	{
 		Class<?> type = getType(target);
-		Class<?>[] newArgs = convertToJavaArgs(args);
+		Class<?>[] newArgs = convertToJavaArgs(args, methodInfo);
 		try
 		{
-			MethodFinder m = new MethodFinder(type);
+			MethodFinder m = getMethodFinder(type);
 			Method method = m.findMethod(selector, newArgs);
 			method.setAccessible(true);
 			Object result = method.invoke(target, args);
@@ -130,12 +162,30 @@ public class Invoker
 		return null;
 	}
 
-	private static Class<?>[] convertToJavaArgs(Object[] args)
+	private static Class<?>[] convertToJavaArgs(Object[] args, MethodInfo methodInfo)
 	{
 		Class<?>[] result = new Class[args.length];
 		for (int i = 0; i < args.length; i++)
 		{
-			result[i] = getType(args[i]);
+			Class<?> cls = null;
+			if (methodInfo != null && methodInfo.getParameters().size() >= i)
+			{
+				ParameterInfo pr = (ParameterInfo) methodInfo.getParameters().get(i);
+				String prType = pr.getParameterTypeString();
+				try
+				{
+					cls = ClassUtilities.classForNameOrPrimitive(prType, null);
+				}
+				catch (ClassNotFoundException e)
+				{
+				}
+			}
+			if (cls == null)
+			{
+				// fall back to argument type inspection
+				cls = getType(args[i]);
+			}
+			result[i] = cls;
 		}
 		return result;
 	}
@@ -164,7 +214,7 @@ public class Invoker
 		Class<?> type = getType(target);
 		try
 		{
-			Constructor<?> constructor = type.getConstructor(convertToJavaArgs(args));
+			Constructor<?> constructor = type.getConstructor(convertToJavaArgs(args, null));
 			return constructor.newInstance(args);
 		}
 		catch (IllegalAccessException e)

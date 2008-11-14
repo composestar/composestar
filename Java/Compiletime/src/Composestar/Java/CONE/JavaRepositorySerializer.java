@@ -53,7 +53,6 @@ public class JavaRepositorySerializer extends CONE
 			if (refusers.isEmpty() && pc.getSuperimposed() == null)
 			{
 				logger.trace(String.format("PrimitiveConcern %s not used", pc.getFullyQualifiedName()));
-				// delayed remove of the signatures
 				it.remove();
 			}
 		}

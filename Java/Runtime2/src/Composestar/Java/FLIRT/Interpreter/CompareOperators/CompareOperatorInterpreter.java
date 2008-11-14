@@ -30,7 +30,9 @@ import Composestar.Java.FLIRT.Interpreter.FEExpressionInterpreter;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 
 /**
- * Interface for all compare operator interpreters.
+ * Interface for all compare operator interpreters. Important implementation
+ * note: do not keep state is member variables. These instances can be called
+ * concurrently.
  * 
  * @author Michiel Hendriks
  */

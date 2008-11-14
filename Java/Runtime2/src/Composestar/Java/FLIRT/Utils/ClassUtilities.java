@@ -117,7 +117,7 @@ final class ClassUtilities
 	 * @exception ClassNotFoundException if name names an unknown class or
 	 *                primitive
 	 */
-	static Class<?> classForNameOrPrimitive(String name, ClassLoader loader) throws ClassNotFoundException
+	public static Class<?> classForNameOrPrimitive(String name, ClassLoader loader) throws ClassNotFoundException
 	{
 		if (name == null || name.equals("") || name.equals("null") || name.equals("void"))
 		{
@@ -172,7 +172,7 @@ final class ClassUtilities
 	 * @return true if the class is accessible, false otherwise. Presently
 	 *         returns true if the class is declared public.
 	 */
-	static boolean classIsAccessible(Class<?> aClass)
+	public static boolean classIsAccessible(Class<?> aClass)
 	{
 		return Modifier.isPublic(aClass.getModifiers());
 	}
@@ -190,7 +190,7 @@ final class ClassUtilities
 	 *            primitive.
 	 * @return true if compatible, false otherwise
 	 */
-	static boolean compatibleClasses(Class<?>[] lhs, Class<?>[] rhs)
+	public static boolean compatibleClasses(Class<?>[] lhs, Class<?>[] rhs)
 	{
 		if (lhs.length != rhs.length)
 		{
@@ -237,7 +237,7 @@ final class ClassUtilities
 	 *         interfaces of aClass are searched, then their superclasses, etc.
 	 *         until a method is found. Returns null if there is no such method.
 	 */
-	static Method getAccessibleMethodFrom(Class<?> aClass, String methodName, Class<?>[] parameterTypes)
+	public static Method getAccessibleMethodFrom(Class<?> aClass, String methodName, Class<?>[] parameterTypes)
 	{
 		// Look for overridden method in the superclass.
 		Class<?> superclass = aClass.getSuperclass();
@@ -320,7 +320,7 @@ final class ClassUtilities
 	 *         wrapper. If aClass is primitive, returns aClass. Otherwise,
 	 *         returns null.
 	 */
-	static Class<?> primitiveEquivalentOf(Class<?> aClass)
+	public static Class<?> primitiveEquivalentOf(Class<?> aClass)
 	{
 		return aClass.isPrimitive() ? aClass : objectToPrimitiveMap.get(aClass);
 	}
@@ -335,7 +335,7 @@ final class ClassUtilities
 	 *         <code>null</code>, or one of the parameters does not represent a
 	 *         primitive (e.g. Byte.TYPE), returns false.
 	 */
-	static boolean primitiveIsAssignableFrom(Class<?> lhs, Class<?> rhs)
+	public static boolean primitiveIsAssignableFrom(Class<?> lhs, Class<?> rhs)
 	{
 		if (lhs == null || rhs == null)
 		{

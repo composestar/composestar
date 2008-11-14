@@ -80,8 +80,6 @@ public class ObjectManager extends MessageReceiver implements RTCpsObject
 	{
 		super();
 		objectRef = new WeakReference<Object>(forObject);
-		// TODO add listener to the GC so that cleanup is called when the
-		// reference is shortened
 		concern = crn;
 		filterModules = fms;
 		innerObject = new SimpleCpsObject(forObject, crn.getTypeReference());

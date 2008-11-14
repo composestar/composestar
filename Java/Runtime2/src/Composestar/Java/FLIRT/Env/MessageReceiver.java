@@ -127,7 +127,7 @@ public abstract class MessageReceiver implements Runnable
 	/**
 	 * An incoming message, which should be processed by the input filters
 	 * 
-	 * @param sender
+	 * @param sender cann be null in case of static context
 	 * @param receiver
 	 * @param msg
 	 * @return The return value of the message, can be null for void methods

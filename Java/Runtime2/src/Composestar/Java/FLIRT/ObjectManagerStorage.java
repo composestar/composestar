@@ -79,4 +79,84 @@ public class ObjectManagerStorage
 	{
 		managers.values().remove(objectManager);
 	}
+
+	// Note: the following code shouldn't be needed, the ObjectManagers would
+	// automatically
+	// become garbage collected when their associated object is no longer in the
+	// WeakHashMap
+
+	// private static Map<Reference<? extends Object>, ObjectManager> refToMan =
+	// new HashMap<Reference<? extends Object>, ObjectManager>();
+	//
+	// private static ReferenceQueue<Object> managerQueue = new
+	// ReferenceQueue<Object>();
+	//	
+	// /**
+	// * Get a managed weak reference for an Object Manager. These references
+	// are
+	// * internally monitor so that ObjectManager release their resources when
+	// * their monitoring object is garbage collected.
+	// *
+	// * @param forObject
+	// * @param objectManager
+	// * @return
+	// */
+	// public static WeakReference<Object> getWeakReference(Object forObject,
+	// ObjectManager objectManager)
+	// {
+	// WeakReference<Object> ref = new WeakReference<Object>(forObject,
+	// managerQueue);
+	// refToMan.put(ref, objectManager);
+	// runCleanupThread();
+	// return ref;
+	// }
+	//
+	// private static boolean cleanupRunning = false;
+	//
+	// private static void runCleanupThread()
+	// {
+	// if (cleanupRunning)
+	// {
+	// return;
+	// }
+	// synchronized (refToMan)
+	// {
+	// cleanupRunning = true;
+	// new Thread(new CleanupThread(), "ObjectManagerGC");
+	// }
+	// }
+	//
+	// /**
+	// * The clean up thread that checks the reference queue and calls cleanup
+	// on
+	// * the associated manager objects.
+	// *
+	// * @author Michiel Hendriks
+	// */
+	// private static class CleanupThread implements Runnable
+	// {
+	// public void run()
+	// {
+	// while (!managers.isEmpty())
+	// {
+	// try
+	// {
+	// Reference<? extends Object> ref = managerQueue.remove();
+	// ObjectManager om = refToMan.get(ref);
+	// if (om != null)
+	// {
+	// om.cleanup();
+	// }
+	// refToMan.remove(ref);
+	// }
+	// catch (InterruptedException e)
+	// {
+	// }
+	// }
+	// synchronized (refToMan)
+	// {
+	// cleanupRunning = false;
+	// }
+	// }
+	// }
 }

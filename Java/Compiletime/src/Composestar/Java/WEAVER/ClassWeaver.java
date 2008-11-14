@@ -145,7 +145,7 @@ public class ClassWeaver
 		try
 		{
 			CtMethod mainmethod = clazz.getMethod("main", "([Ljava/lang/String;)V");
-			String src = "Composestar.RuntimeJava.FLIRT.JavaMessageHandlingFacility.handleJavaApplicationStart("
+			String src = "Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart("
 					+ "\"repository.dat\"" + "," + rundebuglevel + ", " + clazz.getName() + ".class);";
 			mainmethod.insertBefore(src);
 		}

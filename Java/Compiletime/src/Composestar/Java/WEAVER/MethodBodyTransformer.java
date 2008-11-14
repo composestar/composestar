@@ -6,6 +6,8 @@ import java.util.Iterator;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.CtPrimitiveType;
 import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.Descriptor;
@@ -172,18 +174,18 @@ public class MethodBodyTransformer extends ExprEditor
 	{
 		if (hd.isAfterInstantationInterception(e.getClassName()))
 		{
+			String.format("", new Object[] { "", "", "" });
 			int mod = e.where().getModifiers();
 			boolean isStaticCaller = Modifier.isStatic(mod);
 			if (isStaticCaller)
 			{
-				e
-						.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation("
-								+ '"' + e.where().getName() + '"' + ",$_,$args);}");
+				e.replace("{$_ = $proceed($$); Composestar.Java.FLIRT.MessageHandlingFacility.handleInstanceCreation("
+						+ '"' + e.where().getName() + '"' + ",$_,$args, null);}");
 			}
 			else
 			{
 				e
-						.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation(this,$_,$args);}");
+						.replace("{$_ = $proceed($$); Composestar.Java.FLIRT.MessageHandlingFacility.handleInstanceCreation(this,$_,$args, null);}");
 			}
 		}
 	}
@@ -203,28 +205,29 @@ public class MethodBodyTransformer extends ExprEditor
 		if (isStaticCaller && isStaticTarget)
 		{
 			// static caller, static target
-			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(" + '"'
+			m.replace("Composestar.Java.FLIRT.MessageHandlingFacility.handleVoidMethodCall(" + '"'
 					+ m.where().getDeclaringClass().getName() + '"' + "," + '"' + m.getClassName() + '"' + "," + '"'
-					+ m.getMethodName() + '"' + ",$args);");
+					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
 		}
 		else if (isStaticCaller && !isStaticTarget)
 		{
 			// static caller, non-static target
-			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(" + '"'
+			m.replace("Composestar.Java.FLIRT.MessageHandlingFacility.handleVoidMethodCall(" + '"'
 					+ m.where().getDeclaringClass().getName() + '"' + ",$0," + '"' + m.getMethodName() + '"'
-					+ ",$args);");
+					+ ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
 		}
 		else if (!isStaticCaller && isStaticTarget)
 		{
 			// non-static caller, static target
-			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this," + '"'
-					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args);");
+			m.replace("Composestar.Java.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this," + '"'
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args, \""
+					+ getMethodHashKey(m.getMethod()) + "\");");
 		}
 		else
 		{
 			// non-static caller, non-static target
-			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this,$0," + '"'
-					+ m.getMethodName() + '"' + ",$args);");
+			m.replace("Composestar.Java.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this,$0," + '"'
+					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
 		}
 	}
 
@@ -243,30 +246,29 @@ public class MethodBodyTransformer extends ExprEditor
 		if (isStaticCaller && isStaticTarget)
 		{
 			// static caller, static target
-			m.replace("$_ = ($r)" + "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall("
-					+ '"' + m.where().getDeclaringClass().getName() + '"' + "," + '"' + m.getClassName() + '"' + ","
-					+ '"' + m.getMethodName() + '"' + ",$args);");
+			m.replace("$_ = ($r)" + "Composestar.Java.FLIRT.MessageHandlingFacility.handleReturnMethodCall(" + '"'
+					+ m.where().getDeclaringClass().getName() + '"' + "," + '"' + m.getClassName() + '"' + "," + '"'
+					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
 		}
 		else if (isStaticCaller && !isStaticTarget)
 		{
 			// static caller, non-static target
-			m.replace("$_ = ($r)" + "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall("
-					+ '"' + m.where().getDeclaringClass().getName() + '"' + ",$0," + '"' + m.getMethodName() + '"'
-					+ ",$args);");
+			m.replace("$_ = ($r)" + "Composestar.Java.FLIRT.MessageHandlingFacility.handleReturnMethodCall(" + '"'
+					+ m.where().getDeclaringClass().getName() + '"' + ",$0," + '"' + m.getMethodName() + '"'
+					+ ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
 		}
 		else if (!isStaticCaller && isStaticTarget)
 		{
 			// non-static caller, static target
-			m.replace("$_ = ($r)"
-					+ "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this," + '"'
-					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args);");
+			m.replace("$_ = ($r)" + "Composestar.Java.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this," + '"'
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args, \""
+					+ getMethodHashKey(m.getMethod()) + "\");");
 		}
 		else
 		{
 			// non-static caller, non-static target
-			m.replace("$_ = ($r)"
-					+ "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this,$0," + '"'
-					+ m.getMethodName() + '"' + ",$args);");
+			m.replace("$_ = ($r)" + "Composestar.Java.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this,$0,"
+					+ '"' + m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
 		}
 	}
 
@@ -350,5 +352,41 @@ public class MethodBodyTransformer extends ExprEditor
 			logger.debug("NotFoundException: " + nfe.getMessage());
 		}
 		return true;
+	}
+
+	/**
+	 * Create a method hash key for this CtMethod, it should have the same
+	 * format as the hash key in methodInfo
+	 * 
+	 * @param meth
+	 * @return
+	 * @throws NotFoundException
+	 * @see {@link MethodInfo#getHashKey()}
+	 */
+	public String getMethodHashKey(CtMethod meth) throws NotFoundException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(meth.getName()).append('%');
+		if (meth.getReturnType() != null)
+		{
+			if (meth.getReturnType() instanceof CtPrimitiveType)
+			{
+				sb.append(meth.getReturnType().getSimpleName());
+			}
+			else
+			{
+				sb.append(meth.getReturnType().getName());
+			}
+		}
+		else
+		{
+			sb.append("void");
+		}
+		sb.append('%');
+		for (CtClass p : meth.getParameterTypes())
+		{
+			sb.append(p.getName()).append('%');
+		}
+		return sb.toString();
 	}
 }

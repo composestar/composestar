@@ -181,22 +181,26 @@ public class ObjectManagerHandler
 						}
 						else
 						{
-							// TODO error
+							logger.severe(String.format(
+									"Unknown CpsObject used in an instance method reference for the external: %s",
+									((External) fmvar).getFullyQualifiedName()));
 						}
 						// TODO: use JPCA
-						instance = Invoker.invoke(context, mref.getReferenceId(), EMPTY_OBJECT_ARRAY);
+						instance = Invoker.invoke(context, mref.getReferenceId(), EMPTY_OBJECT_ARRAY, mref
+								.getReference());
 					}
 					else
 					{
 						// static call
 						// TODO: use JPCA
 						instance = Invoker.invoke(mref.getTypeReference().getReferenceId(), mref.getReferenceId(),
-								EMPTY_OBJECT_ARRAY);
+								EMPTY_OBJECT_ARRAY, mref.getReference());
 					}
 				}
 			}
 			if (instance != null)
 			{
+				// TODO check the type to be valid
 				RTCpsObject inst = getObjectManager(instance, repos);
 				if (inst == null)
 				{

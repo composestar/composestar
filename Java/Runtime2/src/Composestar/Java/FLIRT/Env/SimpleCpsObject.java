@@ -103,7 +103,11 @@ public class SimpleCpsObject implements RTCpsObject
 	 */
 	public ProgramElement getProgramElement()
 	{
-		return tref.getReference();
+		if (tref != null)
+		{
+			return tref.getReference();
+		}
+		return null;
 	}
 
 	/*

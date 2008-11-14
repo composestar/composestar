@@ -72,13 +72,14 @@ public class MethodReferenceInterpreter
 			}
 			if (rtobj != null)
 			{
-				result = Invoker.invoke(rtobj.getObject(), ref.getReference().getName(), EMPTY_OBJECT_ARRAY);
+				result = Invoker.invoke(rtobj.getObject(), ref.getReference().getName(), EMPTY_OBJECT_ARRAY, ref
+						.getReference());
 			}
 		}
 		else
 		{
 			result = Invoker.invoke(ref.getTypeReference().getReferenceId(), ref.getReference().getName(),
-					EMPTY_OBJECT_ARRAY);
+					EMPTY_OBJECT_ARRAY, ref.getReference());
 		}
 		if (result != null)
 		{
