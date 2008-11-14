@@ -24,9 +24,12 @@
 
 package Composestar.Java.FLIRT.Interpreter;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
+import Composestar.Java.FLIRT.Actions.FilterAction;
 import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTFilterModule;
 import Composestar.Java.FLIRT.Env.RTMessage;
@@ -68,6 +71,11 @@ public class FilterExecutionContext
 	protected FilterArguments filterArguments;
 
 	/**
+	 * List of actions enqueued to be executed on the return flow
+	 */
+	protected Queue<EnqueuedAction> returnActions;
+
+	/**
 	 * @param man
 	 * @param msg
 	 */
@@ -76,6 +84,7 @@ public class FilterExecutionContext
 		om = man;
 		message = msg;
 		filterModules = man.getFilterModules();
+		returnActions = new LinkedList<EnqueuedAction>();
 	}
 
 	/**
@@ -182,5 +191,34 @@ public class FilterExecutionContext
 			return true;
 		}
 		return MethodReferenceInterpreter.boolEval(fm.getCondition(), this);
+	}
+
+	/**
+	 * Enqueue an action to be executed at a later stage
+	 * 
+	 * @param action
+	 */
+	public void addReturnAction(FilterAction action)
+	{
+		EnqueuedAction item = new EnqueuedAction();
+		item.action = action;
+		item.matchedMessage = new RTMessage(message);
+		returnActions.add(item);
+	}
+
+	/**
+	 * @author Michiel Hendriks
+	 */
+	public static class EnqueuedAction
+	{
+		/**
+		 * The message at the time it was matched
+		 */
+		public RTMessage matchedMessage;
+
+		/**
+		 * The return action
+		 */
+		public FilterAction action;
 	}
 }

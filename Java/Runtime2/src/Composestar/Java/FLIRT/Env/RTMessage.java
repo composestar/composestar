@@ -71,6 +71,13 @@ public class RTMessage implements CpsMessage
 		args = new Object[0];
 	}
 
+	public RTMessage(RTMessage copyFrom)
+	{
+		this();
+		properties.putAll(copyFrom.properties);
+		args = Arrays.copyOf(copyFrom.args, copyFrom.args.length);
+	}
+
 	public RTMessage(CpsObject sender)
 	{
 		this();
@@ -79,10 +86,8 @@ public class RTMessage implements CpsMessage
 
 	public RTMessage(CpsObject sender, RTMessage copyFrom)
 	{
-		this();
-		properties.putAll(copyFrom.properties);
+		this(copyFrom);
 		setProperty(PropertyNames.SENDER, sender);
-		args = Arrays.copyOf(copyFrom.args, copyFrom.args.length);
 	}
 
 	/**
