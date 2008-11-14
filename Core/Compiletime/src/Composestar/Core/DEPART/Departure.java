@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -161,7 +162,14 @@ public class Departure implements CTCommonModule
 			fm.setOwner(realOwner);
 
 			List<RepositoryEntity> newEnt = pm.getRepositoryEntities();
-			newEnt.remove(fakeOwner);
+			Iterator<RepositoryEntity> it = newEnt.iterator();
+			while (it.hasNext())
+			{
+				if (it.next().equals(fakeOwner))
+				{
+					it.remove();
+				}
+			}
 			repository.addAll(newEnt);
 			return fm;
 		}

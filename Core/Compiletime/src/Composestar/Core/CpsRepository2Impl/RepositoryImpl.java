@@ -247,6 +247,27 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.util.HashSet#iterator()
+	 */
+	@Override
+	public Iterator<RepositoryEntity> iterator()
+	{
+		// return a specialized iterator that will also remove qualified entries
+		// from the qualified entry table
+		return new RepositoryIterator<RepositoryEntity>(RepositoryEntity.class);
+	}
+
+	/**
+	 * @return The super iterator implementation, used by the RepositoryIterator
+	 *         implementation
+	 */
+	public Iterator<RepositoryEntity> superIterator()
+	{
+		return super.iterator();
+	}
+
 	/**
 	 * An iterable that creates an filtered iterator when needed
 	 * 
@@ -314,7 +335,7 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		 */
 		public RepositoryIterator(Class<T> filter)
 		{
-			it = RepositoryImpl.this.iterator();
+			it = RepositoryImpl.this.superIterator();
 			filterClass = filter;
 		}
 
@@ -362,6 +383,10 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 				// nextSet is false after next() was called
 				// only allow remove after next() was called
 				throw new IllegalStateException("next() has not been called yet");
+			}
+			if (next instanceof QualifiedRepositoryEntity)
+			{
+				qualifiedEntities.values().remove(next);
 			}
 			it.remove();
 		}
