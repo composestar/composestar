@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Java.FLIRT.FLIRTConstants;
+import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext.EnqueuedAction;
 
 /**
  * The main entry point for the interpreter
@@ -48,7 +49,6 @@ public class InterpreterMain
 		FilterExpression fex = context.getNextFilterExpression();
 		while (fex != null)
 		{
-			// TODO execute
 			if (context.getMessageFlow() != MessageFlow.CONTINUE)
 			{
 				break;
@@ -56,6 +56,23 @@ public class InterpreterMain
 			fex = context.getNextFilterExpression();
 			FilterExpressionInterpreter.interpret(fex, context);
 		}
-		// TODO ...
+		if (context.getMessageFlow() == MessageFlow.EXIT)
+		{
+			return;
+		}
+		// execute return actions
+		for (EnqueuedAction act : context.getReturnActions())
+		{
+			if (act.action == null)
+			{
+				continue;
+			}
+			context.setFilterArguments(act.arguments);
+			act.action.execute(act.matchedMessage, context);
+			if (context.getMessageFlow() == MessageFlow.EXIT)
+			{
+				return;
+			}
+		}
 	}
 }

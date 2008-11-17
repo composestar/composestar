@@ -250,15 +250,10 @@ public class ObjectManager extends MessageReceiver implements RTCpsObject
 	 * .Java.FLIRT.Env.RTMessage)
 	 */
 	@Override
-	public Object receiveMessage(RTMessage msg)
+	protected Object receiveMessage(RTMessage msg)
 	{
-		MessageDirection dir = msg.getDirection();
 		FilterExecutionContext context = new FilterExecutionContext(this, msg);
 		InterpreterMain.interpret(context);
-		if (dir == MessageDirection.OUTGOING)
-		{
-			return msg;
-		}
-		return msg.getResponse();
+		return null;
 	}
 }

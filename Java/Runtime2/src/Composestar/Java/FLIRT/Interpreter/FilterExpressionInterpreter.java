@@ -29,8 +29,13 @@ import java.util.logging.Logger;
 import Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;
 import Composestar.Core.CpsRepository2Impl.FilterModules.SequentialFilterOper;
 import Composestar.Java.FLIRT.FLIRTConstants;
+import Composestar.Java.FLIRT.Actions.RTFilterAction;
+import Composestar.Java.FLIRT.Actions.RTFilterActionFactory;
+import Composestar.Java.FLIRT.Env.RTMessage;
 
 /**
  * Filter expression interpreter
@@ -100,20 +105,71 @@ public class FilterExpressionInterpreter
 		FilterArguments farg = new FilterArguments();
 		farg.addAll(filter.getArguments());
 		context.setFilterArguments(farg);
+		RTMessage matchedMessage = new RTMessage(context.getMessage());
 		try
 		{
 			if (FEExpressionInterpreter.interpret(filter.getElementExpression(), context))
 			{
-				// TODO exec accept actions
+				if (filter.getType() instanceof PrimitiveFilterType)
+				{
+					interpretPrimitiveFilterType(matchedMessage, (PrimitiveFilterType) filter.getType(), context, true);
+				}
+				else
+				{
+					logger.severe(String.format("Unhandled filter type class: %s", filter.getType().getClass()
+							.getName()));
+				}
 			}
 			else
 			{
-				// TODO exec reject actions
+				if (filter.getType() instanceof PrimitiveFilterType)
+				{
+					interpretPrimitiveFilterType(matchedMessage, (PrimitiveFilterType) filter.getType(), context, false);
+				}
+				else
+				{
+					logger.severe(String.format("Unhandled filter type class: %s", filter.getType().getClass()
+							.getName()));
+				}
 			}
 		}
 		finally
 		{
 			context.setFilterArguments(null);
+		}
+	}
+
+	/**
+	 * Execute the filter type actions
+	 * 
+	 * @param type
+	 * @param context
+	 * @param onCall
+	 */
+	public static void interpretPrimitiveFilterType(RTMessage matchedMessage, PrimitiveFilterType type,
+			FilterExecutionContext context, boolean accepted)
+	{
+		FilterAction onCall;
+		FilterAction onReturn;
+		if (accepted)
+		{
+			onCall = type.getAcceptCallAction();
+			onReturn = type.getAcceptReturnAction();
+		}
+		else
+		{
+			onCall = type.getRejectCallAction();
+			onReturn = type.getRejectReturnAction();
+		}
+		RTFilterAction act = RTFilterActionFactory.createAction(onReturn);
+		if (act != null)
+		{
+			context.addReturnAction(matchedMessage, act);
+		}
+		act = RTFilterActionFactory.createAction(onCall);
+		if (act != null)
+		{
+			act.execute(matchedMessage, context);
 		}
 	}
 }

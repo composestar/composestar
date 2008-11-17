@@ -34,7 +34,22 @@ import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
- * A proxy to a previously defined filter in the filter module
+ * A proxy to a previously defined filter in the filter module. For example
+ * 
+ * <pre>
+ * filtermodule Foo
+ * {
+ * 		filters
+ * 			f1 : Dispatch = (target == inner);
+ * 		inputfilters
+ * 			f1;
+ * 			subst : Substitution = (!(target == inner)) { target = inner; };
+ * 			f1
+ * }
+ * </pre>
+ * 
+ * Filter "f1" is used twice, in both cases a proxy filter is used in the filter
+ * expression.
  * 
  * @author Michiel Hendriks
  */

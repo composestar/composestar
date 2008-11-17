@@ -24,12 +24,14 @@
 
 package Composestar.Java.FLIRT.Interpreter;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
-import Composestar.Java.FLIRT.Actions.FilterAction;
+import Composestar.Java.FLIRT.Actions.RTFilterAction;
 import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTFilterModule;
 import Composestar.Java.FLIRT.Env.RTMessage;
@@ -102,6 +104,24 @@ public class FilterExecutionContext
 	 */
 	public void setMessageFlow(MessageFlow value)
 	{
+		switch (flow)
+		{
+			case EXIT:
+				if (flow != value)
+				{
+					throw new IllegalStateException("Message flow can not be changed when in EXIT");
+				}
+				break;
+			case RETURN:
+				if (flow == MessageFlow.CONTINUE)
+				{
+					throw new IllegalStateException("Message flow can not return to CONTINUE");
+				}
+				break;
+			case CONTINUE:
+			default:
+				break;
+		}
 		flow = value;
 	}
 
@@ -198,12 +218,24 @@ public class FilterExecutionContext
 	 * 
 	 * @param action
 	 */
-	public void addReturnAction(FilterAction action)
+	public void addReturnAction(RTMessage matchedMessage, RTFilterAction action)
 	{
 		EnqueuedAction item = new EnqueuedAction();
 		item.action = action;
-		item.matchedMessage = new RTMessage(message);
+		item.matchedMessage = matchedMessage;
+		if (filterArguments != null)
+		{
+			item.arguments = new FilterArguments(filterArguments);
+		}
 		returnActions.add(item);
+	}
+
+	/**
+	 * @return
+	 */
+	public Collection<EnqueuedAction> getReturnActions()
+	{
+		return Collections.unmodifiableCollection(returnActions);
 	}
 
 	/**
@@ -217,8 +249,13 @@ public class FilterExecutionContext
 		public RTMessage matchedMessage;
 
 		/**
+		 * The filter arguments
+		 */
+		public FilterArguments arguments;
+
+		/**
 		 * The return action
 		 */
-		public FilterAction action;
+		public RTFilterAction action;
 	}
 }

@@ -152,8 +152,7 @@ public abstract class MessageReceiver implements Runnable
 		// notify objectmanager that messagequeue is not empty
 		notifyMessageConsumer();
 
-		// read the returnvalue from the message's response buffer
-		return msg.getResponse();
+		return msg.getReturnValue();
 	}
 
 	/**
@@ -162,9 +161,9 @@ public abstract class MessageReceiver implements Runnable
 	 * @param sender
 	 * @param receiver
 	 * @param msg
-	 * @return The message that is going to be send to the target
+	 * @return The result of the message
 	 */
-	public RTMessage deliverOutgoingMessage(CpsObject sender, CpsObject receiver, RTMessage msg)
+	public Object deliverOutgoingMessage(CpsObject sender, CpsObject receiver, RTMessage msg)
 	{
 		if (sender instanceof ObjectManager)
 		{
@@ -175,7 +174,8 @@ public abstract class MessageReceiver implements Runnable
 			// shouldn't even be possible
 			msg.setInner(sender);
 		}
-		msg.setSelf(receiver);
+		msg.setSelf(receiver); // TODO: verify this value, shouldn't this be
+								// "sender" ?
 		msg.setTarget(receiver);
 
 		// add the message to the objectmanager's message queue
@@ -184,18 +184,7 @@ public abstract class MessageReceiver implements Runnable
 		// notify objectmanager that queue is not empty
 		notifyMessageConsumer();
 
-		// read the response from the responsebuffer...
-		Object reply = msg.getResponse();
-
-		if (reply instanceof RTMessage)
-		{
-			msg = (RTMessage) ((RTMessage) reply).send(sender);
-			msg.setDirection(MessageDirection.INCOMING);
-			return msg;
-		}
-		logger.severe(String.format("Message response is not a RTMessage: %s", reply));
-		// TODO error, this should always be a message
-		return null;
+		return msg.getReturnValue();
 	}
 
 	/**
@@ -204,5 +193,5 @@ public abstract class MessageReceiver implements Runnable
 	 * @param msg
 	 * @return
 	 */
-	public abstract Object receiveMessage(RTMessage msg);
+	protected abstract Object receiveMessage(RTMessage msg);
 }

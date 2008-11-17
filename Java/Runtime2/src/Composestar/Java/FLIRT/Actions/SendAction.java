@@ -24,26 +24,32 @@
 
 package Composestar.Java.FLIRT.Actions;
 
+import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Java.FLIRT.Annotations.FilterActionDef;
+import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTMessage;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 
 /**
- * A filter action
+ * Sends a message to the target, this changes the sender of the message to the
+ * value of, at that time "self"
  * 
  * @author Michiel Hendriks
  */
-public abstract class FilterAction
+@FilterActionDef(name = FilterActionNames.SEND_ACTION)
+public class SendAction extends DispatchAction
 {
-	/**
-	 * Called when this action is executed
-	 * 
-	 * @param matchedMessage The message that was matched at the time this
-	 *            filter action was created. In case of "on-call" actions the
-	 *            message contains identical information as the message in the
-	 *            context. Changing the matches message has no effect, the
-	 *            message in the context needs to be modified.
-	 * @param context The current execution context.
-	 * @see FilterExecutionContext#getMessage()
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Java.FLIRT.Actions.DispatchAction#dispatch(Composestar.Java
+	 * .FLIRT.Env.ObjectManager,
+	 * Composestar.Java.FLIRT.Interpreter.FilterExecutionContext)
 	 */
-	public abstract void execute(RTMessage matchedMessage, FilterExecutionContext context);
+	@Override
+	protected Object dispatch(ObjectManager target, FilterExecutionContext context)
+	{
+		RTMessage message = (RTMessage) context.getMessage().send(context.getMessage().getSelf());
+		return target.deliverIncomingMessage(message.getSender(), target, message);
+	}
 }

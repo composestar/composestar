@@ -45,6 +45,11 @@ public class FilterArguments
 		args = new HashMap<String, CanonAssignment>();
 	}
 
+	public FilterArguments(FilterArguments copyFrom)
+	{
+		args = new HashMap<String, CanonAssignment>(copyFrom.args);
+	}
+
 	/**
 	 * Add a single argument
 	 * 

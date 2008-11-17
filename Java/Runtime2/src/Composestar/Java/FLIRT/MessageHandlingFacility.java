@@ -25,6 +25,7 @@
 package Composestar.Java.FLIRT;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +42,7 @@ import Composestar.Core.LAMA.Signatures.MethodRelation;
 import Composestar.Core.LAMA.Signatures.MethodStatus;
 import Composestar.Core.LAMA.Signatures.Signature;
 import Composestar.Java.FLIRT.Env.MessageDirection;
+import Composestar.Java.FLIRT.Env.MessageState;
 import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTCpsObject;
 import Composestar.Java.FLIRT.Env.RTMessage;
@@ -148,6 +150,7 @@ public class MessageHandlingFacility
 		CpsSelector sel = new CpsSelectorImpl(createdObject.getClass().getSimpleName());
 		msg.setSelector(sel);
 		msg.setArguments(args);
+		msg.setState(MessageState.CONSTRUCTOR);
 
 		msg.setDirection(MessageDirection.INCOMING);
 		try
@@ -180,7 +183,7 @@ public class MessageHandlingFacility
 	}
 
 	/**
-	 * Instance method call with a return from an instance context
+	 * Generic method handling
 	 * 
 	 * @param caller
 	 * @param target
@@ -188,7 +191,8 @@ public class MessageHandlingFacility
 	 * @param args
 	 * @return
 	 */
-	public static Object handleReturnMethodCall(Object caller, Object target, String selector, Object[] args, String key)
+	public static Object handleMethodCall(Object caller, Object target, String selector, Object[] args, String key,
+			EnumSet<MessageState> state)
 	{
 		ObjectManager targetOm = ObjectManagerHandler.getObjectManager(target, repository);
 		ObjectManager senderOm = ObjectManagerHandler.getObjectManager(caller, repository);
@@ -219,33 +223,27 @@ public class MessageHandlingFacility
 		}
 
 		RTMessage msg = new RTMessage(senderObj);
-		msg.setServer(targetObj);
+		msg.setServer(targetObj); // TODO: verify this value
 		CpsSelector sel = createSelector(target, selector, args, key);
 		msg.setSelector(sel);
 		msg.setArguments(args);
-		msg.setDirection(MessageDirection.OUTGOING);
-
 		Object returnvalue;
 
 		try
 		{
 			if (senderOm != null)
 			{
-				msg = senderOm.deliverOutgoingMessage(senderObj, targetObj, msg);
+				msg.setDirection(MessageDirection.OUTGOING);
+				returnvalue = senderOm.deliverOutgoingMessage(senderObj, targetObj, msg);
 			}
-			else
+			else if (targetOm != null)
 			{
 				msg.setDirection(MessageDirection.INCOMING);
-				msg.setTarget(targetObj);
-			}
-
-			if (targetOm != null)
-			{
 				returnvalue = targetOm.deliverIncomingMessage(senderObj, targetObj, msg);
 			}
 			else
 			{
-				returnvalue = invokeMessage(msg);
+				returnvalue = invokeMessageToInner(msg);
 			}
 		}
 		catch (RuntimeException e)
@@ -260,6 +258,20 @@ public class MessageHandlingFacility
 	}
 
 	/**
+	 * Instance method call with a return from an instance context
+	 * 
+	 * @param caller
+	 * @param target
+	 * @param selector
+	 * @param args
+	 * @return
+	 */
+	public static Object handleReturnMethodCall(Object caller, Object target, String selector, Object[] args, String key)
+	{
+		return handleMethodCall(caller, target, selector, args, key, EnumSet.noneOf(MessageState.class));
+	}
+
+	/**
 	 * Instance method call without a return from an instance context
 	 * 
 	 * @param caller
@@ -269,7 +281,7 @@ public class MessageHandlingFacility
 	 */
 	public static void handleVoidMethodCall(Object caller, Object target, String selector, Object[] args, String key)
 	{
-		handleReturnMethodCall(caller, target, selector, args, key);
+		handleMethodCall(caller, target, selector, args, key, EnumSet.of(MessageState.VOID_RETURN));
 	}
 
 	/**
@@ -284,7 +296,7 @@ public class MessageHandlingFacility
 	public static Object handleReturnMethodCall(String staticcaller, Object target, String selector, Object[] args,
 			String key)
 	{
-		return handleReturnMethodCall(null, target, selector, args, key);
+		return handleMethodCall(null, target, selector, args, key, EnumSet.of(MessageState.STATIC_SENDER));
 	}
 
 	/**
@@ -298,7 +310,8 @@ public class MessageHandlingFacility
 	public static void handleVoidMethodCall(String staticcaller, Object target, String selector, Object[] args,
 			String key)
 	{
-		handleReturnMethodCall(staticcaller, target, selector, args, key);
+		handleMethodCall(staticcaller, target, selector, args, key, EnumSet.of(MessageState.STATIC_SENDER,
+				MessageState.VOID_RETURN));
 	}
 
 	/**
@@ -362,12 +375,12 @@ public class MessageHandlingFacility
 	}
 
 	/**
-	 * Invoke a RTMessage
+	 * Invoke a RTMessage to the inner object
 	 * 
 	 * @param msg
 	 * @return
 	 */
-	public static Object invokeMessage(RTMessage msg)
+	public static Object invokeMessageToInner(RTMessage msg)
 	{
 		Object target = null;
 		if (msg.getTarget() instanceof RTCpsObject)
@@ -377,6 +390,11 @@ public class MessageHandlingFacility
 		else
 		{
 			throw new IllegalStateException("Message target is not an RTCpsObject");
+		}
+		if (msg.getTarget().isInnerObject() && msg.hasState(MessageState.CONSTRUCTOR))
+		{
+			logger.info("Dispatch to inner from a constructor, returning null");
+			return null;
 		}
 		MethodInfo methodInfo = null;
 		if (msg.getSelector() instanceof CpsSelectorMethodInfo)

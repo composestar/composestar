@@ -27,6 +27,7 @@ package Composestar.Java.FLIRT.Env;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -61,9 +62,16 @@ public class RTMessage implements CpsMessage
 	protected MessageDirection direction = MessageDirection.OUTGOING;
 
 	/**
+	 * The message state
+	 */
+	protected EnumSet<MessageState> state;
+
+	/**
 	 * The arguments passed on the method call
 	 */
 	protected Object[] args;
+
+	protected Object returnValue;
 
 	public RTMessage()
 	{
@@ -75,7 +83,11 @@ public class RTMessage implements CpsMessage
 	{
 		this();
 		properties.putAll(copyFrom.properties);
+		inner = copyFrom.inner;
 		args = Arrays.copyOf(copyFrom.args, copyFrom.args.length);
+		direction = copyFrom.direction;
+		state = copyFrom.state;
+		returnValue = copyFrom.returnValue;
 	}
 
 	public RTMessage(CpsObject sender)
@@ -109,6 +121,31 @@ public class RTMessage implements CpsMessage
 	}
 
 	/**
+	 * @param value
+	 */
+	public void setState(EnumSet<MessageState> value)
+	{
+		state = value;
+	}
+
+	/**
+	 * @param value
+	 */
+	public void setState(MessageState value)
+	{
+		state = EnumSet.of(value);
+	}
+
+	/**
+	 * @param value
+	 * @return True if the given state is in the message
+	 */
+	public boolean hasState(MessageState value)
+	{
+		return state.contains(value);
+	}
+
+	/**
 	 * @return The arguments
 	 */
 	public Object[] getArguments()
@@ -124,6 +161,24 @@ public class RTMessage implements CpsMessage
 	public void setArguments(Object[] value)
 	{
 		args = value;
+	}
+
+	/**
+	 * @return The return value of the message
+	 */
+	public Object getReturnValue()
+	{
+		return returnValue;
+	}
+
+	/**
+	 * Set the return value
+	 * 
+	 * @param returnValue
+	 */
+	public void setReturnValue(Object returnValue)
+	{
+		this.returnValue = returnValue;
 	}
 
 	/**
@@ -270,7 +325,9 @@ public class RTMessage implements CpsMessage
 	 */
 	public CpsMessage send(CpsObject sender) throws NullPointerException
 	{
-		return new RTMessage(sender, this);
+		RTMessage newmsg = new RTMessage(sender, this);
+		newmsg.setDirection(MessageDirection.INCOMING);
+		return newmsg;
 	}
 
 	/*
