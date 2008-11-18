@@ -34,7 +34,7 @@
 		<!-- composestar.java package -->
 		<copy todir="${out.build}/plugins/composestar.java_${version.java}">
 			<fileset dir="${build.java}/Compiletime/${out.dist}" />
-			<fileset dir="${build.java}/Runtime/${out.dist}" />
+			<fileset dir="${build.java}/Runtime2/${out.dist}" />
 		</copy>
 		<copy todir="${out.build}/plugins/composestar.java.plugin_${version.java}">
 			<fileset dir="${build.java}/Plugin/eclipse/${out.dist}" />
