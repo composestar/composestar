@@ -16,7 +16,7 @@
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<delete dir="${out.qa}" />
 		<ant target="clean" dir="Compiletime" inheritRefs="true" />
-		<!--<ant target="clean" dir="Runtime" inheritRefs="true" />-->
+		<ant target="clean" dir="Runtime" inheritRefs="true" />
 		<ant target="clean" dir="Examples" inheritRefs="true" />
 		<ant target="clean" dir="Testing" inheritRefs="true" />
 		<ant target="clean" dir="Plugin" inheritRefs="true" />
@@ -25,7 +25,7 @@
 
 	<target name="build" description="Build the .Net implementation of Compose*">
 		<ant target="build" dir="Compiletime" inheritRefs="true" />
-		<!--<ant target="build" dir="Runtime" inheritRefs="true" />-->
+		<ant target="build" dir="Runtime2" inheritRefs="true" />
 	</target>
 
 	<target name="plugin" description="Build the plugin for the IDE">
@@ -41,13 +41,13 @@
 
 	<target name="install" description="Install the result">
 		<ant target="install" dir="Compiletime" inheritRefs="true" />
-		<!--<ant target="install" dir="Runtime" inheritRefs="true" />-->
+		<ant target="install" dir="Runtime2" inheritRefs="true" />
 		<ant target="install" dir="Plugin" inheritRefs="true" />
 	</target>
 
 	<target name="uninstall" description="Clean up and installation">
 		<!--<ant target="uninstall" dir="Compiletime" />-->
-		<!--<ant target="uninstall" dir="Runtime" inheritRefs="true" />-->
+		<!--<ant target="uninstall" dir="Runtime2" inheritRefs="true" />-->
 		<!--<ant target="uninstall" dir="Plugin" />-->
 	</target>
 
@@ -58,14 +58,14 @@
 	<target name="findbugs" depends="init_qa" description="Execute FindBugs">
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.java}${file.separator}Compiletime${file.separator}${out.build}" />
-			<!--<class location="${build.java}${file.separator}Runtime${file.separator}${out.build}" />-->
+			<class location="${build.java}${file.separator}Runtime2${file.separator}${out.build}" />
 			<sourcePath path="${build.java}${file.separator}Compiletime${file.separator}src" />
-			<!--<sourcePath path="${build.java}${file.separator}Runtime${file.separator}src" />-->
+			<sourcePath path="${build.java}${file.separator}Runtime2${file.separator}src" />
 			<auxClasspath refid="lib.core" />
 			<auxClasspath>
 				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
 				<pathelement path="${build.java}${file.separator}Compiletime${file.separator}lib${file.separator}javassist${file.separator}javassist.jar" />
-				<!--<pathelement path="${build.core}${file.separator}Runtime${file.separator}${out.build}" />-->
+				<pathelement path="${build.core}${file.separator}Runtime2${file.separator}${out.build}" />
 			</auxClasspath>
 		</findbugs>
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />
@@ -82,12 +82,9 @@
 				<exclude name="Composestar/Java/DUMMER/JavaRecognizer.java" />
 				<exclude name="Composestar/Java/DUMMER/JavaTokenTypes.java" />
 			</FileSet>
-
-			<!--
-			<FileSet dir="${build.java}${file.separator}runtime${file.separator}src">
+			<FileSet dir="${build.java}${file.separator}Runtime2${file.separator}src">
 				<include name="**/*.java" />
 			</FileSet>
-			-->
 		</checkstyle>
 		<xslt in="${out.qa}${file.separator}checkstyle-result.xml" out="${out.qa}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
 	</target>

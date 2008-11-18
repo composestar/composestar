@@ -128,47 +128,4 @@ public class ErrorAction extends RTFilterAction
 					"Unable to create exception of type %s for the error filter action", rtec.getName()), e);
 		}
 	}
-
-	/**
-	 *Default exception thrown by the error filter
-	 * 
-	 * @author Michiel Hendriks
-	 */
-	public static final class ErrorFilterException extends RuntimeException
-	{
-		private static final long serialVersionUID = -8676277511091283118L;
-
-		/**
-		 * 
-		 */
-		public ErrorFilterException()
-		{
-			super();
-		}
-
-		/**
-		 * @param message
-		 * @param cause
-		 */
-		public ErrorFilterException(String message, Throwable cause)
-		{
-			super(message, cause);
-		}
-
-		/**
-		 * @param message
-		 */
-		public ErrorFilterException(String message)
-		{
-			super(message);
-		}
-
-		/**
-		 * @param cause
-		 */
-		public ErrorFilterException(Throwable cause)
-		{
-			super(cause);
-		}
-	}
 }

@@ -3,7 +3,7 @@ package observer;
 import java.util.ArrayList;
 import java.util.List;
 
-import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
+import Composestar.Java.FLIRT.Env.ReifiedMessage;
 
 public class Subject {
     protected List<IObserver> observers;

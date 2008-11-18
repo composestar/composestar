@@ -1,11 +1,9 @@
 package BasicTests;
 
-import Composestar.RuntimeCore.FLIRT.Exception.ErrorFilterException;
+import Composestar.Java.FLIRT.Actions.ErrorFilterException;
 
-public class MainClass
-{
-	public static void main(String[] args)
-	{
+public class MainClass {
+	public static void main(String[] args) {
 		TypeTests typeTests = new TypeTests();
 		System.out.println("Bool:		" + typeTests.dummyBool());
 		System.out.println("Byte:		" + typeTests.dummyByte());
@@ -27,12 +25,9 @@ public class MainClass
 
 		filtTests.makeError();
 		filtTests.setProduceError(true);
-		try
-		{
+		try {
 			filtTests.makeError();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println("An exception was raised.");
 		}
 		filtTests.setProduceError(false);
@@ -42,22 +37,17 @@ public class MainClass
 		filtTests.makeOutsideTrip();
 
 		FooBarQuux fbq = new FooBarQuux();
-		try 
-		{
+		try {
 			fbq.foo(); // should result in an exception
-		}
-		catch (ErrorFilterException e)
-		{
+		} catch (ErrorFilterException e) {
 			System.out.println("An ErrorFilterException was raised.");
 		}
-		try 
-		{
+		try {
 			// method introduced by a concern
-			fbq.quux2(); // should be quux3 but a bug in Fire or Sign prevents this
-					 // because quux3 isn't added
-		}
-		catch (ErrorFilterException e)
-		{
+			fbq.quux2(); // should be quux3 but a bug in Fire or Sign
+							// prevents this
+			// because quux3 isn't added
+		} catch (ErrorFilterException e) {
 			System.out.println("An ErrorFilterException was raised.");
 		}
 		fbq.success();

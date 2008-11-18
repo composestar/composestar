@@ -1,7 +1,10 @@
 package pacman;
 
-import Composestar.RuntimeCore.FLIRT.Message.*;
-import java.awt.*;
+
+import java.awt.BorderLayout;
+import java.awt.Label;
+
+import Composestar.Java.FLIRT.Env.ReifiedMessage;
 
 public class Score 
 {
