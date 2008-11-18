@@ -146,11 +146,17 @@ public abstract class MessageReceiver implements Runnable
 		msg.setSelf(receiver);
 		msg.setTarget(receiver);
 
-		// add the message to the message queue
-		messageQueue.produce(msg);
+		// just deliver it
+		receiveMessage(msg);
 
-		// notify objectmanager that messagequeue is not empty
-		notifyMessageConsumer();
+		// // add the message to the message queue
+		// messageQueue.produce(msg);
+		//
+		// // notify objectmanager that messagequeue is not empty
+		// notifyMessageConsumer();
+		//
+		// // wait for a response for the message
+		// msg.getResponse();
 
 		return msg.getReturnValue();
 	}
@@ -175,14 +181,20 @@ public abstract class MessageReceiver implements Runnable
 			msg.setInner(sender);
 		}
 		msg.setSelf(receiver); // TODO: verify this value, shouldn't this be
-								// "sender" ?
+		// "sender" ?
 		msg.setTarget(receiver);
 
-		// add the message to the objectmanager's message queue
-		messageQueue.produce(msg);
+		// just deliver it
+		receiveMessage(msg);
 
-		// notify objectmanager that queue is not empty
-		notifyMessageConsumer();
+		// // add the message to the objectmanager's message queue
+		// messageQueue.produce(msg);
+		//
+		// // notify objectmanager that queue is not empty
+		// notifyMessageConsumer();
+		//
+		// // wait for a response for the message
+		// msg.getResponse();
 
 		return msg.getReturnValue();
 	}

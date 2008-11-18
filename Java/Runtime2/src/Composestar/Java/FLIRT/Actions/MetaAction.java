@@ -24,11 +24,20 @@
 
 package Composestar.Java.FLIRT.Actions;
 
+import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
 import Composestar.Java.FLIRT.Annotations.CpsVariableType;
 import Composestar.Java.FLIRT.Annotations.FilterActionDef;
+import Composestar.Java.FLIRT.Env.RTCpsObject;
 import Composestar.Java.FLIRT.Env.RTMessage;
+import Composestar.Java.FLIRT.Env.ReifiedMessage;
+import Composestar.Java.FLIRT.Env.ReifiedMessage.ReifiedMessageResult;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
+import Composestar.Java.FLIRT.Interpreter.MessageFlow;
 
 /**
  * @author Michiel Hendriks
@@ -37,6 +46,7 @@ import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 		CpsVariableType.OBJECT, CpsVariableType.SELECTOR_OR_LIT })
 public class MetaAction extends RTFilterAction
 {
+	protected ReifiedMessage reifiedMessage;
 
 	/*
 	 * (non-Javadoc)
@@ -48,7 +58,61 @@ public class MetaAction extends RTFilterAction
 	@Override
 	public void execute(RTMessage matchedMessage, FilterExecutionContext context)
 	{
-	// TODO Auto-generated method stub
+		RTCpsObject target = null;
+		CpsSelector selector = null;
+
+		CpsVariable var = context.getFilterArguments().get(PropertyNames.TARGET);
+		if (var instanceof RTCpsObject)
+		{
+			target = (RTCpsObject) var;
+		}
+		if (target == null && matchedMessage.getTarget() instanceof RTCpsObject)
+		{
+			target = (RTCpsObject) matchedMessage.getTarget();
+		}
+		var = context.getFilterArguments().get(PropertyNames.SELECTOR);
+		if (var instanceof CpsSelector)
+		{
+			selector = (CpsSelector) var;
+		}
+		else if (var instanceof CpsLiteral)
+		{
+			selector = new CpsSelectorImpl(((CpsLiteral) var).getLiteralValue());
+		}
+		if (selector == null)
+		{
+			selector = matchedMessage.getSelector();
+		}
+
+		if (target == null)
+		{
+			throw new IllegalStateException("No RTCpsObject target for AdviceAction");
+		}
+
+		reifiedMessage = new ReifiedMessage(context.getMessage(), target.getObject(), selector.getName());
+		procMessage(context);
 	}
 
+	private void procMessage(FilterExecutionContext context)
+	{
+		Thread thread = new Thread(reifiedMessage, "MetaAction");
+		thread.start();
+
+		ReifiedMessageResult result = reifiedMessage.consume();
+		switch (result.action)
+		{
+			case RESUME:
+				// do nothing special, just continue
+				break;
+			case REPLY:
+				context.setMessageFlow(MessageFlow.RETURN);
+				break;
+			case RESPOND:
+				// TODO
+				break;
+			case PROCEED:
+				// ... erm!?
+				break;
+		}
+	}
 }

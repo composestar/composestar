@@ -58,7 +58,7 @@ public final class RTFilterActionFactory
 		}
 		else if (FilterActionNames.META_ACTION.equals(action.getName()))
 		{
-
+			return new MetaAction();
 		}
 		else if (FilterActionNames.SUBSTITUTION_ACTION.equals(action.getName()))
 		{
@@ -66,9 +66,37 @@ public final class RTFilterActionFactory
 		}
 		else if (FilterActionNames.ADVICE_ACTION.equals(action.getName()))
 		{
-
+			return new AdviceAction();
 		}
-		// TODO: custom filter type
-		return null;
+		if (action.getSystemName() != null && !action.getSystemName().isEmpty())
+		{
+			return createCustomAction(action.getSystemName());
+		}
+		throw new IllegalStateException(String.format("Unknown filter action %s", action.getName()));
+		// return null;
+	}
+
+	/**
+	 * Create a custom filter action.
+	 * 
+	 * @param systemName
+	 * @return
+	 */
+	private static RTFilterAction createCustomAction(String systemName)
+	{
+		try
+		{
+			Class<?> cls = Class.forName(systemName);
+			if (!RTFilterAction.class.isAssignableFrom(cls))
+			{
+				throw new IllegalStateException(String.format("Class %s is not a subclass of RTFilterAction",
+						systemName));
+			}
+			return cls.asSubclass(RTFilterAction.class).newInstance();
+		}
+		catch (Exception e)
+		{
+			throw new IllegalStateException(String.format("Unable to create custom filter action %s", systemName), e);
+		}
 	}
 }

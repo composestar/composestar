@@ -38,10 +38,15 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Java.FLIRT.Utils.ResponseBuffer;
+import Composestar.Java.FLIRT.Utils.SyncBuffer;
 
 /**
  * A runtime message
  * 
+ * @author Michiel Hendriks
+ */
+/**
  * @author Michiel Hendriks
  */
 public class RTMessage implements CpsMessage
@@ -71,10 +76,19 @@ public class RTMessage implements CpsMessage
 	 */
 	protected Object[] args;
 
+	/**
+	 * The return value of the message
+	 */
 	protected Object returnValue;
+
+	/**
+	 * Synchronization buffer. This responsebuffer stuff could be simplified.
+	 */
+	protected ResponseBuffer responseBuffer;
 
 	public RTMessage()
 	{
+		responseBuffer = new ResponseBuffer();
 		properties = new HashMap<String, CpsVariable>();
 		args = new Object[0];
 	}
@@ -93,13 +107,19 @@ public class RTMessage implements CpsMessage
 	public RTMessage(CpsObject sender)
 	{
 		this();
-		setProperty(PropertyNames.SENDER, sender);
+		if (sender != null)
+		{
+			properties.put(PropertyNames.SENDER, sender);
+		}
 	}
 
 	public RTMessage(CpsObject sender, RTMessage copyFrom)
 	{
 		this(copyFrom);
-		setProperty(PropertyNames.SENDER, sender);
+		if (sender != null)
+		{
+			properties.put(PropertyNames.SENDER, sender);
+		}
 	}
 
 	/**
@@ -142,7 +162,7 @@ public class RTMessage implements CpsMessage
 	 */
 	public boolean hasState(MessageState value)
 	{
-		return state.contains(value);
+		return (state != null) && state.contains(value);
 	}
 
 	/**
@@ -164,6 +184,21 @@ public class RTMessage implements CpsMessage
 	}
 
 	/**
+	 * @param index
+	 * @param value
+	 * @throws IndexOutOfBoundsException TODO
+	 */
+	public void setArgument(int index, Object value) throws IndexOutOfBoundsException
+	{
+		if (index < 0 || index > args.length)
+		{
+			throw new IndexOutOfBoundsException(String.format("Index out of bounds: %d. Argument length: %d", index,
+					args.length));
+		}
+		args[index] = value;
+	}
+
+	/**
 	 * @return The return value of the message
 	 */
 	public Object getReturnValue()
@@ -182,22 +217,45 @@ public class RTMessage implements CpsMessage
 	}
 
 	/**
+	 * @return The response buffer for this message
+	 */
+	public ResponseBuffer getResponseBuffer()
+	{
+		return responseBuffer;
+	}
+
+	/**
 	 * Set the response value for the message
 	 * 
 	 * @param value
 	 */
 	public void setResponse(Object value)
 	{
-	// TODO Auto-generated method stub
+		responseBuffer.produce(value);
 	}
 
 	/**
-	 * @return The response value of the message (i.e. the return value)
+	 * @return The response value of the message
 	 */
 	public Object getResponse()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return responseBuffer.consume();
+	}
+
+	/**
+	 * @param buff
+	 * @return
+	 */
+	public Object getResponse(SyncBuffer<Object> buff)
+	{
+		if (buff == null)
+		{
+			return responseBuffer.consume();
+		}
+		else
+		{
+			return responseBuffer.consume(buff);
+		}
 	}
 
 	/*

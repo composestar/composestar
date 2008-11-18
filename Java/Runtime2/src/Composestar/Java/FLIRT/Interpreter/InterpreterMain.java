@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext.EnqueuedAction;
+import Composestar.Java.FLIRT.Utils.SyncBuffer;
 
 /**
  * The main entry point for the interpreter
@@ -46,33 +47,59 @@ public class InterpreterMain
 	 */
 	public static void interpret(FilterExecutionContext context)
 	{
-		FilterExpression fex = context.getNextFilterExpression();
-		while (fex != null)
+		// make sure we're wating for the right buffer to be filled
+		SyncBuffer<Object> reponseBuffer = context.getMessage().getResponseBuffer().wrap();
+		try
 		{
-			if (context.getMessageFlow() != MessageFlow.CONTINUE)
+			FilterExpression fex = context.getNextFilterExpression();
+			while (fex != null)
 			{
-				break;
+				if (context.getMessageFlow() != MessageFlow.CONTINUE)
+				{
+					break;
+				}
+				FilterExpressionInterpreter.interpret(fex, context);
+				fex = context.getNextFilterExpression();
 			}
-			fex = context.getNextFilterExpression();
-			FilterExpressionInterpreter.interpret(fex, context);
-		}
-		if (context.getMessageFlow() == MessageFlow.EXIT)
-		{
-			return;
-		}
-		// execute return actions
-		for (EnqueuedAction act : context.getReturnActions())
-		{
-			if (act.action == null)
-			{
-				continue;
-			}
-			context.setFilterArguments(act.arguments);
-			act.action.execute(act.matchedMessage, context);
 			if (context.getMessageFlow() == MessageFlow.EXIT)
 			{
 				return;
 			}
+			// execute return actions
+			for (EnqueuedAction act : context.getReturnActions())
+			{
+				if (act.action == null)
+				{
+					continue;
+				}
+				context.setFilterArguments(act.arguments);
+				act.action.execute(act.matchedMessage, context);
+				if (context.getMessageFlow() == MessageFlow.EXIT)
+				{
+					return;
+				}
+			}
+			if (context.getMessageFlow() == MessageFlow.CONTINUE)
+			{
+				logger.warning("Message is still 'continue' at the end of interpretation");
+			}
 		}
+		finally
+		{
+			finish(reponseBuffer, context);
+		}
+	}
+
+	/**
+	 * Finish the interpreter by syncing up
+	 * 
+	 * @param reponseBuffer
+	 * @param context
+	 */
+	private static void finish(SyncBuffer<Object> reponseBuffer, FilterExecutionContext context)
+	{
+		context.getMessage().setResponse(null);
+		context.getMessage().getResponse(reponseBuffer);
+		context.getMessage().getResponseBuffer().unwrap();
 	}
 }

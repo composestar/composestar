@@ -132,7 +132,8 @@ public class FEExpressionInterpreter
 					continue;
 				}
 
-				CpsVariable value = getValue(asg.getValue(), msg, farg);
+				CpsVariable value = FilterExpressionInterpreter.getRTObject(getValue(asg.getValue(), msg, farg),
+						context);
 
 				if (value == null)
 				{

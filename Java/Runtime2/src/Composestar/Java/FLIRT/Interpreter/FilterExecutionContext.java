@@ -44,7 +44,7 @@ public class FilterExecutionContext
 	/**
 	 * The object in which the execution currently happens.
 	 */
-	protected ObjectManager om;
+	protected ObjectManager objectManager;
 
 	/**
 	 * The current message
@@ -59,7 +59,7 @@ public class FilterExecutionContext
 	/**
 	 * Filter module index
 	 */
-	protected int fmIdx = -1;
+	protected int activeFMIndex = -1;
 
 	/**
 	 * The current flow of the message. Interpretation is influenced by this
@@ -83,7 +83,7 @@ public class FilterExecutionContext
 	 */
 	public FilterExecutionContext(ObjectManager man, RTMessage msg)
 	{
-		om = man;
+		objectManager = man;
 		message = msg;
 		filterModules = man.getFilterModules();
 		returnActions = new LinkedList<EnqueuedAction>();
@@ -157,9 +157,9 @@ public class FilterExecutionContext
 	 */
 	public RTFilterModule getCurrentFilterModule()
 	{
-		if (fmIdx >= 0 && fmIdx < filterModules.size())
+		if (activeFMIndex >= 0 && activeFMIndex < filterModules.size())
 		{
-			return filterModules.get(fmIdx);
+			return filterModules.get(activeFMIndex);
 		}
 		return null;
 	}
@@ -170,14 +170,14 @@ public class FilterExecutionContext
 	 */
 	public FilterExpression getNextFilterExpression()
 	{
-		if (fmIdx < -1)
+		if (activeFMIndex < -1)
 		{
-			fmIdx = -1;
+			activeFMIndex = -1;
 		}
-		while (fmIdx < filterModules.size())
+		while (activeFMIndex < filterModules.size() - 1)
 		{
-			fmIdx++;
-			RTFilterModule fm = filterModules.get(fmIdx);
+			activeFMIndex++;
+			RTFilterModule fm = filterModules.get(activeFMIndex);
 			if (!canEvalFM(fm))
 			{
 				continue;

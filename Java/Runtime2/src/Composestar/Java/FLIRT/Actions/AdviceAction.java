@@ -30,6 +30,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Java.FLIRT.Annotations.CpsVariableType;
 import Composestar.Java.FLIRT.Annotations.FilterActionDef;
+import Composestar.Java.FLIRT.Env.JoinPointContext;
 import Composestar.Java.FLIRT.Env.RTCpsObject;
 import Composestar.Java.FLIRT.Env.RTMessage;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
@@ -81,7 +82,7 @@ public class AdviceAction extends RTFilterAction
 		}
 
 		Object[] args = new Object[1];
-		// TODO args[0] = new JoinPointContext();
+		args[0] = new JoinPointContext(context.getMessage());
 		Invoker.invoke(target.getObject(), selector.getName(), args);
 	}
 }

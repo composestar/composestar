@@ -26,15 +26,20 @@ package Composestar.Java.FLIRT.Interpreter;
 
 import java.util.logging.Logger;
 
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
 import Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
 import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.FilterElements.CanonAssignmentImpl;
 import Composestar.Core.CpsRepository2Impl.FilterModules.SequentialFilterOper;
 import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Actions.RTFilterAction;
 import Composestar.Java.FLIRT.Actions.RTFilterActionFactory;
+import Composestar.Java.FLIRT.Env.RTCpsObject;
 import Composestar.Java.FLIRT.Env.RTMessage;
 
 /**
@@ -103,7 +108,13 @@ public class FilterExpressionInterpreter
 	public static void interpretFilter(Filter filter, FilterExecutionContext context)
 	{
 		FilterArguments farg = new FilterArguments();
-		farg.addAll(filter.getArguments());
+		for (CanonAssignment asgn : filter.getArguments())
+		{
+			CanonAssignmentImpl arg = new CanonAssignmentImpl();
+			arg.setProperty(asgn.getProperty());
+			arg.setValue(getRTObject(asgn.getValue(), context));
+			farg.add(arg);
+		}
 		context.setFilterArguments(farg);
 		RTMessage matchedMessage = new RTMessage(context.getMessage());
 		try
@@ -137,6 +148,29 @@ public class FilterExpressionInterpreter
 		{
 			context.setFilterArguments(null);
 		}
+	}
+
+	/**
+	 * Replaces FilterModuleVariable (i.e. internal/external) to the correct
+	 * RTCpsObject
+	 * 
+	 * @param value
+	 * @param context
+	 * @return
+	 */
+	public static CpsVariable getRTObject(CpsVariable value, FilterExecutionContext context)
+	{
+		if (!(value instanceof FilterModuleVariable))
+		{
+			return value;
+		}
+		RTCpsObject result = context.getCurrentFilterModule().getMemberObject((FilterModuleVariable) value);
+		if (result != null)
+		{
+			return result;
+		}
+		// TODO: error
+		return value;
 	}
 
 	/**

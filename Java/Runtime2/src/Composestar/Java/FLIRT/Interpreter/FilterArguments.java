@@ -102,6 +102,6 @@ public class FilterArguments
 		{
 			return null;
 		}
-		return asn.getProperty();
+		return asn.getValue();
 	}
 }

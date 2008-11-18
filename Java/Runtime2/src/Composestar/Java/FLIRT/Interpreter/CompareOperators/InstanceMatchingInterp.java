@@ -26,6 +26,7 @@ package Composestar.Java.FLIRT.Interpreter.CompareOperators;
 
 import java.util.logging.Logger;
 
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
@@ -81,6 +82,13 @@ public class InstanceMatchingInterp extends CompareOperatorInterpreter<InstanceM
 			}
 			// name matching on CpsSelector
 			if (((CpsSelector) lhs).getName().equals(((CpsSelector) rhs).getName()))
+			{
+				return true;
+			}
+		}
+		else if (lhs instanceof CpsSelector && rhs instanceof CpsLiteral)
+		{
+			if (((CpsSelector) lhs).getName().equals(((CpsLiteral) rhs).getLiteralValue()))
 			{
 				return true;
 			}

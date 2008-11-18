@@ -72,6 +72,7 @@ public abstract class CompareOperatorInterpreter<T extends MECompareStatement>
 		}
 		for (CpsVariable rhs : expr.getRHS())
 		{
+			rhs = FEExpressionInterpreter.getValue(rhs, context.getMessage(), null);
 			if ((rhs != null) && matches(lhs, rhs, context))
 			{
 				return true;

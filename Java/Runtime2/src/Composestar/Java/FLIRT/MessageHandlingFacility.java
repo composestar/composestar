@@ -78,8 +78,9 @@ public class MessageHandlingFacility
 	 * 
 	 * @param lvl
 	 */
-	public static void setDebugLevel(int lvl)
+	public static synchronized void setDebugLevel(int lvl)
 	{
+		lvl = Math.max(lvl, Integer.getInteger("composestar.runtime.loglevel", -1));
 		if (lvl < 0)
 		{
 			logger.setLevel(Level.OFF);
@@ -88,8 +89,8 @@ public class MessageHandlingFacility
 		switch (lvl)
 		{
 			case 0:
-				logger.setLevel(Level.OFF);
-				break;
+				// logger.setLevel(Level.OFF);
+				// break;
 			case 1:
 				logger.setLevel(Level.SEVERE);
 				break;
@@ -143,6 +144,33 @@ public class MessageHandlingFacility
 	public synchronized static void handleInstanceCreation(Object creator, Object createdObject, Object[] args,
 			String key)
 	{
+		internalInstanceCreation(creator, createdObject, args, key);
+	}
+
+	/**
+	 * Instance creation from a static context
+	 * 
+	 * @param staticcontext
+	 * @param createdObject
+	 * @param args
+	 */
+	public synchronized static void handleInstanceCreation(String staticcontext, Object createdObject, Object[] args,
+			String key)
+	{
+		internalInstanceCreation(null, createdObject, args, key);
+	}
+
+	/**
+	 * Performs the real instance creation, this is to work around the ambiguity
+	 * of the handleInstanceCreation method
+	 * 
+	 * @param creator
+	 * @param createdObject
+	 * @param args
+	 * @param key
+	 */
+	private static void internalInstanceCreation(Object creator, Object createdObject, Object[] args, String key)
+	{
 		RTCpsObject sender = createSender(creator);
 		RTMessage msg = new RTMessage(sender);
 		ObjectManager om = ObjectManagerHandler.getObjectManager(createdObject, repository);
@@ -170,19 +198,6 @@ public class MessageHandlingFacility
 	}
 
 	/**
-	 * Instance creation from a static context
-	 * 
-	 * @param staticcontext
-	 * @param createdObject
-	 * @param args
-	 */
-	public synchronized static void handleInstanceCreation(String staticcontext, Object createdObject, Object[] args,
-			String key)
-	{
-		handleInstanceCreation(null, createdObject, args, key);
-	}
-
-	/**
 	 * Generic method handling
 	 * 
 	 * @param caller
@@ -199,7 +214,7 @@ public class MessageHandlingFacility
 		if (targetOm == null && senderOm == null)
 		{
 			// no superimposition
-			// TODO find MethodInfo
+			// TODO find MethodInfo for the best result
 			return Invoker.invoke(target, selector, args);
 		}
 
@@ -219,7 +234,7 @@ public class MessageHandlingFacility
 		}
 		else
 		{
-			targetObj = senderOm;
+			targetObj = targetOm;
 		}
 
 		RTMessage msg = new RTMessage(senderObj);
