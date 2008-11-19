@@ -37,11 +37,14 @@ import Composestar.Java.FLIRT.Utils.Invoker;
 /**
  * @author Michiel Hendriks
  */
-public class MethodReferenceInterpreter
+public final class MethodReferenceInterpreter
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".MethodRef");
 
 	private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+
+	private MethodReferenceInterpreter()
+	{}
 
 	/**
 	 * Interpret a method reference to a boolean value
@@ -72,14 +75,16 @@ public class MethodReferenceInterpreter
 			}
 			if (rtobj != null)
 			{
-				result = Invoker.invoke(rtobj.getObject(), ref.getReference().getName(), EMPTY_OBJECT_ARRAY, ref
-						.getReference());
+				result =
+						Invoker.invoke(rtobj.getObject(), ref.getReference().getName(), EMPTY_OBJECT_ARRAY, ref
+								.getReference());
 			}
 		}
 		else
 		{
-			result = Invoker.invoke(ref.getTypeReference().getReferenceId(), ref.getReference().getName(),
-					EMPTY_OBJECT_ARRAY, ref.getReference());
+			result =
+					Invoker.invoke(ref.getTypeReference().getReferenceId(), ref.getReference().getName(),
+							EMPTY_OBJECT_ARRAY, ref.getReference());
 		}
 		if (result != null)
 		{

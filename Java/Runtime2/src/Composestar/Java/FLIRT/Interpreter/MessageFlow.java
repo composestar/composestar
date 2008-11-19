@@ -31,5 +31,16 @@ package Composestar.Java.FLIRT.Interpreter;
  */
 public enum MessageFlow
 {
-	CONTINUE, RETURN, EXIT;
+	/**
+	 * Continue with the next filter
+	 */
+	CONTINUE,
+	/**
+	 * Enter the return message flow
+	 */
+	RETURN,
+	/**
+	 * Exit filter processing (do not execute return actions)
+	 */
+	EXIT;
 }

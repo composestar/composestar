@@ -45,7 +45,7 @@ public class SimpleCpsObject implements RTCpsObject
 	 * The object this manager manages. It's a weak reference so the managers
 	 * are not kept around longer than needed.
 	 */
-	protected WeakReference<Object> objectRef;
+	protected transient WeakReference<Object> objectRef;
 
 	/**
 	 * Type reference information

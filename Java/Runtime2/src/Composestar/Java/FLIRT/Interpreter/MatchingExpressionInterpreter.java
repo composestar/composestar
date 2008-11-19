@@ -42,9 +42,12 @@ import Composestar.Java.FLIRT.FLIRTConstants;
  * 
  * @author Michiel Hendriks
  */
-public class MatchingExpressionInterpreter
+public final class MatchingExpressionInterpreter
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".MatchExpr");
+
+	private MatchingExpressionInterpreter()
+	{}
 
 	/**
 	 * @param expr
@@ -65,7 +68,7 @@ public class MatchingExpressionInterpreter
 		{
 			return interpretUnOper((UnaryMEOperator) expr, context);
 		}
-		else if (expr instanceof BinaryMEOperator)
+		else if (expr instanceof MELiteral)
 		{
 			return ((MELiteral) expr).getLiteralValue();
 		}
@@ -97,7 +100,10 @@ public class MatchingExpressionInterpreter
 			{
 				return false;
 			}
-			else interpret(expr.getRHS(), context);
+			else
+			{
+				interpret(expr.getRHS(), context);
+			}
 		}
 		else if (expr instanceof OrMEOper)
 		{
@@ -105,7 +111,10 @@ public class MatchingExpressionInterpreter
 			{
 				return true;
 			}
-			else interpret(expr.getRHS(), context);
+			else
+			{
+				interpret(expr.getRHS(), context);
+			}
 		}
 		else
 		{

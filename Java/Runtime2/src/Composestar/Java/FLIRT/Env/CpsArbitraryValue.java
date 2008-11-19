@@ -24,6 +24,10 @@
 
 package Composestar.Java.FLIRT.Env;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
@@ -56,11 +60,11 @@ public class CpsArbitraryValue implements CpsVariable
 	}
 
 	/**
-	 * @param value
+	 * @param val
 	 */
-	public void setValue(Object value)
+	public void setValue(Object val)
 	{
-		this.value = value;
+		value = val;
 	}
 
 	/*
@@ -113,4 +117,9 @@ public class CpsArbitraryValue implements CpsVariable
 	public void setSourceInformation(SourceInformation srcInfo)
 	{}
 
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{}
 }

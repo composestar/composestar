@@ -92,6 +92,6 @@ public class SyncBuffer<T>
 	 */
 	public boolean isEmpty()
 	{
-		return (this.queue.isEmpty());
+		return queue.isEmpty();
 	}
 }

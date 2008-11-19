@@ -65,7 +65,6 @@
 			<auxClasspath>
 				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
 				<pathelement path="${build.java}${file.separator}Compiletime${file.separator}lib${file.separator}javassist${file.separator}javassist.jar" />
-				<pathelement path="${build.core}${file.separator}Runtime2${file.separator}${out.build}" />
 			</auxClasspath>
 		</findbugs>
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />

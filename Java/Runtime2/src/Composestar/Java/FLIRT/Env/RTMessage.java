@@ -162,7 +162,7 @@ public class RTMessage implements CpsMessage
 	 */
 	public boolean hasState(MessageState value)
 	{
-		return (state != null) && state.contains(value);
+		return state != null && state.contains(value);
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class RTMessage implements CpsMessage
 	 */
 	public Object[] getArguments()
 	{
-		return args;
+		return Arrays.copyOf(args, args.length);
 	}
 
 	/**
@@ -180,13 +180,14 @@ public class RTMessage implements CpsMessage
 	 */
 	public void setArguments(Object[] value)
 	{
-		args = value;
+		args = Arrays.copyOf(value, value.length);
 	}
 
 	/**
 	 * @param index
 	 * @param value
-	 * @throws IndexOutOfBoundsException TODO
+	 * @throws IndexOutOfBoundsException Thrown when the index is not within the
+	 *             bounds
 	 */
 	public void setArgument(int index, Object value) throws IndexOutOfBoundsException
 	{
@@ -209,11 +210,11 @@ public class RTMessage implements CpsMessage
 	/**
 	 * Set the return value
 	 * 
-	 * @param returnValue
+	 * @param value
 	 */
-	public void setReturnValue(Object returnValue)
+	public void setReturnValue(Object value)
 	{
-		this.returnValue = returnValue;
+		returnValue = value;
 	}
 
 	/**

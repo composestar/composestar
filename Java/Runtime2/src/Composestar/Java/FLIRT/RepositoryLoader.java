@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 import Composestar.Core.CpsRepository2.Repository;
 
@@ -41,9 +42,12 @@ import Composestar.Core.CpsRepository2.Repository;
  * 
  * @author Michiel Hendriks
  */
-public class RepositoryLoader
+public final class RepositoryLoader
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.MODULE_NAME + ".RepositoryLoader");
+
+	private RepositoryLoader()
+	{}
 
 	/**
 	 * Loads the repository as a resource relative to the main class
@@ -61,6 +65,10 @@ public class RepositoryLoader
 			if (is == null)
 			{
 				is = new FileInputStream(new File(file));
+			}
+			if (file.endsWith(".gz"))
+			{
+				is = new GZIPInputStream(is);
 			}
 			BufferedInputStream bis = new BufferedInputStream(is);
 			ois = new ObjectInputStream(bis);

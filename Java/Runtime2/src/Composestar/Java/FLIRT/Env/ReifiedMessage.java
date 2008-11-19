@@ -28,18 +28,62 @@ import Composestar.Java.FLIRT.Utils.Invoker;
 import Composestar.Java.FLIRT.Utils.SyncBuffer;
 
 /**
+ * A reigied message passed to methods who serve as target for the meta filters.
+ * 
  * @author Michiel Hendriks
  */
 public class ReifiedMessage extends JoinPointContext implements Runnable
 {
+	/**
+	 * The status of this message
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	public enum ReifiedMessageState
 	{
-		REIFIED, RESPONDED, PROCEEDED, FORKED
+		/**
+		 * The message is reified (initial state)
+		 */
+		REIFIED,
+		/**
+		 * A respond action was executed
+		 */
+		RESPONDED,
+		/**
+		 * A proceed action was executed
+		 */
+		PROCEEDED,
+		/**
+		 * The the message execution is now decoupled from the main thread
+		 * (final state)
+		 */
+		FORKED
 	}
 
+	/**
+	 * Used to communicate actions to the waiting meta action
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	public enum ReifiedMessageAction
 	{
-		RESUME, REPLY, RESPOND, PROCEED
+		/**
+		 * A resume action was issued
+		 */
+		RESUME,
+		/**
+		 * A reply action was issued
+		 */
+		REPLY,
+		/**
+		 * A respond action was issued
+		 */
+		RESPOND,
+		/**
+		 * The message requested to proceed with the filters. This message
+		 * itself issues the wait for a result.
+		 */
+		PROCEED
 	}
 
 	/**
@@ -71,6 +115,8 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	}
 
 	/**
+	 * This method is blocking until an action was taken by this message
+	 * 
 	 * @return The ReifiedMessage action
 	 */
 	public ReifiedMessageResult consume()
@@ -122,7 +168,7 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	 * Return the message to the original sender. The message will still be
 	 * processed by the other filters.
 	 */
-	public void respond()
+	public synchronized void respond()
 	{
 		state = ReifiedMessageState.RESPONDED;
 		throw new UnsupportedOperationException("ReifiedMessage.respond() is not (yet) supported");
@@ -133,7 +179,7 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	 * 
 	 * @param returnValue
 	 */
-	public void respond(Object returnValue)
+	public synchronized void respond(Object returnValue)
 	{
 		setReturnValue(returnValue);
 		respond();
@@ -149,6 +195,9 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	{
 		if (state == ReifiedMessageState.REIFIED || state == ReifiedMessageState.RESPONDED)
 		{
+			// issue a new sync buffer to wait for, this is needed in case of
+			// multiple concurrently waiting actions (i.e. meta filter actions)
+			// otherwise the action might awaken in the wrong order
 			SyncBuffer<Object> buff = message.getResponseBuffer().wrap();
 			// makes the filter processing proceed
 			buffer.produce(new ReifiedMessageResult(ReifiedMessageAction.PROCEED));
@@ -168,7 +217,15 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 		Object[] args = new Object[1];
 		args[0] = this;
 		Invoker.invoke(actTarget, actSelector, args);
+		finish();
+	}
 
+	/**
+	 * Finish the execution of the reified message. This is executed after the
+	 * called method returns.
+	 */
+	private synchronized void finish()
+	{
 		switch (state)
 		{
 			case REIFIED:
@@ -197,6 +254,9 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	 */
 	public static class ReifiedMessageResult
 	{
+		/**
+		 * The action that was taken/requested
+		 */
 		public ReifiedMessageAction action;
 
 		public ReifiedMessageResult(ReifiedMessageAction act)

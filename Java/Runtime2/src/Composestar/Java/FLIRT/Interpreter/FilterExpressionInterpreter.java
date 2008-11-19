@@ -47,9 +47,12 @@ import Composestar.Java.FLIRT.Env.RTMessage;
  * 
  * @author Michiel Hendriks
  */
-public class FilterExpressionInterpreter
+public final class FilterExpressionInterpreter
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".FilterExpr");
+
+	private FilterExpressionInterpreter()
+	{}
 
 	/**
 	 * Execute filter expressions

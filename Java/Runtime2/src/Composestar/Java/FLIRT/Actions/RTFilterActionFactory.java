@@ -32,13 +32,16 @@ import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
  */
 public final class RTFilterActionFactory
 {
+	private RTFilterActionFactory()
+	{}
+
 	/**
 	 * Create the runtime filter action.
 	 * 
 	 * @param action
 	 * @return The action to execute, or null when no action should be executed
 	 */
-	public static final RTFilterAction createAction(FilterAction action)
+	public static RTFilterAction createAction(FilterAction action)
 	{
 		if (FilterActionNames.DISPATCH_ACTION.equals(action.getName()))
 		{

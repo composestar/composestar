@@ -52,7 +52,7 @@ import Composestar.Java.FLIRT.Utils.Invoker;
  * 
  * @author Michiel Hendriks
  */
-public class ObjectManagerHandler
+public final class ObjectManagerHandler
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.MODULE_NAME + ".ObjectManagerHandler");
 
@@ -63,7 +63,10 @@ public class ObjectManagerHandler
 	 * to detect a recursive initialization error due to external initalizers
 	 * who call an inner method.
 	 */
-	private static final Set<Object> underConstruction = Collections.synchronizedSet(new HashSet<Object>());
+	private static final Set<Object> UNDER_CONSTRUCTION = Collections.synchronizedSet(new HashSet<Object>());
+
+	private ObjectManagerHandler()
+	{}
 
 	/**
 	 * Get the object manager for a given object. A new manager will be created
@@ -82,13 +85,13 @@ public class ObjectManagerHandler
 		ObjectManager result = ObjectManagerStorage.get(forObject);
 		if (result == null)
 		{
-			if (underConstruction.contains(forObject))
+			if (UNDER_CONSTRUCTION.contains(forObject))
 			{
 				throw new IllegalStateException(String.format(
 						"Recursive intialization of an object manager for object of type %s", forObject.getClass()
 								.getName()));
 			}
-			underConstruction.add(forObject);
+			UNDER_CONSTRUCTION.add(forObject);
 			try
 			{
 				result = createObjectManager(forObject, repos);
@@ -99,7 +102,7 @@ public class ObjectManagerHandler
 			}
 			finally
 			{
-				underConstruction.remove(forObject);
+				UNDER_CONSTRUCTION.remove(forObject);
 			}
 		}
 		return result;
@@ -186,15 +189,16 @@ public class ObjectManagerHandler
 									((External) fmvar).getFullyQualifiedName()));
 						}
 						// TODO: use JPCA
-						instance = Invoker.invoke(context, mref.getReferenceId(), EMPTY_OBJECT_ARRAY, mref
-								.getReference());
+						instance =
+								Invoker.invoke(context, mref.getReferenceId(), EMPTY_OBJECT_ARRAY, mref.getReference());
 					}
 					else
 					{
 						// static call
 						// TODO: use JPCA
-						instance = Invoker.invoke(mref.getTypeReference().getReferenceId(), mref.getReferenceId(),
-								EMPTY_OBJECT_ARRAY, mref.getReference());
+						instance =
+								Invoker.invoke(mref.getTypeReference().getReferenceId(), mref.getReferenceId(),
+										EMPTY_OBJECT_ARRAY, mref.getReference());
 					}
 				}
 			}

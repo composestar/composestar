@@ -352,7 +352,7 @@ final class ClassUtilities
 			return true;
 		}
 
-		Set<?> wideningSet = (Set<?>) primitiveWideningsMap.get(rhs);
+		Set<?> wideningSet = primitiveWideningsMap.get(rhs);
 
 		if (wideningSet == null)
 		{

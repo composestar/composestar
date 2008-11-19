@@ -43,12 +43,12 @@ public abstract class MessageReceiver implements Runnable
 	/**
 	 * The message queue
 	 */
-	private SyncBuffer<RTMessage> messageQueue;
+	protected SyncBuffer<RTMessage> messageQueue;
 
 	/**
 	 * True if this receiver is busy processing a message
 	 */
-	private boolean working = false;
+	private boolean working;
 
 	/**
 	 * Mutex used for locking
@@ -64,10 +64,9 @@ public abstract class MessageReceiver implements Runnable
 	 * (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
-	public synchronized void run()
+	public void run()
 	{
 		// The message processing loop
-		this.working = true;
 		do
 		{
 			RTMessage msg = messageQueue.consume();
@@ -76,33 +75,21 @@ public abstract class MessageReceiver implements Runnable
 			{
 				reply = receiveMessage(msg);
 			}
-			catch (Exception e)
+			catch (RuntimeException e)
 			{
 				logger.log(Level.SEVERE, "An exception was thrown from within a filter.", e);
-				// Debug.out(Debug.MODE_ERROR, "FLIRT",
-				// "An exception was thrown from within a filter.");
-				// Debug.out(Debug.MODE_ERROR, "FLIRT", "Message was `" +
-				// msg.getSelector() + "' for target `"
-				// + msg.getTarget() + "' from sender `" + msg.getSender() +
-				// "'.");
-				// Debug.out(Debug.MODE_ERROR, "FLIRT",
-				// "Internal Compose* stack trace:");
-				// e.printStackTrace();
-				// This method is executed in a seperate thread and will die on
-				// exceptions.
+				// set the exception as the response, which will be rethrown
+				// in the base thread
+				reply = e;
 			}
 			finally
 			{
 				msg.setResponse(reply);
-			}
-
-			if (this.messageQueue.isEmpty())
-			{
 				synchronized (workingMutex)
 				{
-					if (this.messageQueue.isEmpty())
+					if (messageQueue.isEmpty())
 					{
-						this.working = false;
+						working = false;
 						return;
 					}
 				}
@@ -117,11 +104,14 @@ public abstract class MessageReceiver implements Runnable
 	{
 		synchronized (workingMutex)
 		{
-			if (this.working) return;
-			this.working = true;
+			if (working)
+			{
+				return;
+			}
+			working = true;
+			Thread child = new Thread(this, "MessageReceiver");
+			child.start();
 		}
-		Thread child = new Thread(this, "MessageReceiver");
-		child.start();
 	}
 
 	/**
@@ -156,7 +146,11 @@ public abstract class MessageReceiver implements Runnable
 		// notifyMessageConsumer();
 		//
 		// // wait for a response for the message
-		// msg.getResponse();
+		// Object resp = msg.getResponse();
+		// if (resp instanceof RuntimeException)
+		// {
+		// throw (RuntimeException) resp;
+		// }
 
 		return msg.getReturnValue();
 	}
@@ -194,7 +188,11 @@ public abstract class MessageReceiver implements Runnable
 		// notifyMessageConsumer();
 		//
 		// // wait for a response for the message
-		// msg.getResponse();
+		// Object resp = msg.getResponse();
+		// if (resp instanceof RuntimeException)
+		// {
+		// throw (RuntimeException) resp;
+		// }
 
 		return msg.getReturnValue();
 	}

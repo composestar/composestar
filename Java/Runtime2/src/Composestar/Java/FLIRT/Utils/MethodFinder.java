@@ -151,7 +151,7 @@ public final class MethodFinder
 
 		for (Member member : memberList)
 		{
-			Class<?>[] methodParamTypes = (Class[]) paramMap.get(member);
+			Class<?>[] methodParamTypes = paramMap.get(member);
 
 			if (Arrays.equals(methodParamTypes, parameterTypes))
 			{
@@ -279,7 +279,7 @@ public final class MethodFinder
 			throw new NoSuchMethodException("...");
 		}
 
-		return (Member) mostSpecificMembers.get(0);
+		return mostSpecificMembers.get(0);
 	}
 
 	/**
@@ -419,11 +419,8 @@ public final class MethodFinder
 			 * paramTypes );
 			 */
 
-			if (m != null)
-			{
-				list.add(m);
-				paramMap.put(m, paramTypes);
-			}
+			list.add(m);
+			paramMap.put(m, paramTypes);
 		}
 
 		methods = clazz.getDeclaredMethods();
@@ -446,11 +443,8 @@ public final class MethodFinder
 			 * paramTypes );
 			 */
 
-			if (m != null)
-			{
-				list.add(m);
-				paramMap.put(m, paramTypes);
-			}
+			list.add(m);
+			paramMap.put(m, paramTypes);
 		}
 	}
 
@@ -463,8 +457,8 @@ public final class MethodFinder
 	 */
 	private boolean memberIsMoreSpecific(Member first, Member second)
 	{
-		Class<?>[] firstParamTypes = (Class[]) paramMap.get(first);
-		Class<?>[] secondParamTypes = (Class[]) paramMap.get(second);
+		Class<?>[] firstParamTypes = paramMap.get(first);
+		Class<?>[] secondParamTypes = paramMap.get(second);
 
 		return ClassUtilities.compatibleClasses(secondParamTypes, firstParamTypes);
 	}

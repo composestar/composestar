@@ -111,7 +111,11 @@ public class MetaAction extends RTFilterAction
 				// TODO
 				break;
 			case PROCEED:
-				// ... erm!?
+				// continue with filters as usual, ReifiedMessage thread locked
+				// itself
+				break;
+			default:
+				// unknown action, just continue
 				break;
 		}
 	}

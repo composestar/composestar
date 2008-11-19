@@ -41,7 +41,7 @@ import Composestar.Java.FLIRT.Interpreter.CompareOperators.SignatureMatchingInte
  * 
  * @author Michiel Hendriks
  */
-public class CompareStatementInterpreter
+public final class CompareStatementInterpreter
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".CmpStmt");
 
@@ -58,6 +58,9 @@ public class CompareStatementInterpreter
 		registerInterpreter(new AnnotationMatchingInterp());
 		registerInterpreter(new CompatibilityMatchingInterp());
 	}
+
+	private CompareStatementInterpreter()
+	{};
 
 	/**
 	 * Register an interpreter

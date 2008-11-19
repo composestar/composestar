@@ -74,10 +74,12 @@
 				<exclude name="Composestar/Core/COPPER3/CpsTreeWalker.java" />
 				<exclude name="Composestar/Core/COPPER3/CpsTreeWalkerTokenTypes.java" />
 			</FileSet>
+			<!--
 			<FileSet dir="${build.core}${file.separator}Runtime${file.separator}src">
 				<include name="**/*.java" />
 				<exclude name="Composestar/RuntimeCore/CODER/BreakPoint/Parsers/*/*.java" />
 			</FileSet>
+			-->
 			<!--
 			<FileSet dir="${build.core}${file.separator}Visualization${file.separator}src/Composestar">
 				<include name="**/*.java" />

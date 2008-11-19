@@ -51,9 +51,12 @@ import Composestar.Java.FLIRT.Env.RTMessage;
  * 
  * @author Michiel Hendriks
  */
-public class FEExpressionInterpreter
+public final class FEExpressionInterpreter
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER + ".FEExpr");
+
+	private FEExpressionInterpreter()
+	{}
 
 	/**
 	 * Interpret this filter element
@@ -98,7 +101,10 @@ public class FEExpressionInterpreter
 			{
 				return true;
 			}
-			else return interpret(fex.getRHS(), context);
+			else
+			{
+				return interpret(fex.getRHS(), context);
+			}
 		}
 		else
 		{
@@ -132,8 +138,8 @@ public class FEExpressionInterpreter
 					continue;
 				}
 
-				CpsVariable value = FilterExpressionInterpreter.getRTObject(getValue(asg.getValue(), msg, farg),
-						context);
+				CpsVariable value =
+						FilterExpressionInterpreter.getRTObject(getValue(asg.getValue(), msg, farg), context);
 
 				if (value == null)
 				{

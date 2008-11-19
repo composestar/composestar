@@ -31,9 +31,12 @@ import Composestar.Java.FLIRT.Env.ObjectManager;
 /**
  * @author Michiel Hendriks
  */
-public class ObjectManagerStorage
+public final class ObjectManagerStorage
 {
 	private static WeakHashMap<Object, ObjectManager> managers = new WeakHashMap<Object, ObjectManager>(100);
+
+	private ObjectManagerStorage()
+	{}
 
 	/**
 	 * Get the object manager for a specific class

@@ -42,11 +42,14 @@ import Composestar.Java.FLIRT.FLIRTConstants;
  * 
  * @author Michiel Hendriks
  */
-public class Invoker
+public final class Invoker
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.MODULE_NAME + ".Invoker");
 
 	private static WeakHashMap<Class<?>, MethodFinder> methodFinders = new WeakHashMap<Class<?>, MethodFinder>();
+
+	private Invoker()
+	{}
 
 	/**
 	 * Get the method finder for a specific class
@@ -157,7 +160,7 @@ public class Invoker
 		catch (InvocationTargetException e)
 		{
 			logger.log(Level.SEVERE, "Error while delegating to target: " + target + " selector: " + selector
-					+ " args: " + args, e);
+					+ " args: " + Arrays.toString(args), e);
 		}
 		return null;
 	}

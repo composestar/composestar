@@ -54,16 +54,19 @@ import Composestar.Java.FLIRT.Utils.Invoker;
  * 
  * @author Michiel Hendriks
  */
-public class MessageHandlingFacility
+public final class MessageHandlingFacility
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.MODULE_NAME);
 
 	public static final boolean RT_DEBUG = Boolean.getBoolean("composestar.runtime.debug");
 
 	/**
-	 * The inputstream that contains the repository
+	 * The CPS repository, initialized on startup
 	 */
-	protected static Repository repository;
+	private static Repository repository;
+
+	private MessageHandlingFacility()
+	{}
 
 	/**
 	 * Initialize the runtime environment
@@ -141,7 +144,7 @@ public class MessageHandlingFacility
 	 * @param createdObject
 	 * @param args
 	 */
-	public synchronized static void handleInstanceCreation(Object creator, Object createdObject, Object[] args,
+	public static synchronized void handleInstanceCreation(Object creator, Object createdObject, Object[] args,
 			String key)
 	{
 		internalInstanceCreation(creator, createdObject, args, key);
@@ -154,7 +157,7 @@ public class MessageHandlingFacility
 	 * @param createdObject
 	 * @param args
 	 */
-	public synchronized static void handleInstanceCreation(String staticcontext, Object createdObject, Object[] args,
+	public static synchronized void handleInstanceCreation(String staticcontext, Object createdObject, Object[] args,
 			String key)
 	{
 		internalInstanceCreation(null, createdObject, args, key);

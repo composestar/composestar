@@ -36,9 +36,12 @@ import Composestar.Java.FLIRT.Utils.SyncBuffer;
  * 
  * @author Michiel Hendriks
  */
-public class InterpreterMain
+public final class InterpreterMain
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER);
+
+	private InterpreterMain()
+	{}
 
 	/**
 	 * Entry point for the interpreter. This will execute the provided context
