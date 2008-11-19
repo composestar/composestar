@@ -9,7 +9,7 @@
 	<module class="Composestar.Java.TYM.TypeCollector.AnnotationCollector" />
 	<module class="Composestar.Core.REXREF2.RexRef" />
 	<module class="Composestar.Java.LOLA.JavaLOLA" />
-	<!-- <module class="Composestar.Core.FITER.FITER" />  --><!-- disabled for now -->
+	<module class="Composestar.Java.FITER.FITER" />
 	<parallel perprocessor="1">
 		<module class="Composestar.Core.CHKREP2.Check" />
 	</parallel>

@@ -36,6 +36,11 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 {
 	private static final long serialVersionUID = -5151470511518075199L;
 
+	/**
+	 * The type of object this is
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	public enum CpsObjectType
 	{
 		NORMAL, INNER, SELF
@@ -102,6 +107,15 @@ public class CpsObjectImpl extends CpsTypeProgramElementImpl implements CpsObjec
 	public boolean isSelfObject()
 	{
 		return objectType == CpsObjectType.SELF;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#getObject()
+	 */
+	public Object getObject() throws IllegalStateException
+	{
+		throw new IllegalStateException("This is not an interpreted instance");
 	}
 
 	/*

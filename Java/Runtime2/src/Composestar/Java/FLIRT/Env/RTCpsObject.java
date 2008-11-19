@@ -27,14 +27,10 @@ package Composestar.Java.FLIRT.Env;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 
 /**
- * Rutnime CpsObject
+ * Marker interface to make sure only runtime objects are used at certain points
  * 
  * @author Michiel Hendriks
  */
 public interface RTCpsObject extends CpsObject
 {
-	/**
-	 * @return The object instance associated with this CpsObject
-	 */
-	Object getObject();
 }

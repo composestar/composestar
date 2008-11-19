@@ -686,6 +686,11 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 		{
 			return false;
 		}
+
+		public Object getObject() throws IllegalStateException
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -790,6 +795,11 @@ public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTest
 		public boolean isSelfObject()
 		{
 			return false;
+		}
+
+		public Object getObject() throws IllegalStateException
+		{
+			return null;
 		}
 	}
 

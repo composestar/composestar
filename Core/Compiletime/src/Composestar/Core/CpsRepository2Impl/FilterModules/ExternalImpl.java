@@ -192,4 +192,13 @@ public class ExternalImpl extends AbstractQualifiedRepositoryEntity implements E
 	{
 		return false;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.CpsRepository2.TypeSystem.CpsObject#getObject()
+	 */
+	public Object getObject() throws IllegalStateException
+	{
+		throw new IllegalStateException("This is not an interpreted instance");
+	}
 }

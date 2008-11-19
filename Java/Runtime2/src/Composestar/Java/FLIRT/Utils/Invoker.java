@@ -212,6 +212,20 @@ public final class Invoker
 		return getMethod(type, m_selector) != null;
 	}
 
+	public static boolean objectHasMethod(Object target, String selector, Object[] args, MethodInfo methodInfo)
+	{
+		Class<?>[] newArgs = convertToJavaArgs(args, methodInfo);
+		MethodFinder m = getMethodFinder(target.getClass());
+		try
+		{
+			return m.findMethod(selector, newArgs) != null;
+		}
+		catch (NoSuchMethodException e)
+		{
+			return false;
+		}
+	}
+
 	public static Object requestInstance(String target, Object[] args)
 	{
 		Class<?> type = getType(target);

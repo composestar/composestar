@@ -75,6 +75,7 @@ public final class InterpreterMain
 				{
 					continue;
 				}
+				logger.fine(String.format("Executing return filter action %s", act.action.getClass().getName()));
 				context.setFilterArguments(act.arguments);
 				act.action.execute(act.matchedMessage, context);
 				if (context.getMessageFlow() == MessageFlow.EXIT)

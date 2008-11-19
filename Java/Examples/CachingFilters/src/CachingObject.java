@@ -3,8 +3,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
-
 /**
  * The cache handler. Keeps a cache for each object that passes. This
  * implementation has the following limitations:
@@ -55,54 +53,56 @@ public class CachingObject {
 	}
 
 	/**
-	 * This is where the actual caching takes place. A "Meta-filter" can forward
-	 * "Reified (*) messages" to this method. (*) To regard or treat (an
-	 * abstraction) as if it had concrete or material existence.
+	 * Fetch a cached result, returns null when no cache entry was available
 	 * 
-	 * @param message
+	 * @param target
+	 * @param methodName
+	 * @param args
+	 * @return
 	 */
-	public void storeValue(ReifiedMessage message) {
-		// Obtain message argument values. To keep things simple, this version
-		// only supports methods that have 0 or 1 arguments (otherwise, you need
-		// nested hashtables, etc.)
-
-		CacheRecord rec = new CacheRecord(message.getSelector(), message
-				.getArgs());
-
-		if (debug) {
-			debugPrint("Method " + message.getSelector()
-					+ " called with argument value: "
-					+ Arrays.toString(rec.args));
-		}
-
-		Map<CacheRecord, Object> cache = objectCache.get(message.getTarget());
+	public Object fetchValue(Object target, String methodName, Object[] args) {
+		Map<CacheRecord, Object> cache = objectCache.get(target);
 		if (cache == null) {
-			cache = new HashMap<CacheRecord, Object>();
-			objectCache.put(message.getTarget(), cache);
+			return null;
 		}
 
-		// Did we already calculate the return value, given this argument value?
+		CacheRecord rec = new CacheRecord(methodName, args);
 		if (cache.containsKey(rec)) { // Yes....
 			Object result = cache.get(rec);
 			if (debug) {
 				debugPrint("Cached result for argument value: "
 						+ Arrays.toString(rec.args) + ": " + result);
 			}
+			return result;
+		}
+		return null;
+	}
 
-			message.reply(result);
-			return; // do not proceed! Skip normal execution.
+	/**
+	 * Store the value
+	 */
+	public void storeValue(Object target, String methodName, Object[] args,
+			Object value) {
+
+		CacheRecord rec = new CacheRecord(methodName, args);
+
+		if (debug) {
+			debugPrint("Method " + methodName + " called with argument value: "
+					+ Arrays.toString(rec.args));
 		}
 
-		message.proceed();
+		Map<CacheRecord, Object> cache = objectCache.get(target);
+		if (cache == null) {
+			cache = new HashMap<CacheRecord, Object>();
+			objectCache.put(target, cache);
+		}
 
-		Object res = message.getReturnValue();
-
-		if (res != null) // don't crash if accidentally used on void methods
+		if (value != null) // don't crash if accidentally used on void methods
 		// (which have no result obviously)
 		{
-			cache.put(rec, res);
+			cache.put(rec, value);
 			if (debug) {
-				debugPrint("Calculated result for " + rec + ": " + res);
+				debugPrint("Calculated result for " + rec + ": " + value);
 			}
 		}
 	}
@@ -112,8 +112,8 @@ public class CachingObject {
 	 * 
 	 * @param message
 	 */
-	public void invalidate(ReifiedMessage message) {
-		Map<CacheRecord, Object> cache = objectCache.get(message.getTarget());
+	public void invalidate(Object forObject) {
+		Map<CacheRecord, Object> cache = objectCache.get(forObject);
 		if (cache != null) {
 			cache.clear();
 		}

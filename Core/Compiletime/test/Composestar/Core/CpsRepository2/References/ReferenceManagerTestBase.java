@@ -355,5 +355,10 @@ public abstract class ReferenceManagerTestBase extends TestCase
 		{
 			return false;
 		}
+
+		public Object getObject() throws IllegalStateException
+		{
+			return null;
+		}
 	}
 }

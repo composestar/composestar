@@ -397,6 +397,14 @@ public class RTMessage implements CpsMessage
 	 */
 	public void setInner(CpsObject value) throws NullPointerException
 	{
+		if (value == null)
+		{
+			throw new NullPointerException();
+		}
+		if (!(value instanceof RTCpsObject))
+		{
+			throw new IllegalStateException("Value is not an RTCpsObject");
+		}
 		inner = value;
 	}
 
@@ -420,17 +428,17 @@ public class RTMessage implements CpsMessage
 		{
 			throw new IllegalArgumentException("Sender can not be set, use the send() method");
 		}
-		else if (PropertyNames.SELF.equals(name) && !(value instanceof CpsObject))
+		else if (PropertyNames.SELF.equals(name) && !(value instanceof RTCpsObject))
 		{
-			throw new IllegalArgumentException("Self must be an CpsObject");
+			throw new IllegalArgumentException("Self must be an RTCpsObject");
 		}
-		else if (PropertyNames.TARGET.equals(name) && !(value instanceof CpsObject))
+		else if (PropertyNames.TARGET.equals(name) && !(value instanceof RTCpsObject))
 		{
-			throw new IllegalArgumentException("Target must be an CpsObject");
+			throw new IllegalArgumentException("Target must be an RTCpsObject");
 		}
-		else if (PropertyNames.SERVER.equals(name) && !(value instanceof CpsObject))
+		else if (PropertyNames.SERVER.equals(name) && !(value instanceof RTCpsObject))
 		{
-			throw new IllegalArgumentException("Server must be an CpsObject");
+			throw new IllegalArgumentException("Server must be an RTCpsObject");
 		}
 		else if (PropertyNames.SELECTOR.equals(name) && !(value instanceof CpsSelector))
 		{
@@ -466,6 +474,10 @@ public class RTMessage implements CpsMessage
 		{
 			throw new NullPointerException("Self can not be null");
 		}
+		if (!(value instanceof RTCpsObject))
+		{
+			throw new IllegalStateException("Value is not an RTCpsObject");
+		}
 		properties.put(PropertyNames.SELF, value);
 	}
 
@@ -481,6 +493,10 @@ public class RTMessage implements CpsMessage
 		{
 			throw new NullPointerException("Server can not be null");
 		}
+		if (!(value instanceof RTCpsObject))
+		{
+			throw new IllegalStateException("Value is not an RTCpsObject");
+		}
 		properties.put(PropertyNames.SERVER, value);
 	}
 
@@ -495,6 +511,10 @@ public class RTMessage implements CpsMessage
 		if (value == null)
 		{
 			throw new NullPointerException("Target can not be null");
+		}
+		if (!(value instanceof RTCpsObject))
+		{
+			throw new IllegalStateException("Value is not an RTCpsObject");
 		}
 		properties.put(PropertyNames.TARGET, value);
 	}

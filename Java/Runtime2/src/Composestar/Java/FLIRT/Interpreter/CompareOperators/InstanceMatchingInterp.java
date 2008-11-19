@@ -28,10 +28,13 @@ import java.util.logging.Logger;
 
 import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.InstanceMatching;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 
@@ -91,6 +94,27 @@ public class InstanceMatchingInterp extends CompareOperatorInterpreter<InstanceM
 			if (((CpsSelector) lhs).getName().equals(((CpsLiteral) rhs).getLiteralValue()))
 			{
 				return true;
+			}
+		}
+		else if (lhs instanceof CpsSelector && rhs instanceof CpsProgramElement)
+		{
+			ProgramElement pe = ((CpsProgramElement) rhs).getProgramElement();
+			if (pe instanceof MethodInfo)
+			{
+				if (lhs instanceof CpsSelectorMethodInfo)
+				{
+					if (((CpsSelectorMethodInfo) lhs).getMethodInfo().checkEquals((MethodInfo) pe))
+					{
+						return true;
+					}
+				}
+				else
+				{
+					if (((CpsSelector) lhs).getName().equals(((MethodInfo) pe).getName()))
+					{
+						return true;
+					}
+				}
 			}
 		}
 		return false;

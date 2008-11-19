@@ -65,7 +65,7 @@ public class MethodBodyTransformer extends ExprEditor
 		{
 			if (hd.isCastInterception(c.getType().getName()))
 			{
-				c.replace("$_ = $proceed(Composestar.RuntimeCore.FLIRT.CastingFacility.handleCast($1" + ", " + '"'
+				c.replace("$_ = $proceed(Composestar.Java.FLIRT.CastingFacility.handleCast($1" + ", " + '"'
 						+ c.getType().getName() + '"' + "));");
 			}
 		}

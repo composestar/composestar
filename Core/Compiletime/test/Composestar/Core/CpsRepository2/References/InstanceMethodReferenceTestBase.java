@@ -177,5 +177,10 @@ public abstract class InstanceMethodReferenceTestBase extends MethodReferenceTes
 		{
 			return false;
 		}
+
+		public Object getObject() throws IllegalStateException
+		{
+			return null;
+		}
 	}
 }

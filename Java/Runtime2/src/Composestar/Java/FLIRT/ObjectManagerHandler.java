@@ -83,7 +83,7 @@ public final class ObjectManagerHandler
 			return null;
 		}
 		ObjectManager result = ObjectManagerStorage.get(forObject);
-		if (result == null)
+		if (result == null && repos != null)
 		{
 			if (UNDER_CONSTRUCTION.contains(forObject))
 			{

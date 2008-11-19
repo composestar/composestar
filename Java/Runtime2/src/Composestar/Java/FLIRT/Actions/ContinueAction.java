@@ -24,6 +24,8 @@
 
 package Composestar.Java.FLIRT.Actions;
 
+import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Java.FLIRT.Annotations.FilterActionDef;
 import Composestar.Java.FLIRT.Env.RTMessage;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 
@@ -32,7 +34,8 @@ import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
  * 
  * @author Michiel Hendriks
  */
-public class VoidAction extends RTFilterAction
+@FilterActionDef(name = FilterActionNames.CONTINUE_ACTION)
+public final class ContinueAction extends RTFilterAction
 {
 
 	/*

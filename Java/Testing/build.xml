@@ -76,7 +76,7 @@
 
 	
 	<!-- execute tests -->
-	<target name="test_exec" depends="test_comp,init_eclipse">
+	<target name="test_exec" depends="init_eclipse">
 		<cs:j_test workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="composestar.java.plugin.testrun" resultOutput="${basedir}/TEST-Execution.xml">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>

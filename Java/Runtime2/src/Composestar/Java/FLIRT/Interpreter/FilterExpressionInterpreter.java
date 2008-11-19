@@ -201,11 +201,13 @@ public final class FilterExpressionInterpreter
 		RTFilterAction act = RTFilterActionFactory.createAction(onReturn);
 		if (act != null)
 		{
+			logger.fine(String.format("Add return filter action %s", act.getClass().getName()));
 			context.addReturnAction(matchedMessage, act);
 		}
 		act = RTFilterActionFactory.createAction(onCall);
 		if (act != null)
 		{
+			logger.fine(String.format("Executing filter action %s", act.getClass().getName()));
 			act.execute(matchedMessage, context);
 		}
 	}

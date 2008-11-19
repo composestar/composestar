@@ -22,34 +22,18 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.TypeSystem;
+package Composestar.Java.FLIRT.Filters;
 
 /**
- * An object instance. Used for internals, externals, and message properties
- * like sender, server, inner, etc.
+ * Base class for custom filter types. No implementation is needed as these
+ * classes are never instantiated, they are only used to register filter types
+ * and find their filter actions. All the real magic happens in the filter
+ * actions. Custom filter types need an FilterTypeDef annotation
  * 
  * @author Michiel Hendriks
+ * @see Composestar.Java.FLIRT.Actions.RTFilterAction
+ * @see Composestar.Java.FLIRT.Annotations.FilterTypeDef
  */
-public interface CpsObject extends CpsTypeProgramElement
+public abstract class RTCustomFilterType
 {
-	/**
-	 * @return True when this is an inner object.
-	 */
-	boolean isInnerObject();
-
-	/**
-	 * @return True when this is a "self" CpsObject, meaning this concern. An
-	 *         CpsObject can not be both inner and self.
-	 */
-	boolean isSelfObject();
-
-	/**
-	 * This method can only be used during interpretation when real object
-	 * instances exist.
-	 * 
-	 * @return The object instance associated with this CpsObject.
-	 * @throws IllegalStateException Thrown by CpsObject implementations that
-	 *             are not interpreted.
-	 */
-	Object getObject() throws IllegalStateException;
 }

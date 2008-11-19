@@ -89,25 +89,37 @@ public final class InnerDispatcher
 		sigm.setLHS(prop);
 		repository.add(prop);
 
-		prop = new CanonPropertyImpl(PropertyPrefix.NONE, PropertyNames.INNER);
+		if (DefaultInnerDispatchNames.INPUT_FILTER.equals(name))
+		{
+			prop = new CanonPropertyImpl(PropertyPrefix.NONE, PropertyNames.INNER);
+		}
+		else
+		{
+			// Send matches the target's signature
+			prop = new CanonPropertyImpl(PropertyPrefix.MESSAGE, PropertyNames.TARGET);
+		}
 		CpsVariableCollection values = new CpsVariableCollectionImpl();
 		values.add(prop);
 		sigm.setRHS(values);
 		repository.add(prop);
 		repository.add(values);
 
-		CanonAssignment asgn = new CanonAssignmentImpl();
+		if (DefaultInnerDispatchNames.INPUT_FILTER.equals(name))
+		{
+			CanonAssignment asgn = new CanonAssignmentImpl();
 
-		prop = new CanonPropertyImpl(PropertyPrefix.MESSAGE, PropertyNames.TARGET);
-		asgn.setProperty(prop);
-		repository.add(prop);
+			prop = new CanonPropertyImpl(PropertyPrefix.MESSAGE, PropertyNames.TARGET);
+			asgn.setProperty(prop);
+			repository.add(prop);
 
-		prop = new CanonPropertyImpl(PropertyPrefix.NONE, PropertyNames.INNER);
-		asgn.setValue(prop);
-		repository.add(prop);
+			prop = new CanonPropertyImpl(PropertyPrefix.NONE, PropertyNames.INNER);
+			asgn.setValue(prop);
+			repository.add(prop);
 
-		expr.addAssignment(asgn);
-		repository.add(asgn);
+			expr.addAssignment(asgn);
+			repository.add(asgn);
+		}
+		// no changes to the message for the send filter
 		return filter;
 	}
 }

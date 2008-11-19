@@ -32,6 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ComposestarModule.Importance;
@@ -270,14 +271,15 @@ public class Manager
 				synchronized (moduleResults)
 				{
 					// check if everything executed
-					for (CTCommonModule.ModuleReturnValue res : moduleResults.values())
+					for (Entry<String, CTCommonModule.ModuleReturnValue> res : moduleResults.entrySet())
 					{
-						if (res != CTCommonModule.ModuleReturnValue.OK
-								&& res != CTCommonModule.ModuleReturnValue.NO_EXECUTION)
+						if (res.getValue() != CTCommonModule.ModuleReturnValue.OK
+								&& res.getValue() != CTCommonModule.ModuleReturnValue.NO_EXECUTION)
 						{
 							// one failed
-							logger.info(String.format("Module %s depends on module %s which did not return Ok", annot
-									.ID(), dep));
+							logger.info(String.format(
+									"Module %s depends on all previous modules, %s did not execute successfully", annot
+											.ID(), res.getKey()));
 							return false || undeterministic;
 						}
 					}

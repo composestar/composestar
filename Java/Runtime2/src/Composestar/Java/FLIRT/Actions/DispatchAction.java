@@ -25,6 +25,7 @@
 package Composestar.Java.FLIRT.Actions;
 
 import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Java.FLIRT.MessageHandlingFacility;
 import Composestar.Java.FLIRT.Annotations.FilterActionDef;
 import Composestar.Java.FLIRT.Env.ObjectManager;
@@ -63,7 +64,7 @@ public class DispatchAction extends RTFilterAction
 			throw new IllegalStateException("Target is not an instance of RTCpsObject");
 		}
 
-		RTCpsObject target = (RTCpsObject) context.getMessage().getTarget();
+		CpsObject target = context.getMessage().getTarget();
 
 		if (target.isInnerObject() || !(target instanceof ObjectManager))
 		{

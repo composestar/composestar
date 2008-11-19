@@ -75,7 +75,7 @@ public class JoinPointContext
 	{
 		if (var instanceof RTCpsObject)
 		{
-			return ((RTCpsObject) var).getObject();
+			return var.getObject();
 		}
 		return null;
 	}
@@ -93,6 +93,10 @@ public class JoinPointContext
 	 */
 	public String getSelector()
 	{
+		if (message.getSelector() == null)
+		{
+			return null;
+		}
 		return message.getSelector().getName();
 	}
 

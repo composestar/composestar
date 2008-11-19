@@ -26,6 +26,7 @@ package Composestar.Java.FLIRT.Actions;
 
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Java.FLIRT.Annotations.CpsVariableType;
@@ -54,7 +55,7 @@ public class AdviceAction extends RTFilterAction
 	@Override
 	public void execute(RTMessage matchedMessage, FilterExecutionContext context)
 	{
-		RTCpsObject target = null;
+		CpsObject target = null;
 		CpsSelector selector = null;
 
 		CpsVariable var = context.getFilterArguments().get(PropertyNames.TARGET);
@@ -64,7 +65,7 @@ public class AdviceAction extends RTFilterAction
 		}
 		if (target == null && matchedMessage.getTarget() instanceof RTCpsObject)
 		{
-			target = (RTCpsObject) matchedMessage.getTarget();
+			target = matchedMessage.getTarget();
 		}
 		var = context.getFilterArguments().get(PropertyNames.SELECTOR);
 		if (var instanceof CpsSelector)

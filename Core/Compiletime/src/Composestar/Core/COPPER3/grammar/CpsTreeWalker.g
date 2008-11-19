@@ -1343,7 +1343,8 @@ implementation [CpsConcern c]
 		{
 			if (embeddedSourceManager != null)
 			{
-				EmbeddedSource src = new EmbeddedSource($lang.text, unescapeLiteral($fn.text), $code.text);
+				String lvalue = $fn.text;
+				EmbeddedSource src = new EmbeddedSource($lang.text, unescapeLiteral(lvalue.substring(1, lvalue.length()-1)), $code.text);
 				SourceInformation srcInfo = new SourceInformation(fileInformation);
 				src.setSourceInformation(srcInfo);
 				if (strt != null)

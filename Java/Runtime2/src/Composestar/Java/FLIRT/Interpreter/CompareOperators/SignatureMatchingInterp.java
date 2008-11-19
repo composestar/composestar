@@ -27,6 +27,7 @@ package Composestar.Java.FLIRT.Interpreter.CompareOperators;
 import java.util.List;
 import java.util.logging.Logger;
 
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
@@ -41,6 +42,7 @@ import Composestar.Core.LAMA.Signatures.MethodStatus;
 import Composestar.Core.LAMA.Signatures.Signature;
 import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
+import Composestar.Java.FLIRT.Utils.Invoker;
 
 /**
  * @author Michiel Hendriks
@@ -73,7 +75,7 @@ public class SignatureMatchingInterp extends CompareOperatorInterpreter<Signatur
 	{
 		if (!(lhs instanceof CpsSelector))
 		{
-			// only selectors are allowed ont he lhs
+			// only selectors are allowed on the lhs
 			return false;
 		}
 		if (context.getMessage().getTarget() == null)
@@ -86,6 +88,19 @@ public class SignatureMatchingInterp extends CompareOperatorInterpreter<Signatur
 			// right hand side must be a type program elements
 			return false;
 		}
+
+		// special case for inner targets, check the actual type
+		if (rhs instanceof CpsObject && ((CpsObject) rhs).isInnerObject())
+		{
+			MethodInfo mi = null;
+			if (lhs instanceof CpsSelectorMethodInfo)
+			{
+				mi = ((CpsSelectorMethodInfo) lhs).getMethodInfo();;
+			}
+			return Invoker.objectHasMethod(((CpsObject) rhs).getObject(), ((CpsSelector) lhs).getName(), context
+					.getMessage().getArguments(), mi);
+		}
+
 		ProgramElement pe = ((CpsProgramElement) rhs).getProgramElement();
 		if (!(pe instanceof Type))
 		{

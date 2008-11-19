@@ -95,7 +95,7 @@ public class ErrorAction extends RTFilterAction
 			}
 		}
 
-		if (!RuntimeException.class.isAssignableFrom(excpClass))
+		if (excpClass != null && !RuntimeException.class.isAssignableFrom(excpClass))
 		{
 			excpClass = null;
 			logger.log(Level.SEVERE, String.format("%s is not a runtime exception", excpClass));
@@ -120,12 +120,12 @@ public class ErrorAction extends RTFilterAction
 			{
 				exception = rtec.newInstance();
 			}
-			throw exception;
 		}
 		catch (Exception e)
 		{
 			throw new IllegalStateException(String.format(
 					"Unable to create exception of type %s for the error filter action", rtec.getName()), e);
 		}
+		throw exception;
 	}
 }
