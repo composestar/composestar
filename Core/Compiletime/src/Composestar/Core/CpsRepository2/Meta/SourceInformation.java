@@ -44,16 +44,16 @@ public final class SourceInformation implements Serializable
 	private FileInformation fileInfo;
 
 	/**
-	 * The line number where the entity was declared. A negative value means
-	 * that the information is unknown.
+	 * The line number where the entity was declared. Value can be null when no
+	 * location information is available.
 	 */
-	private int line = -1;
+	private int line;
 
 	/**
-	 * The position on the line (or column) where this entity was declared.A
-	 * negative value means that the information is unknown.
+	 * The position on the line (or column) where this entity was declared.
+	 * Value can be null when no location information is available.
 	 */
-	private int linePos = -1;
+	private int linePos;
 
 	/**
 	 * Create a new source information instance using the provide

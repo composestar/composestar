@@ -207,27 +207,27 @@ public class MethodBodyTransformer extends ExprEditor
 			// static caller, static target
 			m.replace("Composestar.Java.FLIRT.MessageHandlingFacility.handleVoidMethodCall(" + '"'
 					+ m.where().getDeclaringClass().getName() + '"' + "," + '"' + m.getClassName() + '"' + "," + '"'
-					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
+					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m) + "\");");
 		}
 		else if (isStaticCaller && !isStaticTarget)
 		{
 			// static caller, non-static target
 			m.replace("Composestar.Java.FLIRT.MessageHandlingFacility.handleVoidMethodCall(" + '"'
 					+ m.where().getDeclaringClass().getName() + '"' + ",$0," + '"' + m.getMethodName() + '"'
-					+ ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
+					+ ",$args, \"" + getMethodHashKey(m) + "\");");
 		}
 		else if (!isStaticCaller && isStaticTarget)
 		{
 			// non-static caller, static target
 			m.replace("Composestar.Java.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this," + '"'
-					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args, \""
-					+ getMethodHashKey(m.getMethod()) + "\");");
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m)
+					+ "\");");
 		}
 		else
 		{
 			// non-static caller, non-static target
 			m.replace("Composestar.Java.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this,$0," + '"'
-					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
+					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m) + "\");");
 		}
 	}
 
@@ -248,27 +248,27 @@ public class MethodBodyTransformer extends ExprEditor
 			// static caller, static target
 			m.replace("$_ = ($r)" + "Composestar.Java.FLIRT.MessageHandlingFacility.handleReturnMethodCall(" + '"'
 					+ m.where().getDeclaringClass().getName() + '"' + "," + '"' + m.getClassName() + '"' + "," + '"'
-					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
+					+ m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m) + "\");");
 		}
 		else if (isStaticCaller && !isStaticTarget)
 		{
 			// static caller, non-static target
 			m.replace("$_ = ($r)" + "Composestar.Java.FLIRT.MessageHandlingFacility.handleReturnMethodCall(" + '"'
 					+ m.where().getDeclaringClass().getName() + '"' + ",$0," + '"' + m.getMethodName() + '"'
-					+ ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
+					+ ",$args, \"" + getMethodHashKey(m) + "\");");
 		}
 		else if (!isStaticCaller && isStaticTarget)
 		{
 			// non-static caller, static target
 			m.replace("$_ = ($r)" + "Composestar.Java.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this," + '"'
-					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args, \""
-					+ getMethodHashKey(m.getMethod()) + "\");");
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m)
+					+ "\");");
 		}
 		else
 		{
 			// non-static caller, non-static target
 			m.replace("$_ = ($r)" + "Composestar.Java.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this,$0,"
-					+ '"' + m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m.getMethod()) + "\");");
+					+ '"' + m.getMethodName() + '"' + ",$args, \"" + getMethodHashKey(m) + "\");");
 		}
 	}
 
@@ -363,30 +363,67 @@ public class MethodBodyTransformer extends ExprEditor
 	 * @throws NotFoundException
 	 * @see {@link MethodInfo#getHashKey()}
 	 */
-	public String getMethodHashKey(CtMethod meth) throws NotFoundException
+	public String getMethodHashKey(MethodCall mc)
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(meth.getName()).append('%');
-		if (meth.getReturnType() != null)
+		CtMethod meth;
+		try
 		{
-			if (meth.getReturnType() instanceof CtPrimitiveType)
+			// this happens in case of methods that were added by a filter (i.e.
+			// signature expansion)
+			StringBuilder sb = new StringBuilder();
+			sb.append(mc.getMethodName()).append('%');
+			CtClass cls = Descriptor.getReturnType(mc.getSignature(), classpool);
+			if (cls != null)
 			{
-				sb.append(meth.getReturnType().getSimpleName());
+				if (cls instanceof CtPrimitiveType)
+				{
+					sb.append(cls.getSimpleName());
+				}
+				else
+				{
+					sb.append(cls.getName());
+				}
 			}
 			else
 			{
-				sb.append(meth.getReturnType().getName());
+				sb.append("void");
 			}
+			sb.append('%');
+			for (CtClass p : Descriptor.getParameterTypes(mc.getSignature(), classpool))
+			{
+				sb.append(p.getName()).append('%');
+			}
+			return sb.toString();
+
+			// meth = mc.getMethod();
+			//
+			// StringBuilder sb = new StringBuilder();
+			// sb.append(meth.getName()).append('%');
+			// if (meth.getReturnType() != null)
+			// {
+			// if (meth.getReturnType() instanceof CtPrimitiveType)
+			// {
+			// sb.append(meth.getReturnType().getSimpleName());
+			// }
+			// else
+			// {
+			// sb.append(meth.getReturnType().getName());
+			// }
+			// }
+			// else
+			// {
+			// sb.append("void");
+			// }
+			// sb.append('%');
+			// for (CtClass p : meth.getParameterTypes())
+			// {
+			// sb.append(p.getName()).append('%');
+			// }
+			// return sb.toString();
 		}
-		else
+		catch (NotFoundException e)
 		{
-			sb.append("void");
+			return "";
 		}
-		sb.append('%');
-		for (CtClass p : meth.getParameterTypes())
-		{
-			sb.append(p.getName()).append('%');
-		}
-		return sb.toString();
 	}
 }

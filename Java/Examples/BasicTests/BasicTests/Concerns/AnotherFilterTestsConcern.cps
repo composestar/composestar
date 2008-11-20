@@ -23,7 +23,12 @@ concern AnotherFilterTestsConcern in BasicTests
 			countVisit : Meta = { [*.doOutsideVisit] visitor.visitHome };
 			makeTrip : Dispatch = { [*.doOutsideVisit] *.makeOutsideTrip }
 		outputfilters
-			makeOutsideTrip : Send = { !enoughVisits => [*.makeTrip] inner.doOutsideVisit }
+			//makeOutsideTrip : Send = { !enoughVisits => [*.makeTrip] inner.doOutsideVisit }
+			makeOutsideTrip : Send = ( !enoughVisits & selector == 'makeTrip' )
+				{
+					target = message.self;
+					selector = 'doOutsideVisit'; 
+				}
 	}
 
 	superimposition

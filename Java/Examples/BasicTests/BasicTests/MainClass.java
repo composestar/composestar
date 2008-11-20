@@ -38,15 +38,13 @@ public class MainClass {
 
 		FooBarQuux fbq = new FooBarQuux();
 		try {
-			fbq.foo(); // should result in an exception
+			fbq.foo(); // should not result in an exception
 		} catch (ErrorFilterException e) {
 			System.out.println("An ErrorFilterException was raised.");
 		}
 		try {
 			// method introduced by a concern
-			fbq.quux2(); // should be quux3 but a bug in Fire or Sign
-							// prevents this
-			// because quux3 isn't added
+			fbq.quux3();
 		} catch (ErrorFilterException e) {
 			System.out.println("An ErrorFilterException was raised.");
 		}

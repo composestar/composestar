@@ -174,8 +174,8 @@ public abstract class MessageReceiver implements Runnable
 			// shouldn't even be possible
 			msg.setInner(sender);
 		}
-		msg.setSelf(receiver); // TODO: verify this value, shouldn't this be
-		// "sender" ?
+		msg.setSelf(sender); // TODO: old implementation used receiver, validate
+		// that this really should be sender
 		msg.setTarget(receiver);
 
 		// just deliver it

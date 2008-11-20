@@ -186,7 +186,10 @@ public final class MessageHandlingFacility
 		msg.setDirection(MessageDirection.INCOMING);
 		try
 		{
-			om.deliverIncomingMessage(sender, om, msg);
+			// TODO constructor message are currently not handled because the
+			// message selector has a dubious value, what should the selector
+			// value of a constructor message be?
+			// om.deliverIncomingMessage(sender, om, msg);
 		}
 		catch (RuntimeException e)
 		{
@@ -241,7 +244,8 @@ public final class MessageHandlingFacility
 		}
 
 		RTMessage msg = new RTMessage(senderObj);
-		msg.setServer(targetObj); // TODO: verify this value
+		msg.setServer(targetObj); // TODO: verify this value, shouldn't this be
+		// "sender" in case of output messages?
 		CpsSelector sel = createSelector(target, selector, args, key);
 		msg.setSelector(sel);
 		msg.setArguments(args);
@@ -328,7 +332,7 @@ public final class MessageHandlingFacility
 	public static void handleVoidMethodCall(String staticcaller, Object target, String selector, Object[] args,
 			String key)
 	{
-		handleMethodCall(staticcaller, target, selector, args, key, EnumSet.of(MessageState.STATIC_SENDER,
+		handleMethodCall(null, target, selector, args, key, EnumSet.of(MessageState.STATIC_SENDER,
 				MessageState.VOID_RETURN));
 	}
 

@@ -55,6 +55,11 @@ public final class MethodReferenceInterpreter
 	 */
 	public static boolean boolEval(MethodReference ref, FilterExecutionContext context)
 	{
+		// FIXME shouldn't these methods calls be handled as messages? This
+		// could result in recursive messages in order to evaluate the
+		// condition, it is also an problem with outgoing filters and the sender
+		// of this "condition" method.
+
 		Object result = null;
 		// TODO: JPCA
 		if (ref instanceof InstanceMethodReference)
@@ -75,17 +80,20 @@ public final class MethodReferenceInterpreter
 			}
 			if (rtobj != null)
 			{
+				// note: ref.getReference() is usually null in when the
+				// methodreference used an inner.SomeMethod construction
 				result =
-						Invoker.invoke(rtobj.getObject(), ref.getReference().getName(), EMPTY_OBJECT_ARRAY, ref
-								.getReference());
+						Invoker.invoke(rtobj.getObject(), ref.getReferenceId(), EMPTY_OBJECT_ARRAY, ref.getReference());
 			}
 		}
 		else
 		{
 			result =
-					Invoker.invoke(ref.getTypeReference().getReferenceId(), ref.getReference().getName(),
-							EMPTY_OBJECT_ARRAY, ref.getReference());
+					Invoker.invoke(ref.getTypeReference().getReferenceId(), ref.getReferenceId(), EMPTY_OBJECT_ARRAY,
+							ref.getReference());
 		}
+		logger.finer(String.format("Executiong of %s.%s resulted in %s", ref.getTypeReference().getReferenceId(), ref
+				.getReferenceId(), result));
 		if (result != null)
 		{
 			return Boolean.TRUE.equals(result);

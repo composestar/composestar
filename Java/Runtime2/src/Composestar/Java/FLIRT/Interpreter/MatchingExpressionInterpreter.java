@@ -102,7 +102,7 @@ public final class MatchingExpressionInterpreter
 			}
 			else
 			{
-				interpret(expr.getRHS(), context);
+				return interpret(expr.getRHS(), context);
 			}
 		}
 		else if (expr instanceof OrMEOper)
@@ -113,7 +113,7 @@ public final class MatchingExpressionInterpreter
 			}
 			else
 			{
-				interpret(expr.getRHS(), context);
+				return interpret(expr.getRHS(), context);
 			}
 		}
 		else

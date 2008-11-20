@@ -110,6 +110,8 @@ public final class FilterExpressionInterpreter
 	 */
 	public static void interpretFilter(Filter filter, FilterExecutionContext context)
 	{
+		context.setCurrentFilter(filter);
+		context.setMatchedElement(null);
 		FilterArguments farg = new FilterArguments();
 		for (CanonAssignment asgn : filter.getArguments())
 		{
@@ -149,6 +151,7 @@ public final class FilterExpressionInterpreter
 		}
 		finally
 		{
+			context.setCurrentFilter(null);
 			context.setFilterArguments(null);
 		}
 	}

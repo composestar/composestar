@@ -84,6 +84,8 @@
 				<include name="ErrorFilterTest"/>
 				<include name="Platypus"/>
 				<include name="VenusFlyTrap"/>
+				<include name="Fibonacci"/>
+				<include name="BookShelf"/>
 				<exclude name="**/.svn/"/>
 				<exclude name="**/.metadata/"/>
 			</DirSet>

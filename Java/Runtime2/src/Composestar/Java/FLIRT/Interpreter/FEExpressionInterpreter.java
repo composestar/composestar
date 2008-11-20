@@ -124,6 +124,7 @@ public final class FEExpressionInterpreter
 	{
 		if (MatchingExpressionInterpreter.interpret(fex.getMatchingExpression(), context))
 		{
+			context.setMatchedElement(fex);
 			FilterArguments farg = context.getFilterArguments();
 			if (farg == null)
 			{

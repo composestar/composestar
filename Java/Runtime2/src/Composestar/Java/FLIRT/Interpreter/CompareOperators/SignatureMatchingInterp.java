@@ -97,6 +97,12 @@ public class SignatureMatchingInterp extends CompareOperatorInterpreter<Signatur
 			{
 				mi = ((CpsSelectorMethodInfo) lhs).getMethodInfo();;
 			}
+			// if (context.getMessage().hasState(MessageState.CONSTRUCTOR))
+			// {
+			// return Invoker.objectHasConstructor(((CpsObject)
+			// rhs).getObject(), context.getMessage().getArguments(),
+			// mi);
+			// }
 			return Invoker.objectHasMethod(((CpsObject) rhs).getObject(), ((CpsSelector) lhs).getName(), context
 					.getMessage().getArguments(), mi);
 		}

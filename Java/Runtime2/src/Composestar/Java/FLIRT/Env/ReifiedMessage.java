@@ -248,6 +248,16 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	// TODO set message properties (target, selector, ...?)
 
 	/**
+	 * Set the arguments of the message
+	 * 
+	 * @param values
+	 */
+	public void setArguments(Object[] values)
+	{
+		message.setArguments(values);
+	}
+
+	/**
 	 * Communication structure between the reified message and the meta action.
 	 * 
 	 * @author Michiel Hendriks

@@ -30,6 +30,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Java.FLIRT.Actions.RTFilterAction;
 import Composestar.Java.FLIRT.Env.ObjectManager;
@@ -76,6 +78,17 @@ public class FilterExecutionContext
 	 * List of actions enqueued to be executed on the return flow
 	 */
 	protected Queue<EnqueuedAction> returnActions;
+
+	/**
+	 * The current filter which is being executed.
+	 */
+	protected Filter currentFilter;
+
+	/**
+	 * The matched filter element. Set to the matched filter elements, is null
+	 * when no filter element matched.
+	 */
+	protected FilterElement matchedElement;
 
 	/**
 	 * @param man
@@ -149,6 +162,38 @@ public class FilterExecutionContext
 	public void setFilterArguments(FilterArguments value)
 	{
 		filterArguments = value;
+	}
+
+	/**
+	 * @param value
+	 */
+	public void setMatchedElement(FilterElement value)
+	{
+		matchedElement = value;
+	}
+
+	/**
+	 * @return
+	 */
+	public FilterElement getMatchedElement()
+	{
+		return matchedElement;
+	}
+
+	/**
+	 * @param value
+	 */
+	public void setCurrentFilter(Filter value)
+	{
+		currentFilter = value;
+	}
+
+	/**
+	 * @return
+	 */
+	public Filter getCurrentFilter()
+	{
+		return currentFilter;
 	}
 
 	/**
