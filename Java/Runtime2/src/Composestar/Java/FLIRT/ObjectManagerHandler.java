@@ -212,6 +212,10 @@ public final class ObjectManagerHandler
 					inst = new SimpleCpsObject(instance, tref);
 				}
 				rtfm.setMemberObject(fmvar, inst);
+				if (fmvar instanceof Internal)
+				{
+					CastingFacility.registerInternal(instance, forObject);
+				}
 			}
 		}
 	}

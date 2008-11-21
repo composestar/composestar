@@ -4,7 +4,7 @@ concern ErrorTestConcern
 	{
 		inputfilters
 			// disable calls to method Test2
-			test_error : Error = { True ~> [*.f2] }
+			test_error : Error(message='Compose* error filter exception') = { True ~> [*.f2] }
 	}
 	superimposition
 	{

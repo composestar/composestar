@@ -34,9 +34,9 @@ public class CastingFacility
 	 * @param internal
 	 * @param outer
 	 */
-	public static void registerInternal(Object internal, WeakReference<Object> outer)
+	public static void registerInternal(Object internal, Object outer)
 	{
-		internalMapping.put(internal, outer);
+		internalMapping.put(internal, new WeakReference<Object>(outer));
 	}
 
 	/**
@@ -79,13 +79,6 @@ public class CastingFacility
 		if (to == null)
 		{
 			throw new IllegalArgumentException("to cannot be null");
-		}
-
-		// remove assembly name
-		int bracket = to.indexOf(']');
-		if (bracket != -1)
-		{
-			to = to.substring(bracket + 1);
 		}
 
 		// cast to type of itself is always safe, really it is

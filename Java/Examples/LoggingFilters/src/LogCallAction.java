@@ -17,12 +17,12 @@ public class LogCallAction extends RTFilterAction {
 	@Override
 	public void execute(RTMessage matchedMessage, FilterExecutionContext context) {
 
-		System.err.println(createLogMessage(matchedMessage));
+		System.err.println(createLogMessage(matchedMessage, context));
 		context.getMessage().setProperty(TIMER_PROP,
 				new CpsArbitraryValue(System.nanoTime()));
 	}
 
-	protected String createLogMessage(RTMessage matchedMessage) {
+	protected String createLogMessage(RTMessage matchedMessage, FilterExecutionContext context) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[id:");
 		sb.append(System.identityHashCode(matchedMessage.getTarget()
@@ -41,9 +41,9 @@ public class LogCallAction extends RTFilterAction {
 			sb.append(arg);
 		}
 		sb.append(')');
-		if (matchedMessage.getReturnValue() != null) {
+		if (context.getMessage().getReturnValue() != null) {
 			sb.append(" = ");
-			sb.append(matchedMessage.getReturnValue());
+			sb.append(context.getMessage().getReturnValue());
 		}
 		return sb.toString();
 	}

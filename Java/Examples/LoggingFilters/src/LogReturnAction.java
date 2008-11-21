@@ -28,6 +28,6 @@ public class LogReturnAction extends LogCallAction {
 			stop = -1;
 		}
 		System.err.println("<< [dt:" + (System.nanoTime() - stop) / 1000000
-				+ "ms] " + createLogMessage(matchedMessage));
+				+ "ms] " + createLogMessage(matchedMessage, context));
 	}
 }
