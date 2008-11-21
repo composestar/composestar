@@ -12,13 +12,13 @@ public class ScoreIncreaser {
 	}
 
 	public void increase(ReifiedMessage message) {
-		Object[] args = message.getArgs();
+		Object[] args = message.getArguments();
 
 		if (args.length == 1) {
 			int points = Integer.parseInt(args[0].toString());
 			points = Game.getLevel() * points;
 			// args[0] = (System.Int32) points;
-			message.setArgs(args);
+			message.setArguments(args);
 		} else {
 			System.out
 					.println("\n\n*** Invalid argument count! Message was for '"

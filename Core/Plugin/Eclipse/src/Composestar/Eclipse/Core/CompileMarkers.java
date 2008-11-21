@@ -24,6 +24,9 @@
 
 package Composestar.Eclipse.Core;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -109,24 +112,26 @@ public class CompileMarkers
 
 		try
 		{
+			// filename(line:colum) priority [module]: description
+			final Pattern pat = Pattern.compile("^(.*)\\(([0-9]+):([0-9]+)\\) ([\\w]+) \\[([\\w+._]+)\\]: (.*)$");
 			// old format
-			String[] entries = logEntry.split("~", 5);
-
-			if (logEntry.length() < 5)
+			Matcher m = pat.matcher(logEntry);
+			if (!m.matches())
 			{
 				return;
 			}
 
-			msg = String.format("[%s] %s", entries[0], entries[4]);
-			if ("INFO".equalsIgnoreCase(entries[1]))
+			msg = String.format("[%s] %s", m.group(5), m.group(6));
+			String prio = m.group(4);
+			if ("INFO".equalsIgnoreCase(prio))
 			{
 				sevr = IMarker.SEVERITY_INFO;
 			}
-			else if ("WARN".equalsIgnoreCase(entries[1]))
+			else if ("WARN".equalsIgnoreCase(prio))
 			{
 				sevr = IMarker.SEVERITY_WARNING;
 			}
-			else if ("ERROR".equalsIgnoreCase(entries[1]))
+			else if ("ERROR".equalsIgnoreCase(prio))
 			{
 				sevr = IMarker.SEVERITY_ERROR;
 			}
@@ -134,13 +139,14 @@ public class CompileMarkers
 			{
 				return;
 			}
-			filename = entries[2];
+			filename = m.group(1);
 			if (filename != null && !filename.isEmpty())
 			{
-				line = Integer.parseInt(entries[3]);
+				line = Integer.parseInt(m.group(2));
+				linepos = Integer.parseInt(m.group(3));
 			}
 
-			if ("COMP".equals(entries[0]) && (sevr != IMarker.SEVERITY_ERROR) && filename != null
+			if ("COMP".equals(m.group(5)) && (sevr != IMarker.SEVERITY_ERROR) && filename != null
 					&& filename.replace("\\", "/").contains(".composestar/dummies"))
 			{
 				// ignore compile warnings in the dummies
