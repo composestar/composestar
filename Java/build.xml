@@ -33,10 +33,7 @@
 	</target>
 
 	<target name="test" description="Execute system tests">
-		<echo level="error">Compose*/Java system test disabled!</echo>
-		<!--
 		<ant target="test" dir="Testing" inheritRefs="true"/>
-		-->
 	</target>
 
 	<target name="install" description="Install the result">
