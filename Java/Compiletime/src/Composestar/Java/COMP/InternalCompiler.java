@@ -80,6 +80,8 @@ public class InternalCompiler
 	{
 		StandardJavaFileManager fm = javac.getStandardFileManager(null, null, null);
 		List<String> options = new ArrayList<String>();
+		logger.debug(String.format("Java Compiler class: %s", javac.getClass().getName()));
+		// org.eclipse.jdt.internal.compiler.tool.EclipseCompiler
 		if (javac.getClass().getName().equals("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler"))
 		{
 			if (complianceLevel != null && complianceLevel.length() > 0)

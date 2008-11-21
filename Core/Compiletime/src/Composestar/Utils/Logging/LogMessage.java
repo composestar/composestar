@@ -10,9 +10,11 @@
 
 package Composestar.Utils.Logging;
 
+import java.io.File;
 import java.io.Serializable;
 
 import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Meta.FileInformation;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 
 /**
@@ -55,13 +57,15 @@ public class LogMessage implements LocationProvider, Serializable
 	public LogMessage(Object inMsg, String inFN, int inLN, int onLine)
 	{
 		this(inMsg);
-		// FIXME
+		FileInformation fi = new FileInformation(new File(inFN));
+		srcInfo = new SourceInformation(fi);
+		srcInfo.setLine(inLN);
+		srcInfo.setLinePos(onLine);
 	}
 
 	public LogMessage(Object inMsg, String inFN, int inLN)
 	{
 		this(inMsg, inFN, inLN, 0);
-		// FIXME
 	}
 
 	public LogMessage(Object inMsg, SourceInformation sourceInformation)
