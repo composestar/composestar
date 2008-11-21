@@ -57,10 +57,13 @@ public class LogMessage implements LocationProvider, Serializable
 	public LogMessage(Object inMsg, String inFN, int inLN, int onLine)
 	{
 		this(inMsg);
-		FileInformation fi = new FileInformation(new File(inFN));
-		srcInfo = new SourceInformation(fi);
-		srcInfo.setLine(inLN);
-		srcInfo.setLinePos(onLine);
+		if (inFN != null && !inFN.isEmpty())
+		{
+			FileInformation fi = new FileInformation(new File(inFN));
+			srcInfo = new SourceInformation(fi);
+			srcInfo.setLine(inLN);
+			srcInfo.setLinePos(onLine);
+		}
 	}
 
 	public LogMessage(Object inMsg, String inFN, int inLN)
