@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.Misc;
+package Composestar.Core.CpsRepository2.Meta;
 
 import java.io.File;
 import java.io.IOException;

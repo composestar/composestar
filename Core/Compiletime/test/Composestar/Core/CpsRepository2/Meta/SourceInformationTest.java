@@ -22,13 +22,11 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.Misc;
+package Composestar.Core.CpsRepository2.Meta;
 
 import java.io.File;
 
 import junit.framework.TestCase;
-import Composestar.Core.CpsRepository2.Meta.FileInformation;
-import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 
 /**
  * @author Michiel Hendriks
@@ -43,7 +41,6 @@ public class SourceInformationTest extends TestCase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
@@ -57,7 +54,6 @@ public class SourceInformationTest extends TestCase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override
@@ -75,7 +71,8 @@ public class SourceInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#SourceInformation(Composestar.Core.CpsRepository2.Meta.SourceInformation)}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#SourceInformation(Composestar.Core.CpsRepository2.Meta.SourceInformation)}
+	 * .
 	 */
 	public void testSourceInformationSourceInformation()
 	{
@@ -117,7 +114,8 @@ public class SourceInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#getFileInfo()}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#getFileInfo()}
+	 * .
 	 */
 	public void testGetFileInfo()
 	{
@@ -127,7 +125,8 @@ public class SourceInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#getFilename()}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#getFilename()}
+	 * .
 	 */
 	public void testGetFilename()
 	{
@@ -138,24 +137,26 @@ public class SourceInformationTest extends TestCase
 	 * Test method for
 	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#getLine()}.
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#setLine(int)}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#setLine(int)}
+	 * .
 	 */
 	public void testSetLine()
 	{
-		assertEquals(-1, si.getLine());
+		assertEquals(0, si.getLine());
 		si.setLine(123);
 		assertEquals(123, si.getLine());
 	}
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#getLinePos()}.
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#setLinePos(int)}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#getLinePos()}
+	 * . Test method for
+	 * {@link Composestar.Core.CpsRepository2.Meta.SourceInformation#setLinePos(int)}
+	 * .
 	 */
 	public void testSetLinePos()
 	{
-		assertEquals(-1, si.getLinePos());
+		assertEquals(0, si.getLinePos());
 		si.setLinePos(123);
 		assertEquals(123, si.getLinePos());
 	}
