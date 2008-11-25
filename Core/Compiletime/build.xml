@@ -21,15 +21,8 @@
 		</delete>
 
 		<!-- COPPER parser -->
+		<delete dir="src/Composestar/Core/COPPER2" />
 		<delete>
-			<fileset dir="src/Composestar/Core/COPPER2">
-				<include name="CpsLexer.java" />
-				<include name="CpsParser.java" />
-				<include name="Cps__.g" />
-				<include name="Cps.tokens" />
-				<include name="CpsTreeWalker.java" />
-				<include name="CpsTreeWalker.tokens" />
-			</fileset>
 			<fileset dir="src/Composestar/Core/COPPER3">
 				<include name="CpsLexer.java" />
 				<include name="CpsParser.java" />
