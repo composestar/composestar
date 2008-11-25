@@ -6,7 +6,6 @@ import java.util.Iterator;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.CtMethod;
 import javassist.CtPrimitiveType;
 import javassist.Modifier;
 import javassist.NotFoundException;
@@ -365,7 +364,6 @@ public class MethodBodyTransformer extends ExprEditor
 	 */
 	public String getMethodHashKey(MethodCall mc)
 	{
-		CtMethod meth;
 		try
 		{
 			// this happens in case of methods that were added by a filter (i.e.

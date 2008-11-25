@@ -121,12 +121,12 @@ public final class ObjectManagerHandler
 		Concern crn = repos.get(cls.getName(), Concern.class);
 		if (crn == null)
 		{
-			logger.info(String.format("Class %s does not have a concern", cls.getName()));
+			logger.fine(String.format("Class %s does not have a concern", cls.getName()));
 			return null;
 		}
 		if (crn.getSuperimposed() == null)
 		{
-			logger.info(String.format("Concern %s does not have superimposition", cls.getName()));
+			logger.fine(String.format("Concern %s does not have superimposition", cls.getName()));
 			return null;
 		}
 

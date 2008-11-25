@@ -27,6 +27,7 @@ package Composestar.Java.FLIRT;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -244,8 +245,13 @@ public final class MessageHandlingFacility
 		}
 
 		RTMessage msg = new RTMessage(senderObj);
-		msg.setServer(targetObj); // TODO: verify this value, shouldn't this be
-		// "sender" in case of output messages?
+		if (targetObj != null)
+		{
+			// outgoing filter to a static context
+			msg.setServer(targetObj); // TODO: verify this value, shouldn't this
+			// be
+			// "sender" in case of output messages?
+		}
 		CpsSelector sel = createSelector(target, selector, args, key);
 		msg.setSelector(sel);
 		msg.setArguments(args);
@@ -255,6 +261,7 @@ public final class MessageHandlingFacility
 		{
 			if (senderOm != null)
 			{
+				msg.setServer(senderOm);
 				msg.setDirection(MessageDirection.OUTGOING);
 				returnvalue = senderOm.deliverOutgoingMessage(senderObj, targetObj, msg);
 			}
@@ -427,33 +434,43 @@ public final class MessageHandlingFacility
 	}
 
 	/**
+	 * Cache for the simple objects
+	 */
+	private static final WeakHashMap<Object, RTCpsObject> simpleObjectCache = new WeakHashMap<Object, RTCpsObject>();
+
+	/**
 	 * Create a RTCpsObject for a given object
 	 * 
-	 * @param sender
+	 * @param forObject
 	 * @return
 	 */
-	public static RTCpsObject getRTCpsObject(Object sender)
+	public static RTCpsObject getRTCpsObject(Object forObject)
 	{
-		if (sender == null)
+		if (forObject == null)
 		{
 			return null;
 		}
-		if (sender instanceof RTCpsObject)
+		if (forObject instanceof RTCpsObject)
 		{
-			return (RTCpsObject) sender;
+			return (RTCpsObject) forObject;
 		}
-		RTCpsObject result = ObjectManagerHandler.getObjectManager(sender, repository);
+		RTCpsObject result = ObjectManagerHandler.getObjectManager(forObject, repository);
 		if (result == null)
 		{
-			Concern crn = repository.get(sender.getClass().getName(), Concern.class);
+			if (simpleObjectCache.containsKey(forObject))
+			{
+				return simpleObjectCache.get(forObject);
+			}
+			Concern crn = repository.get(forObject.getClass().getName(), Concern.class);
 			if (crn != null)
 			{
-				result = new SimpleCpsObject(sender, crn.getTypeReference());
+				result = new SimpleCpsObject(forObject, crn.getTypeReference());
 			}
 			else
 			{
-				result = new SimpleCpsObject(sender, null);
+				result = new SimpleCpsObject(forObject, null);
 			}
+			simpleObjectCache.put(forObject, result);
 		}
 		return result;
 	}

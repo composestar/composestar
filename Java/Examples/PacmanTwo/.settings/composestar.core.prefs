@@ -1,0 +1,7 @@
+#Fri Nov 21 16:53:56 CET 2008
+SECRET.mode=Normal
+buildDebugLevel=WARN
+eclipse.preferences.version=1
+incremental=false
+mainclass=PacmanTwo.Main
+runDebugLevel=0

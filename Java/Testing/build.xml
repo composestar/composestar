@@ -65,6 +65,7 @@
 				<include name="ConditionTests"/>
 				<include name="ErrorFilterTest"/>
 				<include name="Pacman"/>
+				<include name="PacmanTwo"/>
 				<include name="Platypus"/>
 				<include name="VenusFlyTrap"/>
 				<include name="Fibonacci"/>

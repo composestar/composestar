@@ -23,9 +23,9 @@ public class HookDictionary
 
 	private List<String> castInterceptions = new ArrayList<String>();
 
-	private Map<String, Map> incomingMethodInterceptions = new HashMap<String, Map>();
+	private Map<String, Object> incomingMethodInterceptions = new HashMap<String, Object>();
 
-	private Map<String, Map> outgoingMethodInterceptions = new HashMap<String, Map>();
+	private Map<String, Object> outgoingMethodInterceptions = new HashMap<String, Object>();
 
 	public HookDictionary()
 	{}
@@ -67,7 +67,7 @@ public class HookDictionary
 	{
 		if (incomingMethodInterceptions.get(className) == null)
 		{
-			incomingMethodInterceptions.put(className, new HashMap());
+			incomingMethodInterceptions.put(className, new Object());
 		}
 	}
 
@@ -80,7 +80,7 @@ public class HookDictionary
 	{
 		if (outgoingMethodInterceptions.get(className) == null)
 		{
-			outgoingMethodInterceptions.put(className, new HashMap());
+			outgoingMethodInterceptions.put(className, new Object());
 		}
 	}
 
@@ -95,8 +95,8 @@ public class HookDictionary
 	 * public void addMethodInterception(String className, String methodName,
 	 * List params) { Hashtable methods; List parameters; if
 	 * (methodInterceptions.get(className) != null) { methods = (Hashtable)
-	 * methodInterceptions.get(className); if (methods.get(methodName) != null) {
-	 * methods.put(methodName, params); methodInterceptions.put(className,
+	 * methodInterceptions.get(className); if (methods.get(methodName) != null)
+	 * { methods.put(methodName, params); methodInterceptions.put(className,
 	 * methods); } else { parameters = (List) methods.get(methodName); if
 	 * (!compareParameters(parameters, params)) { methods.put(methodName,
 	 * params); methodInterceptions.put(className, methods); } } } else { //
