@@ -15,6 +15,10 @@ import Composestar.Utils.FileUtils;
 
 public class JavaBACO extends BACO
 {
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.BACO.BACO#addRepository(java.util.Set)
+	 */
 	@Override
 	protected void addRepository(Set<File> filesToCopy)
 	{
@@ -24,10 +28,14 @@ public class JavaBACO extends BACO
 		filesToCopy.add(repository);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.BACO.BACO#addBuiltLibraries(java.util.Set)
+	 */
 	@Override
 	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
-		List<File> weavedClasses = (List<File>) resources.get(JavaWeaver.WOVEN_CLASSES);// DataStore.instance().getObjectByID("WeavedClasses");
+		List<File> weavedClasses = resources.get(JavaWeaver.WOVEN_CLASSES);// DataStore.instance().getObjectByID("WeavedClasses");
 		for (File weavedClass : weavedClasses)
 		{
 			logger.debug("Adding weaved class: '" + weavedClass + "'");
@@ -35,6 +43,10 @@ public class JavaBACO extends BACO
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.BACO.BACO#addRequiredFiles(java.util.Set)
+	 */
 	@Override
 	protected void addRequiredFiles(Set<File> filesToCopy)
 	{
@@ -43,6 +55,11 @@ public class JavaBACO extends BACO
 	// So this is a redundant operation.
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.BACO.BACO#copyFile(java.io.File, java.io.File,
+	 * boolean)
+	 */
 	@Override
 	protected void copyFile(File outputDir, File source, boolean fatal) throws ModuleException
 	{
@@ -81,6 +98,10 @@ public class JavaBACO extends BACO
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.BACO.BACO#isNeededDependency(java.io.File)
+	 */
 	@Override
 	protected boolean isNeededDependency(File dependency)
 	{
@@ -89,6 +110,12 @@ public class JavaBACO extends BACO
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.BACO.BACO#resolveCustomFilter(Composestar.Core.Config
+	 * .CustomFilter)
+	 */
 	@Override
 	protected File resolveCustomFilter(CustomFilter filter)
 	{

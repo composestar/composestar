@@ -2,7 +2,10 @@ package Composestar.Java.WEAVER;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -12,6 +15,7 @@ import Composestar.Core.Config.Project;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * A Class Weaver. Uses Javassist to transform a class.
@@ -20,6 +24,8 @@ import Composestar.Core.Resources.CommonResources;
  */
 public class ClassWeaver
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);
+
 	private ClassPool classpool;
 
 	protected CommonResources resources;
@@ -91,15 +97,30 @@ public class ClassWeaver
 		resources.put(JavaWeaver.WOVEN_CLASSES, weavedClasses);
 
 		String startobject = resources.configuration().getProject().getMainclass();
+		File outputDir = new File(p.getIntermediate(), JavaWeaver.WEAVE_PATH);
 
+		Set<CtClass> classes = new HashSet<CtClass>();
 		for (String typeName : p.getTypeMapping().getTypes())
 		{
-			File outputDir = new File(p.getIntermediate(), JavaWeaver.WEAVE_PATH);
-
-			// weave the class and write to disk
 			try
 			{
 				CtClass clazz = classpool.get(typeName);
+				classes.add(clazz);
+				classes.addAll(Arrays.asList(clazz.getNestedClasses()));
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				throw new ModuleException("Error while instrumenting " + typeName + ": " + e.getMessage(),
+						ModuleNames.WEAVER);
+			}
+		}
+
+		for (CtClass clazz : classes)
+		{
+			// weave the class and write to disk
+			try
+			{
 				// FIXME: this is added because somehow javassist prunes and
 				// frozens types from embedded sources. So temporarily disabled
 				// weaving on embedded types.
@@ -107,14 +128,17 @@ public class ClassWeaver
 				// {
 				clazz.instrument(new MethodBodyTransformer(classpool, hd, resources.repository()));
 
-				if (startobject.equals(typeName))
+				if (startobject.equals(clazz.getName()))
 				{
 					// write applicationStart
 					writeApplicationStart(clazz);
 				}
 
 				clazz.writeFile(outputDir.toString());
-				weavedClasses.add(getOutputFile(outputDir, clazz));
+				File outfile = getOutputFile(outputDir, clazz);
+				weavedClasses.add(outfile);
+				logger.debug(String.format("Wrote file %s", outfile.toString()));
+
 				// }
 				// else
 				// {
@@ -128,7 +152,7 @@ public class ClassWeaver
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				throw new ModuleException("Error while instrumenting " + typeName + ": " + e.getMessage(),
+				throw new ModuleException("Error while instrumenting " + clazz.getName() + ": " + e.getMessage(),
 						ModuleNames.WEAVER);
 			}
 		}
@@ -145,8 +169,9 @@ public class ClassWeaver
 		try
 		{
 			CtMethod mainmethod = clazz.getMethod("main", "([Ljava/lang/String;)V");
-			String src = "Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart("
-					+ "\"repository.dat\"" + "," + rundebuglevel + ", " + clazz.getName() + ".class);";
+			String src =
+					"Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(" + "\"repository.dat\""
+							+ "," + rundebuglevel + ", " + clazz.getName() + ".class);";
 			mainmethod.insertBefore(src);
 		}
 		catch (Exception e)

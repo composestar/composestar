@@ -27,16 +27,22 @@ package Composestar.Java.COMP;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.JavaCompiler.CompilationTask;
+
+import org.apache.log4j.Level;
 
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COMP.CompilerException;
@@ -78,7 +84,8 @@ public class InternalCompiler
 	public boolean compileSources(JavaCompiler javac, Set<File> sources, File dest, Set<File> classpath,
 			boolean separate) throws CompilerException
 	{
-		StandardJavaFileManager fm = javac.getStandardFileManager(null, null, null);
+		DiagnosticCollector<JavaFileObject> diag = new DiagnosticCollector<JavaFileObject>();
+		StandardJavaFileManager fm = javac.getStandardFileManager(diag, null, null);
 		List<String> options = new ArrayList<String>();
 		logger.debug(String.format("Java Compiler class: %s", javac.getClass().getName()));
 		// org.eclipse.jdt.internal.compiler.tool.EclipseCompiler
@@ -123,27 +130,59 @@ public class InternalCompiler
 			cp.append(file.toString());
 		}
 		options.add(cp.toString());
+		boolean result = true;
 
+		Writer err = new IntErrOut(emacsLogEntries);
 		if (!separate)
 		{
 			Iterable<? extends JavaFileObject> fo = fm.getJavaFileObjectsFromFiles(sources);
-			CompilationTask task = javac.getTask(new IntErrOut(emacsLogEntries), fm, null, options, null, fo);
-			return task.call();
+			CompilationTask task = javac.getTask(err, fm, diag, options, null, fo);
+			result = task.call();
 		}
 		else
 		{
-			Writer err = new IntErrOut(emacsLogEntries);
 			for (File file : sources)
 			{
 				Iterable<? extends JavaFileObject> fo = fm.getJavaFileObjects(file);
-				CompilationTask task = javac.getTask(err, fm, null, options, null, fo);
-				if (!task.call())
-				{
-					return false;
-				}
+				CompilationTask task = javac.getTask(err, fm, diag, options, null, fo);
+				result &= task.call();
 			}
-			return true;
 		}
+
+		if (!javac.getClass().getName().equals("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler"))
+		{
+			// eclipse's compiler doesn't create nice entries (no source info)
+			for (Diagnostic<? extends JavaFileObject> d : diag.getDiagnostics())
+			{
+				Level l = Level.INFO;
+				switch (d.getKind())
+				{
+					case ERROR:
+						l = Level.ERROR;
+						break;
+					case MANDATORY_WARNING:
+					case WARNING:
+						l = Level.WARN;
+						break;
+				}
+				String file = null;
+				if (d.getSource() != null)
+				{
+					URI sourceUri = d.getSource().toUri();
+					if ("file".equals(sourceUri.getScheme()))
+					{
+						file = sourceUri.getPath();
+					}
+					else
+					{
+						file = sourceUri.toString();
+					}
+				}
+				logger.log(l, new LogMessage(d.getMessage(Locale.getDefault()).replaceAll("[\\r\\n]+", ". "), file,
+						(int) d.getLineNumber(), (int) d.getColumnNumber()));
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -163,17 +202,30 @@ public class InternalCompiler
 			emacsLogEntries = emacsStyle;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see java.io.Writer#close()
+		 */
 		@Override
 		public void close() throws IOException
 		{}
 
+		/*
+		 * (non-Javadoc)
+		 * @see java.io.Writer#flush()
+		 */
 		@Override
 		public void flush() throws IOException
 		{}
 
+		/*
+		 * (non-Javadoc)
+		 * @see java.io.Writer#write(char[], int, int)
+		 */
 		@Override
 		public void write(char[] str, int offset, int len) throws IOException
 		{
+			// only used for eclipse's compiler
 			sb.append(str, offset, len);
 			int nl = sb.indexOf("\n");
 			if (nl > -1)
@@ -188,7 +240,7 @@ public class InternalCompiler
 					Matcher match = pat.matcher(sb.substring(0, nl).trim());
 					if (!match.matches())
 					{
-						logger.debug(sb.substring(0, nl).trim());
+						logger.debug(sb.substring(0, nl).replaceAll("[\\r\\n]+", ""));
 					}
 					else
 					{
@@ -216,7 +268,7 @@ public class InternalCompiler
 				}
 				else
 				{
-					logger.warn(sb.substring(0, nl).trim());
+					// logger.warn(sb.substring(0, nl).trim());
 				}
 				sb = new StringBuffer(sb.substring(nl + 1));
 			}
