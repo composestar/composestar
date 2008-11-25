@@ -49,9 +49,6 @@
 		-->
 		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" />
 		<jarjar jarfile="${out.dist}/lib/ComposestarRuntimeInterpreter.jar">
-			<fileset dir="${build.core}/Runtime/${out.build}">
-				<include name="**/*.class" />
-			</fileset>
 			<fileset dir="${out.build}" />
 			<zipfileset src="${build.core}/Compiletime/${out.jar.core}">
 				<include name="**/*.class" />

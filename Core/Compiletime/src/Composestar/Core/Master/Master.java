@@ -37,8 +37,6 @@ import Composestar.Core.Config.Xml.BuildConfigHandler;
 import Composestar.Core.Config.Xml.PlatformConfigHandler;
 import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.RepositoryImplementation.DataMap;
-import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.PathResolver;
 import Composestar.Core.TASMAN.Manager;
@@ -126,12 +124,10 @@ public abstract class Master
 	}
 
 	/**
-	 * Called to initialize certain evironment settings
+	 * Called to initialize certain environment settings
 	 */
 	protected void initEvironment()
-	{
-		DataMap.setDataMapClass(DataMapImpl.class);
-	}
+	{}
 
 	/**
 	 * Initialize the logger environment. This is called from the constructor so
@@ -316,8 +312,8 @@ public abstract class Master
 			int et = Integer.parseInt(so.getValue());
 
 			Logger root = Logger.getRootLogger();
-			ConsoleAppender errAppender = new ConsoleAppender(new CPSPatternLayout("[%c] %p: %m%n"),
-					ConsoleAppender.SYSTEM_ERR);
+			ConsoleAppender errAppender =
+					new ConsoleAppender(new CPSPatternLayout("[%c] %p: %m%n"), ConsoleAppender.SYSTEM_ERR);
 			LevelRangeFilter rangeFilter = new LevelRangeFilter();
 			rangeFilter.setLevelMax(Level.FATAL);
 			rangeFilter.setLevelMin(debugModeToLevel(et));

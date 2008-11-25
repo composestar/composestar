@@ -13,9 +13,8 @@ package Composestar.Core.DIGGER2;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;

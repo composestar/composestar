@@ -16,7 +16,7 @@
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<delete dir="${out.qa}" />
 		<ant target="clean" dir="Compiletime" inheritRefs="true" />
-		<ant target="clean" dir="Runtime" inheritRefs="true" />
+		<ant target="clean" dir="Runtime2" inheritRefs="true" />
 		<ant target="clean" dir="Examples" inheritRefs="true" />
 		<ant target="clean" dir="Testing" inheritRefs="true" />
 		<ant target="clean" dir="Plugin" inheritRefs="true" />

@@ -47,8 +47,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
 import Composestar.Core.Config.BuildConfig;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.FILTH2.DefaultInnerDispatchNames;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -132,11 +131,12 @@ public class XMLReport implements SECRETReport
 		{
 			try
 			{
-				FileOutputStream stylesheet = new FileOutputStream(new File(outputFile.getParentFile(),
-						"SECRETStyle.xslt"));
+				FileOutputStream stylesheet =
+						new FileOutputStream(new File(outputFile.getParentFile(), "SECRETStyle.xslt"));
 				FileUtils.copy(is, stylesheet);
-				ProcessingInstruction pi = xmlDoc.createProcessingInstruction("xml-stylesheet",
-						"type=\"text/xml\" href=\"SECRETStyle.xslt\"");
+				ProcessingInstruction pi =
+						xmlDoc.createProcessingInstruction("xml-stylesheet",
+								"type=\"text/xml\" href=\"SECRETStyle.xslt\"");
 				xmlDoc.appendChild(pi);
 			}
 			catch (IOException e)
@@ -350,17 +350,13 @@ public class XMLReport implements SECRETReport
 								continue;
 							}
 							Filter re = (Filter) fn.getRepositoryLink();
-							if (re.getDescriptionFileName() == null)
+							if (re.getSourceInformation() == null)
 							{
 								continue;
 							}
-							String fname = re.getFilterType().getType();
-							if (re.getFilterType() instanceof LegacyCustomFilterType)
-							{
-								fname = ((LegacyCustomFilterType) re.getFilterType()).getName();
-							}
+							String fname = re.getType().getFilterName();
 							traceElm = xmlDoc.createElement("trace");
-							traceElm.setTextContent(re.getFilterAST().getQualifiedName() + " : " + fname);
+							traceElm.setTextContent(re.getFullyQualifiedName() + " : " + fname);
 						}
 						else if (fn.containsName(FlowNode.FILTER_ACTION_NODE))
 						{

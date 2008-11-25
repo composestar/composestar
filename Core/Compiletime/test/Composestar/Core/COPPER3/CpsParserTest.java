@@ -41,9 +41,6 @@ import org.apache.log4j.BasicConfigurator;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
 import Composestar.Core.CpsRepository2Impl.References.ReferenceManagerImpl;
-import Composestar.Core.RepositoryImplementation.DataMap;
-import Composestar.Core.RepositoryImplementation.DataMapImpl;
-import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
  * @author Michiel Hendriks
@@ -64,8 +61,6 @@ public class CpsParserTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		DataMap.setDataMapClass(DataMapImpl.class);
-
 		URL url = CpsParserTest.class.getResource("examples");
 		File exampleDir = new File(url.toURI());
 		if (!exampleDir.isDirectory())
@@ -96,9 +91,6 @@ public class CpsParserTest extends TestCase
 	private int testCpsFile(File file)
 	{
 		System.out.println("Parsing file " + file.toString());
-
-		DataStore ds = new DataStore();
-		DataStore.setInstance(ds);
 
 		CpsLexer lex;
 		try

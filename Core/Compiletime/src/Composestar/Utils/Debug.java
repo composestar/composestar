@@ -11,7 +11,7 @@ package Composestar.Utils;
 
 import java.util.StringTokenizer;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LocationProvider;
 import Composestar.Utils.Logging.LogMessage;
@@ -120,8 +120,8 @@ public final class Debug
 
 	public static void out(int mode, String module, String msg, RepositoryEntity re)
 	{
-		String filename = re.getDescriptionFileName();
-		int linenumber = re.getDescriptionLineNumber();
+		String filename = re.getSourceInformation().getFilename().toString();
+		int linenumber = re.getSourceInformation().getLine();
 		out(mode, module, msg, filename, linenumber);
 	}
 

@@ -1,11 +1,11 @@
 package Composestar.DotNET2.LAMA;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
+import java.io.Serializable;
 
 /**
  * This class represents the CallingConventions Enum in the .NET framework.
  */
-public class DotNETCallingConventions implements SerializableRepositoryEntity
+public class DotNETCallingConventions implements Serializable
 {
 	private static final long serialVersionUID = -2916103173240390588L;
 

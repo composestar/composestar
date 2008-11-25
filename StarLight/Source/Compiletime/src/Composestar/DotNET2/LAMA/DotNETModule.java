@@ -7,15 +7,15 @@
 
 package Composestar.DotNET2.LAMA;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
+import java.io.Serializable;
 
 /**
  * Corresponds to the Module class in the .NET framework. For more information
  * on the methods and their meaning please refer to the microsoft documentation:
- * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
- * fsystemreflectionmoduleclasstopic.asp
+ * http ://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/
+ * frlr fsystemreflectionmoduleclasstopic.asp
  */
-public class DotNETModule implements SerializableRepositoryEntity
+public class DotNETModule implements Serializable
 {
 	private static final long serialVersionUID = 9147930667863841248L;
 

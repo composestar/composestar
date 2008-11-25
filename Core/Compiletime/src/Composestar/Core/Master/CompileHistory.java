@@ -24,7 +24,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.CpsRepository2.Repository;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -117,7 +116,6 @@ public class CompileHistory implements Serializable
 		CompileHistory history;
 		try
 		{
-			DataStore.setIsDeserializing(true);
 			history = (CompileHistory) ois.readObject();
 			ois.close();
 		}
@@ -125,10 +123,6 @@ public class CompileHistory implements Serializable
 		{
 			logger.warn("Unable to restore compile history. Received exception: " + e, e);
 			return null;
-		}
-		finally
-		{
-			DataStore.setIsDeserializing(false);
 		}
 		return history;
 	}

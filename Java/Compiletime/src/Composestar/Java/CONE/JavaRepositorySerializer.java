@@ -15,7 +15,6 @@ import Composestar.Core.CpsRepository2.References.ReferenceUsage;
 import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
 
@@ -61,8 +60,6 @@ public class JavaRepositorySerializer extends CONE
 		ObjectOutputStream oos = null;
 		try
 		{
-			DataMap.setRtSerialization(true);
-
 			FileOutputStream fos = new FileOutputStream(repositoryFilename);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			oos = new ObjectOutputStream(bos);
@@ -84,7 +81,6 @@ public class JavaRepositorySerializer extends CONE
 		}
 		finally
 		{
-			DataMap.setRtSerialization(false);
 			FileUtils.close(oos);
 		}
 		return ModuleReturnValue.OK;

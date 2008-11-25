@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.PropertyPrefix;
@@ -1016,7 +1015,7 @@ public class FireModel
 		FireMessage result = new FireMessage();
 		result.setInner(innerObject);
 		result.setTarget(selfObject); // FIXME target is not self for outgoing
-										// messages
+		// messages
 		if (selector != null)
 		{
 			result.setSelector(selector);
