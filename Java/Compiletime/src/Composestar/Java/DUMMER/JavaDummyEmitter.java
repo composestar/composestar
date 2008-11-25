@@ -610,8 +610,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	}
 
 	/**
-	 * prints out the <code>'{'</code> character to start a block of
-	 * statements.
+	 * prints out the <code>'{'</code> character to start a block of statements.
 	 */
 	private void startBlock()
 	{
@@ -877,9 +876,18 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				visit(getChild(ast, IDENT));
 				if (assign != null)
 				{
-					// create a stub assignment
-					out(" = ");
-					out(getDefaultReturnValue(getChild(ast, TYPE).getFirstChild().getType()));
+					if (getChild(mods, FINAL) != null && getChild(mods, LITERAL_static) != null)
+					{
+						// static final will be inlined
+						visit(assign);
+					}
+					// else
+					// {
+					// // create a stub assignment
+					// out(" = ");
+					// out(getDefaultReturnValue(getChild(ast,
+					// TYPE).getFirstChild().getType()));
+					// }
 				}
 				printSemi(parent);
 				if (parent != null && parent.getType() == OBJBLOCK)
@@ -1031,9 +1039,11 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case METHOD_CALL:
+				// see java.g:identPrimary
+				visit(child2);
 				visit(child1);
 				out("(");
-				visit(child2);
+				visit(child3);
 				out(")");
 				break;
 

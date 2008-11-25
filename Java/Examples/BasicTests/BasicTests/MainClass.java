@@ -50,4 +50,14 @@ public class MainClass {
 		}
 		fbq.success();
 	}
+	
+	public void nop() {
+		int i = 0;
+		switch (i) {
+			case DummyTester.X:
+				break;
+			case DummyTester.Y:
+				break;
+		}
+	}
 }

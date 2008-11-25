@@ -134,6 +134,23 @@ public class JoinPointContext
 	}
 
 	/**
+	 * Return a specific argument
+	 * 
+	 * @param idx
+	 * @return
+	 * @throws IndexOutOfBoundsException Thrown when the index is out of bounds
+	 */
+	public Object getArgument(int idx) throws IndexOutOfBoundsException
+	{
+		Object[] args = message.getArguments();
+		if (idx < 0 || idx >= args.length)
+		{
+			throw new IndexOutOfBoundsException(String.format("Index out of bounds: %d/%d", idx, args.length));
+		}
+		return args[idx];
+	}
+
+	/**
 	 * Change an argument value
 	 * 
 	 * @param index

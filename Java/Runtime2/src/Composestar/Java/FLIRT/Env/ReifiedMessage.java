@@ -24,6 +24,10 @@
 
 package Composestar.Java.FLIRT.Env;
 
+import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
+import Composestar.Java.FLIRT.MessageHandlingFacility;
 import Composestar.Java.FLIRT.Utils.Invoker;
 import Composestar.Java.FLIRT.Utils.SyncBuffer;
 
@@ -245,8 +249,6 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 		}
 	}
 
-	// TODO set message properties (target, selector, ...?)
-
 	/**
 	 * Set the arguments of the message
 	 * 
@@ -255,6 +257,61 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	public void setArguments(Object[] values)
 	{
 		message.setArguments(values);
+	}
+
+	/**
+	 * Set the target
+	 * 
+	 * @param obj
+	 */
+	public void setTarget(Object obj)
+	{
+		message.setTarget(MessageHandlingFacility.getRTCpsObject(obj));
+	}
+
+	/**
+	 * Set the selector
+	 * 
+	 * @param selector
+	 */
+	public void setSelector(String selector)
+	{
+		message.setSelector(new CpsSelectorImpl(selector));
+	}
+
+	public void setSelector(CpsSelector selector)
+	{
+		message.setSelector(selector);
+	}
+
+	/**
+	 * Change "self" the self of a message
+	 * 
+	 * @param obj
+	 */
+	public void setSelf(Object obj)
+	{
+		message.setSelf(MessageHandlingFacility.getRTCpsObject(obj));
+	}
+
+	/**
+	 * Change the server of the message
+	 * 
+	 * @param obj
+	 */
+	public void setServer(Object obj)
+	{
+		message.setServer(MessageHandlingFacility.getRTCpsObject(obj));
+	}
+
+	/**
+	 * @return The "inner" object. This is a special object that the runtime
+	 *         interpreter knows how to handle. It can be used to set the new
+	 *         target.
+	 */
+	public CpsObject getInner()
+	{
+		return message.getInner();
 	}
 
 	/**

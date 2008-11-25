@@ -198,8 +198,8 @@ public class JavaCollectorRunner implements CTCommonModule
 				continue;
 			}
 			PrimitiveConcern pc = new PrimitiveConcern(type.getFullName().split("\\."));
-			Composestar.Core.Config.Source typeSource = resources.configuration().getProject().getTypeMapping()
-					.getSource(type.getFullName());
+			Composestar.Core.Config.Source typeSource =
+					resources.configuration().getProject().getTypeMapping().getSource(type.getFullName());
 			if (typeSource != null)
 			{
 				SourceInformation srcInfo = new SourceInformation(new FileInformation(typeSource.getFile()));
@@ -270,7 +270,7 @@ public class JavaCollectorRunner implements CTCommonModule
 		methods = c.getDeclaredMethods();
 		for (Method method : methods)
 		{
-			if (Modifier.isPrivate(method.getModifiers()))
+			if (!Modifier.isPrivate(method.getModifiers()))
 			{
 				jtype.addMethod(processMethodInfo(method));
 			}

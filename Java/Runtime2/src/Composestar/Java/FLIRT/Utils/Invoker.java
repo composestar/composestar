@@ -177,7 +177,7 @@ public final class Invoker
 				String prType = pr.getParameterTypeString();
 				try
 				{
-					cls = ClassUtilities.classForNameOrPrimitive(prType, null);
+					cls = ClassUtilities.classForNameOrPrimitive(prType, Invoker.class.getClassLoader());
 				}
 				catch (ClassNotFoundException e)
 				{

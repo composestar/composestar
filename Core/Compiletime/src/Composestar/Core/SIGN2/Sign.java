@@ -69,7 +69,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 // FIXME this can be optimized a lot, quite some repository.getAll(Concern.clss)
 // calls, and other things
-@ComposestarModule(ID = ModuleNames.SIGN, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH })
+@ComposestarModule(ID = ModuleNames.SIGN, dependsOn = { ModuleNames.REXREF, ModuleNames.FIRE, ModuleNames.FILTH })
 public class Sign implements CTCommonModule
 {
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SIGN);
@@ -239,8 +239,8 @@ public class Sign implements CTCommonModule
 			}
 			else
 			{
-				FireModel model = fire2Resources
-						.getFireModel(concern, concern.getSuperimposed().getFilterModuleOrder());
+				FireModel model =
+						fire2Resources.getFireModel(concern, concern.getSuperimposed().getFilterModuleOrder());
 				fireModels.put(concern, model);
 
 				// initialize distinguishable set:
@@ -259,6 +259,10 @@ public class Sign implements CTCommonModule
 	 */
 	private static Signature getSignature(Concern concern)
 	{
+		if (concern == null)
+		{
+			return null;
+		}
 		if (concern.getTypeReference() == null)
 		{
 			return null;
@@ -565,7 +569,8 @@ public class Sign implements CTCommonModule
 		HashMap<ExecutionState, List<MethodInfo>> matchingSets = new HashMap<ExecutionState, List<MethodInfo>>();
 
 		// Create in-transition map
-		HashMap<ExecutionState, List<ExecutionTransition>> inTransitionMap = new HashMap<ExecutionState, List<ExecutionTransition>>();
+		HashMap<ExecutionState, List<ExecutionTransition>> inTransitionMap =
+				new HashMap<ExecutionState, List<ExecutionTransition>>();
 		Iterator<ExecutionState> stateIter = new ExecutionStateIterator(execModel);
 		while (stateIter.hasNext())
 		{
@@ -626,8 +631,8 @@ public class Sign implements CTCommonModule
 					{
 						if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
 						{
-							SignatureMatching matchExpr = (SignatureMatching) startState.getFlowNode()
-									.getRepositoryLink();
+							SignatureMatching matchExpr =
+									(SignatureMatching) startState.getFlowNode().getRepositoryLink();
 
 							for (CpsVariable var : matchExpr.getRHS())
 							{
@@ -643,8 +648,9 @@ public class Sign implements CTCommonModule
 									CanonProperty prop = (CanonProperty) var;
 									if (PropertyNames.INNER.equals(prop.getName()))
 									{
-										matchTarget = new CpsObjectImpl(concern.getTypeReference(),
-												CpsObjectImpl.CpsObjectType.INNER);
+										matchTarget =
+												new CpsObjectImpl(concern.getTypeReference(),
+														CpsObjectImpl.CpsObjectType.INNER);
 									}
 									else if (PropertyPrefix.MESSAGE == prop.getPrefix())
 									{
@@ -790,8 +796,9 @@ public class Sign implements CTCommonModule
 	private void checkDispatchable(MethodInfoWrapper method, Concern concern)
 	{
 		FireModel fireModel = fireModels.get(concern);
-		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.INPUT, method.getMethodInfo(),
-				FireModel.STRICT_SIGNATURE_CHECK);
+		ExecutionModel execModel =
+				fireModel.getExecutionModel(FilterDirection.INPUT, method.getMethodInfo(),
+						FireModel.STRICT_SIGNATURE_CHECK);
 
 		// Check whether it can be marked EXISTING
 		for (ExecutionState state : dispatchStates(execModel))
@@ -805,8 +812,9 @@ public class Sign implements CTCommonModule
 		}
 
 		// Check whether it can keep the marking UNKNOWN
-		execModel = fireModel.getExecutionModel(FilterDirection.INPUT, method.getMethodInfo(),
-				FireModel.LOOSE_SIGNATURE_CHECK);
+		execModel =
+				fireModel.getExecutionModel(FilterDirection.INPUT, method.getMethodInfo(),
+						FireModel.LOOSE_SIGNATURE_CHECK);
 
 		for (ExecutionState state : dispatchStates(execModel))
 		{
@@ -929,13 +937,14 @@ public class Sign implements CTCommonModule
 				for (MethodInfoWrapper wrapper : methods(concern))
 				{
 					boolean cyclDisp = false;
-					ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.INPUT, wrapper
-							.getMethodInfo());
+					ExecutionModel execModel =
+							fireModel.getExecutionModel(FilterDirection.INPUT, wrapper.getMethodInfo());
 					MethodInfo methodInfo = wrapper.getMethodInfo();
 					for (ExecutionState state : dispatchStates(execModel))
 					{
-						MethodInfoWrapper targetMethod = getTargetMethod(concern, methodInfo, state.getMessage()
-								.getTarget(), state.getMessage().getSelector());
+						MethodInfoWrapper targetMethod =
+								getTargetMethod(concern, methodInfo, state.getMessage().getTarget(), state.getMessage()
+										.getSelector());
 						if (cyclicDispatchSet.contains(targetMethod))
 						{
 							cyclDisp = true;
@@ -1275,8 +1284,8 @@ public class Sign implements CTCommonModule
 		// methods = signature.getMethods();
 		// }
 
-		Set<CpsSelector> distinguishableSelectors = fireModels.get(concern).getDistinguishableSelectors(
-				FilterDirection.INPUT);
+		Set<CpsSelector> distinguishableSelectors =
+				fireModels.get(concern).getDistinguishableSelectors(FilterDirection.INPUT);
 
 		ArrayList<MethodInfo> targetMethods = new ArrayList<MethodInfo>();
 		for (MethodInfo method : methods)
@@ -1457,8 +1466,8 @@ public class Sign implements CTCommonModule
 			MethodInfo dispatchMethod = methodInfo.getClone(selector.getName(), type);
 
 			// get the method wrapper
-			Signature signature = getSignature(repository
-					.get(target.getTypeReference().getReferenceId(), Concern.class));
+			Signature signature =
+					getSignature(repository.get(target.getTypeReference().getReferenceId(), Concern.class));
 			MethodInfoWrapper wrapper = signature.getMethodInfoWrapper(dispatchMethod);
 			return wrapper;
 		}

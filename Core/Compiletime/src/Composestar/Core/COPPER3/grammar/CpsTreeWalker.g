@@ -866,7 +866,7 @@ cpsVariableFqn [FilterModule fm] returns [CpsVariable entity]
 					entity = new CpsTypeProgramElementImpl(tr);
 					references.addReferenceUser(tr, entity, true);
 				}
-				if (entity != null)
+				if (entity != null && !(entity instanceof FilterModuleVariable))
 				{
 					setLocInfo(entity, errTok);
 					repository.add(entity);

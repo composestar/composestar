@@ -174,7 +174,7 @@ public final class MessageHandlingFacility
 	 */
 	private static void internalInstanceCreation(Object creator, Object createdObject, Object[] args, String key)
 	{
-		RTCpsObject sender = createSender(creator);
+		RTCpsObject sender = getRTCpsObject(creator);
 		RTMessage msg = new RTMessage(sender);
 		ObjectManager om = ObjectManagerHandler.getObjectManager(createdObject, repository);
 		msg.setServer(om);
@@ -227,7 +227,7 @@ public final class MessageHandlingFacility
 		RTCpsObject senderObj;
 		if (senderOm == null)
 		{
-			senderObj = createSender(caller);
+			senderObj = getRTCpsObject(caller);
 		}
 		else
 		{
@@ -236,7 +236,7 @@ public final class MessageHandlingFacility
 		RTCpsObject targetObj;
 		if (targetOm == null)
 		{
-			targetObj = createSender(target);
+			targetObj = getRTCpsObject(target);
 		}
 		else
 		{
@@ -427,16 +427,20 @@ public final class MessageHandlingFacility
 	}
 
 	/**
-	 * Create a CpsObject for a given object
+	 * Create a RTCpsObject for a given object
 	 * 
 	 * @param sender
 	 * @return
 	 */
-	public static RTCpsObject createSender(Object sender)
+	public static RTCpsObject getRTCpsObject(Object sender)
 	{
 		if (sender == null)
 		{
 			return null;
+		}
+		if (sender instanceof RTCpsObject)
+		{
+			return (RTCpsObject) sender;
 		}
 		RTCpsObject result = ObjectManagerHandler.getObjectManager(sender, repository);
 		if (result == null)
@@ -466,17 +470,17 @@ public final class MessageHandlingFacility
 	{
 		if (target == null)
 		{
-			return new CpsSelectorImpl("name");
+			return new CpsSelectorImpl(name);
 		}
 		Concern concern = repository.get(target.getClass().getName(), Concern.class);
 		if (concern == null)
 		{
-			return new CpsSelectorImpl("name");
+			return new CpsSelectorImpl(name);
 		}
 		Type type = concern.getTypeReference().getReference();
 		if (type == null)
 		{
-			return new CpsSelectorImpl("name");
+			return new CpsSelectorImpl(name);
 		}
 		List<MethodInfo> hits = new ArrayList<MethodInfo>();
 		Signature sig = type.getSignature();
