@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -53,8 +54,9 @@ public class JavaBuildConfigGenerator extends BuildConfigGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Eclipse.Core.BuildConfigGenerator#addProject(org.eclipse.core.resources.IProject)
+	 * @see
+	 * Composestar.Eclipse.Core.BuildConfigGenerator#addProject(org.eclipse.
+	 * core.resources.IProject)
 	 */
 	@Override
 	public void addProject(IProject project) throws ConfigurationException
@@ -164,4 +166,18 @@ public class JavaBuildConfigGenerator extends BuildConfigGenerator
 		addSources(sources);
 	}
 
+	public boolean projectHasSources(IProject proj) throws CoreException
+	{
+		IJavaProject project = JavaCore.create(proj);
+		IPackageFragment[] pkgs = project.getPackageFragments();
+		for (IPackageFragment pkg : pkgs)
+		{
+			ICompilationUnit[] cus = pkg.getCompilationUnits();
+			if (cus.length > 0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -1,8 +1,8 @@
 package Composestar.Eclipse.Java.UI.Wizards;
 
-import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizardFirstPage;
+import org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageOne;
 
-public class ComposestarProjectWizardFirstPage extends JavaProjectWizardFirstPage
+public class ComposestarProjectWizardFirstPage extends NewJavaProjectWizardPageOne
 {
 	private static String fPageDescription = "Create a Compose* Java project in the workspace or in an external location.";
 

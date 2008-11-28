@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizardFirstPage;
-import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizardSecondPage;
 import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageOne;
+import org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageTwo;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import Composestar.Eclipse.Java.CStarJavaRuntimeContainer;
@@ -27,14 +27,14 @@ import Composestar.Eclipse.Java.IComposestarJavaConstants;
 /**
  * @author Michiel Hendriks
  */
-public class ComposestarProjectWizardSecondPageEx extends JavaProjectWizardSecondPage
+public class ComposestarProjectWizardSecondPageEx extends NewJavaProjectWizardPageTwo
 {
 	/**
 	 * Needed because fFirstPage isn't accessable
 	 */
-	protected JavaProjectWizardFirstPage fFirstPageEx;
+	protected NewJavaProjectWizardPageOne fFirstPageEx;
 
-	public ComposestarProjectWizardSecondPageEx(JavaProjectWizardFirstPage mainPage)
+	public ComposestarProjectWizardSecondPageEx(NewJavaProjectWizardPageOne mainPage)
 	{
 		super(mainPage);
 		fFirstPageEx = mainPage;
@@ -47,10 +47,11 @@ public class ComposestarProjectWizardSecondPageEx extends JavaProjectWizardSecon
 		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
 		// force this setting because we prefer it
 		store.setValue(PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ, true);
-		if (!fFirstPageEx.getDetect())
+		List<IClasspathEntry> cpEntries = new ArrayList<IClasspathEntry>(Arrays.asList(defaultEntries));
+		IClasspathEntry entry = JavaCore.newContainerEntry(CStarJavaRuntimeContainer.PATH);
+		if (!cpEntries.contains(entry))
 		{
-			List<IClasspathEntry> cpEntries = new ArrayList<IClasspathEntry>(Arrays.asList(defaultEntries));
-			cpEntries.add(JavaCore.newContainerEntry(CStarJavaRuntimeContainer.PATH));
+			cpEntries.add(entry);
 			defaultEntries = cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);
 		}
 		super.init(jproject, defaultOutputLocation, defaultEntries, defaultsOverrideExistingClasspath);

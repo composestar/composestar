@@ -216,7 +216,8 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 				// dependencies
 				if (element.getEntryKind() == IClasspathEntry.CPE_LIBRARY)
 				{
-					classpath.add(FileUtils.fixFilename(element.getPath().toOSString()));
+					classpath.add(FileUtils.fixFilename(project.getLocation().removeLastSegments(1).append(
+							element.getPath()).toOSString()));
 				}
 				else if (element.getEntryKind() == IClasspathEntry.CPE_VARIABLE)
 				{
