@@ -28,6 +28,8 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -99,6 +101,24 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 			throw new CoreException(
 					new Status(IStatus.ERROR, pluginid, IResourceStatus.BUILD_FAILED, e.getMessage(), e));
 		}
+
+		IPath binPath = configGenerator.getOutputDir();
+		if (binPath != null)
+		{
+			IFolder binFolder = currentProject.getFolder(binPath);
+			if (!binFolder.exists())
+			{
+				binFolder.create(false, true, monitor);
+			}
+		}
+
+		IFolder binFolder = currentProject.getFolder(BuildConfigGenerator.INTERMEDIATE_DIR);
+		if (!binFolder.exists())
+		{
+			binFolder.create(false, true, monitor);
+		}
+		binFolder.setDerived(true);
+
 		monitor.worked(1);
 		File buildConfigFile = new File(currentProject.getLocation().toFile(), "BuildConfiguration.xml");
 		if (!configGenerator.generate(buildConfigFile))
@@ -106,10 +126,34 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 			// throw CoreException
 			return null;
 		}
+		IFile configFile = currentProject.getFile("BuildConfiguration.xml");
+		if (configFile.exists())
+		{
+			configFile.setDerived(true);
+		}
 		monitor.worked(1);
 		callMaster(monitor, buildConfigFile);
 		monitor.worked(1);
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#clean(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	protected void clean(IProgressMonitor monitor) throws CoreException
+	{
+		if (getProject() != null)
+		{
+			IFolder binFolder = getProject().getFolder(BuildConfigGenerator.INTERMEDIATE_DIR);
+			if (binFolder.exists())
+			{
+				binFolder.delete(true, false, monitor);
+			}
+		}
+		super.clean(monitor);
 	}
 
 	protected abstract void callMaster(IProgressMonitor monitor, File buildConfigFile) throws CoreException;
