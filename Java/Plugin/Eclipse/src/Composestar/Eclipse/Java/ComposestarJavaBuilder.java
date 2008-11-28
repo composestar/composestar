@@ -33,6 +33,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 
 import Composestar.Eclipse.Core.ComposestarBuilder;
 
@@ -60,8 +62,8 @@ public class ComposestarJavaBuilder extends ComposestarBuilder
 		m.run(currentProject, buildConfigFile, monitor);
 		if (!m.completed)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, pluginid, IResourceStatus.BUILD_FAILED, "Build failed",
-					null));
+			throw new CoreException(new Status(IStatus.ERROR, pluginid, IResourceStatus.BUILD_FAILED,
+					"Build failed. See the console output and problems view for more information.", null));
 		}
 	}
 }

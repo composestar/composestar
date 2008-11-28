@@ -62,6 +62,10 @@ public abstract class BuildConfigGenerator
 
 	protected String mainclass;
 
+	protected IPath outputDir;
+
+	public static final String INTERMEDIATE_DIR = ".composestar";
+
 	public BuildConfigGenerator()
 	{
 		config = new BuildConfig();
@@ -105,7 +109,8 @@ public abstract class BuildConfigGenerator
 			}
 			catch (IllegalArgumentException e)
 			{
-				throw new ConfigurationException("Mainclass setting is not set");
+				throw new ConfigurationException(
+						"Mainclass setting is not set. Set the mainclass in the project properties in the 'Compose*' section.");
 			}
 			try
 			{
@@ -205,5 +210,15 @@ public abstract class BuildConfigGenerator
 			Dependency filedep = new Dependency(dep.toFile());
 			curProject.addDependency(filedep);
 		}
+	}
+
+	public IPath getOutputDir()
+	{
+		return outputDir;
+	}
+
+	public String getIntermediateDir()
+	{
+		return INTERMEDIATE_DIR;
 	}
 }

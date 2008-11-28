@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathContainer;
@@ -85,9 +86,10 @@ public class JavaBuildConfigGenerator extends BuildConfigGenerator
 				else
 				{
 					curProject.setOutput(path.toString());
+					outputDir = path;
 				}
 			}
-			curProject.setIntermediate(".composestar");
+			curProject.setIntermediate(INTERMEDIATE_DIR);
 
 			Map opt = jproj.getOptions(true);
 			if (opt.containsKey(JavaCore.COMPILER_SOURCE))
