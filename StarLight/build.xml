@@ -302,7 +302,7 @@
 		<!-- ARM -->
 		<delete file="Documentation/ARM.pdf" />
 		<svn>
-			<export srcUrl="https://composestar.svn.sourceforge.net/svnroot/composestar/documentation/ARM/ARM.pdf" destPath="Documentation" />
+			<export srcUrl="https://composestar.svn.sourceforge.net/svnroot/composestar/documentation/ARM/ARM.pdf" destPath="Documentation/ARM.pdf" />
 		</svn>
 	</target>
 
