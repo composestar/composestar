@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -14,6 +15,7 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.FIRE2.preprocessing.GrooveASTBuilderCN;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.iterator.OrderedFlowNodeIterator;
 
@@ -156,8 +158,8 @@ public class CoreConflictDetector
 
 		if (currentFilterNode != null && rejectingFilterElementCounter == filterElementCounter)
 		{
-			CoreConflict conflict = new CoreConflict(ConflictType.FILTER_ALWAYS_REJECTS, currentFilterNode
-					.getRepositoryLink());
+			CoreConflict conflict =
+					new CoreConflict(ConflictType.FILTER_ALWAYS_REJECTS, currentFilterNode.getRepositoryLink());
 			conflicts.add(conflict);
 
 		}
@@ -165,11 +167,12 @@ public class CoreConflictDetector
 		// TODO this isn't property checked ...
 		if (!unreachableActionNodes.isEmpty())
 		{
+			final String continueActionName =
+					GrooveASTBuilderCN.createFilterActionText(FilterActionNames.CONTINUE_ACTION);
 			boolean onlyContinue = true;
 			for (FlowNode actionNode : currentActionNodes)
 			{
-				if (!unreachableActionNodes.contains(actionNode)
-						&& !actionNode.containsName(FlowNode.CONTINUE_ACTION_NODE))
+				if (!unreachableActionNodes.contains(actionNode) && !actionNode.containsName(continueActionName))
 				{
 					onlyContinue = false;
 					break;
@@ -178,8 +181,9 @@ public class CoreConflictDetector
 
 			if (onlyContinue)
 			{
-				CoreConflict conflict = new CoreConflict(ConflictType.FILTER_REDUNDANT, currentFilterNode
-						.getRepositoryLink(), accRejFilterConflict);
+				CoreConflict conflict =
+						new CoreConflict(ConflictType.FILTER_REDUNDANT, currentFilterNode.getRepositoryLink(),
+								accRejFilterConflict);
 				conflicts.add(conflict);
 			}
 		}
@@ -208,20 +212,22 @@ public class CoreConflictDetector
 		{
 			unreachableFilter = true;
 
-			CoreConflict conflict = new CoreConflict(ConflictType.FILTER_UNREACHABLE, unreachableNode
-					.getRepositoryLink(), accRejFilterConflict);
+			CoreConflict conflict =
+					new CoreConflict(ConflictType.FILTER_UNREACHABLE, unreachableNode.getRepositoryLink(),
+							accRejFilterConflict);
 			conflicts.add(conflict);
 		}
 		else if (unreachableNode.containsName(FlowNode.FILTER_ELEMENT_NODE))
 		{
-			CoreConflict conflict = new CoreConflict(ConflictType.FILTER_ELEMENT_UNREACHABLE, unreachableNode
-					.getRepositoryLink(), acceptingFilterElementConflict);
+			CoreConflict conflict =
+					new CoreConflict(ConflictType.FILTER_ELEMENT_UNREACHABLE, unreachableNode.getRepositoryLink(),
+							acceptingFilterElementConflict);
 			conflicts.add(conflict);
 		}
 		else if (unreachableNode.containsName(FlowNode.MATCHING_EXPRESSION_NODE))
 		{
-			CoreConflict conflict = new CoreConflict(ConflictType.MATCHING_EXPRESSION_UNREACHABLE, unreachableNode
-					.getRepositoryLink());
+			CoreConflict conflict =
+					new CoreConflict(ConflictType.MATCHING_EXPRESSION_UNREACHABLE, unreachableNode.getRepositoryLink());
 			conflicts.add(conflict);
 		}
 		else if (unreachableNode.containsName(FlowNode.FILTER_ACTION_NODE))
