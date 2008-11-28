@@ -1,11 +1,15 @@
 package Composestar.Java.COMP;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Properties;
+import java.util.Queue;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -25,8 +29,8 @@ import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Triggers <i>javac</i> and <i>jar</i> commands. Used for compiling dummies
- * and sources.
+ * Triggers <i>javac</i> and <i>jar</i> commands. Used for compiling dummies and
+ * sources.
  */
 public class CStarJavaCompiler implements LangCompiler
 {
@@ -288,51 +292,97 @@ public class CStarJavaCompiler implements LangCompiler
 
 		logger.info("Creating dummies jar file");
 
-		Properties prop = new Properties();
 		File dummiesJar = new File(p.getIntermediate(), p.getName() + ".dummies.jar");
-		prop.put("JAR", dummiesJar.toString());
-		prop.put("SOURCEDIR", dummiesDir.toString());
-		CompilerAction action = compConfig.getAction("CreateJar");
+		if (true)
+		{
+			files.clear();
+			files.addAll(getClassFiles(dummiesDir));
+			if (!JarCreator.create(dummiesJar, files, dummiesDir))
+			{
+				logger.error("Failed to create dummies.jar file");
+			}
+		}
+		else
+		{
+			Properties prop = new Properties();
+			prop.put("JAR", dummiesJar.toString());
+			prop.put("SOURCEDIR", dummiesDir.toString());
+			CompilerAction action = compConfig.getAction("CreateJar");
 
-		files = Collections.emptySet();
-		String[] cmdline = action.getCmdLine(p, files, prop);
-		logger.debug(Arrays.toString(cmdline));
-		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int result;
-		try
-		{
-			result = cmdExec.exec(cmdline);
-		}
-		catch (IOException e)
-		{
-			throw new CompilerException(e.getMessage());
-		}
-		catch (InterruptedException e)
-		{
-			throw new CompilerException(e.getMessage());
-		}
-		compilerOutput = cmdExec.outputError();
-
-		if (result != 0)
-		{
-			// there was an error
+			files = Collections.emptySet();
+			String[] cmdline = action.getCmdLine(p, files, prop);
+			logger.debug(Arrays.toString(cmdline));
+			CommandLineExecutor cmdExec = new CommandLineExecutor();
+			int result;
 			try
 			{
-				java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
-				String lastToken = null;
-				while (st.hasMoreTokens())
-				{
-					lastToken = st.nextToken();
-					logger.error(lastToken);
-				}
-				throw new CompilerException("COMP reported errors during jar creations.");
+				result = cmdExec.exec(cmdline);
 			}
-			catch (Exception ex)
+			catch (IOException e)
 			{
-				throw new CompilerException(ex.getMessage());
+				throw new CompilerException(e.getMessage());
+			}
+			catch (InterruptedException e)
+			{
+				throw new CompilerException(e.getMessage());
+			}
+			compilerOutput = cmdExec.outputError();
+
+			if (result != 0)
+			{
+				// there was an error
+				try
+				{
+					java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
+					String lastToken = null;
+					while (st.hasMoreTokens())
+					{
+						lastToken = st.nextToken();
+						logger.error(lastToken);
+					}
+					throw new CompilerException("COMP reported errors during jar creations.");
+				}
+				catch (Exception ex)
+				{
+					throw new CompilerException(ex.getMessage());
+				}
 			}
 		}
 
 		resources.put(DUMMY_JAR, dummiesJar);
+	}
+
+	/**
+	 * Recursively get all the .class files
+	 * 
+	 * @param dummiesDir
+	 * @return
+	 */
+	private Collection<? extends File> getClassFiles(File dummiesDir)
+	{
+		final Queue<File> todoDirs = new LinkedList<File>();
+		todoDirs.add(dummiesDir);
+		final Set<File> results = new HashSet<File>();
+		while (!todoDirs.isEmpty())
+		{
+			File dir = todoDirs.poll();
+			dir.listFiles(new FileFilter()
+			{
+				public boolean accept(File pathname)
+				{
+					if (pathname.isDirectory())
+					{
+						todoDirs.add(pathname);
+					}
+					else if (pathname.toString().endsWith(".class"))
+					{
+						results.add(pathname);
+						return true;
+					}
+					return false;
+				}
+			});
+		}
+		return results;
 	}
 }
