@@ -1010,12 +1010,28 @@ public class FireModel
 	 * @param selector
 	 * @return
 	 */
-	private CpsMessage getEntranceMessage(CpsSelector selector)
+	private CpsMessage getEntranceMessage(CpsSelector selector, FilterDirection filterDirection)
 	{
 		FireMessage result = new FireMessage();
 		result.setInner(innerObject);
-		result.setTarget(selfObject); // FIXME target is not self for outgoing
-		// messages
+		if (filterDirection == FilterDirection.INPUT)
+		{
+			result.setTarget(selfObject);
+		}
+		else
+		{
+			// if (selector instanceof CpsSelectorMethodInfo)
+			// {
+			// CpsObject inittarget = new CpsObjectImpl(((CpsSelectorMethodInfo)
+			// selector).getMethodInfo().parent());
+			// result.setTarget(inittarget);
+			// }
+			// else
+			// {
+			// FIXME target is not self for outgoing messages
+			result.setTarget(selfObject);
+			// }
+		}
 		if (selector != null)
 		{
 			result.setSelector(selector);
@@ -1025,15 +1041,15 @@ public class FireModel
 		return result;
 	}
 
-	private CpsMessage getEntranceMessage(String selector)
+	private CpsMessage getEntranceMessage(String selector, FilterDirection filterDirection)
 	{
-		return getEntranceMessage(new CpsSelectorImpl(selector));
+		return getEntranceMessage(new CpsSelectorImpl(selector), filterDirection);
 	}
 
-	private CpsMessage getEntranceMessage(MethodInfo selector)
+	private CpsMessage getEntranceMessage(MethodInfo selector, FilterDirection filterDirection)
 	{
 		// start with inner target:
-		return getEntranceMessage(new CpsSelectorMethodInfo(selector));
+		return getEntranceMessage(new CpsSelectorMethodInfo(selector), filterDirection);
 	}
 
 	/**
@@ -1130,7 +1146,7 @@ public class FireModel
 
 			for (CpsSelector selector : getDistinguishableSelectors(filterPosition))
 			{
-				message = getEntranceMessage(selector);
+				message = getEntranceMessage(selector, filterDirection);
 
 				// state =
 				// executionModels[filterPosition][0].getEntranceState(message);
@@ -1146,7 +1162,7 @@ public class FireModel
 
 			// undistinguishable selector:
 			CpsSelector nullsel = null;
-			message = getEntranceMessage(nullsel);
+			message = getEntranceMessage(nullsel, filterDirection);
 
 			// state =
 			// executionModels[filterPosition][0].getEntranceState(message);
@@ -1167,7 +1183,7 @@ public class FireModel
 		{
 			filterPosition = filterDirection.getIndex();
 
-			CpsMessage message = getEntranceMessage(selector);
+			CpsMessage message = getEntranceMessage(selector, filterDirection);
 
 			// ExecutionState state =
 			// executionModels[filterPosition][0].getEntranceState(message);
@@ -1188,7 +1204,7 @@ public class FireModel
 		{
 			filterPosition = filterDirection.getIndex();
 
-			CpsMessage message = getEntranceMessage(selector);
+			CpsMessage message = getEntranceMessage(selector, filterDirection);
 
 			// ExecutionState state =
 			// executionModels[filterPosition][0].getEntranceState(message);
@@ -1209,7 +1225,7 @@ public class FireModel
 		{
 			filterPosition = filterDirection.getIndex();
 
-			CpsMessage message = getEntranceMessage(methodInfo);
+			CpsMessage message = getEntranceMessage(methodInfo, filterDirection);
 
 			// ExecutionState state =
 			// executionModels[filterPosition][0].getEntranceState(message);

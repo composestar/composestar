@@ -91,6 +91,11 @@ public abstract class BuildConfigGenerator
 		}
 	}
 
+	public boolean projectHasSources(IProject project) throws CoreException
+	{
+		return true;
+	}
+
 	public void addProject(IProject project) throws ConfigurationException
 	{
 		curProject = config.getNewProject();

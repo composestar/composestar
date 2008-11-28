@@ -247,7 +247,9 @@ public class FireMessage implements CpsMessage
 	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
-		FireMessage result = new FireMessage(this);
+		FireMessage result = (FireMessage) super.clone();
+		result.properties = new HashMap<String, CpsVariable>(properties);
+		result.inner = inner;
 		result.originator = this;
 		return result;
 	}

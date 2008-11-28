@@ -323,8 +323,8 @@ public class CommonResources implements Serializable
 				{
 					if (ModuleResourceManager.class.isAssignableFrom(field.getType()))
 					{
-						Class<? extends ModuleResourceManager> mrmType = (Class<? extends ModuleResourceManager>) field
-								.getType();
+						Class<? extends ModuleResourceManager> mrmType =
+								field.getType().asSubclass(ModuleResourceManager.class);
 						try
 						{
 							field.setAccessible(true);
@@ -523,8 +523,8 @@ public class CommonResources implements Serializable
 			}
 			try
 			{
-				Class<Enum> enumcls = (Class<Enum>) field.getType();
-				objectValue = (Enum) Enum.valueOf(enumcls, value);
+				Class<? extends Enum> enumcls = field.getType().asSubclass(Enum.class);
+				objectValue = Enum.valueOf(enumcls, value);
 			}
 			catch (IllegalArgumentException e)
 			{

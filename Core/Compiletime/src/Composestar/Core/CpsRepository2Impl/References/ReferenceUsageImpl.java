@@ -47,7 +47,7 @@ public class ReferenceUsageImpl implements ReferenceUsage
 	/**
 	 * A weak reference to a repository entity
 	 */
-	protected WeakReference<RepositoryEntity> reposEntity;
+	protected transient WeakReference<RepositoryEntity> reposEntity;
 
 	/**
 	 * Flag to see if the reference value is required

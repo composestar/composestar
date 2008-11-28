@@ -1199,7 +1199,7 @@ public class Sign implements CTCommonModule
 
 	private MethodInfo cloneMethod(MethodInfo method, Concern concern, CpsSelector selector, Concern newConcern)
 	{
-		if (selector.equals(method.getName()) && concern.equals(newConcern))
+		if (selector.getName().equals(method.getName()) && concern.equals(newConcern))
 		{
 			return method;
 		}
@@ -1292,7 +1292,16 @@ public class Sign implements CTCommonModule
 		{
 			if (selector == null) // undistinguishable
 			{
-				if (!distinguishableSelectors.contains(method.getName()))
+				boolean doAdd = true;
+				for (CpsSelector sel : distinguishableSelectors)
+				{
+					if (sel.getName().equals(method.getName()))
+					{
+						doAdd = false;
+						break;
+					}
+				}
+				if (doAdd)
 				{
 					targetMethods.add(method);
 				}

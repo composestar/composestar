@@ -223,7 +223,7 @@ public class StreamGxl implements Xml<Graph>
 			for (Map.Entry<String, String> entry : ((AttributeLabel) edge.label()).getAttributes().entrySet())
 			{
 				groove.gxl.Value gxlLabelText = new groove.gxl.Value();
-				gxlLabelText.setString(entry.getValue().toString());
+				gxlLabelText.setString(entry.getValue());
 				groove.gxl.Attr gxlLabelAttr = new groove.gxl.Attr();
 				gxlLabelAttr.setName(entry.getKey());
 				gxlLabelAttr.setValue(gxlLabelText);

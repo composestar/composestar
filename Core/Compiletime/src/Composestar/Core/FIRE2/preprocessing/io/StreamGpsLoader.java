@@ -70,14 +70,21 @@ public class StreamGpsLoader extends AspectualViewGps
 		if (is != null)
 		{
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			while (true)
+			try
 			{
-				String item = reader.readLine();
-				if (item == null)
+				while (true)
 				{
-					break;
+					String item = reader.readLine();
+					if (item == null)
+					{
+						break;
+					}
+					manifest.add(baseLocation + '/' + item.trim());
 				}
-				manifest.add(baseLocation + '/' + item.trim());
+			}
+			finally
+			{
+				reader.close();
 			}
 		}
 
@@ -102,13 +109,14 @@ public class StreamGpsLoader extends AspectualViewGps
 					{
 						streamGxlLoader = new StreamGxl();
 					}
-					RuleNameLabel ruleName = new RuleNameLabel(RULE_FILTER.stripExtension(item.substring(item
-							.lastIndexOf('/') + 1)));
-					AspectGraph unmarshalledRule = AspectGraph.getFactory().fromPlainGraph(
-							streamGxlLoader.unmarshalGraph(ruleName.name(), new InputStreamReader(is)));
+					RuleNameLabel ruleName =
+							new RuleNameLabel(RULE_FILTER.stripExtension(item.substring(item.lastIndexOf('/') + 1)));
+					AspectGraph unmarshalledRule =
+							AspectGraph.getFactory().fromPlainGraph(
+									streamGxlLoader.unmarshalGraph(ruleName.name(), new InputStreamReader(is)));
 					GraphInfo.setRole(unmarshalledRule, Groove.RULE_ROLE);
-					AspectualRuleView ruleView = new AspectualRuleView(unmarshalledRule, ruleName, result
-							.getProperties());
+					AspectualRuleView ruleView =
+							new AspectualRuleView(unmarshalledRule, ruleName, result.getProperties());
 					result.addRule(ruleView);
 				}
 				else

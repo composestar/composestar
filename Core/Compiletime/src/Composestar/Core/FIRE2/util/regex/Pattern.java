@@ -30,6 +30,8 @@ import java.io.Serializable;
  */
 public abstract class Pattern implements Serializable
 {
+	private static final long serialVersionUID = -5807901476403090522L;
+
 	/**
 	 * The original string used to create the pattern
 	 */
@@ -52,7 +54,6 @@ public abstract class Pattern implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

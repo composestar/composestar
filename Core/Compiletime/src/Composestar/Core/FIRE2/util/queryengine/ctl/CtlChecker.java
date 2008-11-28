@@ -128,12 +128,15 @@ public class CtlChecker
 	{
 		if (satTable.containsKey(state))
 		{
+			// System.err.println("]] " + state + " " + state.hashCode() + " " +
+			// satTable.containsKey(state) + " "
+			// + reverseTable.containsKey(state));
 			return;
 		}
 
+		// System.err.println(">> " + state + " " + state.hashCode());
 		satTable.put(state, new HashSet<CtlFormula>());
 		reverseSatTable.put(state, new HashSet<CtlFormula>());
-
 		reverseTable.put(state, new ArrayList<ExecutionState>());
 
 		for (ExecutionTransition transition : state.getOutTransitionsEx())
@@ -141,6 +144,9 @@ public class CtlChecker
 			ExecutionState nextState = transition.getEndState();
 			addState(nextState);
 
+			// System.err.println("}} " + nextState + " " + nextState.hashCode()
+			// + " " + satTable.containsKey(nextState)
+			// + " " + reverseTable.containsKey(nextState));
 			List<ExecutionState> v = reverseTable.get(nextState);
 			v.add(state);
 		}

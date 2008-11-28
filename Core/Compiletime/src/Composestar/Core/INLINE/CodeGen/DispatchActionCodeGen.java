@@ -27,11 +27,15 @@ package Composestar.Core.INLINE.CodeGen;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterActionInstruction;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.Signatures.MethodInfoWrapper;
+import Composestar.Core.LAMA.Signatures.MethodRelation;
+import Composestar.Core.LAMA.Signatures.Signature;
 
 /**
  * Produces the code for a dispatch action
@@ -78,7 +82,38 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 			ParameterInfo pi = paramInfo.get(i);
 			params[i] = pi.getParameterTypeString();
 		}
-		MethodInfo method = targetType.getMethod(action.getMessage().getSelector().getName(), params);
+		Signature sig = targetType.getSignature();
+		MethodInfo method = null;
+		if (sig == null)
+		{
+			method = targetType.getMethod(action.getMessage().getSelector().getName(), params);
+		}
+		else
+		{
+			if (action.getMessage().getSelector() instanceof CpsSelectorMethodInfo)
+			{
+				MethodInfoWrapper wrap =
+						sig.getMethodInfoWrapper(((CpsSelectorMethodInfo) action.getMessage().getSelector())
+								.getMethodInfo());
+				if (wrap.getRelation() == MethodRelation.ADDED || wrap.getRelation() == MethodRelation.NORMAL)
+				{
+					method = wrap.getMethodInfo();
+				}
+			}
+			if (method == null)
+			{
+				for (MethodInfoWrapper wrap : sig.getMethodInfoWrapper(action.getMessage().getSelector().getName()))
+				{
+					if (wrap.getRelation() == MethodRelation.ADDED || wrap.getRelation() == MethodRelation.NORMAL)
+					{
+						if (wrap.getMethodInfo().hasParameters(params))
+						{
+							method = wrap.getMethodInfo();
+						}
+					}
+				}
+			}
+		}
 		List<String> args = getJpcArguments(paramInfo);
 		Object context = null;
 		String prefix = "";

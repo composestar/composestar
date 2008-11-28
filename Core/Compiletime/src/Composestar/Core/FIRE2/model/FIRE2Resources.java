@@ -24,9 +24,10 @@
 
 package Composestar.Core.FIRE2.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.Map.Entry;
 
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
@@ -55,7 +56,7 @@ public class FIRE2Resources implements ModuleResourceManager
 
 	public FIRE2Resources()
 	{
-		ppResults = new WeakHashMap<FilterModule, FirePreprocessingResult>();
+		ppResults = new HashMap<FilterModule, FirePreprocessingResult>();
 	}
 
 	/*
@@ -87,7 +88,14 @@ public class FIRE2Resources implements ModuleResourceManager
 	 */
 	public FirePreprocessingResult getPreprocessingResult(String fmName)
 	{
-		return ppResults.get(fmName);
+		for (Entry<FilterModule, FirePreprocessingResult> entry : ppResults.entrySet())
+		{
+			if (entry.getKey().getFullyQualifiedName().equals(fmName))
+			{
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -146,7 +154,7 @@ public class FIRE2Resources implements ModuleResourceManager
 		{
 			throw new IllegalArgumentException("Filter module reference can not be null");
 		}
-		addPreprocessingResult(fmref, result);
+		addPreprocessingResult(fmref.getReference(), result);
 	}
 
 }

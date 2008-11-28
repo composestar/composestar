@@ -361,7 +361,7 @@ public class GrooveASTBuilderCN
 			CanonProperty prop = (CanonProperty) var;
 			if (prop.getPrefix() == PropertyPrefix.NONE && PropertyNames.INNER.equals(prop.getBaseName()))
 			{
-				valueEdge = VP_OBJECT + PropertyNames.INNER.toString();
+				valueEdge = VP_OBJECT + PropertyNames.INNER;
 				typeLabel = "CpsObject";
 			}
 			else if (prop.getPrefix() == PropertyPrefix.MESSAGE)

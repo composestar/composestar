@@ -61,9 +61,8 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int,
-	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+	 * java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException
@@ -91,6 +90,13 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 			throw new CoreException(new Status(IStatus.ERROR, pluginid, IResourceStatus.BUILD_FAILED,
 					"No configuration generator", new NullPointerException()));
 		}
+
+		// quick escape, project can't be build because there are no sources
+		if (!configGenerator.projectHasSources(currentProject))
+		{
+			return null;
+		}
+
 		monitor.beginTask("Compiling", 3);
 		try
 		{
@@ -139,8 +145,9 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#clean(org.eclipse.core.runtime.IProgressMonitor)
+	 * @see
+	 * org.eclipse.core.resources.IncrementalProjectBuilder#clean(org.eclipse
+	 * .core.runtime.IProgressMonitor)
 	 */
 	@Override
 	protected void clean(IProgressMonitor monitor) throws CoreException

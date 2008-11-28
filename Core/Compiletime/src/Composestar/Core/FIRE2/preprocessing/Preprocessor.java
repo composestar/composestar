@@ -199,8 +199,8 @@ public class Preprocessor implements CTCommonModule
 		timer.stop();
 
 		// store result:
-		FirePreprocessingResult result = new FirePreprocessingResult(flowModelIF, executionModelIF, flowModelOF,
-				executionModelOF);
+		FirePreprocessingResult result =
+				new FirePreprocessingResult(flowModelIF, executionModelIF, flowModelOF, executionModelOF);
 
 		fire2Resources.addPreprocessingResult(module, result);
 	}
@@ -374,8 +374,7 @@ public class Preprocessor implements CTCommonModule
 	{
 		DefaultScenario<Object> scenario = new DefaultScenario<Object>();
 		scenario.setStrategy(new BranchingStrategy());
-		Result<Object> result = new EmptyResult<Object>();
-		scenario.setResult(result);
+		scenario.setResult(new EmptyResult<Object>());
 		Acceptor<Object> acceptor = new EmptyAcceptor();
 		scenario.setAcceptor(acceptor);
 
@@ -400,7 +399,7 @@ public class Preprocessor implements CTCommonModule
 
 		try
 		{
-			result = scenario.play();
+			scenario.play();
 		}
 		catch (InterruptedException e)
 		{

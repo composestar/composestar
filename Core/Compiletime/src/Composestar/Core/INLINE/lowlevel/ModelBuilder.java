@@ -36,6 +36,7 @@ import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -248,8 +249,9 @@ public class ModelBuilder implements CTCommonModule
 		currentSelector = new CpsSelectorMethodInfo(methodInfo);
 
 		// create executionmodel:
-		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FilterDirection.INPUT, methodInfo,
-				FireModel.STRICT_SIGNATURE_CHECK);
+		ExecutionModel execModel =
+				currentFireModelIF.getExecutionModel(FilterDirection.INPUT, methodInfo,
+						FireModel.STRICT_SIGNATURE_CHECK);
 
 		// create inlineModel:
 		inputFilterInliner.inline(execModel, modules, methodInfo);
@@ -283,16 +285,24 @@ public class ModelBuilder implements CTCommonModule
 		// retrieve target methodinfo:
 		MethodInfo methodInfo = call.getCalledMethod();
 
+		if (methodInfo != null && methodInfo.parent() == null)
+		{
+			return;
+		}
+
 		// create executionModel:
 		ExecutionModel execModel;
 		if (methodInfo != null)
 		{
-			execModel = currentFireModelOF.getExecutionModel(FilterDirection.OUTPUT, methodInfo,
-					FireModel.STRICT_SIGNATURE_CHECK);
+			execModel =
+					currentFireModelOF.getExecutionModel(FilterDirection.OUTPUT, methodInfo,
+							FireModel.STRICT_SIGNATURE_CHECK);
 		}
 		else
 		{
-			execModel = currentFireModelOF.getExecutionModel(FilterDirection.OUTPUT, call.getCalledMethod());
+			execModel =
+					currentFireModelOF.getExecutionModel(FilterDirection.OUTPUT, new CpsSelectorImpl(call
+							.getMethodName()));
 		}
 
 		// create inlineModel:
