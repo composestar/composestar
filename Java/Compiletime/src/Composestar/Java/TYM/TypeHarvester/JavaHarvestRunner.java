@@ -93,7 +93,8 @@ public class JavaHarvestRunner implements CTCommonModule
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Error while harvesting types: " + e.getMessage(), "HARVESTER");
+			logger.error(e, e);
+			return ModuleReturnValue.ERROR;
 		}
 		return ModuleReturnValue.OK;
 	}

@@ -173,7 +173,6 @@ public class MethodBodyTransformer extends ExprEditor
 	{
 		if (hd.isAfterInstantationInterception(e.getClassName()))
 		{
-			String.format("", new Object[] { "", "", "" });
 			int mod = e.where().getModifiers();
 			boolean isStaticCaller = Modifier.isStatic(mod);
 			if (isStaticCaller)

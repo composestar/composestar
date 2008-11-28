@@ -71,7 +71,7 @@ public class JavaCollectorRunner implements CTCommonModule
 				resources.put(UnitRegister.RESOURCE_KEY, register);
 			}
 			// iterate over classes
-			Collection<Class<?>> classes = (Collection<Class<?>>) resources.get(JavaHarvestRunner.CLASS_MAP);
+			Collection<Class<?>> classes = resources.get(JavaHarvestRunner.CLASS_MAP);
 			for (Class<?> c : classes)
 			{
 				try
@@ -97,7 +97,7 @@ public class JavaCollectorRunner implements CTCommonModule
 			throw new ModuleException(e.getMessage(), ModuleNames.COLLECTOR);
 		}
 
-		int count = 0;
+		// int count = 0;
 		// DataStore dataStore = resources.repository();
 		// // loop through all current concerns, fetch implementation and remove
 		// // from types map.

@@ -26,13 +26,10 @@ package Composestar.Java.COMP;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -44,6 +41,13 @@ public final class JarCreator
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CStarJavaCompiler.MODULE_NAME + ".JarCreator");
 
+	/**
+	 * @param output the output file name
+	 * @param files the files to add
+	 * @param base the base path of the files to add (this part will be stripped
+	 *            from the filenames)
+	 * @return True when the jar file was created
+	 */
 	public static final boolean create(File output, Collection<File> files, File base)
 	{
 		try
@@ -55,10 +59,18 @@ public final class JarCreator
 				jar = new JarOutputStream(fos);
 				for (File file : files)
 				{
+					if (!file.exists())
+					{
+						continue;
+					}
+					if (file.isDirectory())
+					{
+						continue;
+					}
 					String name;
 					if (file.toString().startsWith(base.toString()))
 					{
-						name = file.toString().substring(base.toString().length()+1);
+						name = file.toString().substring(base.toString().length() + 1);
 					}
 					else
 					{
@@ -104,62 +116,6 @@ public final class JarCreator
 		{
 			logger.error(e, e);
 			return false;
-		}
-	}
-
-	private static void writeFileTree(JarOutputStream jar, FileTreeNode root)
-	{
-		JarEntry entry = new JarEntry(root.getName());
-	}
-
-	private static FileTreeNode createFileTree(Collection<File> files, File base)
-	{
-		return null;
-	}
-
-	/**
-	 * Represents part of a file hierarchy
-	 * 
-	 * @author Michiel Hendriks
-	 */
-	public static class FileTreeNode
-	{
-		String name;
-
-		File file;
-
-		Collection<FileTreeNode> childs;
-
-		public FileTreeNode(String nodeName, File nodeFile)
-		{
-			name = nodeName;
-			file = nodeFile;
-			childs = new ArrayList<FileTreeNode>();
-		}
-
-		public String getName()
-		{
-			return name;
-		}
-
-		public File getFile()
-		{
-			return file;
-		}
-
-		public boolean isDirectory()
-		{
-			return !childs.isEmpty();
-		}
-
-		public Collection<FileTreeNode> getChildren()
-		{
-			return Collections.unmodifiableCollection(childs);
-		}
-
-		public void addChild(FileTreeNode node)
-		{
-			childs.add(node);
 		}
 	}
 }

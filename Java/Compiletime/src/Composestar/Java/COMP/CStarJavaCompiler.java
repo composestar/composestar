@@ -5,7 +5,6 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -293,61 +292,59 @@ public class CStarJavaCompiler implements LangCompiler
 		logger.info("Creating dummies jar file");
 
 		File dummiesJar = new File(p.getIntermediate(), p.getName() + ".dummies.jar");
-		if (true)
+		files.clear();
+		files.addAll(getClassFiles(dummiesDir));
+		if (!JarCreator.create(dummiesJar, files, dummiesDir))
 		{
-			files.clear();
-			files.addAll(getClassFiles(dummiesDir));
-			if (!JarCreator.create(dummiesJar, files, dummiesDir))
-			{
-				logger.error("Failed to create dummies.jar file");
-			}
+			throw new CompilerException("Failed to create dummies.jar file");
 		}
-		else
-		{
-			Properties prop = new Properties();
-			prop.put("JAR", dummiesJar.toString());
-			prop.put("SOURCEDIR", dummiesDir.toString());
-			CompilerAction action = compConfig.getAction("CreateJar");
 
-			files = Collections.emptySet();
-			String[] cmdline = action.getCmdLine(p, files, prop);
-			logger.debug(Arrays.toString(cmdline));
-			CommandLineExecutor cmdExec = new CommandLineExecutor();
-			int result;
-			try
-			{
-				result = cmdExec.exec(cmdline);
-			}
-			catch (IOException e)
-			{
-				throw new CompilerException(e.getMessage());
-			}
-			catch (InterruptedException e)
-			{
-				throw new CompilerException(e.getMessage());
-			}
-			compilerOutput = cmdExec.outputError();
-
-			if (result != 0)
-			{
-				// there was an error
-				try
-				{
-					java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
-					String lastToken = null;
-					while (st.hasMoreTokens())
-					{
-						lastToken = st.nextToken();
-						logger.error(lastToken);
-					}
-					throw new CompilerException("COMP reported errors during jar creations.");
-				}
-				catch (Exception ex)
-				{
-					throw new CompilerException(ex.getMessage());
-				}
-			}
-		}
+		// // old implementation
+		// Properties prop = new Properties();
+		// prop.put("JAR", dummiesJar.toString());
+		// prop.put("SOURCEDIR", dummiesDir.toString());
+		// CompilerAction action = compConfig.getAction("CreateJar");
+		//
+		// files = Collections.emptySet();
+		// String[] cmdline = action.getCmdLine(p, files, prop);
+		// logger.debug(Arrays.toString(cmdline));
+		// CommandLineExecutor cmdExec = new CommandLineExecutor();
+		// int result;
+		// try
+		// {
+		// result = cmdExec.exec(cmdline);
+		// }
+		// catch (IOException e)
+		// {
+		// throw new CompilerException(e.getMessage());
+		// }
+		// catch (InterruptedException e)
+		// {
+		// throw new CompilerException(e.getMessage());
+		// }
+		// compilerOutput = cmdExec.outputError();
+		//
+		// if (result != 0)
+		// {
+		// // there was an error
+		// try
+		// {
+		// java.util.StringTokenizer st = new
+		// java.util.StringTokenizer(compilerOutput, "\n");
+		// String lastToken = null;
+		// while (st.hasMoreTokens())
+		// {
+		// lastToken = st.nextToken();
+		// logger.error(lastToken);
+		// }
+		// throw new
+		// CompilerException("COMP reported errors during jar creations.");
+		// }
+		// catch (Exception ex)
+		// {
+		// throw new CompilerException(ex.getMessage());
+		// }
+		// }
 
 		resources.put(DUMMY_JAR, dummiesJar);
 	}
