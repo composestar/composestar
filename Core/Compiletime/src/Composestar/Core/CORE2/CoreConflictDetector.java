@@ -173,8 +173,7 @@ public class CoreConflictDetector
 			boolean onlyContinue = true;
 			for (FlowNode actionNode : currentActionNodes)
 			{
-				if (!unreachableActionNodes.contains(actionNode)
-						&& !actionNode.containsName(FlowNode.CONTINUE_ACTION_NODE))
+				if (!unreachableActionNodes.contains(actionNode) && !actionNode.containsName("ContinueAction"))
 				{
 					onlyContinue = false;
 					break;
