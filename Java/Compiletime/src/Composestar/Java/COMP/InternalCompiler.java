@@ -125,10 +125,11 @@ public class InternalCompiler
 		{
 			if (cp.length() > 0)
 			{
-				cp.append(";");
+				cp.append(File.pathSeparator);
 			}
 			cp.append(file.toString());
 		}
+		logger.debug(String.format("Class-path: %s", cp.toString()));
 		options.add(cp.toString());
 		boolean result = true;
 
