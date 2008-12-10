@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: KeyboardController.java 2663 2006-11-12 22:24:53Z elmuerte $
+ * @version $Id$
  */
 package PacmanTwo;
 

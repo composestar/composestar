@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: InternalCompiler.java 4499 2008-11-25 10:50:15Z elmuerte $
+ * $Id$
  */
 package Composestar.Java.COMP;
 

@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: ClassUtilities.java 4475 2008-11-11 16:12:35Z elmuerte $
+ * $Id$
  */
 package Composestar.Java.FLIRT.Utils;
 
