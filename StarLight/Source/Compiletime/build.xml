@@ -38,7 +38,9 @@
 	<target name="init_local" depends="init">
 
 		<!-- default path to xsd.exe (can be overridden in build.ini) -->
-		<property name="xsd.exe" value="xsd.exe" />
+		<condition property="xsd.exe" value="xsd.exe" else="${env.ProgramFiles}\Microsoft Visual Studio 8\SDK\v2.0\Bin\xsd.exe">
+			<available file="xsd.exe" filepath="${env.PATH}" />
+		</condition>
 		<!-- be sure it's .NET 2 or 3 -->
 		<assertDotNetUtil util="${xsd.exe}" version="[23]\." />
 
