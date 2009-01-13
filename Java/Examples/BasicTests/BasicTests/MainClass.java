@@ -3,6 +3,28 @@ package BasicTests;
 import Composestar.Java.FLIRT.Actions.ErrorFilterException;
 
 public class MainClass {
+	
+	protected static Class<?> testClass;
+	protected static final String foo;
+	protected final String bar;
+	
+	static {
+		// static init block test
+		foo = "sdfsdfsdf";
+		try {
+			Class<?> c = Class.forName("BasicTests.MainClass");
+			Class.forName("BasicTests.MainClass");
+			testClass = Class.forName("BasicTests.MainClass");
+		}
+		catch (Exception e)
+		{}
+	}
+	
+	public MainClass()
+	{
+		bar = "sdfsdf";
+	}
+	
 	public static void main(String[] args) {
 		TypeTests typeTests = new TypeTests();
 		System.out.println("Bool:		" + typeTests.dummyBool());

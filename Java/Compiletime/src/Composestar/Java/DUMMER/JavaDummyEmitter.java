@@ -209,6 +209,32 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		return result;
 	}
 
+	private boolean hasChild(AST ast, String withText)
+	{
+		if (ast == null)
+		{
+			throw new IllegalArgumentException("ast cannot be null");
+		}
+
+		if (withText == null)
+		{
+			throw new IllegalArgumentException("remove cannot be null");
+		}
+
+		AST result = factory.create(ast.getType(), ast.getText());
+		AST child = ast.getFirstChild();
+		while (child != null)
+		{
+			String text = child.getText();
+			if (withText.equals(text))
+			{
+				return true;
+			}
+			child = child.getNextSibling();
+		}
+		return false;
+	}
+
 	/**
 	 * Find a child of the given AST that has the given type.
 	 * 
@@ -863,9 +889,11 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				AST assign = getChild(ast, ASSIGN);
 				AST mods = getChild(ast, MODIFIERS);
 
-				// remove the final modifier from uninitialized variable
-				// declarations
-				if (assign == null)
+				// remove the final modifier from uninitialized non-static
+				// variable declarations. Why? because non-static final
+				// variables are usually set in constructors, but methods no
+				// longer contain bodies.
+				if (assign == null && !hasChild(mods, "static"))
 				{
 					mods = filterChildren(mods, "final");
 				}
