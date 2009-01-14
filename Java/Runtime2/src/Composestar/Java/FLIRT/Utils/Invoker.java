@@ -128,6 +128,10 @@ public final class Invoker
 		{
 			logger.log(Level.SEVERE, "Error while delegating to target: " + target + "selector: " + selector
 					+ " args: " + Arrays.toString(args), e);
+			if (e.getCause() instanceof RuntimeException)
+			{
+				throw (RuntimeException) e.getCause();
+			}
 		}
 		return null;
 	}
@@ -161,6 +165,10 @@ public final class Invoker
 		{
 			logger.log(Level.SEVERE, "Error while delegating to target: " + target + " selector: " + selector
 					+ " args: " + Arrays.toString(args), e);
+			if (e.getCause() instanceof RuntimeException)
+			{
+				throw (RuntimeException) e.getCause();
+			}
 		}
 		return null;
 	}
@@ -245,6 +253,10 @@ public final class Invoker
 		catch (InvocationTargetException e)
 		{
 			logger.log(Level.SEVERE, "Error while delegating to target:" + target, e);
+			if (e.getCause() instanceof RuntimeException)
+			{
+				throw (RuntimeException) e.getCause();
+			}
 		}
 		catch (InstantiationException e)
 		{

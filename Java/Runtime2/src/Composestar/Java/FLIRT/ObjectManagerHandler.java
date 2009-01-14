@@ -76,7 +76,7 @@ public final class ObjectManagerHandler
 	 * @param repos
 	 * @return
 	 */
-	public static ObjectManager getObjectManager(Object forObject, Repository repos)
+	public static synchronized ObjectManager getObjectManager(Object forObject, Repository repos)
 	{
 		if (forObject == null)
 		{
