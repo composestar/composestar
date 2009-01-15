@@ -31,10 +31,6 @@
 
 	</target>
 
-	<target name="clean_core" depends="init" if="imply.core">
-		<ant target="clean" dir="${build.core}/Compiletime" inheritRefs="true" />
-	</target>
-
 	<target name="init_local" depends="init">
 
 		<!-- default path to xsd.exe (can be overridden in build.ini) -->
@@ -58,7 +54,7 @@
 
 	<!-- build -->
 
-	<target name="build" depends="init_local,build_core,compile,jar" description="Build the StarLight compiletime">
+	<target name="build" depends="init_local,compile,jar" description="Build the StarLight compiletime">
 		<schemavalidate>
 			<schema namespace="http://composestar.sourceforge.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
 			<schema namespace="http://composestar.sourceforge.net/schema/TASMAN" file="${build.core}/Compiletime/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd" />
@@ -68,10 +64,6 @@
 			</fileset>
 		</schemavalidate>
 		<antcall target="test_tasmanconfig" inheritRefs="true" />
-	</target>
-
-	<target name="build_core" depends="init" if="imply.core">
-		<ant target="build" dir="${build.core}/Compiletime" inheritRefs="true" />
 	</target>
 
 	<target name="antlr">

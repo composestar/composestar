@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build" xmlns:dn="antlib:org.apache.ant.dotnet" xmlns:cs="antlib:Composestar">
 
-	<condition property="imply.core" value="true">
-		<!-- if set Compose*/Core parts will also be executed -->
-		<not>
-			<available file="${ant.file.ComposeStarCommon}" />
-		</not>
-	</condition>
-
 	<property name="build.core" location="${basedir}/../Core" />
 	<import file="${build.core}/common.xml" />
 
@@ -343,7 +336,6 @@
 	<!-- Testing -->
 
 	<target name="test" depends="init_local,init_test" description="Execute Tests on the StarLight code other then QA tests">		
-		<antcall target="test_junit" inheritRefs="true" />
 		<antcall target="test_nunit" inheritRefs="true" />
 		<ant dir="Examples" target="versioncheck" inheritRefs="true" />
 
@@ -353,10 +345,6 @@
 
 	<target name="init_test">
 		<mkdir dir="${out.nunit}" />
-	</target>
-
-	<target name="test_junit">
-		<ant target="unittest" dir="${build.core}/Compiletime" inheritRefs="true" />
 	</target>
 
 	<target name="init_nunit" depends="init_local" description="Build the NUnit projects">
