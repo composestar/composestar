@@ -126,11 +126,18 @@ public final class Invoker
 		}
 		catch (InvocationTargetException e)
 		{
-			logger.log(Level.SEVERE, "Error while delegating to target: " + target + "selector: " + selector
-					+ " args: " + Arrays.toString(args), e);
 			if (e.getCause() instanceof RuntimeException)
 			{
 				throw (RuntimeException) e.getCause();
+			}
+			else if (e.getCause() instanceof Error)
+			{
+				throw (Error) e.getCause();
+			}
+			else
+			{
+				logger.log(Level.SEVERE, "Error while delegating to target: " + target + " selector: " + selector
+						+ " args: " + Arrays.toString(args), e);
 			}
 		}
 		return null;
@@ -163,11 +170,18 @@ public final class Invoker
 		}
 		catch (InvocationTargetException e)
 		{
-			logger.log(Level.SEVERE, "Error while delegating to target: " + target + " selector: " + selector
-					+ " args: " + Arrays.toString(args), e);
 			if (e.getCause() instanceof RuntimeException)
 			{
 				throw (RuntimeException) e.getCause();
+			}
+			else if (e.getCause() instanceof Error)
+			{
+				throw (Error) e.getCause();
+			}
+			else
+			{
+				logger.log(Level.SEVERE, "Error while delegating to target: " + target + " selector: " + selector
+						+ " args: " + Arrays.toString(args), e);
 			}
 		}
 		return null;
@@ -252,10 +266,17 @@ public final class Invoker
 		}
 		catch (InvocationTargetException e)
 		{
-			logger.log(Level.SEVERE, "Error while delegating to target:" + target, e);
 			if (e.getCause() instanceof RuntimeException)
 			{
 				throw (RuntimeException) e.getCause();
+			}
+			else if (e.getCause() instanceof Error)
+			{
+				throw (Error) e.getCause();
+			}
+			else
+			{
+				logger.log(Level.SEVERE, "Error while delegating to target:" + target, e);
 			}
 		}
 		catch (InstantiationException e)
