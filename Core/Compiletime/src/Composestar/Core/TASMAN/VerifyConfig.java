@@ -31,7 +31,6 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.TASMAN.Xml.TASMANConfig;
@@ -119,33 +118,48 @@ public class VerifyConfig
 			System.err.println("A module could not be loaded.");
 			return false;
 		}
-		ComposestarModule modannot = moduleClass.getAnnotation(ComposestarModule.class);
-		if (modannot == null)
+
+		CTCommonModule module;
+		try
 		{
-			// produce warning
-			System.err.println(String.format("Module %s does not have an ComposestarModule annotation.", moduleClass));
-			return true;
+			module = moduleClass.newInstance();
 		}
-		boolean isValid = true;
-		for (String dep : modannot.dependsOn())
+		catch (InstantiationException e)
 		{
-			if (ComposestarModule.DEPEND_ALL.equals(dep))
+			System.err.println("A module could not be loaded.");
+			return false;
+		}
+		catch (IllegalAccessException e)
+		{
+			System.err.println("A module could not be loaded.");
+			return false;
+		}
+
+		boolean isValid = true;
+		String[] deps = module.getDependencies();
+		if (deps == null)
+		{
+			deps = new String[0];
+		}
+		for (String dep : deps)
+		{
+			if (CTCommonModule.DEPEND_ALL.equals(dep))
 			{
 				continue;
 			}
-			if (ComposestarModule.DEPEND_PREVIOUS.equals(dep))
+			if (CTCommonModule.DEPEND_PREVIOUS.equals(dep))
 			{
 				continue;
 			}
 			if (!previousModules.contains(dep))
 			{
 				// missing module
-				System.err.println(String.format("Module %s depends on %s, but has not been executed", modannot.ID(),
-						dep));
+				System.err.println(String.format("Module %s depends on %s, but has not been executed", module
+						.getModuleName(), dep));
 				isValid = false;
 			}
 		}
-		previousModules.add(modannot.ID());
+		previousModules.add(module.getModuleName());
 		return isValid;
 	}
 

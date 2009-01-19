@@ -35,10 +35,12 @@ import java.lang.annotation.Target;
  * annotation will be used to automatically generate the moduleinfo.xml files.
  * 
  * @author Michiel Hendriks
+ * @deprecated This is now part of the CTCommonModule interface
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
+@Deprecated
 public @interface ComposestarModule
 {
 	/**

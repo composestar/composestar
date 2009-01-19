@@ -67,7 +67,8 @@ import Composestar.Utils.Perf.CPSTimer;
  * specification and performed on the resources. Then the specified patterns are
  * matches against the sequences of operations performed on the resources.
  */
-@ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE }, importance = Importance.ADVISING)
+// @ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE },
+// importance = Importance.ADVISING)
 public class SECRET implements CTCommonModule
 {
 	public static final String CONFIG_NAME = "SECRETConfig.xml";
@@ -112,6 +113,33 @@ public class SECRET implements CTCommonModule
 	 */
 	@ModuleSetting(ID = "validate", name = "Configuration Validation")
 	protected boolean validateResources = true;
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.SECRET;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.FIRE };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.ADVISING;
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -83,7 +83,8 @@ import antlr.collections.AST;
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = ModuleNames.COLLECTOR, dependsOn = { ModuleNames.HARVESTER })
+// @ComposestarModule(ID = ModuleNames.COLLECTOR, dependsOn = {
+// ModuleNames.HARVESTER })
 public class LangModelConverter implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
@@ -115,6 +116,33 @@ public class LangModelConverter implements CTCommonModule
 
 	public LangModelConverter()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.COLLECTOR;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.HARVESTER };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -197,8 +225,8 @@ public class LangModelConverter implements CTCommonModule
 			if (pc == null)
 			{
 				pc = new PrimitiveConcern(type.getFullName().split("\\."));
-				Composestar.Core.Config.Source typeSource = resources.configuration().getProject().getTypeMapping()
-						.getSource(type.getFullName());
+				Composestar.Core.Config.Source typeSource =
+						resources.configuration().getProject().getTypeMapping().getSource(type.getFullName());
 				if (typeSource != null)
 				{
 					SourceInformation srcInfo = new SourceInformation(new FileInformation(typeSource.getFile()));

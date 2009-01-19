@@ -17,7 +17,8 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Repository serializer. Saves the data required by the runtime to a file.
  */
-@ComposestarModule(ID = ModuleNames.CONE, dependsOn = { ComposestarModule.DEPEND_ALL })
+// @ComposestarModule(ID = ModuleNames.CONE, dependsOn = {
+// ComposestarModule.DEPEND_ALL })
 public abstract class CONE implements CTCommonModule
 {
 	/**
@@ -26,4 +27,31 @@ public abstract class CONE implements CTCommonModule
 	public static final String REPOSITORY_FILE_KEY = "RepositoryFile";
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CONE);
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.CONE;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { DEPEND_ALL };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 }

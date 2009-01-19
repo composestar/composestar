@@ -43,7 +43,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = PreProcess.MODULE_NAME)
+// @ComposestarModule(ID = PreProcess.MODULE_NAME)
 public class PreProcess implements CTCommonModule
 {
 	public static final String MODULE_NAME = "PreCOMP";
@@ -64,8 +64,36 @@ public class PreProcess implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return MODULE_NAME;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{

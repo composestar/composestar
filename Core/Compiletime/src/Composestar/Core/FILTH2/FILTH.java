@@ -67,7 +67,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = ModuleNames.FILTH, dependsOn = { ModuleNames.LOLA })
+//@ComposestarModule(ID = ModuleNames.FILTH, dependsOn = { ModuleNames.LOLA })
 public class FILTH implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);
@@ -104,6 +104,33 @@ public class FILTH implements CTCommonModule
 
 	public FILTH()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.FILTH;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.LOLA };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/*
 	 * (non-Javadoc)

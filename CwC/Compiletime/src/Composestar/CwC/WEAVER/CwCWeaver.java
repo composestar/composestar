@@ -104,7 +104,8 @@ import antlr.TokenStreamException;
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = ModuleNames.WEAVER, dependsOn = { ModuleNames.INLINE })
+// @ComposestarModule(ID = ModuleNames.WEAVER, dependsOn = { ModuleNames.INLINE
+// })
 public class CwCWeaver implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);
@@ -172,6 +173,33 @@ public class CwCWeaver implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.WEAVER;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.INLINE };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see
 	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
 	 * .CommonResources)
@@ -220,8 +248,8 @@ public class CwCWeaver implements CTCommonModule
 		// emit updated C files
 		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
 		{
-			File target = FileUtils.relocateFile(currentProject.getBase(), weavecResc.getSource(tunit).getFile(),
-					outputDir);
+			File target =
+					FileUtils.relocateFile(currentProject.getBase(), weavecResc.getSource(tunit).getFile(), outputDir);
 			if (!target.getParentFile().exists() && !target.getParentFile().mkdirs())
 			{
 				throw new ModuleException(String.format("Unable to create parent directories for: %s", target
@@ -756,8 +784,9 @@ public class CwCWeaver implements CTCommonModule
 	protected void processOutputFilterCode(CwCCallToOtherMethod ctom, CwCFunctionInfo func, FilterCode fc,
 			Set<String> imports)
 	{
-		String code = codeGen.generate(fc, ctom, inlinerRes.getMethodId(ctom.getCalledMethod()), func, inlinerRes
-				.getMethodId(func));
+		String code =
+				codeGen.generate(fc, ctom, inlinerRes.getMethodId(ctom.getCalledMethod()), func, inlinerRes
+						.getMethodId(func));
 		logger.debug(code);
 		TNode fcAst = generateCodeAST(code, func, imports);
 		if (fcAst == null)
@@ -840,8 +869,9 @@ public class CwCWeaver implements CTCommonModule
 		if (codeGen.hasReturnValue(func))
 		{
 			// yes I know this is extremely dirty, but it works
-			TNode returnVal = TNodeFactory.getInstance().create(ACGrammarTokenTypes.LITERAL_return,
-					String.format("%s retval; return retval", func.getReturnTypeString()));
+			TNode returnVal =
+					TNodeFactory.getInstance().create(ACGrammarTokenTypes.LITERAL_return,
+							String.format("%s retval; return retval", func.getReturnTypeString()));
 			returnVal.addChild(TNodeFactory.getInstance().create(ACGrammarTokenTypes.SEMI, ";"));
 			bodyAST.addChild(returnVal);
 		}
@@ -860,8 +890,9 @@ public class CwCWeaver implements CTCommonModule
 				.getFullName(), func.getName()), -1);
 
 		FunctionDeclaration olddecl = func.getFunctionDeclaration();
-		FunctionDeclaration newdecl = (FunctionDeclaration) CDeclarations.getFunctionOrTypedef(func.getName(), olddecl
-				.getType(), (EnumSet<StorageClass>) olddecl.getStorageClasses(), false);
+		FunctionDeclaration newdecl =
+				(FunctionDeclaration) CDeclarations.getFunctionOrTypedef(func.getName(), olddecl.getType(),
+						(EnumSet<StorageClass>) olddecl.getStorageClasses(), false);
 		newdecl.setAST(fast);
 		newdecl.setBaseTypeAST(bast);
 		func.setFunctionDeclaration(newdecl);

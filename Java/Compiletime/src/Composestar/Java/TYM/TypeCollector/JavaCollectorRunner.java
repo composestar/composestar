@@ -37,7 +37,8 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Module that collects the types retrieved by the <code>HarvestRunner</code>.
  */
-@ComposestarModule(ID = ModuleNames.COLLECTOR, dependsOn = { ModuleNames.HARVESTER })
+// @ComposestarModule(ID = ModuleNames.COLLECTOR, dependsOn = {
+// ModuleNames.HARVESTER })
 public class JavaCollectorRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
@@ -55,6 +56,33 @@ public class JavaCollectorRunner implements CTCommonModule
 	{
 		pendingTypes = new HashMap<String, Class<?>>();
 		processedTypes = new HashMap<String, Class<?>>();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.COLLECTOR;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.HARVESTER };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
 	}
 
 	/**

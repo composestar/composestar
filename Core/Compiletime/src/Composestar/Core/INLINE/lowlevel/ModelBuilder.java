@@ -61,7 +61,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Arjan
  */
-@ComposestarModule(ID = ModuleNames.INLINE, dependsOn = { ModuleNames.SIGN })
+//@ComposestarModule(ID = ModuleNames.INLINE, dependsOn = { ModuleNames.SIGN })
 public class ModelBuilder implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.INLINE);
@@ -138,6 +138,33 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	public ModelBuilder()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.INLINE;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.SIGN };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/**
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)

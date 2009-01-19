@@ -82,7 +82,7 @@ import composestar.dotNET2.tym.entities.WeaveSpecification;
 import composestar.dotNET2.tym.entities.WeaveSpecificationDocument;
 import composestar.dotNET2.tym.entities.WeaveType;
 
-@ComposestarModule(ID = ModuleNames.WESPEM, dependsOn = { ComposestarModule.DEPEND_ALL, ModuleNames.SIGN })
+//@ComposestarModule(ID = ModuleNames.WESPEM, dependsOn = { ComposestarModule.DEPEND_ALL, ModuleNames.SIGN })
 public class StarLightEmitterRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WESPEM);
@@ -108,6 +108,36 @@ public class StarLightEmitterRunner implements CTCommonModule
 	{
 		weaveSpecs = new HashMap<String, WeaveSpecification>();
 		compressors = new HashMap<WeaveSpecification, FilterCodeCompressor>();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	@Override
+	public String getModuleName()
+	{
+		return ModuleNames.WESPEM;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	@Override
+	public String[] getDependencies()
+	{
+		return new String[] { DEPEND_ALL, ModuleNames.SIGN };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	@Override
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
 	}
 
 	public ModuleReturnValue run(CommonResources resc) throws ModuleException

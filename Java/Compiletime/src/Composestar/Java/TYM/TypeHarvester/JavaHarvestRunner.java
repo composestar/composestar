@@ -26,7 +26,8 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Module that harvest the classes from the compiled dummies.
  */
-@ComposestarModule(ID = ModuleNames.HARVESTER, dependsOn = { ModuleNames.DUMMER })
+// @ComposestarModule(ID = ModuleNames.HARVESTER, dependsOn = {
+// ModuleNames.DUMMER })
 public class JavaHarvestRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);
@@ -35,6 +36,33 @@ public class JavaHarvestRunner implements CTCommonModule
 
 	@ResourceManager
 	protected SECRETResources secretResources;
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.HARVESTER;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.DUMMER };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/**
 	 * Module run method.

@@ -31,7 +31,8 @@ import Composestar.Utils.Logging.CPSLogger;
  * BACO is responsible for copying all files required to execute the compiled
  * program to the output directory.
  */
-@ComposestarModule(ID = ModuleNames.BACO, dependsOn = { ComposestarModule.DEPEND_ALL })
+// @ComposestarModule(ID = ModuleNames.BACO, dependsOn = {
+// ComposestarModule.DEPEND_ALL })
 public abstract class BACO implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);
@@ -50,8 +51,36 @@ public abstract class BACO implements CTCommonModule
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.BACO;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { DEPEND_ALL };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+	 * .CommonResources)
 	 */
 	public ModuleReturnValue run(CommonResources inResources) throws ModuleException
 	{

@@ -19,13 +19,13 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.In;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.Out;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -414,10 +414,9 @@ public class CommonResources implements Serializable
 		if (settingId.indexOf('.') == -1)
 		{
 			// No explicit module defined, use the module ID of the subject
-			ComposestarModule cm = subject.getClass().getAnnotation(ComposestarModule.class);
-			if (cm != null)
+			if (subject instanceof CTCommonModule)
 			{
-				settingId = cm.ID() + "." + settingId;
+				settingId = ((CTCommonModule) subject).getModuleName() + "." + settingId;
 			}
 			else
 			{

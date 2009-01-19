@@ -60,7 +60,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Arjan de Roo
  */
-@ComposestarModule(ID = ModuleNames.FIRE, dependsOn = { ModuleNames.COPPER })
+// @ComposestarModule(ID = ModuleNames.FIRE, dependsOn = { ModuleNames.COPPER })
 public class Preprocessor implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);
@@ -85,6 +85,33 @@ public class Preprocessor implements CTCommonModule
 	private void initialize()
 	{
 		loadGrammars();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.FIRE;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.COPPER };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
 	}
 
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException

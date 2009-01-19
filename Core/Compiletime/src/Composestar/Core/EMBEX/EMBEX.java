@@ -19,7 +19,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * Extracts the embedded sources from the concern sources and saves them to the
  * disk for further use.
  */
-@ComposestarModule(ID = ModuleNames.EMBEX, dependsOn = { ModuleNames.COPPER })
+//@ComposestarModule(ID = ModuleNames.EMBEX, dependsOn = { ModuleNames.COPPER })
 public class EMBEX implements CTCommonModule
 {
 	public static final String EMBEDDED_PATH = "embedded";
@@ -33,6 +33,33 @@ public class EMBEX implements CTCommonModule
 
 	public EMBEX()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.EMBEX;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.COPPER };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/**
 	 * Iterates over cps concerns and calls saveToFile for embedded sources

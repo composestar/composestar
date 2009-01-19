@@ -10,6 +10,7 @@
 
 package Composestar.Core.Master;
 
+import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 
@@ -58,6 +59,42 @@ public interface CTCommonModule
 	}
 
 	/**
+	 * Defines the importance of this module. There are three levels of
+	 * importance, from high to low: Required, Validation, Advising. Using a
+	 * configuration option a collection of modules could be disabled.
+	 */
+	public enum ModuleImportance
+	{
+		/**
+		 * This module is absolutely vital for the compilation process.
+		 */
+		REQUIRED,
+		/**
+		 * This module will validate various parts during the compilation
+		 * process. Disabling this module could result in less instructive
+		 * errors at a later stage during compilation.
+		 */
+		VALIDATION,
+		/**
+		 * This module will analyze the resulting program for possible problems.
+		 * Disabling this module should have no influence in in the resulting
+		 * program (except that additional safety checks might not be included).
+		 */
+		ADVISING;
+	}
+
+	/**
+	 * Depends on the proper execution of all previous modules. In case of
+	 * incremental compilation this means that this module will always execute.
+	 */
+	public static final String DEPEND_ALL = "*";
+
+	/**
+	 * It depends on the module that was executed before this module.
+	 */
+	public static final String DEPEND_PREVIOUS = "<";
+
+	/**
 	 * The run function of each module is called in the same order as the
 	 * modules where added to the Master.
 	 * 
@@ -69,4 +106,29 @@ public interface CTCommonModule
 	 * @see ModuleReturnValue
 	 */
 	ModuleReturnValue run(CommonResources resources) throws ModuleException;
+
+	/**
+	 * @return The name/identifier of this module. It will be used for
+	 *         dependency validation.
+	 */
+	String getModuleName();
+
+	/**
+	 * IDs of modules this module depends on. Will be used for conditional
+	 * execution of this module depending on the result of the depending
+	 * modules. Returning null means that there are no explicit dependencies.
+	 * 
+	 * @return
+	 * @see #DEPEND_ALL
+	 * @see #DEPEND_PREVIOUS
+	 */
+	String[] getDependencies();
+
+	/**
+	 * Defines the role of this module within the whole Compose* compiler chain.
+	 * It defaults to the Required level. Returning null implies "REQUIRED"
+	 * 
+	 * @return
+	 */
+	ModuleImportance getImportance();
 }

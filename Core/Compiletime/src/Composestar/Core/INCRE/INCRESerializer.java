@@ -13,7 +13,7 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
-@ComposestarModule(ID = INCRESerializer.MODULE_NAME, dependsOn = { ComposestarModule.DEPEND_ALL })
+//@ComposestarModule(ID = INCRESerializer.MODULE_NAME, dependsOn = { ComposestarModule.DEPEND_ALL })
 public class INCRESerializer implements CTCommonModule
 {
 	public static final String MODULE_NAME = "INCRESerializer";
@@ -23,6 +23,33 @@ public class INCRESerializer implements CTCommonModule
 	public INCRESerializer()
 	{}
 
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return INCRESerializer.MODULE_NAME;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { DEPEND_ALL };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
+
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
@@ -31,8 +58,8 @@ public class INCRESerializer implements CTCommonModule
 			CPSTimer timer = CPSTimer.getTimer("INCRESerializer", "Creation of INCRE history");
 
 			CompileHistory history = new CompileHistory(resources);
-			File dest = new File(resources.configuration().getProject().getIntermediate(),
-					CompileHistory.DEFAULT_FILENAME);
+			File dest =
+					new File(resources.configuration().getProject().getIntermediate(), CompileHistory.DEFAULT_FILENAME);
 			try
 			{
 				logger.info("Saving compile history to: " + dest.toString());

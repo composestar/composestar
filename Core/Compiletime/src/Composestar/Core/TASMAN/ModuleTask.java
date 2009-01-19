@@ -138,12 +138,6 @@ public class ModuleTask extends Task
 		{
 			throw new ModuleException("Task has no module class assigned", Manager.MODULE_NAME);
 		}
-		if (!manager.canExecute(moduleClass))
-		{
-			logger.info(String.format("Skipping execution of %s (dependencies are not met)", moduleClass.getName()));
-			manager.reportModuleResult(CTCommonModule.ModuleReturnValue.NO_EXECUTION, moduleClass, false);
-			return;
-		}
 		if (module == null)
 		{
 			try
@@ -159,14 +153,22 @@ public class ModuleTask extends Task
 				throw new ModuleException(e.getMessage(), Manager.MODULE_NAME, e);
 			}
 		}
+		if (!manager.canExecute(module))
+		{
+			logger.info(String.format("Skipping execution of %s (dependencies are not met)", moduleClass.getName()));
+			manager.reportModuleResult(CTCommonModule.ModuleReturnValue.NO_EXECUTION, module, false);
+			return;
+		}
+
 		resources.inject(module);
-		String mname = Manager.getModuleID(moduleClass);
-		if (mname == null)
+		String mname = module.getModuleName();
+		if (mname == null || mname.isEmpty())
 		{
 			mname = moduleClass.getName();
 		}
-		CPSTimer timer = CPSTimer.getTimer(Manager.MODULE_NAME, "Executing module %s (thread: %s)", mname, Thread
-				.currentThread().getName());
+		CPSTimer timer =
+				CPSTimer.getTimer(Manager.MODULE_NAME, "Executing module %s (thread: %s)", mname, Thread
+						.currentThread().getName());
 		try
 		{
 			CTCommonModule.ModuleReturnValue result = module.run(resources);

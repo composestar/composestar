@@ -95,7 +95,7 @@ import composestar.dotNET2.tym.entities.TypeElement;
 /**
  * Reads the type information from the XML files
  */
-@ComposestarModule(ID = ModuleNames.COLLECTOR)
+// @ComposestarModule(ID = ModuleNames.COLLECTOR)
 public class StarLightCollectorRunner implements CTCommonModule
 {
 	private static CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
@@ -115,6 +115,36 @@ public class StarLightCollectorRunner implements CTCommonModule
 	protected Map<String, Type> typeMap;
 
 	protected ReferenceManager refman;
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	@Override
+	public String getModuleName()
+	{
+		return ModuleNames.COLLECTOR;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	@Override
+	public String[] getDependencies()
+	{
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	@Override
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	public ModuleReturnValue run(CommonResources resc) throws ModuleException
 	{
@@ -584,7 +614,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			// Set value for this attribute
 			// if (ae.getValues().sizeOfValueArray() >= 1)
 			// {
-			//attribute.setStringValue(ae.getValues().getValueArray(0).getValue(
+			// attribute.setStringValue(ae.getValues().getValueArray(0).getValue(
 			// ));
 			// }
 

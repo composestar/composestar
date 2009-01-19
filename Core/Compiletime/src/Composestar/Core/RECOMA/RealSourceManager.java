@@ -33,7 +33,8 @@ import Composestar.Utils.Logging.CPSLogger;
  * Takes care of compiling the real user sources. Links with the dummies and
  * takes care not to destroy them during compilation.
  */
-@ComposestarModule(ID = ModuleNames.RECOMA, dependsOn = { ComposestarModule.DEPEND_ALL })
+// @ComposestarModule(ID = ModuleNames.RECOMA, dependsOn = {
+// ComposestarModule.DEPEND_ALL })
 public class RealSourceManager implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.RECOMA);
@@ -42,6 +43,33 @@ public class RealSourceManager implements CTCommonModule
 
 	public RealSourceManager()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.RECOMA;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { DEPEND_ALL };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{

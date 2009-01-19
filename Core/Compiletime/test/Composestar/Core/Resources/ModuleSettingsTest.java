@@ -25,9 +25,10 @@
 package Composestar.Core.Resources;
 
 import junit.framework.TestCase;
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.CTCommonModule;
 
 /**
  * @author Michiel Hendriks
@@ -114,8 +115,7 @@ public class ModuleSettingsTest extends TestCase
 		EVAL1, EVAL2
 	}
 
-	@ComposestarModule(ID = "TEST")
-	public static class TestModule
+	public static class TestModule implements CTCommonModule
 	{
 		@ModuleSetting
 		private int intValue = 12345;
@@ -308,6 +308,44 @@ public class ModuleSettingsTest extends TestCase
 		public void setRootItem(boolean rootItem)
 		{
 			this.rootItem = rootItem;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+		 */
+		public String getModuleName()
+		{
+			return "TEST";
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+		 */
+		public String[] getDependencies()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+		 */
+		public ModuleImportance getImportance()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources
+		 * .CommonResources)
+		 */
+		public ModuleReturnValue run(CommonResources resources) throws ModuleException
+		{
+			return null;
 		}
 	}
 }

@@ -13,7 +13,7 @@ import Composestar.Java.COMP.CStarJavaCompiler;
  * Starting point for the signature transformer module. This module transforms
  * the signatures of the compiled dummies.
  */
-@ComposestarModule(ID = "SITRA", dependsOn = { ModuleNames.SIGN })
+// @ComposestarModule(ID = "SITRA", dependsOn = { ModuleNames.SIGN })
 public class JavaSignatureTransformer implements CTCommonModule
 {
 	/**
@@ -21,6 +21,33 @@ public class JavaSignatureTransformer implements CTCommonModule
 	 */
 	public JavaSignatureTransformer()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return "SITRA";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.SIGN };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/**
 	 * Module run method.

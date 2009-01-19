@@ -41,7 +41,8 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author pascal
  */
-@ComposestarModule(ID = ModuleNames.FITER, dependsOn = { ModuleNames.LOLA }, importance = Importance.VALIDATION)
+// @ComposestarModule(ID = ModuleNames.FITER, dependsOn = { ModuleNames.LOLA },
+// importance = Importance.VALIDATION)
 public class FITER implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FITER);
@@ -66,6 +67,33 @@ public class FITER implements CTCommonModule
 
 	public FITER()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.FITER;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.LOLA };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.VALIDATION;
+	}
 
 	/*
 	 * (non-Javadoc)

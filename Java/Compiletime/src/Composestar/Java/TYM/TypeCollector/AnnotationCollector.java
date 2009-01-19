@@ -22,7 +22,8 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Collects the annotations retrieved by the Harvester.
  */
-@ComposestarModule(ID = AnnotationCollector.MODULE_NAME, dependsOn = { ModuleNames.HARVESTER })
+// @ComposestarModule(ID = AnnotationCollector.MODULE_NAME, dependsOn = {
+// ModuleNames.HARVESTER })
 public class AnnotationCollector implements CTCommonModule
 {
 	public static final String MODULE_NAME = "AnnotationCollector";
@@ -30,6 +31,33 @@ public class AnnotationCollector implements CTCommonModule
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("AnnotationCollector");
 
 	protected UnitRegister register;
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return AnnotationCollector.MODULE_NAME;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.HARVESTER };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/**
 	 * Module run method.

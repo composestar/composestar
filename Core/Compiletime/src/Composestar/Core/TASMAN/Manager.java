@@ -34,10 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.Annotations.ComposestarModule.Importance;
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
@@ -70,7 +66,7 @@ public class Manager
 	/**
 	 * Defines which groups of modules should be executed.
 	 */
-	protected Map<Importance, Boolean> importance;
+	protected Map<CTCommonModule.ModuleImportance, Boolean> importance;
 
 	/**
 	 * If set to true modules will always be executed. TASMAN sets this to true
@@ -83,10 +79,10 @@ public class Manager
 		undeterministic = false;
 		resources = inresources;
 		moduleResults = new HashMap<String, CTCommonModule.ModuleReturnValue>();
-		importance = new HashMap<Importance, Boolean>();
-		importance.put(Importance.REQUIRED, true);
-		importance.put(Importance.VALIDATION, true);
-		importance.put(Importance.ADVISING, true);
+		importance = new HashMap<CTCommonModule.ModuleImportance, Boolean>();
+		importance.put(CTCommonModule.ModuleImportance.REQUIRED, true);
+		importance.put(CTCommonModule.ModuleImportance.VALIDATION, true);
+		importance.put(CTCommonModule.ModuleImportance.ADVISING, true);
 	}
 
 	/**
@@ -169,74 +165,35 @@ public class Manager
 	}
 
 	/**
-	 * Get the ID of a module. Tries to get the ID from the ComposestarModule
-	 * annotation or the ModuleInformation.
-	 * 
-	 * @param moduleClass
-	 * @return
-	 */
-	public static String getModuleID(Class<? extends CTCommonModule> moduleClass)
-	{
-		ComposestarModule annot = moduleClass.getAnnotation(ComposestarModule.class);
-		if (annot != null)
-		{
-			return annot.ID();
-		}
-		else
-		{
-			logger.warn(String.format("The module class %s does not have a ComposestarModule annotation", moduleClass
-					.getName()));
-			// no annotation, try a different way
-			ModuleInfo mi = ModuleInfoManager.get(moduleClass);
-			if (mi != null)
-			{
-				return mi.getId();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param result
-	 * @param module
-	 * @param throwOnFatal
-	 * @throws ModuleException
-	 */
-	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result, CTCommonModule module,
-			boolean throwOnFatal) throws ModuleException
-	{
-		if (module != null)
-		{
-			reportModuleResult(result, module.getClass(), throwOnFatal);
-		}
-	}
-
-	/**
 	 * Method to call to report the result of a module.
 	 * 
 	 * @param result
 	 * @param module
 	 * @throws ModuleException
 	 */
-	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result,
-			Class<? extends CTCommonModule> module, boolean throwOnFatal) throws ModuleException
+	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result, CTCommonModule module,
+			boolean throwOnFatal) throws ModuleException
 	{
 		if (module == null)
 		{
 			return;
 		}
-		String moduleid = getModuleID(module);
-		if (moduleid == null)
+		String moduleid = module.getModuleName();
+		if (moduleid == null || moduleid.isEmpty())
 		{
 			// Panic! No module name
 			logger.warn(String.format("Module %s does not have an ID, switching to always execute modules", module
-					.getName()));
+					.getClass().getName()));
 			undeterministic = true;
-			moduleid = module.getName();
+			moduleid = module.getClass().getName();
 		}
 		else
 		{
 			moduleResults.put(moduleid, result);
+		}
+		if (result == null)
+		{
+			result = CTCommonModule.ModuleReturnValue.OK;
 		}
 		if (result == CTCommonModule.ModuleReturnValue.FATAL && throwOnFatal)
 		{
@@ -252,21 +209,31 @@ public class Manager
 	 * @return
 	 * @throws ModuleException
 	 */
-	public boolean canExecute(Class<? extends CTCommonModule> module) throws ModuleException
+	public boolean canExecute(CTCommonModule module) throws ModuleException
 	{
-		ComposestarModule annot = module.getAnnotation(ComposestarModule.class);
-		if (annot == null)
+		if (module == null)
 		{
-			// no annotation, can not check it, always execute
-			return true;
+			return false;
 		}
-		if (!importance.get(annot.importance()))
+		// check if this importance level is included
+		CTCommonModule.ModuleImportance imp = module.getImportance();
+		if (imp == null)
+		{
+			imp = CTCommonModule.ModuleImportance.REQUIRED;
+		}
+		if (!importance.get(imp))
 		{
 			return false || undeterministic;
 		}
-		for (String dep : annot.dependsOn())
+		// check dependencies
+		String[] deps = module.getDependencies();
+		if (deps == null)
 		{
-			if (ComposestarModule.DEPEND_ALL.equals(dep))
+			return true;
+		}
+		for (String dep : deps)
+		{
+			if (CTCommonModule.DEPEND_ALL.equals(dep))
 			{
 				synchronized (moduleResults)
 				{
@@ -278,14 +245,14 @@ public class Manager
 						{
 							// one failed
 							logger.info(String.format(
-									"Module %s depends on all previous modules, %s did not execute successfully", annot
-											.ID(), res.getKey()));
+									"Module %s depends on all previous modules, %s did not execute successfully",
+									module.getModuleName(), res.getKey()));
 							return false || undeterministic;
 						}
 					}
 				}
 			}
-			else if (ComposestarModule.DEPEND_PREVIOUS.equals(dep))
+			else if (CTCommonModule.DEPEND_PREVIOUS.equals(dep))
 			{
 				// TODO check previously executed module
 			}
@@ -297,15 +264,15 @@ public class Manager
 					if (!moduleResults.containsKey(dep))
 					{
 						// not executed
-						logger.info(String.format("Module %s depends on module %s which was not executed", annot.ID(),
-								dep));
+						logger.info(String.format("Module %s depends on module %s which was not executed", module
+								.getModuleName(), dep));
 						return false || undeterministic;
 					}
 					else if (moduleResults.get(dep) != CTCommonModule.ModuleReturnValue.OK)
 					{
 						// no valid execution
-						logger.info(String.format("Module %s depends on module %s which did not return Ok", annot.ID(),
-								dep));
+						logger.info(String.format("Module %s depends on module %s which did not return Ok", module
+								.getModuleName(), dep));
 						return false || undeterministic;
 					}
 				}

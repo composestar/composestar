@@ -42,7 +42,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * LOLA evaluates the superimposition selector statements in order to return the
  * program elements the filter modules should be imposed upon.
  */
-@ComposestarModule(ID = ModuleNames.LOLA, dependsOn = { ModuleNames.COLLECTOR })
+//@ComposestarModule(ID = ModuleNames.LOLA, dependsOn = { ModuleNames.COLLECTOR })
 public abstract class LOLA implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
@@ -81,6 +81,33 @@ public abstract class LOLA implements CTCommonModule
 			throw new NullPointerException("LanguageModel can not be null");
 		}
 		langModelClass = modelClass;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.LOLA;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.COLLECTOR };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
 	}
 
 	/**
@@ -291,8 +318,9 @@ public abstract class LOLA implements CTCommonModule
 		Writer oldIOOutput = IO.output;
 		try
 		{
-			IO.output = new OutputStreamWriter(new OutputStreamRedirector(CPSLogger.getCPSLogger(ModuleNames.LOLA
-					+ ".Jinni"), Level.WARN));
+			IO.output =
+					new OutputStreamWriter(new OutputStreamRedirector(CPSLogger.getCPSLogger(ModuleNames.LOLA
+							+ ".Jinni"), Level.WARN));
 
 			unitDict = new UnitDictionary(langModel);
 			resources.put(UnitDictionary.REPOSITORY_KEY, unitDict);

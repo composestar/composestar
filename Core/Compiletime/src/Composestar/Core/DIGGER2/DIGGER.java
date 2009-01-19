@@ -43,7 +43,8 @@ import Composestar.Utils.Perf.CPSTimer;
  * @author Michiel Hendriks
  */
 // FIXME not yet adjusted to the canonical model
-@ComposestarModule(ID = ModuleNames.DIGGER, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH }, importance = Importance.VALIDATION)
+// @ComposestarModule(ID = ModuleNames.DIGGER, dependsOn = { ModuleNames.FIRE,
+// ModuleNames.FILTH }, importance = Importance.VALIDATION)
 public class DIGGER implements CTCommonModule
 {
 	/**
@@ -94,6 +95,33 @@ public class DIGGER implements CTCommonModule
 
 	public DIGGER()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.DIGGER;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.FIRE, ModuleNames.FILTH };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.VALIDATION;
+	}
 
 	/*
 	 * (non-Javadoc)

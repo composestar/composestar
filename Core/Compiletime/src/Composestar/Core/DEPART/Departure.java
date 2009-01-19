@@ -56,7 +56,8 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 // This module does not really depend on FILTH, it is just to make sure it is
 // executed after FILTH, because FILTH requires the original filter modules.
-@ComposestarModule(ID = ModuleNames.DEPART, dependsOn = { ModuleNames.LOLA, ModuleNames.FILTH })
+// @ComposestarModule(ID = ModuleNames.DEPART, dependsOn = { ModuleNames.LOLA,
+// ModuleNames.FILTH })
 public class Departure implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DEPART);
@@ -67,6 +68,33 @@ public class Departure implements CTCommonModule
 
 	public Departure()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.DEPART;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.LOLA, ModuleNames.FILTH };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -41,7 +41,8 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER }, importance = Importance.VALIDATION)
+// @ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER
+// }, importance = Importance.VALIDATION)
 public class Check implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CHKREP);
@@ -66,6 +67,33 @@ public class Check implements CTCommonModule
 
 	public Check()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.CHKREP;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.COPPER };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.VALIDATION;
+	}
 
 	/*
 	 * (non-Javadoc)

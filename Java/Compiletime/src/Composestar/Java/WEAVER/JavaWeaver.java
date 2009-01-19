@@ -26,7 +26,8 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @see Composestar.Java.WEAVER.JavaWeaver#run(CommonResources)
  */
-@ComposestarModule(ID = ModuleNames.WEAVER, dependsOn = { ComposestarModule.DEPEND_ALL })
+// @ComposestarModule(ID = ModuleNames.WEAVER, dependsOn = {
+// ComposestarModule.DEPEND_ALL })
 public class JavaWeaver implements CTCommonModule
 {
 	/**
@@ -50,6 +51,33 @@ public class JavaWeaver implements CTCommonModule
 	 */
 	public JavaWeaver()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.WEAVER;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { DEPEND_ALL };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
+	}
 
 	/**
 	 * Run this module. This module does the following tasks:

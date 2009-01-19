@@ -69,7 +69,8 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 // FIXME this can be optimized a lot, quite some repository.getAll(Concern.clss)
 // calls, and other things
-@ComposestarModule(ID = ModuleNames.SIGN, dependsOn = { ModuleNames.REXREF, ModuleNames.FIRE, ModuleNames.FILTH })
+// @ComposestarModule(ID = ModuleNames.SIGN, dependsOn = { ModuleNames.REXREF,
+// ModuleNames.FIRE, ModuleNames.FILTH })
 public class Sign implements CTCommonModule
 {
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SIGN);
@@ -133,6 +134,33 @@ public class Sign implements CTCommonModule
 				.createFilterActionText(FilterActionNames.DISPATCH_ACTION)));
 		dictionary.put(SEND_FORMULA, new StateType(GrooveASTBuilderCN
 				.createFilterActionText(FilterActionNames.SEND_ACTION)));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
+	 */
+	public String getModuleName()
+	{
+		return ModuleNames.SIGN;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
+	 */
+	public String[] getDependencies()
+	{
+		return new String[] { ModuleNames.REXREF, ModuleNames.FIRE, ModuleNames.FILTH };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
+	 */
+	public ModuleImportance getImportance()
+	{
+		return ModuleImportance.REQUIRED;
 	}
 
 	/**
