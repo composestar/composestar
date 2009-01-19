@@ -27,52 +27,52 @@
 	<target name="build" />
 
 	<target name="copy_files" depends="local_init">
-		<copy todir="${out.build}/features/composestar.java_${version.java}">
+		<copy todir="${out.build}/features/composestar.java_${version.java}.${version.eclipse.qualifier}">
 			<fileset dir="${build.java}/Plugin/Eclipse/dist-feature" />
 		</copy>
 
 		<!-- composestar.java package -->
-		<copy todir="${out.build}/plugins/composestar.java_${version.java}">
+		<copy todir="${out.build}/plugins/composestar.java_${version.java}.${version.eclipse.qualifier}">
 			<fileset dir="${build.java}/Compiletime/${out.dist}" />
 			<fileset dir="${build.java}/Runtime2/${out.dist}" />
 		</copy>
-		<copy todir="${out.build}/plugins/composestar.java.plugin_${version.java}">
+		<copy todir="${out.build}/plugins/composestar.java.plugin_${version.java}.${version.eclipse.qualifier}">
 			<fileset dir="${build.java}/Plugin/eclipse/${out.dist}" />
 		</copy>
 
 		<!-- composestar.core package -->
-		<copy todir="${out.build}/plugins/composestar.core_${version.java}">
+		<copy todir="${out.build}/plugins/composestar.core_${version.java}.${version.eclipse.qualifier}">
 			<fileset dir="${build.core}/Compiletime/${out.dist}" />
 		</copy>
-		<copy todir="${out.build}/plugins/composestar.core.plugin_${version.java}">
+		<copy todir="${out.build}/plugins/composestar.core.plugin_${version.java}.${version.eclipse.qualifier}">
 			<fileset dir="${build.core}/Plugin/eclipse/${out.dist}" />
 		</copy>
 	</target>
 
 	<target name="publish" depends="local_init,copy_files" description="create eclipse packages">
-		<jar destfile="${out.dist}/www/features/composestar.java_${version.java}.jar">
-			<fileset dir="${out.build}/features/composestar.java_${version.java}" />
+		<jar destfile="${out.dist}/www/features/composestar.java_${version.java}.${version.eclipse.qualifier}.jar">
+			<fileset dir="${out.build}/features/composestar.java_${version.java}.${version.eclipse.qualifier}" />
 		</jar>
-		<jar destfile="${out.dist}/www/plugins/composestar.java_${version.java}.jar" manifest="${out.build}/plugins/composestar.java_${version.java}/META-INF/MANIFEST.MF">
-			<fileset dir="${out.build}/plugins/composestar.java_${version.java}" />
+		<jar destfile="${out.dist}/www/plugins/composestar.java_${version.java}.${version.eclipse.qualifier}.jar" manifest="${out.build}/plugins/composestar.java_${version.java}.${version.eclipse.qualifier}/META-INF/MANIFEST.MF">
+			<fileset dir="${out.build}/plugins/composestar.java_${version.java}.${version.eclipse.qualifier}" />
 		</jar>
-		<jar destfile="${out.dist}/www/plugins/composestar.java.plugin_${version.java}.jar" manifest="${out.build}/plugins/composestar.java.plugin_${version.java}/META-INF/MANIFEST.MF">
-			<fileset dir="${out.build}/plugins/composestar.java.plugin_${version.java}" />
+		<jar destfile="${out.dist}/www/plugins/composestar.java.plugin_${version.java}.${version.eclipse.qualifier}.jar" manifest="${out.build}/plugins/composestar.java.plugin_${version.java}.${version.eclipse.qualifier}/META-INF/MANIFEST.MF">
+			<fileset dir="${out.build}/plugins/composestar.java.plugin_${version.java}.${version.eclipse.qualifier}" />
 		</jar>
-		<jar destfile="${out.dist}/www/plugins/composestar.core_${version.core}.jar" manifest="${out.build}/plugins/composestar.core_${version.core}/META-INF/MANIFEST.MF">
-			<fileset dir="${out.build}/plugins/composestar.core_${version.java}" />
+		<jar destfile="${out.dist}/www/plugins/composestar.core_${version.core}.${version.eclipse.qualifier}.jar" manifest="${out.build}/plugins/composestar.core_${version.core}.${version.eclipse.qualifier}/META-INF/MANIFEST.MF">
+			<fileset dir="${out.build}/plugins/composestar.core_${version.java}.${version.eclipse.qualifier}" />
 		</jar>
-		<jar destfile="${out.dist}/www/plugins/composestar.core.plugin_${version.core}.jar" manifest="${out.build}/plugins/composestar.core.plugin_${version.core}/META-INF/MANIFEST.MF">
-			<fileset dir="${out.build}/plugins/composestar.core.plugin_${version.java}" />
+		<jar destfile="${out.dist}/www/plugins/composestar.core.plugin_${version.core}.${version.eclipse.qualifier}.jar" manifest="${out.build}/plugins/composestar.core.plugin_${version.core}.${version.eclipse.qualifier}/META-INF/MANIFEST.MF">
+			<fileset dir="${out.build}/plugins/composestar.core.plugin_${version.java}.${version.eclipse.qualifier}" />
 		</jar>
 
 		<copy file="site.template.xml" tofile="${out.dist}/www/site.xml" overwrite="true" />
 		<replace file="${out.dist}/www/site.xml">
-			<replacefilter token="@version.core@" value="${version.core}" />
-			<replacefilter token="@version.java@" value="${version.java}" />
+			<replacefilter token="@version.core@" value="${version.core}.${version.eclipse.qualifier}" />
+			<replacefilter token="@version.java@" value="${version.java}.${version.eclipse.qualifier}" />
 		</replace>
 
-		<zip destfile="${out.dist}/composestar.java_${version.java}.zip">
+		<zip destfile="${out.dist}/composestar.java_${version.java}.${version.eclipse.qualifier}.zip">
 			<fileset dir="${out.build}" />
 		</zip>
 		

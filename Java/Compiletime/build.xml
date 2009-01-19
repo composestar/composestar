@@ -121,7 +121,7 @@
 			<attribute name="Bundle-ManifestVersion" value="2" />
 			<attribute name="Bundle-Name" value="Compose*/Java" />
 			<attribute name="Bundle-SymbolicName" value="composestar.java" />
-			<attribute name="Bundle-Version" value="${version.java}" />
+			<attribute name="Bundle-Version" value="${version.java}.${version.eclipse.qualifier}" />
 			<attribute name="Bundle-Vendor" value="University of Twente" />
 			<attribute name="Bundle-ClassPath" value="${composestar.java.bundle-classpath}" />
 			<attribute name="Export-Package" value="${composestar.java.export-package}" />

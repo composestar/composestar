@@ -151,7 +151,7 @@
 			<attribute name="Bundle-ManifestVersion" value="2" />
 			<attribute name="Bundle-Name" value="Compose*/Core" />
 			<attribute name="Bundle-SymbolicName" value="composestar.core" />
-			<attribute name="Bundle-Version" value="${version.core}" />
+			<attribute name="Bundle-Version" value="${version.core}.${version.eclipse.qualifier}" />
 			<attribute name="Bundle-Vendor" value="University of Twente" />
 			<attribute name="Bundle-ClassPath" value="${composestar.core.bundle-classpath}" />
 			<attribute name="Export-Package" value="${composestar.core.export-package}" />

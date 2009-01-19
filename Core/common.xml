@@ -33,6 +33,13 @@
 		<property name="version.java" value="${version.core}" />
 		<property name="version.starlight" value="${version.core}" />
 		<property name="version.cwc" value="${version.core}" />
+		
+		<tstamp>
+            <format property="timestamp" pattern="yyyyMMddHHmm"/>
+        </tstamp>
+		<condition property="version.eclipse.qualifier" value="DEV" else="t${timestamp}-b${version.build}">
+		  <equals arg1="${version.build}" arg2="0" />
+		</condition>
 
 		<!-- various config items -->
 		<property name="out.build" value="build" />
@@ -343,14 +350,14 @@
 		</path>
 
 		<property name="eclipse.pluginsdir.core"
-			value="${eclipse.pluginsdir}${file.separator}composestar.core_${version.core}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.core_${version.core}.${version.eclipse.qualifier}" />
 		<property name="eclipse.pluginsdir.core.plugin"
-			value="${eclipse.pluginsdir}${file.separator}composestar.core.plugin_${version.core}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.core.plugin_${version.core}.${version.eclipse.qualifier}" />
 
 		<property name="eclipse.pluginsdir.java"
-			value="${eclipse.pluginsdir}${file.separator}composestar.java_${version.java}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.java_${version.java}.${version.eclipse.qualifier}" />
 		<property name="eclipse.pluginsdir.java.plugin"
-			value="${eclipse.pluginsdir}${file.separator}composestar.java.plugin_${version.java}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.java.plugin_${version.java}.${version.eclipse.qualifier}" />
 	</target>
 
 	<!-- generic target to rebuild all -->
@@ -497,6 +504,7 @@
 		<echo message="	 starlight.installdir:   ${starlight.installdir}" />
 		<echo message="	 eclipse.home:           ${eclipse.home}" />
 		<echo message="	 eclipse.pluginsdir:     ${eclipse.pluginsdir}" />
+		<echo message="  eclipse version qualifier: ${version.eclipse.qualifier} "/>
 		<echo></echo>
 		<echo message="Status of Compose* ports:" />
 		<echo message="  StarLight: ${status.starlight}	(version ${version.starlight})" />

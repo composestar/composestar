@@ -46,7 +46,7 @@
 	<target name="jar">
 		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF"/>
 		<manifest file="${out.build}/META-INF/MANIFEST.MF" mode="update">
-			<attribute name="Bundle-Version" value="${version.java}"/>
+			<attribute name="Bundle-Version" value="${version.java}.${version.eclipse.qualifier}"/>
 		</manifest>		
 		<copy todir="${out.build}">
 			<fileset dir="src">
@@ -61,8 +61,8 @@
 	<target name="quicklaunch" depends="init_local">
 		<copy file="quicklaunch/MANIFEST.MF.template" tofile="quicklaunch/MANIFEST.MF" overwrite="true"/>
 		<replace file="quicklaunch/MANIFEST.MF" >
-			<replacefilter token="@core@" value="../composestar.core_${version.core}/lib"/>
-			<replacefilter token="@java@" value="../composestar.java_${version.java}/lib"/>
+			<replacefilter token="@core@" value="../composestar.core_${version.core}.${version.eclipse.qualifier}/lib"/>
+			<replacefilter token="@java@" value="../composestar.java_${version.java}.${version.eclipse.qualifier}/lib"/>
 		</replace>
 		<jar destfile="${out.dist}/compiler.jar" manifest="quicklaunch/MANIFEST.MF">
 			<fileset dir="quicklaunch">
@@ -82,8 +82,8 @@
 	
 		<copy file="feature.template.xml" tofile="${out.dist.feature}/feature.xml" overwrite="true"/>
 		<replace file="${out.dist.feature}/feature.xml" >
-			<replacefilter token="@version.core@" value="${version.core}"/>
-			<replacefilter token="@version.java@" value="${version.java}"/>
+			<replacefilter token="@version.core@" value="${version.core}.${version.eclipse.qualifier}"/>
+			<replacefilter token="@version.java@" value="${version.java}.${version.eclipse.qualifier}"/>
 			<replacefilter token="@license@" value="${license}"/>
 		</replace>
 		
@@ -118,7 +118,7 @@
 		<copy todir="${eclipse.pluginsdir.java.plugin}">
 			<fileset dir="${out.dist}" />
 		</copy>
-		<copy todir="${eclipse.pluginsdir}/../features/composestar.java_${version.java}">
+		<copy todir="${eclipse.pluginsdir}/../features/composestar.java_${version.java}.${version.eclipse.qualifier}">
 			<fileset dir="${out.dist.feature}" />
 		</copy>			
 	</target>

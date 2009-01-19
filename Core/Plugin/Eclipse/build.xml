@@ -38,7 +38,7 @@
 	<target name="jar" depends="compile">
 		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF" />
 		<manifest file="${out.build}/META-INF/MANIFEST.MF" mode="update">
-			<attribute name="Bundle-Version" value="${version.core}" />
+			<attribute name="Bundle-Version" value="${version.core}.${version.eclipse.qualifier}" />
 		</manifest>
 		<jar destfile="${out.dist}/ComposestarEclipseCore.jar" manifest="${out.build}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
