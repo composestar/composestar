@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.PropertyNames;
@@ -114,7 +113,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 	 * (non-Javadoc)
 	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
 	 */
-	@Override
 	public String getModuleName()
 	{
 		return ModuleNames.WESPEM;
@@ -124,7 +122,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 	 * (non-Javadoc)
 	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
 	 */
-	@Override
 	public String[] getDependencies()
 	{
 		return new String[] { DEPEND_ALL, ModuleNames.SIGN };
@@ -134,7 +131,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 	 * (non-Javadoc)
 	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
 	 */
-	@Override
 	public ModuleImportance getImportance()
 	{
 		return ModuleImportance.REQUIRED;
@@ -193,8 +189,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private void writeWeaveSpecs() throws ModuleException
 	{
-		ConfigurationContainer configContainer = (ConfigurationContainer) resources
-				.get(StarLightMaster.RESOURCE_CONFIGCONTAINER);
+		ConfigurationContainer configContainer =
+				(ConfigurationContainer) resources.get(StarLightMaster.RESOURCE_CONFIGCONTAINER);
 		ArrayOfAssemblyConfig assemblies = configContainer.getAssemblies();
 		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
 		{
@@ -247,7 +243,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 		FilterCode[] filterCodes = compressor.getGeneralizedFilterCodes();
 
-		composestar.dotNET2.tym.entities.FilterCode[] translatedFilterCodes = new composestar.dotNET2.tym.entities.FilterCode[filterCodes.length];
+		composestar.dotNET2.tym.entities.FilterCode[] translatedFilterCodes =
+				new composestar.dotNET2.tym.entities.FilterCode[filterCodes.length];
 
 		for (int i = 0; i < filterCodes.length; i++)
 		{
@@ -275,8 +272,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 		}
 		for (ConflictRule cr : sresc.getRules())
 		{
-			composestar.dotNET2.tym.entities.ConflictRuleElement rule = weaveSpec.getConflictRules()
-					.addNewConflictRule();
+			composestar.dotNET2.tym.entities.ConflictRuleElement rule =
+					weaveSpec.getConflictRules().addNewConflictRule();
 			rule.setPattern(cr.getPattern().toString());
 			rule.setResource(cr.getResource().getName());
 			rule.setConstraint(cr.getType() == ConflictRule.RuleType.Constraint);
@@ -338,8 +335,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 				{
 					if (fmvar instanceof Internal)
 					{
-						composestar.dotNET2.tym.entities.Internal storedInternal = weaveType.getInternals()
-								.addNewInternal();
+						composestar.dotNET2.tym.entities.Internal storedInternal =
+								weaveType.getInternals().addNewInternal();
 						storedInternal.setName(getUniqueName(fmvar));
 
 						Internal intern = (Internal) fmvar;
@@ -350,8 +347,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 					}
 					else if (fmvar instanceof External)
 					{
-						composestar.dotNET2.tym.entities.External storedExternal = weaveType.getExternals()
-								.addNewExternal();
+						composestar.dotNET2.tym.entities.External storedExternal =
+								weaveType.getExternals().addNewExternal();
 						storedExternal.setName(getUniqueName(fmvar));
 
 						External extern = (External) fmvar;
@@ -364,8 +361,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 					}
 					else if (fmvar instanceof Condition)
 					{
-						composestar.dotNET2.tym.entities.Condition storedCondition = weaveType.getConditions()
-								.addNewCondition();
+						composestar.dotNET2.tym.entities.Condition storedCondition =
+								weaveType.getConditions().addNewCondition();
 						storedCondition.setName(getUniqueName(fmvar));
 
 						storedCondition.setReference(createReference(((Condition) fmvar).getMethodReference(), type));
@@ -374,8 +371,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 				if (ifm.getCondition() != null && !storedConditions.contains(ifm.getCondition()))
 				{
-					composestar.dotNET2.tym.entities.Condition storedCondition = weaveType.getConditions()
-							.addNewCondition();
+					composestar.dotNET2.tym.entities.Condition storedCondition =
+							weaveType.getConditions().addNewCondition();
 					storedCondition.setName(String.format("%s_%d", ifm.getCondition().getReferenceId(), System
 							.identityHashCode(ifm.getCondition())));
 					storedCondition.setReference(createReference(ifm.getCondition(), null));

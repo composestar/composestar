@@ -111,7 +111,7 @@ public class EmbeddedSource implements Serializable
 	 */
 	public void setLanguage(String value)
 	{
-		this.language = value;
+		language = value;
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class EmbeddedSource implements Serializable
 	 */
 	public void setFilename(String value)
 	{
-		this.filename = value;
+		filename = value;
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class EmbeddedSource implements Serializable
 		{
 			value = "";
 		}
-		this.code = value;
+		code = value;
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class EmbeddedSource implements Serializable
 	 */
 	public void setSourceInformation(SourceInformation value)
 	{
-		this.sourceInformation = value;
+		sourceInformation = value;
 	}
 
 	/**

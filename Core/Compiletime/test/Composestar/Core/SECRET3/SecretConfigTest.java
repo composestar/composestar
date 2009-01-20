@@ -29,9 +29,6 @@ import junit.framework.TestCase;
 import org.apache.log4j.BasicConfigurator;
 
 import Composestar.Core.Exception.ConfigurationException;
-import Composestar.Core.SECRET3.SECRET;
-import Composestar.Core.SECRET3.ResourceOperationLabelerEx;
-import Composestar.Core.SECRET3.SECRETResources;
 import Composestar.Core.SECRET3.Config.Xml.XmlConfiguration;
 
 /**
@@ -43,7 +40,6 @@ public class SecretConfigTest extends TestCase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
@@ -55,7 +51,6 @@ public class SecretConfigTest extends TestCase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override

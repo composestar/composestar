@@ -35,7 +35,6 @@ public class CPSPatternParser extends PatternParser
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.apache.log4j.helpers.PatternParser#finalizeConverter(char)
 	 */
 	@Override

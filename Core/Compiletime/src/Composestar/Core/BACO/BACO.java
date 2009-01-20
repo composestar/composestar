@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.CustomFilter;

@@ -4,7 +4,6 @@
  */
 package Composestar.Core.INLINE.highlevel;
 
-
 // FIXME not implemented
 public interface HighLevelInlineStrategy
 {

@@ -29,10 +29,10 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Encapsulates the data in the module's moduleinfo.xml <br /> Create an
- * instance of this class using the <code>ModuleInfo.load()</code> static
- * method. To use this information in a module request the instance through the
- * Configuration class.
+ * Encapsulates the data in the module's moduleinfo.xml <br />
+ * Create an instance of this class using the <code>ModuleInfo.load()</code>
+ * static method. To use this information in a module request the instance
+ * through the Configuration class.
  * 
  * @author Michiel Hendriks
  */

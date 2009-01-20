@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.PropertyNames;
@@ -1015,7 +1014,7 @@ public class Sign implements CTCommonModule
 		{
 			return new ArrayList<MethodInfo>();
 		}
-		Type dt = (Type) c.getTypeReference().getReference();
+		Type dt = c.getTypeReference().getReference();
 		if (dt == null)
 		{
 			return new ArrayList<MethodInfo>();
@@ -1279,7 +1278,7 @@ public class Sign implements CTCommonModule
 	{
 		Collection<MethodInfo> methods;
 		// get dispatchtarget concern and methods:
-		if ((target instanceof CpsObject) && ((CpsObject) target).isInnerObject())
+		if (target instanceof CpsObject && ((CpsObject) target).isInnerObject())
 		{
 			// inner target should only get the actual methods
 			methods = target.getTypeReference().getReference().getMethods();
@@ -1441,7 +1440,7 @@ public class Sign implements CTCommonModule
 		Type type = target.getTypeReference().getReference();
 		MethodInfo dispatchMethod = method.getClone(selector.getName(), type);
 
-		if ((target instanceof CpsObject) && ((CpsObject) target).isInnerObject())
+		if (target instanceof CpsObject && ((CpsObject) target).isInnerObject())
 		{
 			// special case, don't check the signature
 			List<MethodInfo> methods = type.getMethods();

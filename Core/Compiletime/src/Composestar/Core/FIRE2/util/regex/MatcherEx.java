@@ -84,7 +84,6 @@ public class MatcherEx extends AbstractMatcher
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.FIRE2.util.regex.AbstractMatcher#matches()
 	 */
 	@Override
@@ -193,8 +192,9 @@ public class MatcherEx extends AbstractMatcher
 		}
 
 		FlowNode fnode = state.executionState.getFlowNode();
-		boolean isReturnAction = fnode.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE)
-				|| fnode.containsName(FlowNode.REJECT_RETURN_ACTION_NODE);
+		boolean isReturnAction =
+				fnode.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE)
+						|| fnode.containsName(FlowNode.REJECT_RETURN_ACTION_NODE);
 		boolean isReturnFlow = fnode.containsName(FlowNode.RETURN_ACTION_NODE);
 
 		for (ExecutionTransition trans : state.executionState.getOutTransitionsEx())
@@ -221,8 +221,8 @@ public class MatcherEx extends AbstractMatcher
 			{
 				if (isReturnAction)
 				{
-					CombinedState newState = new CombinedState(trans.getEndState(), state.regularState, state, trans,
-							null);
+					CombinedState newState =
+							new CombinedState(trans.getEndState(), state.regularState, state, trans, null);
 					newState.setReturnOps(sequence.getLabelsEx());
 					if (addCheckedState(newState))
 					{

@@ -92,7 +92,6 @@ public class ParallelTask extends TaskCollection
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.TASMAN.Task#execute()
 	 */
 	@Override

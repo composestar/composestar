@@ -28,8 +28,8 @@ import Composestar.Core.LAMA.UnitResult;
  * Corresponds to the ParameterInfo class in the .NET framework. For more
  * information on the methods and their meaning please refer to the microsoft
  * documentation:
- * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
- * fsystemreflectionparameterinfoclasstopic.asp
+ * http://msdn.microsoft.com/library/default.asp?url=/library/en-us
+ * /cpref/html/frlr fsystemreflectionparameterinfoclasstopic.asp
  */
 public class DotNETParameterInfo extends ParameterInfo
 {
@@ -155,8 +155,8 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
+	 * @see
+	 * Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
 	 */
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
@@ -193,7 +193,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
 	@Override

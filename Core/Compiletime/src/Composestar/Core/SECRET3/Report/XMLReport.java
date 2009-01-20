@@ -184,7 +184,7 @@ public class XMLReport implements SECRETReport
 	{
 		Element root = xmlDoc.createElement("secretreport");
 		root.setAttribute("project", config.getProject().getName());
-		root.setAttribute("timestamp", (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz")).format(new Date()));
+		root.setAttribute("timestamp", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz").format(new Date()));
 
 		writeResources(secretResources, xmlDoc, root);
 		writeActions(secretResources, xmlDoc, root);

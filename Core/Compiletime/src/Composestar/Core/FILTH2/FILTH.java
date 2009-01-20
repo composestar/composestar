@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COPPER3.FilterTypeMapping;
 import Composestar.Core.CpsRepository2.Concern;
@@ -67,7 +66,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Michiel Hendriks
  */
-//@ComposestarModule(ID = ModuleNames.FILTH, dependsOn = { ModuleNames.LOLA })
+// @ComposestarModule(ID = ModuleNames.FILTH, dependsOn = { ModuleNames.LOLA })
 public class FILTH implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);

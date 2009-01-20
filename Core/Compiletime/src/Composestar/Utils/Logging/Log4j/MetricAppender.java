@@ -73,8 +73,9 @@ public class MetricAppender extends AppenderSkeleton
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.log4j.AppenderSkeleton#append(org.apache.log4j.spi.LoggingEvent)
+	 * @see
+	 * org.apache.log4j.AppenderSkeleton#append(org.apache.log4j.spi.LoggingEvent
+	 * )
 	 */
 	@Override
 	protected void append(LoggingEvent event)
@@ -96,7 +97,6 @@ public class MetricAppender extends AppenderSkeleton
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.apache.log4j.AppenderSkeleton#close()
 	 */
 	@Override
@@ -107,7 +107,6 @@ public class MetricAppender extends AppenderSkeleton
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.apache.log4j.AppenderSkeleton#requiresLayout()
 	 */
 	@Override

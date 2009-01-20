@@ -57,16 +57,18 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources(Composestar.Core.INLINE.lowlevel.InlinerResources)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources
+	 * (Composestar.Core.INLINE.lowlevel.InlinerResources)
 	 */
 	public void setInlinerResources(InlinerResources resources)
 	{}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes()
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes
+	 * ()
 	 */
 	public String[] supportedTypes()
 	{
@@ -76,9 +78,9 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @seeComposestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
 	public String generate(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{
@@ -272,9 +274,10 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
 	public String generateMethodInit(CodeGenerator<String> codeGen, FilterActionInstruction action)
 	{

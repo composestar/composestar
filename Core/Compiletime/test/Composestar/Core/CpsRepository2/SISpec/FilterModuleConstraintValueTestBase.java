@@ -27,7 +27,6 @@ package Composestar.Core.CpsRepository2.SISpec;
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraintValue;
 
 /**
  * @author Michiel Hendriks

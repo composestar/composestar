@@ -99,8 +99,8 @@ class InstructionTranslator implements Visitor
 	 */
 	public Object visitFilterCode(FilterCode filterCode)
 	{
-		composestar.dotNET2.tym.entities.FilterCode weaveFilterCode = composestar.dotNET2.tym.entities.FilterCode.Factory
-				.newInstance();
+		composestar.dotNET2.tym.entities.FilterCode weaveFilterCode =
+				composestar.dotNET2.tym.entities.FilterCode.Factory.newInstance();
 
 		weaveFilterCode.setBookKeeping(filterCode.getBookKeeping());
 
@@ -139,8 +139,8 @@ class InstructionTranslator implements Visitor
 
 	public Object visitBlock(Block block)
 	{
-		composestar.dotNET2.tym.entities.Block weaveBlock = composestar.dotNET2.tym.entities.Block.Factory
-				.newInstance();
+		composestar.dotNET2.tym.entities.Block weaveBlock =
+				composestar.dotNET2.tym.entities.Block.Factory.newInstance();
 		weaveBlock.addNewInstructions();
 
 		setLabel(block, weaveBlock);
@@ -162,8 +162,8 @@ class InstructionTranslator implements Visitor
 
 	public Object visitBranch(Branch branch)
 	{
-		composestar.dotNET2.tym.entities.Branch weaveBranch = composestar.dotNET2.tym.entities.Branch.Factory
-				.newInstance();
+		composestar.dotNET2.tym.entities.Branch weaveBranch =
+				composestar.dotNET2.tym.entities.Branch.Factory.newInstance();
 
 		setLabel(branch, weaveBranch);
 
@@ -184,8 +184,8 @@ class InstructionTranslator implements Visitor
 
 	public Object visitFilterAction(FilterActionInstruction filterAction)
 	{
-		composestar.dotNET2.tym.entities.FilterAction weaveAction = composestar.dotNET2.tym.entities.FilterAction.Factory
-				.newInstance();
+		composestar.dotNET2.tym.entities.FilterAction weaveAction =
+				composestar.dotNET2.tym.entities.FilterAction.Factory.newInstance();
 
 		setLabel(filterAction, weaveAction);
 
@@ -225,7 +225,7 @@ class InstructionTranslator implements Visitor
 				CpsVariable var = asgn.getValue();
 				if (var instanceof CpsSelector)
 				{
-					weaveAction.setFilterArgumentSelector((((CpsSelector) var)).getName());
+					weaveAction.setFilterArgumentSelector(((CpsSelector) var).getName());
 				}
 				else if (var instanceof CpsLiteral)
 				{
@@ -262,8 +262,8 @@ class InstructionTranslator implements Visitor
 
 	private composestar.dotNET2.tym.entities.ConditionExpression translateCondition(MethodReference condition)
 	{
-		composestar.dotNET2.tym.entities.ConditionLiteral conditionLiteral = composestar.dotNET2.tym.entities.ConditionLiteral.Factory
-				.newInstance();
+		composestar.dotNET2.tym.entities.ConditionLiteral conditionLiteral =
+				composestar.dotNET2.tym.entities.ConditionLiteral.Factory.newInstance();
 		conditionLiteral
 				.setName(String.format("%s_%d", condition.getReferenceId(), System.identityHashCode(condition)));
 

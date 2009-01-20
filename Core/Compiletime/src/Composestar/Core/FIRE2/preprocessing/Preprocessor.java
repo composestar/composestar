@@ -32,7 +32,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.Exception.ModuleException;

@@ -531,8 +531,10 @@ public class StreamGxl implements Xml<Graph>
 		}
 
 		// now convert the gxl to an attribute graph
-		if (gxl.getGraphCount() != 1) throw new IOException(String
-				.format("Only one graph allowed in document %s", name));
+		if (gxl.getGraphCount() != 1)
+		{
+			throw new IOException(String.format("Only one graph allowed in document %s", name));
+		}
 		// Get the first and only graph element
 		return gxl.getGraph(0);
 	}

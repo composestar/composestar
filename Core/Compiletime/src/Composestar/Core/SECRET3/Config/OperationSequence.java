@@ -242,7 +242,6 @@ public class OperationSequence implements Serializable
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -257,7 +256,6 @@ public class OperationSequence implements Serializable
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
@@ -303,7 +301,6 @@ public class OperationSequence implements Serializable
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Object#toString()
 		 */
 		@Override

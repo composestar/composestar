@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import Composestar.Core.CpsRepository2.Meta.FileInformation;
 
 /**
  * @author Michiel Hendriks
@@ -47,7 +46,6 @@ public class FileInformationTest extends TestCase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
@@ -60,7 +58,6 @@ public class FileInformationTest extends TestCase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override
@@ -77,7 +74,8 @@ public class FileInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#update(java.io.File)}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#update(java.io.File)}
+	 * .
 	 * 
 	 * @throws IOException
 	 */
@@ -102,7 +100,8 @@ public class FileInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#update(java.io.File)}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#update(java.io.File)}
+	 * .
 	 */
 	public void testUpdate2()
 	{
@@ -118,7 +117,8 @@ public class FileInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#getLocation()}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#getLocation()}
+	 * .
 	 */
 	public void testGetLocation()
 	{
@@ -127,7 +127,8 @@ public class FileInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#getLastModified()}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#getLastModified()}
+	 * .
 	 */
 	public void testGetLastModified()
 	{
@@ -136,7 +137,8 @@ public class FileInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#isOutdated()}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#isOutdated()}
+	 * .
 	 */
 	public void testIsOutdated()
 	{
@@ -147,7 +149,8 @@ public class FileInformationTest extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#isOutdated()}.
+	 * {@link Composestar.Core.CpsRepository2.Meta.FileInformation#isOutdated()}
+	 * .
 	 */
 	public void testEquals()
 	{

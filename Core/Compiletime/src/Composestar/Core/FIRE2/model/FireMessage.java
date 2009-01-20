@@ -312,27 +312,27 @@ public class FireMessage implements CpsMessage
 		{
 			throw new NullPointerException("Property name can not be null");
 		}
-		if (PropertyNames.SENDER.equals(name) && ((value instanceof CanonProperty) || (value instanceof CpsObject)))
+		if (PropertyNames.SENDER.equals(name) && (value instanceof CanonProperty || value instanceof CpsObject))
 		{
 			properties.put(name, value);
 			return;
 		}
-		else if (PropertyNames.SELF.equals(name) && (value instanceof CanonProperty))
+		else if (PropertyNames.SELF.equals(name) && value instanceof CanonProperty)
 		{
 			properties.put(name, value);
 			return;
 		}
-		else if (PropertyNames.TARGET.equals(name) && (value instanceof CanonProperty))
+		else if (PropertyNames.TARGET.equals(name) && value instanceof CanonProperty)
 		{
 			properties.put(name, value);
 			return;
 		}
-		else if (PropertyNames.SERVER.equals(name) && (value instanceof CanonProperty))
+		else if (PropertyNames.SERVER.equals(name) && value instanceof CanonProperty)
 		{
 			properties.put(name, value);
 			return;
 		}
-		else if (PropertyNames.SELECTOR.equals(name) && (value instanceof CanonProperty))
+		else if (PropertyNames.SELECTOR.equals(name) && value instanceof CanonProperty)
 		{
 			properties.put(name, value);
 			return;
@@ -454,7 +454,7 @@ public class FireMessage implements CpsMessage
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+		result = prime * result + (properties == null ? 0 : properties.hashCode());
 		return result;
 	}
 

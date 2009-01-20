@@ -37,7 +37,6 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.xmlbeans.XmlException;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.CpsConcern;
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
@@ -120,7 +119,6 @@ public class StarLightCollectorRunner implements CTCommonModule
 	 * (non-Javadoc)
 	 * @see Composestar.Core.Master.CTCommonModule#getModuleName()
 	 */
-	@Override
 	public String getModuleName()
 	{
 		return ModuleNames.COLLECTOR;
@@ -130,7 +128,6 @@ public class StarLightCollectorRunner implements CTCommonModule
 	 * (non-Javadoc)
 	 * @see Composestar.Core.Master.CTCommonModule#getDependencies()
 	 */
-	@Override
 	public String[] getDependencies()
 	{
 		return null;
@@ -140,7 +137,6 @@ public class StarLightCollectorRunner implements CTCommonModule
 	 * (non-Javadoc)
 	 * @see Composestar.Core.Master.CTCommonModule#getImportance()
 	 */
-	@Override
 	public ModuleImportance getImportance()
 	{
 		return ModuleImportance.REQUIRED;
@@ -229,8 +225,14 @@ public class StarLightCollectorRunner implements CTCommonModule
 	 */
 	private JoinPointContextArgument getJPCA(boolean value)
 	{
-		if (value) return JoinPointContextArgument.FULL;
-		else return JoinPointContextArgument.UNUSED;
+		if (value)
+		{
+			return JoinPointContextArgument.FULL;
+		}
+		else
+		{
+			return JoinPointContextArgument.UNUSED;
+		}
 	}
 
 	private void collectFilterTypesAndActions() throws ModuleException
@@ -439,8 +441,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 			if (pc == null)
 			{
 				pc = new PrimitiveConcern(type.getFullName().split("\\."));
-				Composestar.Core.Config.Source typeSource = resources.configuration().getProject().getTypeMapping()
-						.getSource(type.getFullName());
+				Composestar.Core.Config.Source typeSource =
+						resources.configuration().getProject().getTypeMapping().getSource(type.getFullName());
 				if (typeSource != null)
 				{
 					pc.setSourceInformation(new SourceInformation(new FileInformation(typeSource.getFile())));

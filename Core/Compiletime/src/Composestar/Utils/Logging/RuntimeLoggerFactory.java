@@ -34,7 +34,7 @@ public class RuntimeLoggerFactory implements ILoggerFactory
 	 */
 	public static boolean setLoggerClass(Class newLoggerClass)
 	{
-		if ((newLoggerClass != null) && newLoggerClass.isAssignableFrom(RuntimeLogger.class))
+		if (newLoggerClass != null && newLoggerClass.isAssignableFrom(RuntimeLogger.class))
 		{
 			loggerClass = newLoggerClass;
 			return true;

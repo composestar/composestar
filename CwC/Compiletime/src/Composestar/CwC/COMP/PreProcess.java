@@ -26,7 +26,6 @@ package Composestar.CwC.COMP;
 
 import java.io.File;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.Config.Language;

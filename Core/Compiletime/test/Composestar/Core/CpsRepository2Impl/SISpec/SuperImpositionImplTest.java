@@ -27,7 +27,6 @@ package Composestar.Core.CpsRepository2Impl.SISpec;
 import Composestar.Core.CpsRepository2.SISpec.SICondition;
 import Composestar.Core.CpsRepository2.SISpec.Selector;
 import Composestar.Core.CpsRepository2.SISpec.SuperImpositionTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.SISpecificationImpl;
 
 /**
  * @author Michiel Hendriks

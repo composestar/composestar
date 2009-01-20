@@ -45,7 +45,7 @@ public class Branch extends Instruction
 	 */
 	public Branch(MatchingExpression expression)
 	{
-		this.matchingExpression = expression;
+		matchingExpression = expression;
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class Branch extends Instruction
 	 */
 	public Branch(MethodReference condition)
 	{
-		this.conditionMethod = condition;
+		conditionMethod = condition;
 	}
 
 	/**

@@ -88,8 +88,7 @@ public class AnnotationBindingImpl extends AbstractRepositoryEntity implements A
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.AnnotationBinding#getSelector
+	 * @see Composestar.Core.CpsRepository2.SISpec.AnnotationBinding#getSelector
 	 * ()
 	 */
 	public Selector getSelector()
@@ -138,8 +137,7 @@ public class AnnotationBindingImpl extends AbstractRepositoryEntity implements A
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.AnnotationBinding#setSelector
+	 * @see Composestar.Core.CpsRepository2.SISpec.AnnotationBinding#setSelector
 	 * (Composestar.Core.CpsRepository2.SISpec.Selector)
 	 */
 	public void setSelector(Selector sel) throws NullPointerException

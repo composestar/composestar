@@ -48,9 +48,9 @@ public class VoidFilterActionCodeGen<T> implements FilterActionCodeGenerator<T>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @seeComposestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
 	public T generate(CodeGenerator<T> codeGen, FilterActionInstruction action)
 	{
@@ -59,8 +59,9 @@ public class VoidFilterActionCodeGen<T> implements FilterActionCodeGenerator<T>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes()
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes
+	 * ()
 	 */
 	public String[] supportedTypes()
 	{
@@ -69,17 +70,19 @@ public class VoidFilterActionCodeGen<T> implements FilterActionCodeGenerator<T>
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources(Composestar.Core.INLINE.lowlevel.InlinerResources)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources
+	 * (Composestar.Core.INLINE.lowlevel.InlinerResources)
 	 */
 	public void setInlinerResources(InlinerResources resources)
 	{}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @see
+	 * Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(
+	 * Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 * Composestar.Core.INLINE.model.FilterAction)
 	 */
 	public T generateMethodInit(CodeGenerator<T> codeGen, FilterActionInstruction action)
 	{

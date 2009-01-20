@@ -176,13 +176,15 @@ public class ParameterResolver extends ObjectInputStream
 		}
 		else if (obj instanceof MethodReference)
 		{
-			obj = refman.getMethodReference(obj.getReferenceId(), ((MethodReference) obj).getTypeReference()
-					.getReferenceId(), ((MethodReference) obj).getJoinPointContextArgument());
+			obj =
+					refman.getMethodReference(obj.getReferenceId(), ((MethodReference) obj).getTypeReference()
+							.getReferenceId(), ((MethodReference) obj).getJoinPointContextArgument());
 		}
 		else if (obj instanceof InstanceMethodReference)
 		{
-			obj = refman.getInstanceMethodReference(obj.getReferenceId(), ((InstanceMethodReference) obj)
-					.getCpsObject(), ((InstanceMethodReference) obj).getJoinPointContextArgument());
+			obj =
+					refman.getInstanceMethodReference(obj.getReferenceId(), ((InstanceMethodReference) obj)
+							.getCpsObject(), ((InstanceMethodReference) obj).getJoinPointContextArgument());
 		}
 		else
 		{
@@ -242,9 +244,10 @@ public class ParameterResolver extends ObjectInputStream
 					ProgramElement pe = ((CpsProgramElement) value).getProgramElement();
 					if (pe instanceof MethodInfo)
 					{
-						MethodReference tr = refman.getMethodReference(((MethodInfo) pe).getName(), ((MethodInfo) pe)
-								.parent().getFullName(), ((ParameterizedMethodReference) obj)
-								.getJoinPointContextArgument());
+						MethodReference tr =
+								refman.getMethodReference(((MethodInfo) pe).getName(), ((MethodInfo) pe).parent()
+										.getFullName(), ((ParameterizedMethodReference) obj)
+										.getJoinPointContextArgument());
 						if (tr.getReference() == null)
 						{
 							tr.setReference((MethodInfo) pe);

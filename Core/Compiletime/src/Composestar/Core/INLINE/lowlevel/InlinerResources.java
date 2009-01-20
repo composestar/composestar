@@ -81,7 +81,6 @@ public class InlinerResources implements ModuleResourceManager
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Resources.ModuleResourceManager#getModuleName()
 	 */
 	public String getModuleName()
@@ -91,8 +90,7 @@ public class InlinerResources implements ModuleResourceManager
 
 	/**
 	 * Returns the inputfiltercode that needs to be inlined on the given method,
-	 * or <code>null</code> if no inputfilters need to be inlined in the
-	 * method.
+	 * or <code>null</code> if no inputfilters need to be inlined in the method.
 	 * 
 	 * @param method
 	 * @return
@@ -118,8 +116,7 @@ public class InlinerResources implements ModuleResourceManager
 
 	/**
 	 * Returns the outputfiltercode that needs to be inlined on the given call,
-	 * or <code>null</code> if no outputfilters need to be inlined in the
-	 * call.
+	 * or <code>null</code> if no outputfilters need to be inlined in the call.
 	 * 
 	 * @param call
 	 * @return

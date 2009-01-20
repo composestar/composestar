@@ -82,7 +82,6 @@ public final class RegularPattern extends Pattern
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getStartState()
 	 */
 	@Override
@@ -93,7 +92,6 @@ public final class RegularPattern extends Pattern
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getEndState()
 	 */
 	@Override
@@ -477,8 +475,8 @@ public final class RegularPattern extends Pattern
 
 		/*
 		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.FIRE2.util.regex.RegularState#addOutTransition(Composestar.Core.FIRE2.util.regex.RegularTransition)
+		 * @seeComposestar.Core.FIRE2.util.regex.RegularState#addOutTransition(
+		 * Composestar.Core.FIRE2.util.regex.RegularTransition)
 		 */
 		@Override
 		public void addOutTransition(RegularTransition transition)
@@ -488,8 +486,9 @@ public final class RegularPattern extends Pattern
 
 		/*
 		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.FIRE2.util.regex.RegularState#removeOutTransition(Composestar.Core.FIRE2.util.regex.RegularTransition)
+		 * @see
+		 * Composestar.Core.FIRE2.util.regex.RegularState#removeOutTransition
+		 * (Composestar.Core.FIRE2.util.regex.RegularTransition)
 		 */
 		@Override
 		public void removeOutTransition(RegularTransition transition)
@@ -723,7 +722,6 @@ public final class RegularPattern extends Pattern
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Object#toString()
 		 */
 		@Override

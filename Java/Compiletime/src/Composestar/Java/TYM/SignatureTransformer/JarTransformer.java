@@ -66,8 +66,8 @@ public class JarTransformer
 				Signature signature = concern.getTypeReference().getReference().getSignature();
 				if (signature != null)
 				{
-					Collection<MethodInfo> sigChanges = signature.getMethods(EnumSet.of(MethodRelation.ADDED,
-							MethodRelation.REMOVED));
+					Collection<MethodInfo> sigChanges =
+							signature.getMethods(EnumSet.of(MethodRelation.ADDED, MethodRelation.REMOVED));
 					if (sigChanges.size() > 0)
 					{
 						ClassWrapper cw = new ClassWrapper(c, concern, null);

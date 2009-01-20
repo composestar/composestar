@@ -45,7 +45,6 @@ public class SkipConstraint extends ControlConstraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.FILTH2.Model.Constraint#getName()
 	 */
 	@Override
@@ -56,9 +55,9 @@ public class SkipConstraint extends ControlConstraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
-	 *      Composestar.Core.FILTH2.Model.ExecutionManager)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
+	 * Composestar.Core.FILTH2.Model.ExecutionManager)
 	 */
 	@Override
 	public boolean isValidOrder(List<Action> order, ExecutionManager exec)
@@ -83,7 +82,6 @@ public class SkipConstraint extends ControlConstraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

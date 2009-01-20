@@ -7,9 +7,7 @@ package Composestar.Core.CORE2;
 import java.util.Collection;
 import java.util.List;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.CpsRepository2.SIInfo.Superimposed;

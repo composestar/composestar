@@ -75,7 +75,6 @@ public class LabelSequence
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

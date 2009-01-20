@@ -10,7 +10,6 @@
 
 package Composestar.Core.Master;
 
-import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 

@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsRepository2.Concern;
@@ -61,7 +60,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Arjan
  */
-//@ComposestarModule(ID = ModuleNames.INLINE, dependsOn = { ModuleNames.SIGN })
+// @ComposestarModule(ID = ModuleNames.INLINE, dependsOn = { ModuleNames.SIGN })
 public class ModelBuilder implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.INLINE);

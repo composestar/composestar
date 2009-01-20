@@ -40,7 +40,6 @@ import weavec.grammar.AnonymousIdentifier;
 import weavec.grammar.TranslationUnitResult;
 import weavec.parser.AspectCLexer;
 import weavec.parser.AspectCParser;
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
@@ -168,7 +167,7 @@ public class TypeHarvester implements CTCommonModule
 				}
 				catch (RecognitionException e)
 				{
-					logger.error(new LogMessage(e.getMessage(), (new File(e.getFilename())).toString(), e.getLine(), e
+					logger.error(new LogMessage(e.getMessage(), new File(e.getFilename()).toString(), e.getLine(), e
 							.getColumn()), e);
 				}
 				catch (TokenStreamException e)

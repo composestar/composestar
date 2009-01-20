@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Exception.ModuleException;
@@ -19,7 +18,8 @@ import Composestar.Utils.Logging.CPSLogger;
  * Extracts the embedded sources from the concern sources and saves them to the
  * disk for further use.
  */
-//@ComposestarModule(ID = ModuleNames.EMBEX, dependsOn = { ModuleNames.COPPER })
+// @ComposestarModule(ID = ModuleNames.EMBEX, dependsOn = { ModuleNames.COPPER
+// })
 public class EMBEX implements CTCommonModule
 {
 	public static final String EMBEDDED_PATH = "embedded";

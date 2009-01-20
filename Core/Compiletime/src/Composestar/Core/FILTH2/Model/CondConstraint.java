@@ -42,7 +42,6 @@ public class CondConstraint extends ControlConstraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.FILTH2.Model.Constraint#getName()
 	 */
 	@Override
@@ -53,9 +52,9 @@ public class CondConstraint extends ControlConstraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
-	 *      Composestar.Core.FILTH2.Model.ExecutionManager)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
+	 * Composestar.Core.FILTH2.Model.ExecutionManager)
 	 */
 	@Override
 	public boolean isValidOrder(List<Action> order, ExecutionManager exec)

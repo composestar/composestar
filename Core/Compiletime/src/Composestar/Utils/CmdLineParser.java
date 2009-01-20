@@ -401,7 +401,7 @@ public class CmdLineParser
 		public void setValue(T value)
 		{
 			this.value = value;
-			valueSet = (value != null);
+			valueSet = value != null;
 		}
 
 		public boolean isSet()
@@ -684,7 +684,7 @@ public class CmdLineParser
 				throw new IllegalArgumentException("Switch does not take a value");
 			}
 			value = value + 1; // to prevent a dead local datastore (auto
-								// (un)boxing)
+			// (un)boxing)
 			valueSet = true;
 		}
 	}

@@ -48,8 +48,9 @@ public class SourcePatternConverter extends PatternConverter
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.log4j.helpers.PatternConverter#convert(org.apache.log4j.spi.LoggingEvent)
+	 * @see
+	 * org.apache.log4j.helpers.PatternConverter#convert(org.apache.log4j.spi
+	 * .LoggingEvent)
 	 */
 	@Override
 	protected String convert(LoggingEvent event)

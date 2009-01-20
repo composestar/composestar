@@ -92,8 +92,8 @@ public class JavaMethodInfo extends MethodInfo
 	@Override
 	public Collection<String> getUnitAttributes()
 	{
-		HashSet<String> result = new HashSet<String>(Arrays.asList(Modifier.toString(theMethod.getModifiers()).split(
-				" ")));
+		HashSet<String> result =
+				new HashSet<String>(Arrays.asList(Modifier.toString(theMethod.getModifiers()).split(" ")));
 		return result;
 	}
 

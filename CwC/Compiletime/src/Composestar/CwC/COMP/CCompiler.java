@@ -79,9 +79,9 @@ public class CCompiler implements LangCompiler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.COMP.LangCompiler#compileDummies(Composestar.Core.Config.Project,
-	 *      java.util.Set)
+	 * @see
+	 * Composestar.Core.COMP.LangCompiler#compileDummies(Composestar.Core.Config
+	 * .Project, java.util.Set)
 	 */
 	public void compileDummies(Project p, Set<Source> sources) throws CompilerException
 	{
@@ -162,9 +162,9 @@ public class CCompiler implements LangCompiler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.COMP.LangCompiler#compileSources(Composestar.Core.Config.Project,
-	 *      java.util.Set)
+	 * @see
+	 * Composestar.Core.COMP.LangCompiler#compileSources(Composestar.Core.Config
+	 * .Project, java.util.Set)
 	 */
 	public void compileSources(Project p, Set<Source> sources) throws CompilerException
 	{

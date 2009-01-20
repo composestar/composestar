@@ -32,9 +32,7 @@ public enum ERelationType
 	TYPE("Type"),
 
 	// Annotations
-	ANNOTATIONS("Annotations"),
-	ATTACHED_CLASSES("AttachedClasses"),
-	ATTACHED_INTERFACES("AttachedInterfaces"),
+	ANNOTATIONS("Annotations"), ATTACHED_CLASSES("AttachedClasses"), ATTACHED_INTERFACES("AttachedInterfaces"),
 	ATTACHED_METHODS("AttachedMethods"),
 	ATTACHED_FIELDS("AttachedFields"),
 	ATTACHED_PARAMETERS("AttachedParameters"),
@@ -44,19 +42,17 @@ public enum ERelationType
 
 	// Class
 	CLASS("Class"), CHILD_CLASSES("ChildClasses"), PARENT_CLASS("ParentClass"), CHILD_METHODS("ChildMethods"),
-	CHILD_FIELDS("ChildFields"), PARAMETER_CLASS("ParameterClass"),
-	METHOD_RETURN_CLASS("MethodReturnClass"),
-	FIELD_CLASS("FieldClass"),
-	IMPLEMENTS("Implements"),
+	CHILD_FIELDS("ChildFields"), PARAMETER_CLASS("ParameterClass"), METHOD_RETURN_CLASS("MethodReturnClass"),
+	FIELD_CLASS("FieldClass"), IMPLEMENTS("Implements"),
 
 	// Interface
-	INTERFACE("Interface"), CHILD_INTERFACES("ChildInterfaces"), PARENT_INTERFACE("ParentInterface"),
-	IMPLEMENTED_BY("ImplementedBy"), PARAMETER_INTERFACE("ParameterInterface"),
-	METHOD_RETURN_INTERFACE("MethodReturnInterface"), FIELD_INTERFACE("FieldInterface"),
+	INTERFACE("Interface"), CHILD_INTERFACES("ChildInterfaces"), PARENT_INTERFACE("ParentInterface"), IMPLEMENTED_BY(
+			"ImplementedBy"), PARAMETER_INTERFACE("ParameterInterface"), METHOD_RETURN_INTERFACE(
+			"MethodReturnInterface"), FIELD_INTERFACE("FieldInterface"),
 
 	// Method
-	CHILD_PARAMETERS("ChildParameters"), RETURN_CLASS("ReturnClass"), RETURN_INTERFACE("ReturnInterface"),
-	RETURN_TYPE("ReturnType"),
+	CHILD_PARAMETERS("ChildParameters"), RETURN_CLASS("ReturnClass"), RETURN_INTERFACE("ReturnInterface"), RETURN_TYPE(
+			"ReturnType"),
 
 	// Parameter
 	PARENT_METHOD("ParentMethod");

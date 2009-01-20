@@ -402,7 +402,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 		if (mi == null && mref.getTypeReference() instanceof InnerTypeReference)
 		{
 			Type innerType = method.parent();
-			for (MethodInfo m : (List<MethodInfo>) innerType.getMethods())
+			for (MethodInfo m : innerType.getMethods())
 			{
 				if (mref.getReferenceId().equals(m.getName()))
 				{

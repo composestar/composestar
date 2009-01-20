@@ -25,11 +25,9 @@
 package Composestar.Core.REXREF2;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.log4j.Level;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.FMParams.Parameterized;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
@@ -282,7 +280,7 @@ public class RexRef implements CTCommonModule
 			return;
 		}
 		// TODO: account for JPCA
-		for (MethodInfo mi : (List<MethodInfo>) type.getMethods())
+		for (MethodInfo mi : type.getMethods())
 		{
 			if (ref.getReferenceId().equals(mi.getName()))
 			{

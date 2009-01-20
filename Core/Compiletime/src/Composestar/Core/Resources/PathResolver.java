@@ -32,10 +32,10 @@ import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Utility class to resolve various paths to Compose* files. It will assume the
- * following setup: <code>/path/to/composestar/lib/ComposestarCORE.jar</code>
- * In that case the core will point to <code>/path/to/composestar/</code>.
- * The base element will point to whatever has been set as resourceBase. in most
- * cases core == base.
+ * following setup: <code>/path/to/composestar/lib/ComposestarCORE.jar</code> In
+ * that case the core will point to <code>/path/to/composestar/</code>. The base
+ * element will point to whatever has been set as resourceBase. in most cases
+ * core == base.
  * 
  * @author Michiel Hendriks
  */

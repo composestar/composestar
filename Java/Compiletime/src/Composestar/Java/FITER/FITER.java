@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.COPPER3.FilterTypeFactory;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
 import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
@@ -192,7 +190,7 @@ public class FITER implements CTCommonModule
 	 */
 	private void harvestFilterType(ProgramElement type, Set<CustomFilterType> customfilters)
 	{
-		List<Annotation> annots = (List<Annotation>) type.getAnnotations();
+		List<Annotation> annots = type.getAnnotations();
 		for (Annotation annot : annots)
 		{
 			if (annot.getType() == null)
@@ -283,7 +281,7 @@ public class FITER implements CTCommonModule
 		{
 			return;
 		}
-		List<Annotation> annots = (List<Annotation>) type.getAnnotations();
+		List<Annotation> annots = type.getAnnotations();
 		for (Annotation annot : annots)
 		{
 			if (annot.getType() == null)

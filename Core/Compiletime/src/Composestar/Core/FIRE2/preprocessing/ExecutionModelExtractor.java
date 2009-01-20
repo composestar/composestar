@@ -182,8 +182,8 @@ public class ExecutionModelExtractor
 	{
 		FlowTransition flowTransition = startState.getFlowNode().getTransition(endState.getFlowNode());
 
-		ExecutionTransition exeTrans = new BasicExecutionTransition(startState, transition.label().text(), endState,
-				flowTransition);
+		ExecutionTransition exeTrans =
+				new BasicExecutionTransition(startState, transition.label().text(), endState, flowTransition);
 
 		if (flowTransition == null || nonExecTransRules.contains(transition.label().text()))
 		{
@@ -219,8 +219,8 @@ public class ExecutionModelExtractor
 					throw new IllegalStateException("Two concecutive non-execution transitions");
 				}
 
-				ExecutionTransition exeTrans = new BasicExecutionTransition(startState, trans.getLabel(), newEnd,
-						flowTransition);
+				ExecutionTransition exeTrans =
+						new BasicExecutionTransition(startState, trans.getLabel(), newEnd, flowTransition);
 				executionModel.addTransition(exeTrans);
 			}
 
@@ -342,7 +342,7 @@ public class ExecutionModelExtractor
 				if (PropertyNames.TARGET.equals(propName) || PropertyNames.SELF.equals(propName)
 						|| PropertyNames.SENDER.equals(propName) || PropertyNames.SERVER.equals(propName))
 				{
-					if ((val instanceof CanonProperty) || (val instanceof CpsObject))
+					if (val instanceof CanonProperty || val instanceof CpsObject)
 					{
 						message.specialSetProperty(propName, val);
 					}
@@ -353,7 +353,7 @@ public class ExecutionModelExtractor
 				}
 				else if (PropertyNames.SELECTOR.equals(propName))
 				{
-					if ((val instanceof CanonProperty) || (val instanceof CpsSelector))
+					if (val instanceof CanonProperty || val instanceof CpsSelector)
 					{
 						message.specialSetProperty(propName, val);
 					}

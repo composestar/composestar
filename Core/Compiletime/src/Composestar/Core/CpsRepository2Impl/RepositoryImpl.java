@@ -335,7 +335,7 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		 */
 		public RepositoryIterator(Class<T> filter)
 		{
-			it = RepositoryImpl.this.superIterator();
+			it = superIterator();
 			filterClass = filter;
 		}
 

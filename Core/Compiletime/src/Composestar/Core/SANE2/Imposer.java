@@ -24,7 +24,6 @@
 
 package Composestar.Core.SANE2;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.References.ReferenceManager;

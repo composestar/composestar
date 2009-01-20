@@ -27,7 +27,6 @@ public class XMLDispatchGraphExporter extends DispatchGraphExporter
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.DIGGER2.DispatchGraphExporter#export()
 	 */
 	@Override

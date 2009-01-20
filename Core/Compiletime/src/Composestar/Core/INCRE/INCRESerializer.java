@@ -3,7 +3,6 @@ package Composestar.Core.INCRE;
 import java.io.File;
 import java.io.IOException;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ModuleException;

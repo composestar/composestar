@@ -9,7 +9,6 @@
  */
 package Composestar.Core.CONE;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;

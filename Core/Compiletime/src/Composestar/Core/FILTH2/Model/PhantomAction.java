@@ -41,8 +41,9 @@ public class PhantomAction extends Action
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.Action#addConstraint(Composestar.Core.FILTH2.Model.Constraint)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Action#addConstraint(Composestar.Core.FILTH2
+	 * .Model.Constraint)
 	 */
 	@Override
 	public void addConstraint(Constraint constraint)

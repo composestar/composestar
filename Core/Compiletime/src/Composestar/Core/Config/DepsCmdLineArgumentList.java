@@ -50,10 +50,8 @@ public class DepsCmdLineArgumentList extends CmdLineArgumentList
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Config.CmdLineArgumentList#addArgs(java.util.List,
-	 *      Composestar.Core.Config.Project, java.util.Set,
-	 *      java.util.Properties)
+	 * Composestar.Core.Config.Project, java.util.Set, java.util.Properties)
 	 */
 	@Override
 	public void addArgs(List<String> tolist, Project proj, Set<File> sources, Properties prop)

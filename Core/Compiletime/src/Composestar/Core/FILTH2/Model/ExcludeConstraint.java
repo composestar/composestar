@@ -43,7 +43,6 @@ public class ExcludeConstraint extends StructuralConstraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.FILTH2.Model.Constraint#getName()
 	 */
 	@Override
@@ -54,8 +53,8 @@ public class ExcludeConstraint extends StructuralConstraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
 	 */
 	@Override
 	public boolean isValidOrder(List<Action> order, ExecutionManager exec)

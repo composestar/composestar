@@ -62,8 +62,9 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.CwC.INLINE.CodeGen.AbstractHeaderFileGenerator#addMethod(Composestar.Core.LAMA.MethodInfo)
+	 * @see
+	 * Composestar.CwC.INLINE.CodeGen.AbstractHeaderFileGenerator#addMethod(
+	 * Composestar.Core.LAMA.MethodInfo)
 	 */
 	@Override
 	public void addMethod(MethodInfo mi)

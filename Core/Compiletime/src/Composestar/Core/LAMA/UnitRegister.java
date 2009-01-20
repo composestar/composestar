@@ -105,7 +105,7 @@ public class UnitRegister
 		// first add full names
 		for (Type unit : pendingReg)
 		{
-			typeMap.put((unit).getFullName(), unit);
+			typeMap.put(unit.getFullName(), unit);
 		}
 		pendingReg.clear();
 		for (ProgramElement unit : registeredUnits)

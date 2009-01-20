@@ -14,10 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
@@ -343,7 +341,7 @@ public class DIGGER implements CTCommonModule
 		{
 			return;
 		}
-		Type type = (Type) concern.getTypeReference().getReference();
+		Type type = concern.getTypeReference().getReference();
 		if (type == null)
 		{
 			return;

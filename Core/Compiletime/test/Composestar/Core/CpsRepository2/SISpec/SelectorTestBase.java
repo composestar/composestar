@@ -25,7 +25,6 @@
 package Composestar.Core.CpsRepository2.SISpec;
 
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
-import Composestar.Core.CpsRepository2.SISpec.Selector;
 
 /**
  * @author Michiel Hendriks
@@ -36,8 +35,7 @@ public abstract class SelectorTestBase extends QualifiedRepositoryEntityTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.SISpec.Selector#getSelection()}
-	 * .
+	 * {@link Composestar.Core.CpsRepository2.SISpec.Selector#getSelection()} .
 	 */
 	public void testGetSelection()
 	{

@@ -53,7 +53,6 @@ public class ExecutionTest extends TestCase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
@@ -74,7 +73,6 @@ public class ExecutionTest extends TestCase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override

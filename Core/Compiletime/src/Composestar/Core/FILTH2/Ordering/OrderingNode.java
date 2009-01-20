@@ -110,7 +110,6 @@ public class OrderingNode
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

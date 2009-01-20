@@ -37,14 +37,15 @@ import java.util.Set;
  */
 public class CPSTimerRepository
 {
-	protected final static InheritableThreadLocal<Set<CPSTimer>> groupTimers = new InheritableThreadLocal<Set<CPSTimer>>()
-	{
-		@Override
-		protected Set<CPSTimer> initialValue()
-		{
-			return new HashSet<CPSTimer>();
-		}
-	};
+	protected final static InheritableThreadLocal<Set<CPSTimer>> groupTimers =
+			new InheritableThreadLocal<Set<CPSTimer>>()
+			{
+				@Override
+				protected Set<CPSTimer> initialValue()
+				{
+					return new HashSet<CPSTimer>();
+				}
+			};
 
 	protected ThreadLocal<Map<String, CPSTimer>> threadTimers;
 

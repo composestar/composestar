@@ -38,9 +38,8 @@ public class DotNETTypeResolver extends TypeResolver
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.TypeResolver#resolve(Composestar.Core.LAMA.ProgramElement,
-	 *      Composestar.Core.LAMA.UnitRegister)
+	 * @seeComposestar.Core.LAMA.TypeResolver#resolve(Composestar.Core.LAMA.
+	 * ProgramElement, Composestar.Core.LAMA.UnitRegister)
 	 */
 	@Override
 	public void resolve(ProgramElement unit, UnitRegister register)

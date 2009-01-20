@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.SISpec.SelectorTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.AbstractSelector;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
 

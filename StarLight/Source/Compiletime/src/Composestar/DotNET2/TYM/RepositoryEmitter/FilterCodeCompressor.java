@@ -563,8 +563,9 @@ public class FilterCodeCompressor
 			// TODO not a deep clone
 			Collection<CanonAssignment> args = new ArrayList<CanonAssignment>(filterAction.getArguments());
 
-			FilterActionInstruction copy = new FilterActionInstruction(filterAction.getType(), genMessage, args,
-					filterAction.isOnCall(), filterAction.isReturning());
+			FilterActionInstruction copy =
+					new FilterActionInstruction(filterAction.getType(), genMessage, args, filterAction.isOnCall(),
+							filterAction.isReturning());
 
 			copyLabel(filterAction, copy);
 			copy.setBookKeeping(filterAction.getBookKeeping());

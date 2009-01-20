@@ -82,7 +82,8 @@ public final class ExpressionResolver
 		Set<ExecutionState> history = new HashSet<ExecutionState>();
 		history.add(accept);
 		history.add(reject);
-		Map<MatchingExpression, MatchingExpression> replacements = new HashMap<MatchingExpression, MatchingExpression>();
+		Map<MatchingExpression, MatchingExpression> replacements =
+				new HashMap<MatchingExpression, MatchingExpression>();
 		createReplacementMap(start, replacements, history);
 
 		MatchingExpression baseExpr = filterElement.getMatchingExpression();

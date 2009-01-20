@@ -438,8 +438,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private void generateCallAction(ExecutionState state, FilterAction action, Collection<CanonAssignment> filterArgs,
 			List<String> resourceOps)
 	{
-		FilterActionInstruction instruction = new FilterActionInstruction(action.getName(), state.getMessage(),
-				filterArgs, true, action.getFlowBehavior() == FlowBehavior.RETURN);
+		FilterActionInstruction instruction =
+				new FilterActionInstruction(action.getName(), state.getMessage(), filterArgs, true, action
+						.getFlowBehavior() == FlowBehavior.RETURN);
 		instruction.setCreateJPC(action.needsJoinPointContext());
 		setBookKeeping(instruction, state, resourceOps);
 
@@ -456,8 +457,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private void generateReturnAction(ExecutionState state, FilterAction action,
 			Collection<CanonAssignment> filterArgs, List<String> resourceOps)
 	{
-		FilterActionInstruction instruction = new FilterActionInstruction(action.getName(), state.getMessage(),
-				filterArgs, false, action.getFlowBehavior() == FlowBehavior.RETURN);
+		FilterActionInstruction instruction =
+				new FilterActionInstruction(action.getName(), state.getMessage(), filterArgs, false, action
+						.getFlowBehavior() == FlowBehavior.RETURN);
 		instruction.setCreateJPC(action.needsJoinPointContext());
 		setBookKeeping(instruction, state, resourceOps);
 
@@ -475,8 +477,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private void generateDispatchAction(FilterAction action, ExecutionState state, List<String> resourceOps)
 	{
 		CpsMessage msg = state.getMessage();
-		FilterActionInstruction instruction = new FilterActionInstruction(action.getName(), msg,
-				new ArrayList<CanonAssignment>(), true, true);
+		FilterActionInstruction instruction =
+				new FilterActionInstruction(action.getName(), msg, new ArrayList<CanonAssignment>(), true, true);
 		instruction.setCreateJPC(JoinPointContextArgument.UNUSED);
 		setBookKeeping(instruction, state, resourceOps);
 		currentBlock.addInstruction(instruction);

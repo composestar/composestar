@@ -47,9 +47,10 @@ public class FilterTypeFactory
 	/**
 	 * The default builtin filter types
 	 */
-	public static final String[] DEFAULT_FILTER_TYPES = { FilterTypeNames.AFTER, FilterTypeNames.BEFORE,
-			FilterTypeNames.DISPATCH, FilterTypeNames.ERROR, FilterTypeNames.SEND, FilterTypeNames.SUBSTITUTION,
-			FilterTypeNames.META, FilterTypeNames.EXCEPTION, FilterTypeNames.VOID };
+	public static final String[] DEFAULT_FILTER_TYPES =
+			{ FilterTypeNames.AFTER, FilterTypeNames.BEFORE, FilterTypeNames.DISPATCH, FilterTypeNames.ERROR,
+					FilterTypeNames.SEND, FilterTypeNames.SUBSTITUTION, FilterTypeNames.META,
+					FilterTypeNames.EXCEPTION, FilterTypeNames.VOID };
 
 	/**
 	 * The language repository.

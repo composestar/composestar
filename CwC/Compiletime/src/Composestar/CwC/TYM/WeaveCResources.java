@@ -67,7 +67,6 @@ public class WeaveCResources implements ModuleResourceManager
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Resources.ModuleResourceManager#getModuleName()
 	 */
 	public String getModuleName()

@@ -62,8 +62,9 @@ public class FilterLoader
 		customFilters = new HashSet<CustomCwCFilters>();
 
 		FilterTypeFactory filterFactory = new CwCFilterFactory(resources.repository());
-		String[] filters = { FilterTypeNames.DISPATCH, FilterTypeNames.SEND, FilterTypeNames.ERROR,
-				FilterTypeNames.BEFORE, FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION, FilterTypeNames.VOID, };
+		String[] filters =
+				{ FilterTypeNames.DISPATCH, FilterTypeNames.SEND, FilterTypeNames.ERROR, FilterTypeNames.BEFORE,
+						FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION, FilterTypeNames.VOID, };
 
 		filterFactory.createDefaultFilterTypes(filters);
 		resources.put(FilterTypeFactory.RESOURCE_KEY, filterFactory);

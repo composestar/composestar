@@ -140,8 +140,9 @@ public class Simulator implements ExecutionManager
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.ExecutionManager#getResult(Composestar.Core.FILTH2.Model.Action)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.ExecutionManager#getResult(Composestar.
+	 * Core.FILTH2.Model.Action)
 	 */
 	public ExecutionResult getResult(Action action)
 	{
@@ -159,8 +160,9 @@ public class Simulator implements ExecutionManager
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.ExecutionManager#isExecutable(Composestar.Core.FILTH2.Model.Action)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.ExecutionManager#isExecutable(Composestar
+	 * .Core.FILTH2.Model.Action)
 	 */
 	public boolean isExecutable(Action action)
 	{
@@ -173,9 +175,9 @@ public class Simulator implements ExecutionManager
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.ExecutionManager#setExecutable(Composestar.Core.FILTH2.Model.Action,
-	 *      boolean)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.ExecutionManager#setExecutable(Composestar
+	 * .Core.FILTH2.Model.Action, boolean)
 	 */
 	public void setExecutable(Action action, boolean value)
 	{
@@ -184,9 +186,9 @@ public class Simulator implements ExecutionManager
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.ExecutionManager#setResult(Composestar.Core.FILTH2.Model.Action,
-	 *      Composestar.Core.FILTH2.Model.ExecutionResult)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.ExecutionManager#setResult(Composestar.
+	 * Core.FILTH2.Model.Action, Composestar.Core.FILTH2.Model.ExecutionResult)
 	 */
 	public void setResult(Action action, ExecutionResult result)
 	{

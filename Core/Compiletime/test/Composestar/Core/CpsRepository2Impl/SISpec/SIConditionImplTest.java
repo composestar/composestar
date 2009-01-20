@@ -25,7 +25,6 @@
 package Composestar.Core.CpsRepository2Impl.SISpec;
 
 import Composestar.Core.CpsRepository2.SISpec.SIConditionTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.SIConditionImpl;
 
 /**
  * @author Michiel Hendriks

@@ -150,7 +150,6 @@ public class ConflictRule implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -162,7 +161,6 @@ public class ConflictRule implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -178,7 +176,6 @@ public class ConflictRule implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

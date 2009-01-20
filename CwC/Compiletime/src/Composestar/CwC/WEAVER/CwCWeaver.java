@@ -33,7 +33,6 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,7 +63,6 @@ import weavec.grammar.TranslationUnitResult;
 import weavec.parser.ACGrammarTokenTypes;
 import weavec.parser.AspectCLexer;
 import weavec.parser.AspectCParser;
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Project;
@@ -619,7 +617,7 @@ public class CwCWeaver implements CTCommonModule
 				Signature sign = concern.getTypeReference().getReference().getSignature();
 				if (sign != null)
 				{
-					for (MethodInfo mi : (Collection<MethodInfo>) sign.getMethods(MethodRelation.ADDED))
+					for (MethodInfo mi : sign.getMethods(MethodRelation.ADDED))
 					{
 						methodLookup.put(mi.getName(), mi);
 					}

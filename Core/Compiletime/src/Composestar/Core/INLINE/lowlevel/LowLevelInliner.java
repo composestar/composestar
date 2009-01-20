@@ -398,8 +398,8 @@ public class LowLevelInliner
 
 	private void inlineFilterModuleCondition(FilterModuleCondition fmCond)
 	{
-		ImposedFilterModule ifm = (ImposedFilterModule) fmCond.filterModuleConditionState.getFlowNode()
-				.getRepositoryLink();
+		ImposedFilterModule ifm =
+				(ImposedFilterModule) fmCond.filterModuleConditionState.getFlowNode().getRepositoryLink();
 
 		strategy.evalConditionMethod(ifm.getCondition(), fmCond.label);
 

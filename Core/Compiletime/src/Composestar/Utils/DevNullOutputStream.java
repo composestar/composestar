@@ -17,7 +17,6 @@ public class DevNullOutputStream extends OutputStream
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.io.OutputStream#write(int)
 	 */
 	@Override

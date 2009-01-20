@@ -105,8 +105,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.SISpecification#addCondition
+	 * @see Composestar.Core.CpsRepository2.SISpec.SISpecification#addCondition
 	 * (Composestar.Core.CpsRepository2.SISpec.Condition)
 	 */
 	public boolean addCondition(SICondition cond) throws NullPointerException
@@ -158,8 +157,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.SISpecification#addSelector
+	 * @see Composestar.Core.CpsRepository2.SISpec.SISpecification#addSelector
 	 * (Composestar.Core.CpsRepository2.SISpec.Selector)
 	 */
 	public boolean addSelector(Selector newSel) throws NullPointerException
@@ -189,8 +187,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.SISpecification#getCondition
+	 * @see Composestar.Core.CpsRepository2.SISpec.SISpecification#getCondition
 	 * (java.lang.String)
 	 */
 	public SICondition getCondition(String name)
@@ -204,8 +201,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.SISpecification#getConditions
+	 * @see Composestar.Core.CpsRepository2.SISpec.SISpecification#getConditions
 	 * ()
 	 */
 	public Collection<SICondition> getConditions()
@@ -235,8 +231,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.SISpecification#getSelector
+	 * @see Composestar.Core.CpsRepository2.SISpec.SISpecification#getSelector
 	 * (java.lang.String)
 	 */
 	public Selector getSelector(String name)
@@ -250,8 +245,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.SISpecification#getSelectors
+	 * @see Composestar.Core.CpsRepository2.SISpec.SISpecification#getSelectors
 	 * ()
 	 */
 	public Collection<Selector> getSelectors()
@@ -281,8 +275,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 	/*
 	 * (non-Javadoc)
 	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
-	 * removeCondition
-	 * (Composestar.Core.CpsRepository2.SISpec.Condition)
+	 * removeCondition (Composestar.Core.CpsRepository2.SISpec.Condition)
 	 */
 	public SICondition removeCondition(SICondition cond) throws NullPointerException
 	{

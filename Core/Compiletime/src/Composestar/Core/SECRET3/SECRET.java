@@ -19,10 +19,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;

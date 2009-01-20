@@ -113,7 +113,7 @@ public class CpsSelectorMethodInfo extends AbstractRepositoryEntity implements C
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((mi == null) ? 0 : mi.hashCode());
+		result = prime * result + (mi == null ? 0 : mi.hashCode());
 		return result;
 	}
 

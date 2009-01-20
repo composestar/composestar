@@ -28,8 +28,6 @@ import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.SISpec.AnnotationBinding;
-import Composestar.Core.CpsRepository2.SISpec.Selector;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -176,9 +174,7 @@ public abstract class AnnotationBindingTestBase extends RepositoryEntityTestBase
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.SISpec.Selector#getSelection
-		 * ()
+		 * @see Composestar.Core.CpsRepository2.SISpec.Selector#getSelection ()
 		 */
 		public Collection<ProgramElement> getSelection()
 		{

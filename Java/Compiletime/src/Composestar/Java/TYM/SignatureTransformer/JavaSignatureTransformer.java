@@ -2,7 +2,6 @@ package Composestar.Java.TYM.SignatureTransformer;
 
 import java.io.File;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;

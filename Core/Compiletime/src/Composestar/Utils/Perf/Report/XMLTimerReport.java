@@ -75,8 +75,9 @@ public class XMLTimerReport implements CPSTimerReport
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Utils.Perf.Report.CPSTimerReport#generateReport(Composestar.Utils.Perf.Report.CPSTimerTree)
+	 * @see
+	 * Composestar.Utils.Perf.Report.CPSTimerReport#generateReport(Composestar
+	 * .Utils.Perf.Report.CPSTimerTree)
 	 */
 	public boolean generateReport(CPSTimerTree root)
 	{
@@ -100,8 +101,9 @@ public class XMLTimerReport implements CPSTimerReport
 			try
 			{
 				FileUtils.copy(is, styleOut);
-				ProcessingInstruction pi = xmlDoc.createProcessingInstruction("xml-stylesheet",
-						"type=\"text/xml\" href=\"" + styleName + "\"");
+				ProcessingInstruction pi =
+						xmlDoc.createProcessingInstruction("xml-stylesheet", "type=\"text/xml\" href=\"" + styleName
+								+ "\"");
 				xmlDoc.appendChild(pi);
 			}
 			catch (IOException e)
@@ -135,7 +137,7 @@ public class XMLTimerReport implements CPSTimerReport
 		if (parentNode == null)
 		{
 			xmlDoc.appendChild(node);
-			node.setAttribute("timestamp", (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz")).format(new Date()));
+			node.setAttribute("timestamp", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz").format(new Date()));
 		}
 		else
 		{

@@ -26,8 +26,6 @@ package Composestar.Core.CpsRepository2.SISpec;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.References.MethodReference;
-import Composestar.Core.CpsRepository2.SISpec.ConditionConstraintValue;
-import Composestar.Core.CpsRepository2.SISpec.SICondition;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 
 /**

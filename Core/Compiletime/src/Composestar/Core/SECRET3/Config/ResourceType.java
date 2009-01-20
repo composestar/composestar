@@ -42,7 +42,6 @@ public enum ResourceType
 	{
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override
@@ -55,7 +54,6 @@ public enum ResourceType
 	{
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override
@@ -68,7 +66,6 @@ public enum ResourceType
 	{
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override
@@ -81,7 +78,6 @@ public enum ResourceType
 	{
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override
@@ -94,7 +90,6 @@ public enum ResourceType
 	{
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override
@@ -107,7 +102,6 @@ public enum ResourceType
 	{
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override
@@ -120,7 +114,6 @@ public enum ResourceType
 	{
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override

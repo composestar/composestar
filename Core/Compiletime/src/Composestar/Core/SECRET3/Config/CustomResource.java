@@ -75,7 +75,6 @@ public class CustomResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.SECRET3.Config.Resource#getName()
 	 */
 	@Override
@@ -86,7 +85,6 @@ public class CustomResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -104,7 +102,6 @@ public class CustomResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

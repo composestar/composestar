@@ -551,8 +551,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		/*
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
-		 * addCondition
-		 * (Composestar.Core.CpsRepository2.SISpec.Condition)
+		 * addCondition (Composestar.Core.CpsRepository2.SISpec.Condition)
 		 */
 		public boolean addCondition(SICondition cond) throws NullPointerException
 		{
@@ -571,8 +570,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		/*
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
-		 * addFilterModuleConstraint
-		 * (Composestar.Core.CpsRepository2.SISpec
+		 * addFilterModuleConstraint (Composestar.Core.CpsRepository2.SISpec
 		 * .FilterModuleConstraint)
 		 */
 		public void addFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
@@ -662,8 +660,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		/*
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
-		 * removeCondition
-		 * (Composestar.Core.CpsRepository2.SISpec.Condition)
+		 * removeCondition (Composestar.Core.CpsRepository2.SISpec.Condition)
 		 */
 		public SICondition removeCondition(SICondition cond) throws NullPointerException
 		{
@@ -694,8 +691,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		/*
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
-		 * removeFilterModuleConstraint
-		 * (Composestar.Core.CpsRepository2.SISpec
+		 * removeFilterModuleConstraint (Composestar.Core.CpsRepository2.SISpec
 		 * .FilterModuleConstraint)
 		 */
 		public FilterModuleConstraint removeFilterModuleConstraint(FilterModuleConstraint fmc)
@@ -707,8 +703,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		/*
 		 * (non-Javadoc)
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
-		 * removeSelector
-		 * (Composestar.Core.CpsRepository2.SISpec.Selector)
+		 * removeSelector (Composestar.Core.CpsRepository2.SISpec.Selector)
 		 */
 		public Selector removeSelector(Selector sel) throws NullPointerException
 		{

@@ -25,7 +25,6 @@
 package Composestar.Core.CpsRepository2Impl.SISpec;
 
 import Composestar.Core.CpsRepository2.SISpec.FilterModuleBindingTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.FilterModuleBindingImpl;
 
 /**
  * @author Michiel Hendriks

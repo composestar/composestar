@@ -24,7 +24,6 @@
 
 package Composestar.Core.CpsRepository2Impl.SISpec;
 
-import Composestar.Core.CpsRepository2Impl.SISpec.LegacySelector;
 
 /**
  * @author Michiel Hendriks

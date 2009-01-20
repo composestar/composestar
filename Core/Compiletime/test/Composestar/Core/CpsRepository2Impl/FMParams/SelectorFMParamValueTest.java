@@ -123,9 +123,7 @@ public class SelectorFMParamValueTest extends FMParameterValueTestBase
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.SISpec.Selector#getSelection
-		 * ()
+		 * @see Composestar.Core.CpsRepository2.SISpec.Selector#getSelection ()
 		 */
 		public Collection<ProgramElement> getSelection()
 		{

@@ -24,7 +24,6 @@
 package Composestar.Core.LAMA;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.Concern;
@@ -113,9 +112,9 @@ public abstract class Type extends ProgramElement
 	 */
 	public MethodInfo getMethod(String name, String[] types)
 	{
-		for (Iterator<MethodInfo> it = methods.iterator(); it.hasNext();)
+		for (MethodInfo methodInfo : methods)
 		{
-			MethodInfo mi = (MethodInfo) it.next();
+			MethodInfo mi = methodInfo;
 			if (mi.getName().equals(name) && mi.hasParameters(types))
 			{
 				return mi;

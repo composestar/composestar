@@ -218,7 +218,6 @@ public abstract class AbstractMatcher
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
@@ -248,7 +247,6 @@ public abstract class AbstractMatcher
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override

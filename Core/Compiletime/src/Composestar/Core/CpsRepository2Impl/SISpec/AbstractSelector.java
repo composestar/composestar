@@ -60,8 +60,7 @@ public abstract class AbstractSelector extends AbstractQualifiedRepositoryEntity
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.Selector#getSelection()
+	 * @see Composestar.Core.CpsRepository2.SISpec.Selector#getSelection()
 	 */
 	public Collection<ProgramElement> getSelection()
 	{

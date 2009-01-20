@@ -30,7 +30,6 @@ public class CPSPatternLayout extends PatternLayout
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.apache.log4j.PatternLayout#createPatternParser(java.lang.String)
 	 */
 	@Override

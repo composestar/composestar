@@ -43,7 +43,6 @@ public class OrderingConstraint extends Constraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.FILTH2.Constraint#getName()
 	 */
 	@Override
@@ -54,8 +53,8 @@ public class OrderingConstraint extends Constraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
 	 */
 	@Override
 	public boolean isValidOrder(List<Action> order, ExecutionManager exec)

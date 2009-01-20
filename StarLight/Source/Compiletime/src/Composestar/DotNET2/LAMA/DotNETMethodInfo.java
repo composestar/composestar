@@ -28,8 +28,8 @@ import Composestar.Core.LAMA.UnitResult;
  * Corresponds to the MethodInfo class in the .NET framework. For more
  * information on the methods and their meaning please refer to the microsoft
  * documentation:
- * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
- * fsystemreflectionmethodinfoclasstopic.asp
+ * http://msdn.microsoft.com/library/default.asp?url=/library/en-us
+ * /cpref/html/frlr fsystemreflectionmethodinfoclasstopic.asp
  */
 public class DotNETMethodInfo extends MethodInfo
 {

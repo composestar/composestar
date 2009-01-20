@@ -75,9 +75,9 @@ public class RuleHandler extends CpsBaseHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
-	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 * @see
+	 * Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 * java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
@@ -142,9 +142,8 @@ public class RuleHandler extends CpsBaseHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String,
-	 *      java.lang.String, java.lang.String)
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException

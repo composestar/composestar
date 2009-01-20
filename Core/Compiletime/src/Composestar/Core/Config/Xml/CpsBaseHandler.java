@@ -157,9 +157,8 @@ public abstract class CpsBaseHandler extends DefaultHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String,
-	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 * java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
@@ -174,9 +173,8 @@ public abstract class CpsBaseHandler extends DefaultHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String,
-	 *      java.lang.String, java.lang.String)
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
@@ -187,7 +185,6 @@ public abstract class CpsBaseHandler extends DefaultHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
 	 */
 	@Override
@@ -237,10 +234,10 @@ public abstract class CpsBaseHandler extends DefaultHandler
 	public void startUnknownElement(String uri, String localName, String name, Attributes attributes)
 			throws SAXException
 	{
-		String msg = String.format(
-				"%s encountered an unknown element at %d:%d qname=%s, localName=%s, uri=%s, state=%d", getClass()
-						.getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name, localName, uri,
-				state);
+		String msg =
+				String.format("%s encountered an unknown element at %d:%d qname=%s, localName=%s, uri=%s, state=%d",
+						getClass().getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name,
+						localName, uri, state);
 		logger.warn(msg);
 	}
 
@@ -254,17 +251,19 @@ public abstract class CpsBaseHandler extends DefaultHandler
 	 */
 	public void endUnknownElement(String uri, String localName, String name) throws SAXException
 	{
-		String msg = String.format(
-				"%s encountered an unknown end element at %d:%d qname=%s, localName=%s, uri=%s, state=%d", getClass()
-						.getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name, localName, uri,
-				state);
+		String msg =
+				String.format(
+						"%s encountered an unknown end element at %d:%d qname=%s, localName=%s, uri=%s, state=%d",
+						getClass().getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name,
+						localName, uri, state);
 		logger.warn(msg);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.xml.sax.helpers.DefaultHandler#setDocumentLocator(org.xml.sax.Locator)
+	 * @see
+	 * org.xml.sax.helpers.DefaultHandler#setDocumentLocator(org.xml.sax.Locator
+	 * )
 	 */
 	@Override
 	public void setDocumentLocator(Locator loc)

@@ -134,8 +134,7 @@ public class SourceCompiler implements Serializable
 			}
 			catch (Exception e)
 			{
-				throw new ModuleException("Error while instantiating LangCompiler: " + classname,
-						ModuleNames.DUMMER, e);
+				throw new ModuleException("Error while instantiating LangCompiler: " + classname, ModuleNames.DUMMER, e);
 			}
 		}
 		return compiler;

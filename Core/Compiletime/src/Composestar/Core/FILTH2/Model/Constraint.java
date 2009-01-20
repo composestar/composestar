@@ -96,7 +96,6 @@ public abstract class Constraint
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

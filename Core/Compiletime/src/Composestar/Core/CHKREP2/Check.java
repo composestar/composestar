@@ -27,8 +27,6 @@ package Composestar.Core.CHKREP2;
 import java.util.HashSet;
 import java.util.Set;
 
-import Composestar.Core.Annotations.ComposestarModule;
-import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;

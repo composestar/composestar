@@ -437,7 +437,7 @@ public class CommonResources implements Serializable
 		// Convert the string value
 		Object objectValue = null;
 		Class<?> valueType = field.getType();
-		if (valueType == String.class || (setting.setter().length() > 0 && setting.setterTakesString()))
+		if (valueType == String.class || setting.setter().length() > 0 && setting.setterTakesString())
 		{
 			objectValue = value;
 			valueType = String.class;

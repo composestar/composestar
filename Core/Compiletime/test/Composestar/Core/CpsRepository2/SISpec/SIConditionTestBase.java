@@ -29,7 +29,6 @@ import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
-import Composestar.Core.CpsRepository2.SISpec.SICondition;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.LAMA.MethodInfo;
 

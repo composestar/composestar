@@ -152,9 +152,9 @@ public class PlatformConfigHandler extends CpsBaseHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
-	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 * @see
+	 * Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 * java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
@@ -181,9 +181,9 @@ public class PlatformConfigHandler extends CpsBaseHandler
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
-	 *      java.lang.String, java.lang.String)
+	 * @see
+	 * Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException

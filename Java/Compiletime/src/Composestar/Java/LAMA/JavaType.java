@@ -258,8 +258,8 @@ public class JavaType extends Type
 	@Override
 	public Collection<String> getUnitAttributes()
 	{
-		HashSet<String> result = new HashSet<String>(Arrays.asList(Modifier.toString(theClass.getModifiers())
-				.split(" ")));
+		HashSet<String> result =
+				new HashSet<String>(Arrays.asList(Modifier.toString(theClass.getModifiers()).split(" ")));
 		return result;
 	}
 

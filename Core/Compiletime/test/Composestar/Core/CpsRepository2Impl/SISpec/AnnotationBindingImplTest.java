@@ -25,7 +25,6 @@
 package Composestar.Core.CpsRepository2Impl.SISpec;
 
 import Composestar.Core.CpsRepository2.SISpec.AnnotationBindingTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.AnnotationBindingImpl;
 
 /**
  * @author Michiel Hendriks
@@ -35,8 +34,7 @@ public class AnnotationBindingImplTest extends AnnotationBindingTestBase
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.CpsRepository2.SISpec.AnnotationBindingTestBase
+	 * @see Composestar.Core.CpsRepository2.SISpec.AnnotationBindingTestBase
 	 * #setUp()
 	 */
 	@Override

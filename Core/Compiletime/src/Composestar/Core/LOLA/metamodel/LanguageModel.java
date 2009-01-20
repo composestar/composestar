@@ -140,8 +140,8 @@ public abstract class LanguageModel
 					// So also add the link the other way round.
 					((Type) superType).addChildType(concern);
 				}
-				Collection<Type> implementedInterfaces = (Collection<Type>) concern.getUnitRelation("Implements")
-						.multiValue();
+				Collection<Type> implementedInterfaces =
+						(Collection<Type>) concern.getUnitRelation("Implements").multiValue();
 				for (Type implementedInterface : implementedInterfaces)
 				{
 					// This class implements interfaces, also add the reverse
@@ -206,8 +206,8 @@ public abstract class LanguageModel
 				MethodInfo method = (MethodInfo) o;
 				if (method.getReturnType() != null)
 				{
-					ProgramElement methodReturnType = method.getUnitRelation(
-							"Return" + method.getReturnType().getUnitType()).singleValue();
+					ProgramElement methodReturnType =
+							method.getUnitRelation("Return" + method.getReturnType().getUnitType()).singleValue();
 					if (null != methodReturnType && methodReturnType instanceof Type)
 					{
 						// The method has a registered return Type
@@ -266,8 +266,8 @@ public abstract class LanguageModel
 					// Exclude this method because it is inherited; set the
 					// parent of its child parameters
 					// so they will be noticed for removal by the 2nd loop.
-					Collection<ParameterInfo> params = (Collection<ParameterInfo>) method.getUnitRelation(
-							"ChildParameters").multiValue();
+					Collection<ParameterInfo> params =
+							(Collection<ParameterInfo>) method.getUnitRelation("ChildParameters").multiValue();
 					for (Object param : params)
 					{
 						ParameterInfo paramInfo = (ParameterInfo) param;
@@ -403,36 +403,36 @@ public abstract class LanguageModel
 		{
 			if (utClass != null)
 			{
-				annotationAttachedClasses = new RelationType(ERelationType.ATTACHED_CLASSES, utClass,
-						RelationType.MULTIPLE);
+				annotationAttachedClasses =
+						new RelationType(ERelationType.ATTACHED_CLASSES, utClass, RelationType.MULTIPLE);
 				utAnnotation.addRelationType(annotationAttachedClasses);
 			}
 
 			if (utInterface != null)
 			{
-				annotationAttachedInterfaces = new RelationType(ERelationType.ATTACHED_INTERFACES, utInterface,
-						RelationType.MULTIPLE);
+				annotationAttachedInterfaces =
+						new RelationType(ERelationType.ATTACHED_INTERFACES, utInterface, RelationType.MULTIPLE);
 				utAnnotation.addRelationType(annotationAttachedInterfaces);
 			}
 
 			if (utMethod != null)
 			{
-				annotationAttachedMethods = new RelationType(ERelationType.ATTACHED_METHODS, utMethod,
-						RelationType.MULTIPLE);
+				annotationAttachedMethods =
+						new RelationType(ERelationType.ATTACHED_METHODS, utMethod, RelationType.MULTIPLE);
 				utAnnotation.addRelationType(annotationAttachedMethods);
 			}
 
 			if (utField != null)
 			{
-				annotationAttachedFields = new RelationType(ERelationType.ATTACHED_FIELDS, utField,
-						RelationType.MULTIPLE);
+				annotationAttachedFields =
+						new RelationType(ERelationType.ATTACHED_FIELDS, utField, RelationType.MULTIPLE);
 				utAnnotation.addRelationType(annotationAttachedFields);
 			}
 
 			if (utField != null)
 			{
-				annotationAttachedParameters = new RelationType(ERelationType.ATTACHED_PARAMETERS, utField,
-						RelationType.MULTIPLE);
+				annotationAttachedParameters =
+						new RelationType(ERelationType.ATTACHED_PARAMETERS, utField, RelationType.MULTIPLE);
 				utAnnotation.addRelationType(annotationAttachedParameters);
 			}
 		}
@@ -452,8 +452,8 @@ public abstract class LanguageModel
 		{
 			if (utNamespace != null)
 			{
-				classParentNamespace = new RelationType(ERelationType.PARENT_NAMESPACE, utNamespace,
-						RelationType.UNIQUE);
+				classParentNamespace =
+						new RelationType(ERelationType.PARENT_NAMESPACE, utNamespace, RelationType.UNIQUE);
 				utClass.addRelationType(classParentNamespace);
 			}
 
@@ -477,15 +477,15 @@ public abstract class LanguageModel
 
 			if (utParameter != null)
 			{
-				classParameterClass = new RelationType(ERelationType.PARAMETER_CLASS, utParameter,
-						RelationType.MULTIPLE);
+				classParameterClass =
+						new RelationType(ERelationType.PARAMETER_CLASS, utParameter, RelationType.MULTIPLE);
 				utClass.addRelationType(classParameterClass);
 			}
 
 			if (utMethod != null)
 			{
-				classMethodReturnClass = new RelationType(ERelationType.METHOD_RETURN_CLASS, utMethod,
-						RelationType.MULTIPLE);
+				classMethodReturnClass =
+						new RelationType(ERelationType.METHOD_RETURN_CLASS, utMethod, RelationType.MULTIPLE);
 				utClass.addRelationType(classMethodReturnClass);
 			}
 
@@ -522,17 +522,17 @@ public abstract class LanguageModel
 		{
 			if (utNamespace != null)
 			{
-				interfaceParentNamespace = new RelationType(ERelationType.PARENT_NAMESPACE, utNamespace,
-						RelationType.UNIQUE);
+				interfaceParentNamespace =
+						new RelationType(ERelationType.PARENT_NAMESPACE, utNamespace, RelationType.UNIQUE);
 				utInterface.addRelationType(interfaceParentNamespace);
 			}
 
-			interfaceSubInterfaces = new RelationType(ERelationType.CHILD_INTERFACES, utInterface,
-					RelationType.MULTIPLE);
+			interfaceSubInterfaces =
+					new RelationType(ERelationType.CHILD_INTERFACES, utInterface, RelationType.MULTIPLE);
 			utInterface.addRelationType(interfaceSubInterfaces);
 
-			interfaceParentInterface = new RelationType(ERelationType.PARENT_INTERFACE, utInterface,
-					RelationType.UNIQUE);
+			interfaceParentInterface =
+					new RelationType(ERelationType.PARENT_INTERFACE, utInterface, RelationType.UNIQUE);
 			utInterface.addRelationType(interfaceParentInterface);
 
 			if (utMethod != null)
@@ -556,22 +556,22 @@ public abstract class LanguageModel
 
 			if (utParameter != null)
 			{
-				interfaceParameterInterface = new RelationType(ERelationType.PARAMETER_INTERFACE, utParameter,
-						RelationType.MULTIPLE);
+				interfaceParameterInterface =
+						new RelationType(ERelationType.PARAMETER_INTERFACE, utParameter, RelationType.MULTIPLE);
 				utInterface.addRelationType(interfaceParameterInterface);
 			}
 
 			if (utMethod != null)
 			{
-				interfaceMethodReturnInterface = new RelationType(ERelationType.METHOD_RETURN_INTERFACE, utMethod,
-						RelationType.MULTIPLE);
+				interfaceMethodReturnInterface =
+						new RelationType(ERelationType.METHOD_RETURN_INTERFACE, utMethod, RelationType.MULTIPLE);
 				utInterface.addRelationType(interfaceMethodReturnInterface);
 			}
 
 			if (utField != null)
 			{
-				interfaceFieldInterface = new RelationType(ERelationType.FIELD_INTERFACE, utField,
-						RelationType.MULTIPLE);
+				interfaceFieldInterface =
+						new RelationType(ERelationType.FIELD_INTERFACE, utField, RelationType.MULTIPLE);
 				utInterface.addRelationType(interfaceFieldInterface);
 			}
 
@@ -595,8 +595,8 @@ public abstract class LanguageModel
 
 			if (utInterface != null)
 			{
-				namespaceChildInterfaces = new RelationType(ERelationType.CHILD_INTERFACES, utInterface,
-						RelationType.MULTIPLE);
+				namespaceChildInterfaces =
+						new RelationType(ERelationType.CHILD_INTERFACES, utInterface, RelationType.MULTIPLE);
 				utNamespace.addRelationType(namespaceChildInterfaces);
 			}
 		}
@@ -618,15 +618,15 @@ public abstract class LanguageModel
 
 			if (utInterface != null)
 			{
-				methodParentInterface = new RelationType(ERelationType.PARENT_INTERFACE, utInterface,
-						RelationType.UNIQUE);
+				methodParentInterface =
+						new RelationType(ERelationType.PARENT_INTERFACE, utInterface, RelationType.UNIQUE);
 				utMethod.addRelationType(methodParentInterface);
 			}
 
 			if (utParameter != null)
 			{
-				methodChildParameters = new RelationType(ERelationType.CHILD_PARAMETERS, utParameter,
-						RelationType.MULTIPLE);
+				methodChildParameters =
+						new RelationType(ERelationType.CHILD_PARAMETERS, utParameter, RelationType.MULTIPLE);
 				utMethod.addRelationType(methodChildParameters);
 			}
 
@@ -638,8 +638,8 @@ public abstract class LanguageModel
 
 			if (utInterface != null)
 			{
-				methodReturnInterface = new RelationType(ERelationType.RETURN_INTERFACE, utInterface,
-						RelationType.UNIQUE);
+				methodReturnInterface =
+						new RelationType(ERelationType.RETURN_INTERFACE, utInterface, RelationType.UNIQUE);
 				utMethod.addRelationType(methodReturnInterface);
 			}
 
@@ -719,15 +719,17 @@ public abstract class LanguageModel
 		/** Namespace * */
 		if (namespaceChildClasses != null && classParentNamespace != null)
 		{
-			RelationPredicate namespaceHasClass = new RelationPredicate("namespaceHasClass", namespaceChildClasses,
-					"Namespace", classParentNamespace, "Class");
+			RelationPredicate namespaceHasClass =
+					new RelationPredicate("namespaceHasClass", namespaceChildClasses, "Namespace",
+							classParentNamespace, "Class");
 			addRelationPredicate(namespaceHasClass);
 		}
 
 		if (namespaceChildInterfaces != null && classParentNamespace != null)
 		{
-			RelationPredicate namespaceHasInterface = new RelationPredicate("namespaceHasInterface",
-					namespaceChildInterfaces, "Namespace", classParentNamespace, "Interface");
+			RelationPredicate namespaceHasInterface =
+					new RelationPredicate("namespaceHasInterface", namespaceChildInterfaces, "Namespace",
+							classParentNamespace, "Interface");
 			addRelationPredicate(namespaceHasInterface);
 		}
 
@@ -736,145 +738,157 @@ public abstract class LanguageModel
 		RelationPredicate isSuperClass = null;
 		if (classSubClasses != null && classParentClass != null)
 		{
-			isSuperClass = new RelationPredicate("isSuperClass", classSubClasses, "SuperClass", classParentClass,
-					"SubClass");
+			isSuperClass =
+					new RelationPredicate("isSuperClass", classSubClasses, "SuperClass", classParentClass, "SubClass");
 			addRelationPredicate(isSuperClass);
 		}
 
 		RelationPredicate isSuperInterface = null;
 		if (interfaceSubInterfaces != null && interfaceParentInterface != null)
 		{
-			isSuperInterface = new RelationPredicate("isSuperInterface", interfaceSubInterfaces, "SuperInterface",
-					interfaceParentInterface, "SubInterface");
+			isSuperInterface =
+					new RelationPredicate("isSuperInterface", interfaceSubInterfaces, "SuperInterface",
+							interfaceParentInterface, "SubInterface");
 			addRelationPredicate(isSuperInterface);
 		}
 
 		if (isSuperClass != null && isSuperInterface != null)
 		{
-			CompositeRelationPredicate isSuperType = new CompositeRelationPredicate("isSuperType", isSuperClass,
-					isSuperInterface);
+			CompositeRelationPredicate isSuperType =
+					new CompositeRelationPredicate("isSuperType", isSuperClass, isSuperInterface);
 			addRelationPredicate(isSuperType);
 		}
 
 		if (classImplements != null && interfaceImplementedBy != null)
 		{
-			RelationPredicate classImplementsInterface = new RelationPredicate("implements", classImplements, "Class",
-					interfaceImplementedBy, "Interface");
+			RelationPredicate classImplementsInterface =
+					new RelationPredicate("implements", classImplements, "Class", interfaceImplementedBy, "Interface");
 			addRelationPredicate(classImplementsInterface);
 		}
 
 		if (classChildMethods != null && methodParentClass != null)
 		{
-			RelationPredicate classHasMethod = new RelationPredicate("classHasMethod", classChildMethods, "Class",
-					methodParentClass, "Method");
+			RelationPredicate classHasMethod =
+					new RelationPredicate("classHasMethod", classChildMethods, "Class", methodParentClass, "Method");
 			addRelationPredicate(classHasMethod);
 		}
 
 		if (interfaceChildMethods != null && methodParentInterface != null)
 		{
-			RelationPredicate interfaceHasMethod = new RelationPredicate("interfaceHasMethod", interfaceChildMethods,
-					"Interface", methodParentInterface, "Method");
+			RelationPredicate interfaceHasMethod =
+					new RelationPredicate("interfaceHasMethod", interfaceChildMethods, "Interface",
+							methodParentInterface, "Method");
 			addRelationPredicate(interfaceHasMethod);
 		}
 
 		if (classChildFields != null && fieldParentClass != null)
 		{
-			RelationPredicate classHasField = new RelationPredicate("classHasField", classChildFields, "Class",
-					fieldParentClass, "Field");
+			RelationPredicate classHasField =
+					new RelationPredicate("classHasField", classChildFields, "Class", fieldParentClass, "Field");
 			addRelationPredicate(classHasField);
 		}
 
 		RelationPredicate classHasAnnotation = null;
 		if (classAnnotations != null && annotationAttachedClasses != null)
 		{
-			classHasAnnotation = new RelationPredicate("classHasAnnotation", classAnnotations, "Class",
-					annotationAttachedClasses, "Annotation");
+			classHasAnnotation =
+					new RelationPredicate("classHasAnnotation", classAnnotations, "Class", annotationAttachedClasses,
+							"Annotation");
 			addRelationPredicate(classHasAnnotation);
 		}
 
 		RelationPredicate interfaceHasAnnotation = null;
 		if (interfaceAnnotations != null && annotationAttachedInterfaces != null)
 		{
-			interfaceHasAnnotation = new RelationPredicate("interfaceHasAnnotation", interfaceAnnotations, "Interface",
-					annotationAttachedInterfaces, "Annotation");
+			interfaceHasAnnotation =
+					new RelationPredicate("interfaceHasAnnotation", interfaceAnnotations, "Interface",
+							annotationAttachedInterfaces, "Annotation");
 			addRelationPredicate(interfaceHasAnnotation);
 		}
 
 		if (classHasAnnotation != null && interfaceHasAnnotation != null)
 		{
-			CompositeRelationPredicate typeHasAnnotation = new CompositeRelationPredicate("typeHasAnnotation",
-					classHasAnnotation, interfaceHasAnnotation);
+			CompositeRelationPredicate typeHasAnnotation =
+					new CompositeRelationPredicate("typeHasAnnotation", classHasAnnotation, interfaceHasAnnotation);
 			addRelationPredicate(typeHasAnnotation);
 		}
 		else if (classHasAnnotation != null)
 		{
-			RelationPredicate typeHasAnnotation = new RelationPredicate("typeHasAnnotation", classAnnotations, "Class",
-					annotationAttachedClasses, "Annotation");
+			RelationPredicate typeHasAnnotation =
+					new RelationPredicate("typeHasAnnotation", classAnnotations, "Class", annotationAttachedClasses,
+							"Annotation");
 			addRelationPredicate(typeHasAnnotation);
 		}
 		else if (interfaceHasAnnotation != null)
 		{
-			RelationPredicate typeHasAnnotation = new RelationPredicate("typeHasAnnotation", classAnnotations, "Class",
-					annotationAttachedClasses, "Annotation");
+			RelationPredicate typeHasAnnotation =
+					new RelationPredicate("typeHasAnnotation", classAnnotations, "Class", annotationAttachedClasses,
+							"Annotation");
 			addRelationPredicate(typeHasAnnotation);
 		}
 
 		/** Method * */
 		if (methodChildParameters != null && parameterParentMethod != null)
 		{
-			RelationPredicate methodHasParameter = new RelationPredicate("methodHasParameter", methodChildParameters,
-					"Method", parameterParentMethod, "Parameter");
+			RelationPredicate methodHasParameter =
+					new RelationPredicate("methodHasParameter", methodChildParameters, "Method", parameterParentMethod,
+							"Parameter");
 			addRelationPredicate(methodHasParameter);
 		}
 
 		if (methodAnnotations != null && annotationAttachedMethods != null)
 		{
-			RelationPredicate methodHasAnnotation = new RelationPredicate("methodHasAnnotation", methodAnnotations,
-					"Method", annotationAttachedMethods, "Annotation");
+			RelationPredicate methodHasAnnotation =
+					new RelationPredicate("methodHasAnnotation", methodAnnotations, "Method",
+							annotationAttachedMethods, "Annotation");
 			addRelationPredicate(methodHasAnnotation);
 		}
 
 		if (methodReturnClass != null && classMethodReturnClass != null)
 		{
-			RelationPredicate methodReturnClassRel = new RelationPredicate("methodReturnClass", methodReturnClass,
-					"Method", classMethodReturnClass, "Class");
+			RelationPredicate methodReturnClassRel =
+					new RelationPredicate("methodReturnClass", methodReturnClass, "Method", classMethodReturnClass,
+							"Class");
 			addRelationPredicate(methodReturnClassRel);
 		}
 
 		/** Parameter * */
 		if (parameterClass != null && classParameterClass != null)
 		{
-			RelationPredicate parameterClassRel = new RelationPredicate("parameterClass", parameterClass, "Parameter",
-					classParameterClass, "Class");
+			RelationPredicate parameterClassRel =
+					new RelationPredicate("parameterClass", parameterClass, "Parameter", classParameterClass, "Class");
 			addRelationPredicate(parameterClassRel);
 		}
 
 		if (parameterAnnotations != null && annotationAttachedParameters != null)
 		{
-			RelationPredicate parameterHasAnnotation = new RelationPredicate("parameterHasAnnotation",
-					parameterAnnotations, "Parameter", annotationAttachedParameters, "Annotation");
+			RelationPredicate parameterHasAnnotation =
+					new RelationPredicate("parameterHasAnnotation", parameterAnnotations, "Parameter",
+							annotationAttachedParameters, "Annotation");
 			addRelationPredicate(parameterHasAnnotation);
 		}
 
 		/** Field * */
 		if (fieldClass != null && classFieldClass != null)
 		{
-			RelationPredicate fieldClassRel = new RelationPredicate("fieldClass", fieldClass, "Field", classFieldClass,
-					"Class");
+			RelationPredicate fieldClassRel =
+					new RelationPredicate("fieldClass", fieldClass, "Field", classFieldClass, "Class");
 			addRelationPredicate(fieldClassRel);
 		}
 
 		if (fieldInterface != null && interfaceFieldInterface != null)
 		{
-			RelationPredicate fieldInterfaceRel = new RelationPredicate("fieldInterface", fieldInterface, "Field",
-					interfaceFieldInterface, "Interface");
+			RelationPredicate fieldInterfaceRel =
+					new RelationPredicate("fieldInterface", fieldInterface, "Field", interfaceFieldInterface,
+							"Interface");
 			addRelationPredicate(fieldInterfaceRel);
 		}
 
 		if (fieldAnnotations != null && annotationAttachedFields != null)
 		{
-			RelationPredicate fieldHasAnnotation = new RelationPredicate("fieldHasAnnotation", fieldAnnotations,
-					"Field", annotationAttachedFields, "Annotation");
+			RelationPredicate fieldHasAnnotation =
+					new RelationPredicate("fieldHasAnnotation", fieldAnnotations, "Field", annotationAttachedFields,
+							"Annotation");
 			addRelationPredicate(fieldHasAnnotation);
 		}
 	}
@@ -960,7 +974,7 @@ public abstract class LanguageModel
 	// params.clear();
 	// params.add("ChildParameters");
 	// m.setParameters(params);
-	//relations.put(getLanguageUnitType("Method").getImplementingClass().getName
+	// relations.put(getLanguageUnitType("Method").getImplementingClass().getName
 	// (), m);
 	// return relations;
 	// }
@@ -1038,8 +1052,9 @@ public abstract class LanguageModel
 					}
 					while (pos > 0)
 					{
-						String subnsName = currNS.getUnitName() + (currNS.getUnitName().length() > 0 ? "." : "")
-								+ nsToAdd.substring(0, pos);
+						String subnsName =
+								currNS.getUnitName() + (currNS.getUnitName().length() > 0 ? "." : "")
+										+ nsToAdd.substring(0, pos);
 						LangNamespace subns = new LangNamespace(subnsName);
 						dict.addLanguageUnit(subns);
 						currNS.addChildNamespace(subns);

@@ -122,8 +122,9 @@ public class ExtraFilters implements CustomCwCFilters
 		resources.addResource(rsc);
 		try
 		{
-			ConflictRule cr = new ConflictRule(rsc, RuleType.Constraint, ConflictRule.PATTERN_NO_WRITE_WRITE_READ,
-					"Timer value is unreliable");
+			ConflictRule cr =
+					new ConflictRule(rsc, RuleType.Constraint, ConflictRule.PATTERN_NO_WRITE_WRITE_READ,
+							"Timer value is unreliable");
 			resources.addRule(cr);
 		}
 		catch (PatternParseException e)

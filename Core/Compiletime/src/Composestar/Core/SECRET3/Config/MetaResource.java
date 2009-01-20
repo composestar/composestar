@@ -51,8 +51,9 @@ public final class MetaResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.SECRET3.Config.Resource#addVocabulary(java.util.Collection)
+	 * @see
+	 * Composestar.Core.SECRET3.Config.Resource#addVocabulary(java.util.Collection
+	 * )
 	 */
 	@Override
 	public void addVocabulary(Collection<String> words)
@@ -62,8 +63,8 @@ public final class MetaResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.SECRET3.Config.Resource#addVocabulary(java.lang.String)
+	 * @see
+	 * Composestar.Core.SECRET3.Config.Resource#addVocabulary(java.lang.String)
 	 */
 	@Override
 	public void addVocabulary(String word)
@@ -73,7 +74,6 @@ public final class MetaResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.SECRET3.Config.Resource#clearVocabulary()
 	 */
 	@Override
@@ -84,7 +84,6 @@ public final class MetaResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.SECRET3.Config.Resource#equals(java.lang.Object)
 	 */
 	@Override
@@ -119,7 +118,6 @@ public final class MetaResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.SECRET3.Config.Resource#getVocabulary()
 	 */
 	@Override
@@ -130,7 +128,6 @@ public final class MetaResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.SECRET3.Config.Resource#hashCode()
 	 */
 	@Override
@@ -141,7 +138,6 @@ public final class MetaResource extends Resource
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.SECRET3.Config.Resource#toString()
 	 */
 	@Override

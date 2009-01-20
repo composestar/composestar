@@ -48,7 +48,6 @@ import weavec.cmodel.type.AnnotationType;
 import weavec.cmodel.type.CType;
 import weavec.cmodel.type.FunctionType;
 import weavec.grammar.TranslationUnitResult;
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.CpsConcern;

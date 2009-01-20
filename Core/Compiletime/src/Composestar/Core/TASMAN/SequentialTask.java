@@ -41,7 +41,6 @@ public class SequentialTask extends TaskCollection
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.TASMAN.Task#execute()
 	 */
 	@Override

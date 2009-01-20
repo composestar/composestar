@@ -32,8 +32,6 @@ import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding;
-import Composestar.Core.CpsRepository2.SISpec.Selector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
@@ -141,9 +139,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * Composestar.Core.CpsRepository2.SISpec.Selector#getSelection
-		 * ()
+		 * @see Composestar.Core.CpsRepository2.SISpec.Selector#getSelection ()
 		 */
 		public Collection<ProgramElement> getSelection()
 		{

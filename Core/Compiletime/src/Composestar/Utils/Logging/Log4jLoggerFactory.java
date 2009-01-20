@@ -29,8 +29,9 @@ public class Log4jLoggerFactory implements LoggerFactory, ILoggerFactory
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.log4j.spi.LoggerFactory#makeNewLoggerInstance(java.lang.String)
+	 * @see
+	 * org.apache.log4j.spi.LoggerFactory#makeNewLoggerInstance(java.lang.String
+	 * )
 	 */
 	public Logger makeNewLoggerInstance(String name)
 	{

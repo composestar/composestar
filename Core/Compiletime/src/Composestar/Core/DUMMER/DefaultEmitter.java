@@ -16,17 +16,18 @@ public class DefaultEmitter implements DummyEmitter
 {
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.DUMMER.DummyEmitter#createDummies(Composestar.Core.Config.Project,
-	 *      java.util.Set)
+	 * @see
+	 * Composestar.Core.DUMMER.DummyEmitter#createDummies(Composestar.Core.Config
+	 * .Project, java.util.Set)
 	 */
 	public void createDummies(Project project, Set<Source> sources) throws ModuleException
 	{}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.DUMMER.DummyEmitter#setCommonResources(Composestar.Core.Resources.CommonResources)
+	 * @see
+	 * Composestar.Core.DUMMER.DummyEmitter#setCommonResources(Composestar.Core
+	 * .Resources.CommonResources)
 	 */
 	public void setCommonResources(CommonResources resc)
 	{}

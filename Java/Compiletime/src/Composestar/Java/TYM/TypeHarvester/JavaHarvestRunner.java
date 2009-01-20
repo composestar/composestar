@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 
-import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;

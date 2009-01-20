@@ -60,7 +60,6 @@ public class OutputStreamRedirector extends OutputStream
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.io.OutputStream#write(int)
 	 */
 	@Override
