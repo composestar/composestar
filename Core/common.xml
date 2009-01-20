@@ -34,12 +34,25 @@
 		<property name="version.starlight" value="${version.core}" />
 		<property name="version.cwc" value="${version.core}" />
 		
-		<tstamp>
-            <format property="timestamp" pattern="yyyyMMddHHmm"/>
-        </tstamp>
-		<condition property="version.eclipse.qualifier" value="DEV" else="t${timestamp}-b${version.build}">
-		  <equals arg1="${version.build}" arg2="0" />
-		</condition>
+		<!-- 
+			Creates the eclipse version qualifier. This is used for the eclipse plugin
+			versions instead of the plain build label. Development builds (version.build=0)
+			will get the qualifier "DEV", true integration builds get something like:
+			"b00008765". For more information see the Eclipse version format.  
+		-->
+		<script language="javascript"><![CDATA[
+			var versionBuild = project.getProperty("version.build");
+			if (versionBuild == "0")
+			{
+				versionBuild = "DEV";
+			}
+			else 
+			{
+				versionBuild = "00000000"+versionBuild;
+				versionBuild = "b"+versionBuild.substr(versionBuild.length-8);
+			}
+			project.setProperty("version.eclipse.qualifier", versionBuild);
+		]]></script>
 
 		<!-- various config items -->
 		<property name="out.build" value="build" />
