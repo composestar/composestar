@@ -33,6 +33,7 @@ import Composestar.Java.FLIRT.Env.RTCpsObject;
 import Composestar.Java.FLIRT.Env.RTMessage;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 import Composestar.Java.FLIRT.Interpreter.MessageFlow;
+import Composestar.Java.FLIRT.Utils.InvocationException;
 
 /**
  * Dispatches the current message
@@ -68,7 +69,14 @@ public class DispatchAction extends RTFilterAction
 
 		if (target.isInnerObject() || !(target instanceof ObjectManager))
 		{
-			result = MessageHandlingFacility.invokeMessageToInner(context.getMessage());
+			try
+			{
+				result = MessageHandlingFacility.invokeMessageToInner(context.getMessage());
+			}
+			catch (Throwable e)
+			{
+				throw new InvocationException(e);
+			}
 		}
 		else
 		{

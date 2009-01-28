@@ -22,6 +22,7 @@ public class Producer implements Runnable {
 				buffer.produce(new Object());
 			} catch (Exception e) {
 				System.err.println("==> " + e.toString());
+				e.printStackTrace();
 				return;
 			}
 			--produce;

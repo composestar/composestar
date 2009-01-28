@@ -21,6 +21,7 @@ public class Consumer implements Runnable {
 				buffer.consume();
 			} catch (Exception e) {
 				System.err.println("==> " + e.toString());
+				e.printStackTrace();
 				return;
 			}
 			--consume;

@@ -10,7 +10,7 @@
         <setting name="COMP.compliance">1.6</setting>
         <setting name="COMP.target">1.6</setting>
     </settings>
-    <project base="C:\dev\composestar\Java\Examples\ConsumersProducers"
+    <project base="C:\local\mhendrik\composestar\Java\Examples\ConsumersProducers"
         intermediate=".composestar" language="Java"
         mainclass="ConProd.Main" name="ConsumersProducers" output="bin" platform="Java">
         <sources>
@@ -24,7 +24,7 @@
             <concern>src\ConProd\Concerns\BufferEvent.cps</concern>
         </concerns>
         <dependencies>
-            <file>C:\dev\composestar\_env\eclipse\plugins\composestar.java_0.9.0\lib\ComposestarRuntimeInterpreter.jar</file>
+            <file>C:\local\mhendrik\eclipse-devel34\plugins\composestar.java_0.9.0.DEV\lib\ComposestarRuntimeInterpreter.jar</file>
         </dependencies>
     </project>
 </buildconfiguration>

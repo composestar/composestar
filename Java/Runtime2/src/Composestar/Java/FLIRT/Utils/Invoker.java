@@ -27,7 +27,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
@@ -126,19 +125,21 @@ public final class Invoker
 		}
 		catch (InvocationTargetException e)
 		{
-			if (e.getCause() instanceof RuntimeException)
-			{
-				throw (RuntimeException) e.getCause();
-			}
-			else if (e.getCause() instanceof Error)
-			{
-				throw (Error) e.getCause();
-			}
-			else
-			{
-				logger.log(Level.SEVERE, "Error while delegating to target: " + target + " selector: " + selector
-						+ " args: " + Arrays.toString(args), e);
-			}
+			throw new InvocationException(e.getCause());
+			// if (e.getCause() instanceof RuntimeException)
+			// {
+			// throw (RuntimeException) e.getCause();
+			// }
+			// else if (e.getCause() instanceof Error)
+			// {
+			// throw (Error) e.getCause();
+			// }
+			// else
+			// {
+			// logger.log(Level.SEVERE, "Error while delegating to target: " +
+			// target + " selector: " + selector
+			// + " args: " + Arrays.toString(args), e);
+			// }
 		}
 		return null;
 	}
@@ -170,19 +171,21 @@ public final class Invoker
 		}
 		catch (InvocationTargetException e)
 		{
-			if (e.getCause() instanceof RuntimeException)
-			{
-				throw (RuntimeException) e.getCause();
-			}
-			else if (e.getCause() instanceof Error)
-			{
-				throw (Error) e.getCause();
-			}
-			else
-			{
-				logger.log(Level.SEVERE, "Error while delegating to target: " + target + " selector: " + selector
-						+ " args: " + Arrays.toString(args), e);
-			}
+			throw new InvocationException(e.getCause());
+			// if (e.getCause() instanceof RuntimeException)
+			// {
+			// throw (RuntimeException) e.getCause();
+			// }
+			// else if (e.getCause() instanceof Error)
+			// {
+			// throw (Error) e.getCause();
+			// }
+			// else
+			// {
+			// logger.log(Level.SEVERE, "Error while delegating to target: " +
+			// target + " selector: " + selector
+			// + " args: " + Arrays.toString(args), e);
+			// }
 		}
 		return null;
 	}
@@ -266,18 +269,20 @@ public final class Invoker
 		}
 		catch (InvocationTargetException e)
 		{
-			if (e.getCause() instanceof RuntimeException)
-			{
-				throw (RuntimeException) e.getCause();
-			}
-			else if (e.getCause() instanceof Error)
-			{
-				throw (Error) e.getCause();
-			}
-			else
-			{
-				logger.log(Level.SEVERE, "Error while delegating to target:" + target, e);
-			}
+			throw new InvocationException(e.getCause());
+			// if (e.getCause() instanceof RuntimeException)
+			// {
+			// throw (RuntimeException) e.getCause();
+			// }
+			// else if (e.getCause() instanceof Error)
+			// {
+			// throw (Error) e.getCause();
+			// }
+			// else
+			// {
+			// logger.log(Level.SEVERE, "Error while delegating to target:" +
+			// target, e);
+			// }
 		}
 		catch (InstantiationException e)
 		{

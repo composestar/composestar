@@ -48,6 +48,7 @@ import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTCpsObject;
 import Composestar.Java.FLIRT.Env.RTMessage;
 import Composestar.Java.FLIRT.Env.SimpleCpsObject;
+import Composestar.Java.FLIRT.Utils.InvocationException;
 import Composestar.Java.FLIRT.Utils.Invoker;
 
 /**
@@ -146,9 +147,16 @@ public final class MessageHandlingFacility
 	 * @param args
 	 */
 	public static synchronized void handleInstanceCreation(Object creator, Object createdObject, Object[] args,
-			String key)
+			String key) throws Throwable
 	{
-		internalInstanceCreation(creator, createdObject, args, key);
+		try
+		{
+			internalInstanceCreation(creator, createdObject, args, key);
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -159,9 +167,16 @@ public final class MessageHandlingFacility
 	 * @param args
 	 */
 	public static synchronized void handleInstanceCreation(String staticcontext, Object createdObject, Object[] args,
-			String key)
+			String key) throws Throwable
 	{
-		internalInstanceCreation(null, createdObject, args, key);
+		try
+		{
+			internalInstanceCreation(null, createdObject, args, key);
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -174,6 +189,7 @@ public final class MessageHandlingFacility
 	 * @param key
 	 */
 	private static void internalInstanceCreation(Object creator, Object createdObject, Object[] args, String key)
+			throws Throwable
 	{
 		RTCpsObject sender = getRTCpsObject(creator);
 		RTMessage msg = new RTMessage(sender);
@@ -214,7 +230,7 @@ public final class MessageHandlingFacility
 	 * @return
 	 */
 	public static Object handleMethodCall(Object caller, Object target, String selector, Object[] args, String key,
-			EnumSet<MessageState> state)
+			EnumSet<MessageState> state) throws Throwable
 	{
 		ObjectManager targetOm = ObjectManagerHandler.getObjectManager(target, repository);
 		ObjectManager senderOm = ObjectManagerHandler.getObjectManager(caller, repository);
@@ -296,8 +312,16 @@ public final class MessageHandlingFacility
 	 * @return
 	 */
 	public static Object handleReturnMethodCall(Object caller, Object target, String selector, Object[] args, String key)
+			throws Throwable
 	{
-		return handleMethodCall(caller, target, selector, args, key, EnumSet.noneOf(MessageState.class));
+		try
+		{
+			return handleMethodCall(caller, target, selector, args, key, EnumSet.noneOf(MessageState.class));
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -309,8 +333,16 @@ public final class MessageHandlingFacility
 	 * @param args
 	 */
 	public static void handleVoidMethodCall(Object caller, Object target, String selector, Object[] args, String key)
+			throws Throwable
 	{
-		handleMethodCall(caller, target, selector, args, key, EnumSet.of(MessageState.VOID_RETURN));
+		try
+		{
+			handleMethodCall(caller, target, selector, args, key, EnumSet.of(MessageState.VOID_RETURN));
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -323,9 +355,16 @@ public final class MessageHandlingFacility
 	 * @return
 	 */
 	public static Object handleReturnMethodCall(String staticcaller, Object target, String selector, Object[] args,
-			String key)
+			String key) throws Throwable
 	{
-		return handleMethodCall(null, target, selector, args, key, EnumSet.of(MessageState.STATIC_SENDER));
+		try
+		{
+			return handleMethodCall(null, target, selector, args, key, EnumSet.of(MessageState.STATIC_SENDER));
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -337,10 +376,17 @@ public final class MessageHandlingFacility
 	 * @param args
 	 */
 	public static void handleVoidMethodCall(String staticcaller, Object target, String selector, Object[] args,
-			String key)
+			String key) throws Throwable
 	{
-		handleMethodCall(null, target, selector, args, key, EnumSet.of(MessageState.STATIC_SENDER,
-				MessageState.VOID_RETURN));
+		try
+		{
+			handleMethodCall(null, target, selector, args, key, EnumSet.of(MessageState.STATIC_SENDER,
+					MessageState.VOID_RETURN));
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -353,9 +399,17 @@ public final class MessageHandlingFacility
 	 * @return
 	 */
 	public static Object handleReturnMethodCall(Object caller, String target, String selector, Object[] args, String key)
+			throws Throwable
 	{
-		// no filters possible on a static target
-		return Invoker.invoke(target, selector, args);
+		try
+		{
+			// no filters possible on a static target
+			return Invoker.invoke(target, selector, args);
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -367,9 +421,17 @@ public final class MessageHandlingFacility
 	 * @param args
 	 */
 	public static void handleVoidMethodCall(Object caller, String target, String selector, Object[] args, String key)
+			throws Throwable
 	{
-		// no filters possible on a static target
-		Invoker.invoke(target, selector, args);
+		try
+		{
+			// no filters possible on a static target
+			Invoker.invoke(target, selector, args);
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -382,10 +444,17 @@ public final class MessageHandlingFacility
 	 * @return
 	 */
 	public static Object handleReturnMethodCall(String staticcaller, String target, String selector, Object[] args,
-			String key)
+			String key) throws Throwable
 	{
-		// no filters possible on a static target
-		return Invoker.invoke(target, selector, args);
+		try
+		{
+			// no filters possible on a static target
+			return Invoker.invoke(target, selector, args);
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -397,10 +466,17 @@ public final class MessageHandlingFacility
 	 * @param args
 	 */
 	public static void handleVoidMethodCall(String staticcaller, String target, String selector, Object[] args,
-			String key)
+			String key) throws Throwable
 	{
-		// no filters possible on a static target
-		Invoker.invoke(target, selector, args);
+		try
+		{
+			// no filters possible on a static target
+			Invoker.invoke(target, selector, args);
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
@@ -409,7 +485,7 @@ public final class MessageHandlingFacility
 	 * @param msg
 	 * @return
 	 */
-	public static Object invokeMessageToInner(RTMessage msg)
+	public static Object invokeMessageToInner(RTMessage msg) throws Throwable
 	{
 		Object target = null;
 		if (msg.getTarget() instanceof RTCpsObject)
@@ -430,7 +506,14 @@ public final class MessageHandlingFacility
 		{
 			methodInfo = ((CpsSelectorMethodInfo) msg.getSelector()).getMethodInfo();
 		}
-		return Invoker.invoke(target, msg.getSelector().getName(), msg.getArguments(), methodInfo);
+		try
+		{
+			return Invoker.invoke(target, msg.getSelector().getName(), msg.getArguments(), methodInfo);
+		}
+		catch (InvocationException e)
+		{
+			throw e.getCause();
+		}
 	}
 
 	/**
