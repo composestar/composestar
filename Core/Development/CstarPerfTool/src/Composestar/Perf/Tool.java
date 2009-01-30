@@ -48,6 +48,8 @@ public class Tool
 	 */
 	public static final Pattern TIMER_RESULT_FILENAME = Pattern.compile("^(?i)TimerResults_[0-9]+\\.xml$");
 
+	public static final boolean QUIET = Boolean.getBoolean("Composestar.Perf.Tool.quiet");
+
 	public Tool()
 	{}
 
@@ -100,7 +102,10 @@ public class Tool
 		ReportBundle bundle = new ReportBundle(directory);
 		for (File result : resultFiles)
 		{
-			System.out.println(String.format("Processing: %s ...", result.toString()));
+			if (!QUIET)
+			{
+				System.out.println(String.format("Processing: %s ...", result.toString()));
+			}
 			Report report = new Report(result);
 			try
 			{
@@ -117,7 +122,10 @@ public class Tool
 			bundle.addReport(report);
 		}
 		File output = new File(directory.getParentFile(), String.format("%s.xml", directory.getName()));
-		System.out.println(String.format("Exporting to: %s ...", output.toString()));
+		if (!QUIET)
+		{
+			System.out.println(String.format("Exporting to: %s ...", output.toString()));
+		}
 		try
 		{
 			XMLExport exporter = new XMLExport(bundle, new FileOutputStream(output));
@@ -140,6 +148,14 @@ public class Tool
 	 */
 	public static void main(String[] args)
 	{
+		if (!QUIET)
+		{
+			System.out.println("Compose* Performance Report Processing Tool");
+			System.out.println("Copyright 2009 University of Twente");
+			System.out.println("Released under terms of GNU Lesser General Public License 2.1");
+			System.out.println();
+		}
+
 		File baseDir = null;
 		boolean singleDir = false;
 		for (String arg : args)

@@ -1,0 +1,25 @@
+<project name="CstarPerfTool" default="build">
+
+	<target name="clean" description="Clean the build results">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="build" depends="init,compile,jar" description="Build the application" />
+
+	<target name="rebuild" depends="clean,build" description="rebuild the package" />
+
+	<target name="init">
+		<mkdir dir="build" />
+		<mkdir dir="dist" />
+	</target>
+
+	<target name="compile">
+		<javac srcdir="src" destdir="build" />
+	</target>
+
+	<target name="jar">
+		<jar destfile="dist/CstarPerfTool.jar" basedir="build" manifest="src/META-INF/MANIFEST.MF" />
+	</target>
+
+</project>
