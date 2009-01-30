@@ -63,7 +63,7 @@ public abstract class Exporter
 	/**
 	 * Only the latest X reports
 	 */
-	protected int onlyLatestX;
+	protected int onlyLatestX = Integer.getInteger("Composestar.Perf.Tool.Export.onlyLastX", 0);
 
 	protected Exporter(ReportBundle bundleToExport)
 	{
