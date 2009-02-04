@@ -24,94 +24,23 @@
 
 package Composestar.Java.FLIRT.Env;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Java.FLIRT.FLIRTConstants;
-import Composestar.Java.FLIRT.Utils.SyncBuffer;
 
 /**
  * The base message receiver implementation
  * 
  * @author Michiel Hendriks
  */
-public abstract class MessageReceiver implements Runnable
+public abstract class MessageReceiver
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.MODULE_NAME + ".MessageReceiver");
 
-	/**
-	 * The message queue
-	 */
-	protected SyncBuffer<RTMessage> messageQueue;
-
-	/**
-	 * True if this receiver is busy processing a message
-	 */
-	private boolean working;
-
-	/**
-	 * Mutex used for locking
-	 */
-	private Object workingMutex = new Object();
-
 	protected MessageReceiver()
 	{
-		messageQueue = new SyncBuffer<RTMessage>();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	public void run()
-	{
-		// The message processing loop
-		do
-		{
-			RTMessage msg = messageQueue.consume();
-			Object reply = null;
-			try
-			{
-				reply = receiveMessage(msg);
-			}
-			catch (RuntimeException e)
-			{
-				logger.log(Level.SEVERE, "An exception was thrown from within a filter.", e);
-				// set the exception as the response, which will be rethrown
-				// in the base thread
-				reply = e;
-			}
-			finally
-			{
-				msg.setResponse(reply);
-				synchronized (workingMutex)
-				{
-					if (messageQueue.isEmpty())
-					{
-						working = false;
-						return;
-					}
-				}
-			}
-		} while (true); // dowhile because of concurency
-	}
-
-	/**
-	 * Start the message consuming thread when needed.
-	 */
-	public void notifyMessageConsumer()
-	{
-		synchronized (workingMutex)
-		{
-			if (working)
-			{
-				return;
-			}
-			working = true;
-			Thread child = new Thread(this, "MessageReceiver");
-			child.start();
-		}
+		super();
 	}
 
 	/**
@@ -122,7 +51,7 @@ public abstract class MessageReceiver implements Runnable
 	 * @param msg
 	 * @return The return value of the message, can be null for void methods
 	 */
-	public Object deliverIncomingMessage(CpsObject sender, CpsObject receiver, RTMessage msg)
+	public Object deliverIncomingMessage(CpsObject sender, CpsObject receiver, RTMessage msg) throws Throwable
 	{
 		if (receiver instanceof ObjectManager)
 		{
@@ -163,7 +92,7 @@ public abstract class MessageReceiver implements Runnable
 	 * @param msg
 	 * @return The result of the message
 	 */
-	public Object deliverOutgoingMessage(CpsObject sender, CpsObject receiver, RTMessage msg)
+	public Object deliverOutgoingMessage(CpsObject sender, CpsObject receiver, RTMessage msg) throws Throwable
 	{
 		if (sender instanceof ObjectManager)
 		{
@@ -203,5 +132,5 @@ public abstract class MessageReceiver implements Runnable
 	 * @param msg
 	 * @return
 	 */
-	protected abstract Object receiveMessage(RTMessage msg);
+	protected abstract Object receiveMessage(RTMessage msg) throws Throwable;
 }

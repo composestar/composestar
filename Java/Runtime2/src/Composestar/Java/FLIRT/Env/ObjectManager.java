@@ -250,7 +250,7 @@ public class ObjectManager extends MessageReceiver implements RTCpsObject
 	 * .Java.FLIRT.Env.RTMessage)
 	 */
 	@Override
-	protected Object receiveMessage(RTMessage msg)
+	protected Object receiveMessage(RTMessage msg) throws Throwable
 	{
 		FilterExecutionContext context = new FilterExecutionContext(this, msg);
 		InterpreterMain.interpret(context);

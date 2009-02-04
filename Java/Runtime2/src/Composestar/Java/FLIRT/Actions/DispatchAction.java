@@ -95,6 +95,13 @@ public class DispatchAction extends RTFilterAction
 	protected Object dispatch(ObjectManager target, FilterExecutionContext context)
 	{
 		RTMessage message = new RTMessage(context.getMessage());
-		return target.deliverIncomingMessage(message.getSender(), target, message);
+		try
+		{
+			return target.deliverIncomingMessage(message.getSender(), target, message);
+		}
+		catch (Throwable e)
+		{
+			throw new InvocationException(e);
+		}
 	}
 }

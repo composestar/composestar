@@ -29,6 +29,7 @@ import Composestar.Java.FLIRT.Annotations.FilterActionDef;
 import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTMessage;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
+import Composestar.Java.FLIRT.Utils.InvocationException;
 
 /**
  * Sends a message to the target, this changes the sender of the message to the
@@ -50,6 +51,13 @@ public class SendAction extends DispatchAction
 	protected Object dispatch(ObjectManager target, FilterExecutionContext context)
 	{
 		RTMessage message = (RTMessage) context.getMessage().send(context.getMessage().getSelf());
-		return target.deliverIncomingMessage(message.getSender(), target, message);
+		try
+		{
+			return target.deliverIncomingMessage(message.getSender(), target, message);
+		}
+		catch (Throwable e)
+		{
+			throw new InvocationException(e);
+		}
 	}
 }
