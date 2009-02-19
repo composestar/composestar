@@ -60,7 +60,7 @@ public final class MessageHandlingFacility
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.MODULE_NAME);
 
-	public static final boolean RT_DEBUG = false || Boolean.getBoolean("composestar.runtime.debug");
+	public static final boolean RT_DEBUG = Boolean.getBoolean("composestar.runtime.debug");
 
 	/**
 	 * The CPS repository, initialized on startup

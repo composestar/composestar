@@ -40,6 +40,11 @@ public final class InterpreterMain
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER);
 
+	/**
+	 * If true the threaded interpreter will be used
+	 */
+	private static final boolean USE_THREADED = Boolean.getBoolean("composestar.runtime.threaded");
+
 	private InterpreterMain()
 	{}
 
@@ -47,9 +52,16 @@ public final class InterpreterMain
 	 * Entry point for the interpreter. This will execute the provided context
 	 * 
 	 * @param context
+	 * @throws Throwable
 	 */
-	public static void interpret(FilterExecutionContext context)
+	public static void interpret(FilterExecutionContext context) throws Throwable
 	{
+		if (USE_THREADED)
+		{
+			ThreadedInterpreter.interpret(context);
+			return;
+		}
+
 		// make sure we're wating for the right buffer to be filled
 		SyncBuffer<Object> reponseBuffer = context.getMessage().getResponseBuffer().wrap();
 		try

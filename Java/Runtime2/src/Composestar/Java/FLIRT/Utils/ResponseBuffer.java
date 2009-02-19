@@ -78,14 +78,20 @@ public class ResponseBuffer
 
 	public SyncBuffer<Object> wrap()
 	{
-		buffers.push(currentBuffer);
-		currentBuffer = new SyncBuffer<Object>();
-		return currentBuffer;
+		synchronized (buffers)
+		{
+			buffers.push(currentBuffer);
+			currentBuffer = new SyncBuffer<Object>();
+			return currentBuffer;
+		}
 	}
 
 	public void unwrap()
 	{
-		currentBuffer = buffers.pop();
+		synchronized (buffers)
+		{
+			currentBuffer = buffers.pop();
+		}
 	}
 
 }

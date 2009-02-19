@@ -46,21 +46,20 @@ public final class ThreadedInterpreter extends Thread
 	/**
 	 * An interpreter per base thread
 	 */
-	private static final ThreadLocal<ThreadedInterpreter> interpreterThread =
-			new ThreadLocal<ThreadedInterpreter>()
-			{
-				/*
-				 * (non-Javadoc)
-				 * @see java.lang.ThreadLocal#initialValue()
-				 */
-				@Override
-				protected ThreadedInterpreter initialValue()
-				{
-					ThreadedInterpreter thread = new ThreadedInterpreter(Thread.currentThread());
-					threadLocals.put(thread, this);
-					return thread;
-				}
-			};
+	private static final ThreadLocal<ThreadedInterpreter> interpreterThread = new ThreadLocal<ThreadedInterpreter>()
+	{
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.ThreadLocal#initialValue()
+		 */
+		@Override
+		protected ThreadedInterpreter initialValue()
+		{
+			ThreadedInterpreter thread = new ThreadedInterpreter(Thread.currentThread());
+			threadLocals.put(thread, this);
+			return thread;
+		}
+	};
 
 	/**
 	 * Mapping from interpreter to thread local, so that the interpreter can be
@@ -78,10 +77,7 @@ public final class ThreadedInterpreter extends Thread
 	{
 		ThreadedInterpreter thread = getInterpreterThread();
 		thread.start(context);
-		if (thread.isRunning) // because it might already be done
-		{
-			thread.waitForResult();
-		}
+		thread.waitForResult();
 		thread.finish();
 	}
 
@@ -131,11 +127,17 @@ public final class ThreadedInterpreter extends Thread
 	 */
 	private Object workSync;
 
+	/**
+	 * Sync object for the interpreter
+	 */
+	private Object interpSync;
+
 	private ThreadedInterpreter(Thread thread)
 	{
 		super(FLIRTConstants.INTERPRETER);
 		parentThread = new WeakReference<Thread>(thread);
 		workSync = new Object();
+		interpSync = new Object();
 	}
 
 	private void start(FilterExecutionContext ctx) throws InterruptedException
@@ -159,9 +161,12 @@ public final class ThreadedInterpreter extends Thread
 	/**
 	 * Notify the waiting threads
 	 */
-	private synchronized void wakeupForResult()
+	private void wakeupForResult()
 	{
-		notifyAll();
+		synchronized (interpSync)
+		{
+			interpSync.notify();
+		}
 	}
 
 	/**
@@ -171,7 +176,13 @@ public final class ThreadedInterpreter extends Thread
 	 */
 	private synchronized void waitForResult() throws InterruptedException
 	{
-		wait();
+		synchronized (interpSync)
+		{
+			if (isRunning)
+			{
+				interpSync.wait();
+			}
+		}
 	}
 
 	/**
