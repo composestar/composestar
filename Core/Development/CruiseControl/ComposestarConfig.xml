@@ -53,11 +53,11 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 			<gzip every="1" unit="WEEK" />
 		</log>
 		<publishers>
-			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" xslfile="${composestar.path}\Core\Development\CruiseControl\buildresults.xslt"
+			<htmlemail buildresultsurl="http://${cchost}:8080/cruisecontrol/buildresults/${project.name}" xslfile="${composestar.path}\Core\Development\CruiseControl\buildresults.xslt"
 				mailhost="smtp.utwente.nl" reportsuccess="fixes" skipusers="true" returnname="Continuous Integration Server"
 				returnaddress="elmuerte@users.sourceforge.net">
 				<always address="composestar-developers@lists.sourceforge.net" />
-				<parameter name="buildresultsurl" value="http://${cchost}:8080/buildresults/${project.name}" />
+				<parameter name="buildresultsurl" value="http://${cchost}:8080/cruisecontrol/buildresults/${project.name}" />
 				<parameter name="standalonehtml" value="1" />
 				<parameter name="revisionurl" value="http://composestar.svn.sourceforge.net/viewvc/composestar?view=rev&amp;revision=" />
 			</htmlemail>
