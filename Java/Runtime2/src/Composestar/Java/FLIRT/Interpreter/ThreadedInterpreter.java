@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext.EnqueuedAction;
+import Composestar.Java.FLIRT.Reflection.ReflectionHandler;
 import Composestar.Java.FLIRT.Utils.SyncBuffer;
 
 /**
@@ -76,8 +77,10 @@ public final class ThreadedInterpreter extends Thread
 	public static void interpret(FilterExecutionContext context) throws Throwable
 	{
 		ThreadedInterpreter thread = getInterpreterThread();
+		ReflectionHandler.pushContext(thread, context);
 		thread.start(context);
 		thread.waitForResult();
+		ReflectionHandler.popContext(thread, context);
 		thread.finish();
 	}
 

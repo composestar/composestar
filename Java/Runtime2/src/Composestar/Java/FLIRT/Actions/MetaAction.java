@@ -39,6 +39,7 @@ import Composestar.Java.FLIRT.Env.ReifiedMessage;
 import Composestar.Java.FLIRT.Env.ReifiedMessage.ReifiedMessageResult;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 import Composestar.Java.FLIRT.Interpreter.MessageFlow;
+import Composestar.Java.FLIRT.Interpreter.ThreadedInterpreter;
 
 /**
  * @author Michiel Hendriks
@@ -90,7 +91,9 @@ public class MetaAction extends RTFilterAction
 			throw new IllegalStateException("No RTCpsObject target for AdviceAction");
 		}
 
-		reifiedMessage = new ReifiedMessage(context.getMessage(), target.getObject(), selector.getName());
+		reifiedMessage =
+				new ReifiedMessage(context.getMessage(), target.getObject(), selector.getName(), (Thread
+						.currentThread() instanceof ThreadedInterpreter));
 		procMessage(context);
 	}
 
@@ -109,7 +112,14 @@ public class MetaAction extends RTFilterAction
 				context.setMessageFlow(MessageFlow.RETURN);
 				break;
 			case RESPOND:
-				// TODO
+				if (Thread.currentThread() instanceof ThreadedInterpreter)
+				{
+					((ThreadedInterpreter) Thread.currentThread()).forkInterpreter();
+				}
+				else
+				{
+					throw new IllegalStateException("Current interpreter does not support the RESPOND action");
+				}
 				break;
 			case PROCEED:
 				// continue with filters as usual, ReifiedMessage thread locked

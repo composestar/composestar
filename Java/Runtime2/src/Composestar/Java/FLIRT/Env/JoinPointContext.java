@@ -71,7 +71,7 @@ public class JoinPointContext
 	 * @param var
 	 * @return
 	 */
-	protected Object getRealObject(CpsObject var)
+	public static final Object getRealObject(CpsObject var)
 	{
 		if (var instanceof RTCpsObject)
 		{

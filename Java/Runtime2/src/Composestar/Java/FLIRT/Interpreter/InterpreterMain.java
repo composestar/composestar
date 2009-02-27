@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext.EnqueuedAction;
+import Composestar.Java.FLIRT.Reflection.ReflectionHandler;
 import Composestar.Java.FLIRT.Utils.SyncBuffer;
 
 /**
@@ -62,6 +63,7 @@ public final class InterpreterMain
 			return;
 		}
 
+		ReflectionHandler.pushContext(Thread.currentThread(), context);
 		// make sure we're wating for the right buffer to be filled
 		SyncBuffer<Object> reponseBuffer = context.getMessage().getResponseBuffer().wrap();
 		try
@@ -103,6 +105,7 @@ public final class InterpreterMain
 		finally
 		{
 			finish(reponseBuffer, context);
+			ReflectionHandler.popContext(Thread.currentThread(), context);
 		}
 	}
 

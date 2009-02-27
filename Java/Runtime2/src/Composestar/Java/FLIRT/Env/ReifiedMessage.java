@@ -110,12 +110,18 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	 */
 	protected SyncBuffer<ReifiedMessageResult> buffer;
 
-	public ReifiedMessage(RTMessage message, Object actTarget, String actSelector)
+	/**
+	 * If true the RESPOND action is allowed
+	 */
+	protected boolean respondSupported;
+
+	public ReifiedMessage(RTMessage message, Object actTarget, String actSelector, boolean respondAllowed)
 	{
 		super(message);
 		buffer = new SyncBuffer<ReifiedMessageResult>();
 		this.actTarget = actTarget;
 		this.actSelector = actSelector;
+		respondSupported = respondAllowed;
 	}
 
 	/**
@@ -169,13 +175,29 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	}
 
 	/**
+	 * @return the respondSupported
+	 */
+	public boolean isRespondSupported()
+	{
+		return respondSupported;
+	}
+
+	/**
 	 * Return the message to the original sender. The message will still be
 	 * processed by the other filters.
 	 */
 	public synchronized void respond()
 	{
 		state = ReifiedMessageState.RESPONDED;
-		throw new UnsupportedOperationException("ReifiedMessage.respond() is not (yet) supported");
+		if (respondSupported)
+		{
+			buffer.produce(new ReifiedMessageResult(ReifiedMessageAction.REPLY));
+		}
+		else
+		{
+			throw new UnsupportedOperationException(
+					"ReifiedMessage.respond() is not supported by the current interpreter");
+		}
 	}
 
 	/**
