@@ -57,7 +57,7 @@ public class SendAction extends DispatchAction
 		}
 		catch (Throwable e)
 		{
-			throw new InvocationException(e);
+			throw InvocationException.create(e);
 		}
 	}
 }

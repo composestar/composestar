@@ -1,0 +1,240 @@
+>> Test #0
+Inspector[1]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[1]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[1]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[1]: MessageInfo.getSender():       null
+Inspector[1]: MessageInfo.getServer():       reflectiontest.A
+Inspector[1]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[1]: MessageInfo.getInner():        reflectiontest.A
+Inspector[1]: MessageInfo.getSelectorName(): foo
+Inspector[1]: MessageInfo.getArguments():    []
+Inspector[1]: 
+Inspector[1]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[1]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[1]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[1]: MessageInfo.getSender():       null
+Inspector[1]: MessageInfo.getServer():       reflectiontest.A
+Inspector[1]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[1]: MessageInfo.getInner():        reflectiontest.A
+Inspector[1]: MessageInfo.getSelectorName(): foo
+Inspector[1]: MessageInfo.getArguments():    []
+Inspector[1]: 
+Inspector[1]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[1]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[1]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[1]: MessageInfo.getSender():       null
+Inspector[1]: MessageInfo.getServer():       reflectiontest.A
+Inspector[1]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[1]: MessageInfo.getInner():        reflectiontest.A
+Inspector[1]: MessageInfo.getSelectorName(): bar
+Inspector[1]: MessageInfo.getArguments():    [test0]
+Inspector[1]: 
+Inspector[2]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[2]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[2]: MessageInfo.getSender():       null
+Inspector[2]: MessageInfo.getServer():       reflectiontest.A
+Inspector[2]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[2]: MessageInfo.getInner():        reflectiontest.B
+Inspector[2]: MessageInfo.getSelectorName(): bar
+Inspector[2]: MessageInfo.getArguments():    [test0]
+Inspector[2]: 
+Inspector[2]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[2]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[2]: MessageInfo.getSender():       null
+Inspector[2]: MessageInfo.getServer():       reflectiontest.A
+Inspector[2]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[2]: MessageInfo.getInner():        reflectiontest.B
+Inspector[2]: MessageInfo.getSelectorName(): bar
+Inspector[2]: MessageInfo.getArguments():    [test0]
+Inspector[2]: 
+Inspector[1]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[1]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[1]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[1]: MessageInfo.getSender():       null
+Inspector[1]: MessageInfo.getServer():       reflectiontest.A
+Inspector[1]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[1]: MessageInfo.getInner():        reflectiontest.A
+Inspector[1]: MessageInfo.getSelectorName(): quux
+Inspector[1]: MessageInfo.getArguments():    [1, test 0]
+Inspector[1]: 
+Inspector[2]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[2]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[2]: MessageInfo.getSender():       null
+Inspector[2]: MessageInfo.getServer():       reflectiontest.A
+Inspector[2]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[2]: MessageInfo.getInner():        reflectiontest.B
+Inspector[2]: MessageInfo.getSelectorName(): quux
+Inspector[2]: MessageInfo.getArguments():    [1, test 0]
+Inspector[2]: 
+Inspector[2]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[2]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[2]: MessageInfo.getSender():       null
+Inspector[2]: MessageInfo.getServer():       reflectiontest.A
+Inspector[2]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[2]: MessageInfo.getInner():        reflectiontest.B
+Inspector[2]: MessageInfo.getSelectorName(): quux
+Inspector[2]: MessageInfo.getArguments():    [1, test 0]
+Inspector[2]: 
+>> Test #1
+Inspector[3]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[3]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[3]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[3]: MessageInfo.getSender():       reflectiontest.Test
+Inspector[3]: MessageInfo.getServer():       reflectiontest.A
+Inspector[3]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[3]: MessageInfo.getInner():        reflectiontest.A
+Inspector[3]: MessageInfo.getSelectorName(): foo
+Inspector[3]: MessageInfo.getArguments():    []
+Inspector[3]: 
+Inspector[3]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[3]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[3]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[3]: MessageInfo.getSender():       reflectiontest.Test
+Inspector[3]: MessageInfo.getServer():       reflectiontest.A
+Inspector[3]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[3]: MessageInfo.getInner():        reflectiontest.A
+Inspector[3]: MessageInfo.getSelectorName(): foo
+Inspector[3]: MessageInfo.getArguments():    []
+Inspector[3]: 
+Inspector[3]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[3]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[3]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[3]: MessageInfo.getSender():       reflectiontest.Test
+Inspector[3]: MessageInfo.getServer():       reflectiontest.A
+Inspector[3]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[3]: MessageInfo.getInner():        reflectiontest.A
+Inspector[3]: MessageInfo.getSelectorName(): bar
+Inspector[3]: MessageInfo.getArguments():    [test1]
+Inspector[3]: 
+Inspector[4]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[4]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[4]: MessageInfo.getSender():       reflectiontest.Test
+Inspector[4]: MessageInfo.getServer():       reflectiontest.A
+Inspector[4]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[4]: MessageInfo.getInner():        reflectiontest.B
+Inspector[4]: MessageInfo.getSelectorName(): bar
+Inspector[4]: MessageInfo.getArguments():    [test1]
+Inspector[4]: 
+Inspector[4]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[4]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[4]: MessageInfo.getSender():       reflectiontest.Test
+Inspector[4]: MessageInfo.getServer():       reflectiontest.A
+Inspector[4]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[4]: MessageInfo.getInner():        reflectiontest.B
+Inspector[4]: MessageInfo.getSelectorName(): bar
+Inspector[4]: MessageInfo.getArguments():    [test1]
+Inspector[4]: 
+Inspector[3]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[3]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[3]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[3]: MessageInfo.getSender():       reflectiontest.Test
+Inspector[3]: MessageInfo.getServer():       reflectiontest.A
+Inspector[3]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[3]: MessageInfo.getInner():        reflectiontest.A
+Inspector[3]: MessageInfo.getSelectorName(): quux
+Inspector[3]: MessageInfo.getArguments():    [1, test 1]
+Inspector[3]: 
+Inspector[4]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[4]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[4]: MessageInfo.getSender():       reflectiontest.Test
+Inspector[4]: MessageInfo.getServer():       reflectiontest.A
+Inspector[4]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[4]: MessageInfo.getInner():        reflectiontest.B
+Inspector[4]: MessageInfo.getSelectorName(): quux
+Inspector[4]: MessageInfo.getArguments():    [1, test 1]
+Inspector[4]: 
+Inspector[4]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[4]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[4]: MessageInfo.getSender():       reflectiontest.Test
+Inspector[4]: MessageInfo.getServer():       reflectiontest.A
+Inspector[4]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[4]: MessageInfo.getInner():        reflectiontest.B
+Inspector[4]: MessageInfo.getSelectorName(): quux
+Inspector[4]: MessageInfo.getArguments():    [1, test 1]
+Inspector[4]: 
+>> Test #2
+Inspector[5]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[5]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[5]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[5]: MessageInfo.getSender():       reflectiontest.Test$1
+Inspector[5]: MessageInfo.getServer():       reflectiontest.A
+Inspector[5]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[5]: MessageInfo.getInner():        reflectiontest.A
+Inspector[5]: MessageInfo.getSelectorName(): foo
+Inspector[5]: MessageInfo.getArguments():    []
+Inspector[5]: 
+Inspector[5]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[5]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[5]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[5]: MessageInfo.getSender():       reflectiontest.Test$1
+Inspector[5]: MessageInfo.getServer():       reflectiontest.A
+Inspector[5]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[5]: MessageInfo.getInner():        reflectiontest.A
+Inspector[5]: MessageInfo.getSelectorName(): foo
+Inspector[5]: MessageInfo.getArguments():    []
+Inspector[5]: 
+Inspector[5]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[5]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[5]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[5]: MessageInfo.getSender():       reflectiontest.Test$1
+Inspector[5]: MessageInfo.getServer():       reflectiontest.A
+Inspector[5]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[5]: MessageInfo.getInner():        reflectiontest.A
+Inspector[5]: MessageInfo.getSelectorName(): bar
+Inspector[5]: MessageInfo.getArguments():    [test2]
+Inspector[5]: 
+Inspector[6]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[6]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[6]: MessageInfo.getSender():       reflectiontest.Test$1
+Inspector[6]: MessageInfo.getServer():       reflectiontest.A
+Inspector[6]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[6]: MessageInfo.getInner():        reflectiontest.B
+Inspector[6]: MessageInfo.getSelectorName(): bar
+Inspector[6]: MessageInfo.getArguments():    [test2]
+Inspector[6]: 
+Inspector[6]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[6]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[6]: MessageInfo.getSender():       reflectiontest.Test$1
+Inspector[6]: MessageInfo.getServer():       reflectiontest.A
+Inspector[6]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[6]: MessageInfo.getInner():        reflectiontest.B
+Inspector[6]: MessageInfo.getSelectorName(): bar
+Inspector[6]: MessageInfo.getArguments():    [test2]
+Inspector[6]: 
+Inspector[5]: JoinPointInfo.getInstance():   reflectiontest.A
+Inspector[5]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[5]: JoinPointInfo.getInternals()   reflectiontest.B
+Inspector[5]: MessageInfo.getSender():       reflectiontest.Test$1
+Inspector[5]: MessageInfo.getServer():       reflectiontest.A
+Inspector[5]: MessageInfo.getSelf():         reflectiontest.A
+Inspector[5]: MessageInfo.getInner():        reflectiontest.A
+Inspector[5]: MessageInfo.getSelectorName(): quux
+Inspector[5]: MessageInfo.getArguments():    [1, test 2]
+Inspector[5]: 
+Inspector[6]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[6]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[6]: MessageInfo.getSender():       reflectiontest.Test$1
+Inspector[6]: MessageInfo.getServer():       reflectiontest.A
+Inspector[6]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[6]: MessageInfo.getInner():        reflectiontest.B
+Inspector[6]: MessageInfo.getSelectorName(): quux
+Inspector[6]: MessageInfo.getArguments():    [1, test 2]
+Inspector[6]: 
+Inspector[6]: JoinPointInfo.getInstance():   reflectiontest.B
+Inspector[6]: JoinPointInfo.getInternals()   reflectiontest.Inspector
+Inspector[6]: MessageInfo.getSender():       reflectiontest.Test$1
+Inspector[6]: MessageInfo.getServer():       reflectiontest.A
+Inspector[6]: MessageInfo.getSelf():         reflectiontest.B
+Inspector[6]: MessageInfo.getInner():        reflectiontest.B
+Inspector[6]: MessageInfo.getSelectorName(): quux
+Inspector[6]: MessageInfo.getArguments():    [1, test 2]
+Inspector[6]: 
+>> Test #3
+Inspector[7]: JoinPointInfo.getInstance():   null
+Inspector[7]: MessageInfo.getSender():       null
+Inspector[7]: MessageInfo.getServer():       null
+Inspector[7]: MessageInfo.getSelf():         null
+Inspector[7]: MessageInfo.getInner():        null
+Inspector[7]: MessageInfo.getSelectorName(): null
+Inspector[7]: MessageInfo.getArguments():    []
+Inspector[7]: 

@@ -24,7 +24,10 @@
 
 package Composestar.Java.FLIRT.Reflection;
 
+import java.util.EmptyStackException;
+import java.util.Map;
 import java.util.Stack;
+import java.util.WeakHashMap;
 
 import Composestar.Java.FLIRT.Env.RTMessage;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
@@ -37,20 +40,50 @@ import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
  */
 public class ReflectionHandler
 {
+	private static final RTMessage EMPTY_MESSAGE = new RTMessage();
+
+	protected static final boolean hasMessage()
+	{
+		return hasMessage(Thread.currentThread());
+	}
+
+	protected static final boolean hasMessage(Thread forThread)
+	{
+		return getHandler(forThread).hasContext();
+	}
+
 	/**
 	 * @return The current runtime message.
+	 * @throws IllegalStateException Thrown when no message is currently being
+	 *             processed
 	 */
-	protected static final RTMessage getCurrentMessage()
+	protected static final RTMessage getCurrentMessage() throws IllegalStateException
 	{
+		if (!ReflectionHandler.hasMessage())
+		{
+			return EMPTY_MESSAGE;
+		}
 		return getCurrentContext().getMessage();
 	}
 
 	/**
 	 * @return The current execution context
+	 * @throws IllegalStateException Thrown when no message is currently being
+	 *             processed
 	 */
-	protected static final FilterExecutionContext getCurrentContext()
+	protected static final FilterExecutionContext getCurrentContext() throws IllegalStateException
 	{
-		return null;
+		return getCurrentContext(Thread.currentThread());
+	}
+
+	/**
+	 * @param currentThread
+	 * @throws IllegalStateException Thrown when no message is currently being
+	 *             processe
+	 */
+	protected static FilterExecutionContext getCurrentContext(Thread forThread)
+	{
+		return getHandler(forThread).currentContext();
 	}
 
 	/**
@@ -61,7 +94,7 @@ public class ReflectionHandler
 	 */
 	public static final void pushContext(Thread forThread, FilterExecutionContext ctx)
 	{
-	// getHandler(forThread).pushContext(ctx);
+		getHandler(forThread).pushContext(ctx);
 	}
 
 	/**
@@ -72,8 +105,28 @@ public class ReflectionHandler
 	 */
 	public static final void popContext(Thread forThread, FilterExecutionContext ctx)
 	{
-	// getHandler(forThread).popContext(ctx);
+		getHandler(forThread).popContext(ctx);
 	}
+
+	/**
+	 * Clone the handler for a new thread. This is used by the MetaAction to
+	 * make sure the reifiedmessage can access the handler.
+	 * 
+	 * @param from
+	 * @param to
+	 */
+	@SuppressWarnings("unchecked")
+	public static final void cloneHanlder(Thread from, Thread to)
+	{
+		ReflectionHandler fromHandler = getHandler(from);
+		ReflectionHandler toHandler = getHandler(to);
+		toHandler.contexts = (Stack<FilterExecutionContext>) fromHandler.contexts.clone();
+	}
+
+	/**
+	 * The current handlers
+	 */
+	protected static final Map<Thread, ReflectionHandler> handlers = new WeakHashMap<Thread, ReflectionHandler>();
 
 	/**
 	 * @param forThread
@@ -81,10 +134,20 @@ public class ReflectionHandler
 	 */
 	protected static ReflectionHandler getHandler(Thread forThread)
 	{
-		// TODO
-		return null;
+		if (!handlers.containsKey(forThread))
+		{
+			ReflectionHandler handler = new ReflectionHandler();
+			handlers.put(forThread, handler);
+			return handler;
+		}
+		return handlers.get(forThread);
 	}
 
+	/**
+	 * The current stack of filter extecution contexts. A stack because multiple
+	 * context can be present at the same time. But only a single context is
+	 * currently active.
+	 */
 	protected Stack<FilterExecutionContext> contexts;
 
 	protected ReflectionHandler()
@@ -92,19 +155,43 @@ public class ReflectionHandler
 		contexts = new Stack<FilterExecutionContext>();
 	}
 
+	protected boolean hasContext()
+	{
+		return !contexts.isEmpty();
+	}
+
 	/**
 	 * @return The current context
 	 */
-	protected FilterExecutionContext currentContext()
+	protected FilterExecutionContext currentContext() throws IllegalStateException
 	{
-		return contexts.peek();
+		try
+		{
+			return contexts.peek();
+		}
+		catch (EmptyStackException e)
+		{
+			throw new IllegalStateException("No message being interpreted");
+		}
 	}
 
+	/**
+	 * Add a new context to the stack. Should be called at the beginning of the
+	 * contact handling.
+	 * 
+	 * @param ctx
+	 */
 	protected void pushContext(FilterExecutionContext ctx)
 	{
 		contexts.push(ctx);
 	}
 
+	/**
+	 * Remove the current context. Should be called when the message interpreter
+	 * is finished interpreting.
+	 * 
+	 * @param ctx
+	 */
 	protected void popContext(FilterExecutionContext ctx)
 	{
 		if (contexts.peek() != ctx)

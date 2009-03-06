@@ -75,6 +75,7 @@
 				<include name="VenusFlyTrap" />
 				<include name="Fibonacci" />
 				<include name="BookShelf" />
+				<include name="ReflectionTest" />
 				<exclude name="**/.svn/" />
 				<exclude name="**/.metadata/" />
 			</DirSet>

@@ -35,7 +35,23 @@ public class InvocationException extends RuntimeException
 {
 	private static final long serialVersionUID = 5134743425796283931L;
 
-	public InvocationException(Throwable cause)
+	/**
+	 * Create a new invocation exception. It will unwrap existing invocation
+	 * exceptions
+	 * 
+	 * @param cause
+	 * @return
+	 */
+	public static final InvocationException create(Throwable cause)
+	{
+		if (cause instanceof InvocationException && cause.getCause() != null)
+		{
+			cause = cause.getCause();
+		}
+		return new InvocationException(cause);
+	}
+
+	protected InvocationException(Throwable cause)
 	{
 		super(cause);
 	}

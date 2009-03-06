@@ -1,0 +1,7 @@
+#Thu Mar 05 10:56:21 CET 2009
+SECRET.mode=Normal
+buildDebugLevel=WARN
+eclipse.preferences.version=1
+incremental=false
+mainclass=reflectiontest.Test
+runDebugLevel=0

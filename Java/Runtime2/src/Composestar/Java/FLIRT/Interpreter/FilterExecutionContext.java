@@ -103,6 +103,14 @@ public class FilterExecutionContext
 	}
 
 	/**
+	 * @return the objectManager
+	 */
+	public ObjectManager getObjectManager()
+	{
+		return objectManager;
+	}
+
+	/**
 	 * @return The current message
 	 */
 	public RTMessage getMessage()

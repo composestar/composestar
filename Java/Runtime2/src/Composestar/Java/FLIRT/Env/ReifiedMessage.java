@@ -87,7 +87,11 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 		 * The message requested to proceed with the filters. This message
 		 * itself issues the wait for a result.
 		 */
-		PROCEED
+		PROCEED,
+		/**
+		 * Uncaught exception was thrown
+		 */
+		EXCEPTION
 	}
 
 	/**
@@ -240,10 +244,17 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	 */
 	public void run()
 	{
-		Object[] args = new Object[1];
-		args[0] = this;
-		Invoker.invoke(actTarget, actSelector, args);
-		finish();
+		try
+		{
+			Object[] args = new Object[1];
+			args[0] = this;
+			Invoker.invoke(actTarget, actSelector, args);
+			finish();
+		}
+		catch (Throwable t)
+		{
+			buffer.produce(new ReifiedMessageResult(ReifiedMessageAction.EXCEPTION, t));
+		}
 	}
 
 	/**
@@ -348,9 +359,25 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 		 */
 		public ReifiedMessageAction action;
 
+		/**
+		 * The thrown exception, set when the action is
+		 * {@link ReifiedMessageAction#EXCEPTION}
+		 */
+		public Throwable thrown;
+
 		public ReifiedMessageResult(ReifiedMessageAction act)
 		{
 			action = act;
+		}
+
+		/**
+		 * @param exception
+		 * @param t
+		 */
+		public ReifiedMessageResult(ReifiedMessageAction act, Throwable t)
+		{
+			this(act);
+			thrown = t;
 		}
 	}
 }

@@ -24,6 +24,7 @@
 
 package Composestar.Java.FLIRT.Reflection;
 
+import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Java.FLIRT.Env.JoinPointContext;
 
 /**
@@ -74,5 +75,30 @@ public class MessageInfo
 	public static final Object getSelf()
 	{
 		return JoinPointContext.getRealObject(ReflectionHandler.getCurrentMessage().getSelf());
+	}
+
+	/**
+	 * @return The selector object. This is a runtime representation of the
+	 *         selector. It contains various information you might not be
+	 *         interested in. Use {@link #getSelectorName()} to get just the
+	 *         name.
+	 * @see #getSelectorName()
+	 */
+	public static final CpsSelector getSelector()
+	{
+		return ReflectionHandler.getCurrentMessage().getSelector();
+	}
+
+	/**
+	 * @return The selector name
+	 */
+	public static final String getSelectorName()
+	{
+		CpsSelector sel = getSelector();
+		if (sel != null)
+		{
+			return sel.getName();
+		}
+		return null;
 	}
 }

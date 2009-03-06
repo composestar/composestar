@@ -75,7 +75,7 @@ public class DispatchAction extends RTFilterAction
 			}
 			catch (Throwable e)
 			{
-				throw new InvocationException(e);
+				throw InvocationException.create(e);
 			}
 		}
 		else
@@ -101,7 +101,7 @@ public class DispatchAction extends RTFilterAction
 		}
 		catch (Throwable e)
 		{
-			throw new InvocationException(e);
+			throw InvocationException.create(e);
 		}
 	}
 }

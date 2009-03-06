@@ -26,9 +26,11 @@ package Composestar.Java.FLIRT.Actions;
 
 import Composestar.Core.CpsRepository2.PropertyNames;
 import Composestar.Core.CpsRepository2.Filters.FilterActionNames;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorImpl;
 import Composestar.Java.FLIRT.Annotations.CpsVariableType;
 import Composestar.Java.FLIRT.Annotations.FilterActionDef;
 import Composestar.Java.FLIRT.Env.JoinPointContext;
@@ -71,6 +73,10 @@ public class AdviceAction extends RTFilterAction
 		if (var instanceof CpsSelector)
 		{
 			selector = (CpsSelector) var;
+		}
+		else if (var instanceof CpsLiteral)
+		{
+			selector = new CpsSelectorImpl(((CpsLiteral) var).getLiteralValue());
 		}
 		if (selector == null)
 		{

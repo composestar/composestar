@@ -40,6 +40,8 @@ import Composestar.Java.FLIRT.Env.ReifiedMessage.ReifiedMessageResult;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
 import Composestar.Java.FLIRT.Interpreter.MessageFlow;
 import Composestar.Java.FLIRT.Interpreter.ThreadedInterpreter;
+import Composestar.Java.FLIRT.Reflection.ReflectionHandler;
+import Composestar.Java.FLIRT.Utils.InvocationException;
 
 /**
  * @author Michiel Hendriks
@@ -100,6 +102,7 @@ public class MetaAction extends RTFilterAction
 	private void procMessage(FilterExecutionContext context)
 	{
 		Thread thread = new Thread(reifiedMessage, "MetaAction");
+		ReflectionHandler.cloneHanlder(Thread.currentThread(), thread);
 		thread.start();
 
 		ReifiedMessageResult result = reifiedMessage.consume();
@@ -125,9 +128,10 @@ public class MetaAction extends RTFilterAction
 				// continue with filters as usual, ReifiedMessage thread locked
 				// itself
 				break;
+			case EXCEPTION:
+				throw InvocationException.create(result.thrown);
 			default:
-				// unknown action, just continue
-				break;
+				throw new IllegalStateException("Unknown ReifiedMessageResult: " + result.action);
 		}
 	}
 }
