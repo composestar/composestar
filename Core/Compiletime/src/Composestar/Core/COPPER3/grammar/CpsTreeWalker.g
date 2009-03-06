@@ -139,6 +139,12 @@ concern returns [CpsConcern c]
 		(^(IN ns=fqnAsList))?
 		{
 			c = new CpsConcernImpl($name.text, ns);
+			QualifiedRepositoryEntity test = repository.get(c.getFullyQualifiedName());
+			if (test!=null)
+			{
+				throw new CpsSemanticException(String.format("Duplicate concern \"\%s\". Previously declared in \"\%s\".", 
+						c.getFullyQualifiedName(), test.getSourceInformation()), input, $name);
+			}
 			setLocInfo(c, strt);
 			repository.add(c);
 		}
