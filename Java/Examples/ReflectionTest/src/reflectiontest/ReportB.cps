@@ -1,4 +1,4 @@
-concern ReportA
+concern ReportB
 {
 	filtermodule FM1
 	{
