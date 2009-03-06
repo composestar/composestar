@@ -280,8 +280,26 @@
 	<target name="all" depends="clean,install,test,qa" description="Recompile, install and test the whole system." />
 
 	<target name="integration">
+		<antcall target="integration_clean" inheritRefs="true" />
 		<antcall target="required" inheritRefs="true" />
 		<antcall target="qa" inheritRefs="true" />
+	</target>
+
+	<target name="integration_clean">
+		<!-- additional clean actions in case of the integration builds -->
+		<antcall target="integration_clean_eclipse" inheritRefs="true" />
+	</target>
+
+	<target name="integration_clean_eclipse" depends="init_eclipse">
+		<antcall target="-integration_clean_eclipse" inheritRefs="true" />
+	</target>
+	<target name="-integration_clean_eclipse" depends="init_eclipse" if="eclipse.clean.dropins">
+		<fail message="Eclipse dropins location equals the eclipse home directory">
+			<condition>
+				<equals arg1="${eclipse.home}" arg2="${eclipse.dropins}" />
+			</condition>
+		</fail>
+		<delete dir="${eclipse.dropins}" />
 	</target>
 
 	<target name="integration_publish">

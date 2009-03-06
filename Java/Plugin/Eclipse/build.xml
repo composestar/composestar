@@ -118,7 +118,7 @@
 		<copy todir="${eclipse.pluginsdir.java.plugin}">
 			<fileset dir="${out.dist}" />
 		</copy>
-		<copy todir="${eclipse.pluginsdir}/../features/composestar.java_${version.java}.${version.eclipse.qualifier}">
+		<copy todir="${eclipse.dropins}/features/composestar.java_${version.java}.${version.eclipse.qualifier}">
 			<fileset dir="${out.dist.feature}" />
 		</copy>			
 	</target>

@@ -341,8 +341,10 @@
 			</condition>
 		</fail>
 
+		<!-- location for the Eclipse P2 dropins of compose* -->
+		<property name="eclipse.dropins" value="${eclipse.home}" />
 		<!-- location of Eclipse pluginsfolder -->
-		<property name="eclipse.pluginsdir" value="${eclipse.home}${file.separator}plugins" />
+		<property name="eclipse.pluginsdir" value="${eclipse.dropins}${file.separator}plugins" />
 
 		<!-- eclipse libraries -->
 		<path id="lib.eclipse">
@@ -513,6 +515,7 @@
 		</echo>
 		<echo message="	 starlight.installdir:   ${starlight.installdir}" />
 		<echo message="	 eclipse.home:           ${eclipse.home}" />
+		<echo message="	 eclipse.dropins:        ${eclipse.dropins}" />
 		<echo message="	 eclipse.pluginsdir:     ${eclipse.pluginsdir}" />
 		<echo message="  eclipse version qualifier: ${version.eclipse.qualifier} " />
 		<echo>
