@@ -102,10 +102,16 @@ public class Check implements CTCommonModule
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		loadCheckers();
-		runCheckers(resources);
+		boolean errorFree = runCheckers(resources);
 		checkers = null;
-		// TODO return Error when checkers report errors
-		return ModuleReturnValue.OK;
+		if (errorFree)
+		{
+			return ModuleReturnValue.OK;
+		}
+		else
+		{
+			return ModuleReturnValue.ERROR;
+		}
 	}
 
 	/**
@@ -140,11 +146,14 @@ public class Check implements CTCommonModule
 	 * 
 	 * @param resources
 	 */
-	protected void runCheckers(CommonResources resources)
+	protected boolean runCheckers(CommonResources resources)
 	{
+		boolean errorFree = true;
 		for (AbstractChecker checker : checkers)
 		{
 			checker.performCheck(resources.repository());
+			errorFree &= checker.getResults().getErrors().isEmpty();
 		}
+		return errorFree;
 	}
 }

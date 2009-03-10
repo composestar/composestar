@@ -41,6 +41,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 /// <summary>
@@ -81,9 +82,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		private string _selector;
 		private string _target;
 
-        // filter arguments
-		private string _fargSelector;
-		private string _fargTarget;
+        private List<FilterArgument> _arguments = new List<FilterArgument>();
 
         private bool _bookkeeping;
         private string _resourceOperations;
@@ -135,34 +134,42 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 			set { _target = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets the substitution selector.
-		/// </summary>
-		/// <value>The substitution selector.</value>
-		[XmlAttribute]
-		public string FilterArgumentSelector
-		{
-			get { return _fargSelector; }
-			set { _fargSelector = value; }
-		}
+        /// <summary>
+        /// Gets or sets the instructions.
+        /// </summary>
+        /// <value>The instructions.</value>
+        [XmlArray("FilterArguments")]
+        [XmlArrayItem("FilterArgument")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        public List<FilterArgument> Arguments
+        {
+            get { return _arguments; }
+            set { _arguments = value; }
+        }
 
-		/// <summary>
-		/// Gets or sets the substitution target.
-		/// </summary>
-		/// <value>The substitution target.</value>
-		[XmlAttribute]
-		public string FilterArgumentTarget
-		{
-			get { return _fargTarget; }
-			set { _fargTarget = value; }
-		}
+        /// <summary>
+        /// Get an argument by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public FilterArgument getArgument(string name)
+        {
+            foreach (FilterArgument arg in _arguments)
+            {
+                if (arg.Name.Equals(name))
+                {
+                    return arg;
+                }
+            }
+            return null;
+        }
 
-		/// <summary>
-		/// Gets or sets the type.
-		/// </summary>
-		/// <value>The type.</value>
-		[XmlAttribute]
-		public String Type
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        [XmlAttribute]
+        public String Type
 		{
 			get { return _type; }
 			set { _type = value; }
@@ -228,15 +235,12 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// <param name="target">The target.</param>
 		/// <param name="substitutionSelector">The substitution selector.</param>
 		/// <param name="substitutionTarget">The substitution target.</param>
-		public FilterAction(String type, String fullName, String selector, String target,
-			String substitutionSelector, String substitutionTarget)
+		public FilterAction(String type, String fullName, String selector, String target)
 		{
 			_type = type;
 			_fullName = fullName;
 			_selector = selector;
 			_target = target;
-			_fargSelector = substitutionSelector;
-			_fargTarget = substitutionTarget;
 		}
 
 		#endregion
@@ -280,15 +284,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 				fa.Selector = this.Selector;
 			}
 
-			fa.FilterArgumentTarget = this.FilterArgumentTarget;
-            if (GeneralizeSelector.Equals(this.FilterArgumentSelector))
-			{
-				fa.FilterArgumentSelector = selector;
-			}
-			else
-			{
-				fa.FilterArgumentSelector = this.FilterArgumentSelector;
-			}
+            fa.Arguments.Clear();
+            fa.Arguments.AddRange(this.Arguments);
 
 			fa.OnCall = this.OnCall;
 			fa.Returning = this.Returning;

@@ -41,6 +41,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsTypeProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.AndMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.NotMEOper;
@@ -53,12 +54,12 @@ import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.INLINE.model.Visitor;
-import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.ProgramElement;
 
 import composestar.dotNET2.tym.entities.AndCondition;
 import composestar.dotNET2.tym.entities.ConditionLiteral;
 import composestar.dotNET2.tym.entities.FalseCondition;
+import composestar.dotNET2.tym.entities.FilterArgument;
+import composestar.dotNET2.tym.entities.FilterArgumentType;
 import composestar.dotNET2.tym.entities.InlineInstruction;
 import composestar.dotNET2.tym.entities.JumpInstruction;
 import composestar.dotNET2.tym.entities.NotCondition;
@@ -196,57 +197,99 @@ class InstructionTranslator implements Visitor
 		weaveAction.setSelector(filterAction.getMessage().getSelector().getName());
 		weaveAction.setTarget(getSafeTargetName(filterAction.getMessage().getTarget()));
 
-		// TODO other arguments
-
 		weaveAction.setOnCall(filterAction.isOnCall());
 		weaveAction.setReturning(filterAction.isReturning());
 
 		weaveAction.setBookKeeping(filterAction.getBookKeeping());
 		weaveAction.setResourceOperations(filterAction.getResourceOperations());
 
-		// FIXME arguments ....
-		// this is a dirty hack
+		weaveAction.addNewFilterArguments();
+
 		for (CanonAssignment asgn : filterAction.getArguments())
 		{
-			if (PropertyNames.TARGET.equalsIgnoreCase(asgn.getProperty().getBaseName()))
-			{
-				CpsVariable var = asgn.getValue();
-				if (var instanceof CpsObject)
-				{
-					weaveAction.setFilterArgumentTarget(getSafeTargetName((CpsObject) var));
-				}
-				else
-				{
-					// TODO: error
-				}
-			}
-			else if (PropertyNames.SELECTOR.equalsIgnoreCase(asgn.getProperty().getBaseName()))
-			{
-				CpsVariable var = asgn.getValue();
-				if (var instanceof CpsSelector)
-				{
-					weaveAction.setFilterArgumentSelector(((CpsSelector) var).getName());
-				}
-				else if (var instanceof CpsLiteral)
-				{
-					weaveAction.setFilterArgumentSelector(((CpsLiteral) var).getLiteralValue());
-				}
-				else if (var instanceof CpsProgramElement)
-				{
-					ProgramElement pe = ((CpsProgramElement) var).getProgramElement();
-					if (pe instanceof MethodInfo)
-					{
-						weaveAction.setFilterArgumentSelector(((MethodInfo) pe).getName());
-					}
-				}
-				else
-				{
-					// TODO: error
-				}
-			}
+			createFilterArgument(weaveAction.getFilterArguments().addNewFilterArgument(), asgn);
+			//
+			// if
+			// (PropertyNames.TARGET.equalsIgnoreCase(asgn.getProperty().getBaseName()))
+			// {
+			// CpsVariable var = asgn.getValue();
+			// if (var instanceof CpsObject)
+			// {
+			// weaveAction.setFilterArgumentTarget(getSafeTargetName((CpsObject)
+			// var));
+			// }
+			// else
+			// {
+			// // TODO: error
+			// }
+			// }
+			// else if
+			// (PropertyNames.SELECTOR.equalsIgnoreCase(asgn.getProperty().getBaseName()))
+			// {
+			// CpsVariable var = asgn.getValue();
+			// if (var instanceof CpsSelector)
+			// {
+			// weaveAction.setFilterArgumentSelector(((CpsSelector)
+			// var).getName());
+			// }
+			// else if (var instanceof CpsLiteral)
+			// {
+			// weaveAction.setFilterArgumentSelector(((CpsLiteral)
+			// var).getLiteralValue());
+			// }
+			// else if (var instanceof CpsProgramElement)
+			// {
+			// ProgramElement pe = ((CpsProgramElement)
+			// var).getProgramElement();
+			// if (pe instanceof MethodInfo)
+			// {
+			// weaveAction.setFilterArgumentSelector(((MethodInfo)
+			// pe).getName());
+			// }
+			// }
+			// else
+			// {
+			// // TODO: error
+			// }
+			// }
 		}
 
 		return weaveAction;
+	}
+
+	/**
+	 * @param addNewFilterArgument
+	 * @param asgn
+	 */
+	protected void createFilterArgument(FilterArgument arg, CanonAssignment asgn)
+	{
+		arg.setName(asgn.getProperty().getBaseName());
+		CpsVariable var = asgn.getValue();
+		if (var instanceof CpsObject)
+		{
+			arg.setArgType(FilterArgumentType.OBJECT);
+			arg.setValue(getSafeTargetName((CpsObject) var));
+		}
+		else if (var instanceof CpsSelector)
+		{
+			arg.setArgType(FilterArgumentType.SELECTOR);
+			arg.setValue(((CpsSelector) var).getName());
+		}
+		else if (var instanceof CpsLiteral)
+		{
+			arg.setArgType(FilterArgumentType.LITERAL);
+			arg.setValue(((CpsLiteral) var).getLiteralValue());
+		}
+		else if (var instanceof CpsTypeProgramElement)
+		{
+			arg.setArgType(FilterArgumentType.TYPE);
+			arg.setValue(((CpsTypeProgramElement) var).getProgramElement().getUnitName());
+		}
+		else if (var instanceof CpsProgramElement)
+		{
+			arg.setArgType(FilterArgumentType.PROGRAM_ELEMENT);
+			arg.setValue(((CpsProgramElement) var).getProgramElement().getUnitName());
+		}
 	}
 
 	public Object visitJump(Jump jump)

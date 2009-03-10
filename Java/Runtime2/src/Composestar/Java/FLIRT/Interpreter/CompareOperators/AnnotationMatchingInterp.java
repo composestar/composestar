@@ -60,7 +60,6 @@ public class AnnotationMatchingInterp extends CompareOperatorInterpreter<Annotat
 	@Override
 	public boolean matches(CpsVariable lhs, CpsVariable rhs, FilterExecutionContext context)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException("Annotation matching has not been implemented");
 	}
 }

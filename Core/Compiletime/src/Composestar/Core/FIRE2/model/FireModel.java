@@ -725,15 +725,16 @@ public class FireModel
 				}
 				else if (var instanceof CpsSelector)
 				{
-					// TODO: implement
+					// TODO: implement, match current selector with this
+					// variable
 				}
 				else if (var instanceof CpsLiteral)
 				{
-					// TODO: implement
+					// TODO: implement, not possible? selector $= 'foo'
 				}
 				else if (var instanceof CpsProgramElement)
 				{
-					// TODO: implement
+					// TODO: implement, not possible? selector $= aMethodRef
 				}
 			}
 			return result;

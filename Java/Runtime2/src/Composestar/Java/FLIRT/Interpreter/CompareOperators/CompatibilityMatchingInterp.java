@@ -60,7 +60,6 @@ public class CompatibilityMatchingInterp extends CompareOperatorInterpreter<Comp
 	@Override
 	public boolean matches(CpsVariable lhs, CpsVariable rhs, FilterExecutionContext context)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException("Compatibility matching has not been implemented");
 	}
 }

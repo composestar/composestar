@@ -136,6 +136,7 @@
     </Compile>
     <Compile Include="LanguageModel\ExpandedType.cs" />
     <Compile Include="WeaveSpec\Condition.cs" />
+    <Compile Include="WeaveSpec\Instructions\FilterArgument.cs" />
     <Compile Include="WeaveSpec\Instructions\FilterCode.cs" />
     <Compile Include="WeaveSpec\Reference.cs" />
     <Compile Include="WeaveSpec\WeaveCall.cs" />

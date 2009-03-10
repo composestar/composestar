@@ -99,14 +99,14 @@ namespace Composestar.StarLight.Weaving.Strategies
 			if (methodToCall == null)
 			{
 				throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-						Properties.Resources.AdviceMethodNotFound, filterAction.FilterArgumentSelector, filterAction.FilterArgumentTarget));
+                        Properties.Resources.AdviceMethodNotFound, getSelector(filterAction), getTarget(filterAction)));
 			}
 
 			// Set JoinPointContext
 			WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
 
 			// Check if it is an innercall and set innercall context:
-			if (filterAction.FilterArgumentTarget.Equals(FilterAction.InnerTarget))
+			if (getTarget(filterAction).Equals(FilterAction.InnerTarget))
 			{
 				WeaveStrategyUtilities.SetInnerCall(visitor, methodToCall);
 			}
@@ -117,6 +117,26 @@ namespace Composestar.StarLight.Weaving.Strategies
 			// Add nop to enable debugging
 			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Nop));
 		}
+
+        private static string getSelector(FilterAction filterAction)
+        {
+            FilterArgument farg = filterAction.getArgument("selector");
+            if (farg != null)
+            {
+                return farg.Value;
+            }
+            return string.Empty;
+        }
+
+        private static string getTarget(FilterAction filterAction)
+        {
+            FilterArgument farg = filterAction.getArgument("target");
+            if (farg != null)
+            {
+                return farg.Value;
+            }
+            return string.Empty;
+        }
 
 		/// <summary>
 		/// Weaves the call to the advice.
@@ -133,18 +153,19 @@ namespace Composestar.StarLight.Weaving.Strategies
 			// Place target on the stack:
 			if (methodToCall.HasThis)
 			{
-				if (filterAction.FilterArgumentTarget.Equals(FilterAction.InnerTarget) ||
-					filterAction.FilterArgumentTarget.Equals(FilterAction.SelfTarget))
+                String fargTarget = getTarget(filterAction);
+                if (fargTarget.Equals(FilterAction.InnerTarget) ||
+                    fargTarget.Equals(FilterAction.SelfTarget))
 				{
 					WeaveStrategyUtilities.LoadSelfObject(visitor, jpcVar);
 				}
 				else
 				{
-					FieldDefinition target = parentType.Fields.GetField(filterAction.FilterArgumentTarget);
+                    FieldDefinition target = parentType.Fields.GetField(fargTarget);
 					if (target == null)
 					{
 						throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-							Properties.Resources.FieldNotFound, filterAction.FilterArgumentTarget));
+                            Properties.Resources.FieldNotFound, fargTarget));
 					}
 
 					visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
@@ -160,7 +181,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             else if (methodToCall.Parameters.Count != 0)
             {
                 throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                    Properties.Resources.AdviceMethodNotFound, filterAction.FilterArgumentSelector, filterAction.FilterArgumentTarget));
+                    Properties.Resources.AdviceMethodNotFound, getSelector(filterAction), getTarget(filterAction)));
             }
 
 			// We can safely emit a callvirt here. The JITter will make the right call.
@@ -181,46 +202,48 @@ namespace Composestar.StarLight.Weaving.Strategies
 			FilterAction filterAction, TypeDefinition parentType)
 		{
             MethodReference result = null;
-			if (filterAction.FilterArgumentTarget.Equals(FilterAction.InnerTarget) ||
-				filterAction.FilterArgumentTarget.Equals(FilterAction.SelfTarget))
+            string fargTarget = getTarget(filterAction);
+            string fargSelector = getSelector(filterAction);
+            if (fargTarget.Equals(FilterAction.InnerTarget) ||
+                fargTarget.Equals(FilterAction.SelfTarget))
 			{
-				result = CecilUtilities.ResolveMethod(parentType, filterAction.FilterArgumentSelector, m_JpcTypes);
+                result = CecilUtilities.ResolveMethod(parentType, fargSelector, m_JpcTypes);
                 if (result == null)
                 {
-                    result = CecilUtilities.ResolveMethod(parentType, filterAction.FilterArgumentSelector, m_ObjectTypes);
+                    result = CecilUtilities.ResolveMethod(parentType, fargSelector, m_ObjectTypes);
                 }
                 if (result == null)
                 {
-                    result = CecilUtilities.ResolveMethod(parentType, filterAction.FilterArgumentSelector, m_NoneTypes);
+                    result = CecilUtilities.ResolveMethod(parentType, fargSelector, m_NoneTypes);
                 }
 			}
 			else
 			{
-				FieldDefinition target = parentType.Fields.GetField(filterAction.FilterArgumentTarget);
+				FieldDefinition target = parentType.Fields.GetField(fargTarget);
 				if (target == null)
 				{
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-						Properties.Resources.FieldNotFound, filterAction.FilterArgumentTarget));
+						Properties.Resources.FieldNotFound, fargTarget));
 				}
 
 				MethodDefinition method = CecilUtilities.ResolveMethod(target.FieldType,
-					filterAction.FilterArgumentSelector, m_JpcTypes);
+                     fargSelector, m_JpcTypes);
 
                 if (method == null)
                 {
                     // try func(Object)
-                    method = CecilUtilities.ResolveMethod(target.FieldType, filterAction.FilterArgumentSelector, m_ObjectTypes);
+                    method = CecilUtilities.ResolveMethod(target.FieldType, fargSelector, m_ObjectTypes);
                 }
                 if (method == null)
                 {
                     // try func()
-                    method = CecilUtilities.ResolveMethod(target.FieldType, filterAction.FilterArgumentSelector, m_NoneTypes);
+                    method = CecilUtilities.ResolveMethod(target.FieldType, fargSelector, m_NoneTypes);
                 }
 
 				if (method == null)
 				{
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-						Properties.Resources.MethodNotFound, target.FieldType, filterAction.FilterArgumentSelector));
+                        Properties.Resources.MethodNotFound, target.FieldType, fargSelector));
 				}
 
 				return visitor.TargetAssemblyDefinition.MainModule.Import(method);

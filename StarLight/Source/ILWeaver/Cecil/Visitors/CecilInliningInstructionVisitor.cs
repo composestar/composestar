@@ -578,8 +578,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="filterAction">The filter action to be degeneralized</param>
         private FilterAction Degeneralize(FilterAction filterAction)
         {
-            if (filterAction.Selector.Equals(GeneralizationSelector) ||
-                GeneralizationSelector.Equals(filterAction.FilterArgumentSelector))
+            if (filterAction.Selector.Equals(GeneralizationSelector))
             {
                 FilterAction degenFilterAction = new FilterAction();
 
@@ -597,20 +596,11 @@ namespace Composestar.StarLight.ILWeaver
                     degenFilterAction.Selector = filterAction.Selector;
                 }
 
-                if (GeneralizationSelector.Equals(filterAction.FilterArgumentSelector))
-                {
-                    degenFilterAction.FilterArgumentSelector = CalledMethod.Name;
-                }
-                else
-                {
-                    degenFilterAction.FilterArgumentSelector = filterAction.FilterArgumentSelector;
-                }
-
-                degenFilterAction.FilterArgumentTarget = filterAction.FilterArgumentTarget;
                 degenFilterAction.Target = filterAction.Target;
                 degenFilterAction.Type = filterAction.Type;
                 degenFilterAction.BookKeeping = filterAction.BookKeeping;
                 degenFilterAction.ResourceOperations = filterAction.ResourceOperations;
+                degenFilterAction.Arguments = filterAction.Arguments;
 
                 return degenFilterAction;
             }
