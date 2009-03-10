@@ -187,6 +187,14 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		new Label(group, SWT.NULL);
 		incremental.setLayoutData(gd);
 
+		label = new Label(group, SWT.NULL);
+		label.setText("Use Threaded Interpreter");
+		threadedInter = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
+		threadedInter.add("False");
+		threadedInter.add("True");
+		new Label(group, SWT.NULL);
+		threadedInter.setLayoutData(gd);
+
 		return controls;
 	}
 
@@ -325,7 +333,6 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	@Override

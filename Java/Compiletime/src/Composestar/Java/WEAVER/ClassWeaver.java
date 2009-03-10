@@ -166,13 +166,20 @@ public class ClassWeaver
 	public void writeApplicationStart(CtClass clazz) throws ModuleException
 	{
 		String rundebuglevel = resources.configuration().getSetting("runDebugLevel");
+		String setInterpMode = "";
+		boolean useThreaded = Boolean.parseBoolean(resources.configuration().getSetting("FLIRT.threaded"));
+		if (useThreaded)
+		{
+			logger.debug("Setting interpreter to use threaded interpreter");
+			setInterpMode = "Composestar.Java.FLIRT.Interpreter.InterpreterMain.setInterpreterMode(true);";
+		}
 		try
 		{
 			CtMethod mainmethod = clazz.getMethod("main", "([Ljava/lang/String;)V");
 			String src =
 					"Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(" + "\"repository.dat\""
 							+ "," + rundebuglevel + ", " + clazz.getName() + ".class);";
-			mainmethod.insertBefore(src);
+			mainmethod.insertBefore(setInterpMode + src);
 		}
 		catch (Exception e)
 		{

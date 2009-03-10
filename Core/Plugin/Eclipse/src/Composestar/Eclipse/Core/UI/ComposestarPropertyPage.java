@@ -37,6 +37,8 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 
 	protected Combo secretMode;
 
+	protected Combo threadedInter;
+
 	protected GridData gd;
 
 	protected IProject project;
@@ -59,6 +61,7 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 		runDebugLevel.select(settings.getInt("runDebugLevel", 0)); // 0=error
 		incremental.select(settings.getBoolean("incremental", false) ? 1 : 0);
 		secretMode.select(secretMode.indexOf(settings.get("SECRET.mode", "Normal")));
+		threadedInter.select(settings.getBoolean("FLIRT.threaded", false) ? 1 : 0);
 	}
 
 	public void save()
@@ -70,6 +73,7 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 			settings.putInt("runDebugLevel", runDebugLevel.getSelectionIndex());
 			settings.putBoolean("incremental", incremental.getSelectionIndex() == 1);
 			settings.put("SECRET.mode", secretMode.getText());
+			settings.putBoolean("FLIRT.threaded", threadedInter.getSelectionIndex() == 1);
 			try
 			{
 				settings.flush();

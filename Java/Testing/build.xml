@@ -76,6 +76,7 @@
 				<include name="Fibonacci" />
 				<include name="BookShelf" />
 				<include name="ReflectionTest" />
+				<include name="ConsumersProducers" />
 				<exclude name="**/.svn/" />
 				<exclude name="**/.metadata/" />
 			</DirSet>
