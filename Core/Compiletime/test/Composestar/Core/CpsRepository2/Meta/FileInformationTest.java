@@ -143,7 +143,7 @@ public class FileInformationTest extends TestCase
 	public void testIsOutdated()
 	{
 		assertEquals(false, fi.isOutdated());
-		file.setLastModified(file.lastModified() + 10);
+		file.setLastModified(file.lastModified() + 10000);
 		assertEquals(true, fi.isOutdated());
 	}
 
