@@ -21,34 +21,34 @@ public interface FlowModel extends Serializable
 	/**
 	 * @return Returns the startNode.
 	 */
-	public FlowNode getStartNode();
+	FlowNode getStartNode();
 
 	/**
 	 * @return Returns the endNode.
 	 */
-	public FlowNode getEndNode();
+	FlowNode getEndNode();
 
 	/**
 	 * @return Returns all nodes
 	 * @deprecated use getNodesEx()
 	 */
 	@Deprecated
-	public Iterator<FlowNode> getNodes();
+	Iterator<FlowNode> getNodes();
 
 	/**
 	 * @return returns readonly list of all nodes
 	 */
-	public List<FlowNode> getNodesEx();
+	List<FlowNode> getNodesEx();
 
 	/**
 	 * @return Returns all transitions
 	 * @deprecated use getTransitionsEx();
 	 */
 	@Deprecated
-	public Iterator<FlowTransition> getTransitions();
+	Iterator<FlowTransition> getTransitions();
 
 	/**
 	 * @return Returns all transitions
 	 */
-	public List<FlowTransition> getTransitionsEx();
+	List<FlowTransition> getTransitionsEx();
 }

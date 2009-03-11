@@ -16,7 +16,7 @@ public class JavaComposestarPreferencePage extends ComposestarPreferencePage
 	public void performDefaults()
 	{
 		buildDebugLevel.select(1);
-		incremental.select(0);
+		// incremental.select(0);
 		runDebugLevel.select(1);
 		secretMode.select(0);
 		performApply();

@@ -179,16 +179,19 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		new Label(group, SWT.NULL);
 		secretMode.setLayoutData(gd);
 
-		label = new Label(group, SWT.NULL);
-		label.setText(INCRE_TITLE);
-		incremental = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		incremental.add("False");
-		incremental.add("True");
-		new Label(group, SWT.NULL);
-		incremental.setLayoutData(gd);
+		// label = new Label(group, SWT.NULL);
+		// label.setText(INCRE_TITLE);
+		// incremental = new Combo(group, SWT.BORDER | SWT.DROP_DOWN |
+		// SWT.READ_ONLY);
+		// incremental.add("False");
+		// incremental.add("True");
+		// new Label(group, SWT.NULL);
+		// incremental.setLayoutData(gd);
 
 		label = new Label(group, SWT.NULL);
 		label.setText("Use Threaded Interpreter");
+		label
+				.setToolTipText("Threaded interpreter is required for the ReifiedMessage.resume() action when using Meta filter types.");
 		threadedInter = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		threadedInter.add("False");
 		threadedInter.add("True");

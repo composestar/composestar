@@ -44,14 +44,14 @@ public final class InterpreterMain
 	/**
 	 * If true the threaded interpreter will be used
 	 */
-	private static boolean USE_THREADED = Boolean.getBoolean("composestar.runtime.threaded");
+	private static boolean useThreaded = Boolean.getBoolean("composestar.runtime.threaded");
 
 	/**
 	 * @param useThreaded
 	 */
-	public static synchronized void setInterpreterMode(boolean useThreaded)
+	public static synchronized void setInterpreterMode(boolean threaded)
 	{
-		USE_THREADED = useThreaded;
+		useThreaded = threaded;
 	}
 
 	private InterpreterMain()
@@ -65,7 +65,7 @@ public final class InterpreterMain
 	 */
 	public static void interpret(FilterExecutionContext context) throws Throwable
 	{
-		if (USE_THREADED)
+		if (useThreaded)
 		{
 			ThreadedInterpreter.interpret(context);
 			return;

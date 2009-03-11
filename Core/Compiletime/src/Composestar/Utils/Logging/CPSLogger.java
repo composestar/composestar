@@ -37,7 +37,7 @@ import Composestar.Utils.Logging.Log4j.CPSLoggingEvent;
  * 
  * @author Michiel Hendriks
  */
-public class CPSLogger extends Logger implements ILogger
+public class CPSLogger extends Logger
 {
 	private static final Log4jLoggerFactory factory = new Log4jLoggerFactory();
 

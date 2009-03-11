@@ -17,7 +17,7 @@ public interface Visitor
 	 * @param filterCode
 	 * @return
 	 */
-	public Object visitFilterCode(FilterCode filterCode);
+	Object visitFilterCode(FilterCode filterCode);
 
 	/**
 	 * Called when a block is visited.
@@ -25,7 +25,7 @@ public interface Visitor
 	 * @param block
 	 * @return
 	 */
-	public Object visitBlock(Block block);
+	Object visitBlock(Block block);
 
 	/**
 	 * Called when a branch is visited.
@@ -33,7 +33,7 @@ public interface Visitor
 	 * @param branch
 	 * @return
 	 */
-	public Object visitBranch(Branch branch);
+	Object visitBranch(Branch branch);
 
 	/**
 	 * Called when a FilterAction is visited.
@@ -41,7 +41,7 @@ public interface Visitor
 	 * @param filterAction
 	 * @return
 	 */
-	public Object visitFilterAction(FilterActionInstruction filterAction);
+	Object visitFilterAction(FilterActionInstruction filterAction);
 
 	/**
 	 * Called when a jump is visited.
@@ -49,5 +49,5 @@ public interface Visitor
 	 * @param jump
 	 * @return
 	 */
-	public Object visitJump(Jump jump);
+	Object visitJump(Jump jump);
 }

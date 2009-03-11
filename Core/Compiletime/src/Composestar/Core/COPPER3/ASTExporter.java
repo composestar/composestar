@@ -36,7 +36,8 @@ import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Exports the AST to a file. Uses reflection to call the DOTTreeGenerator
+ * Exports the AST to a file. Uses reflection to call the DOTTreeGenerator. FOR
+ * TESTING ONLY.
  * 
  * @author Michiel Hendriks
  */
@@ -82,4 +83,7 @@ public final class ASTExporter
 			logger.debug("Error writing AST: " + e.getMessage());
 		}
 	}
+
+	private ASTExporter()
+	{}
 }

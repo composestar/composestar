@@ -50,7 +50,7 @@ public class FilterTypeFactory
 	public static final String[] DEFAULT_FILTER_TYPES =
 			{ FilterTypeNames.AFTER, FilterTypeNames.BEFORE, FilterTypeNames.DISPATCH, FilterTypeNames.ERROR,
 					FilterTypeNames.SEND, FilterTypeNames.SUBSTITUTION, FilterTypeNames.META,
-					FilterTypeNames.EXCEPTION, FilterTypeNames.VOID };
+					FilterTypeNames.EXCEPTION, FilterTypeNames.VOID, };
 
 	/**
 	 * The language repository.

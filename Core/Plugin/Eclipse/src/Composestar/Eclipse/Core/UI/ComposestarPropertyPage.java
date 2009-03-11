@@ -31,7 +31,7 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 	// Composestar settings UI widgets
 	protected Combo buildDebugLevel;
 
-	protected Combo incremental;
+	// protected Combo incremental;
 
 	protected Combo runDebugLevel;
 
@@ -59,7 +59,8 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 		mainClass.setText(settings.get("mainclass", ""));
 		buildDebugLevel.select(buildDebugLevel.indexOf(settings.get("buildDebugLevel", "WARN"))); // 2=warn
 		runDebugLevel.select(settings.getInt("runDebugLevel", 0)); // 0=error
-		incremental.select(settings.getBoolean("incremental", false) ? 1 : 0);
+		// incremental.select(settings.getBoolean("incremental", false) ? 1 :
+		// 0);
 		secretMode.select(secretMode.indexOf(settings.get("SECRET.mode", "Normal")));
 		threadedInter.select(settings.getBoolean("FLIRT.threaded", false) ? 1 : 0);
 	}
@@ -71,7 +72,8 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 			settings.put("mainclass", mainClass.getText().trim());
 			settings.put("buildDebugLevel", buildDebugLevel.getText());
 			settings.putInt("runDebugLevel", runDebugLevel.getSelectionIndex());
-			settings.putBoolean("incremental", incremental.getSelectionIndex() == 1);
+			// settings.putBoolean("incremental",
+			// incremental.getSelectionIndex() == 1);
 			settings.put("SECRET.mode", secretMode.getText());
 			settings.putBoolean("FLIRT.threaded", threadedInter.getSelectionIndex() == 1);
 			try

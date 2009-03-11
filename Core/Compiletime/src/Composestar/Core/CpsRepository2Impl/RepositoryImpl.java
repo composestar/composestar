@@ -326,7 +326,7 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 		/**
 		 * True if the next object has been set
 		 */
-		private boolean nextSet = false;
+		private boolean nextSet;
 
 		/**
 		 * Create a new repository iterator using a given filter

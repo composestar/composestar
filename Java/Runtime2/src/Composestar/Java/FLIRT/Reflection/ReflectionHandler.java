@@ -126,7 +126,7 @@ public class ReflectionHandler
 	/**
 	 * The current handlers
 	 */
-	protected static final Map<Thread, ReflectionHandler> handlers = new WeakHashMap<Thread, ReflectionHandler>();
+	protected static final Map<Thread, ReflectionHandler> HANDLERS = new WeakHashMap<Thread, ReflectionHandler>();
 
 	/**
 	 * @param forThread
@@ -134,13 +134,13 @@ public class ReflectionHandler
 	 */
 	protected static ReflectionHandler getHandler(Thread forThread)
 	{
-		if (!handlers.containsKey(forThread))
+		if (!HANDLERS.containsKey(forThread))
 		{
 			ReflectionHandler handler = new ReflectionHandler();
-			handlers.put(forThread, handler);
+			HANDLERS.put(forThread, handler);
 			return handler;
 		}
-		return handlers.get(forThread);
+		return HANDLERS.get(forThread);
 	}
 
 	/**

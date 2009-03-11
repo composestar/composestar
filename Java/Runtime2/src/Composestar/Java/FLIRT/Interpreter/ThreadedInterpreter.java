@@ -47,7 +47,7 @@ public final class ThreadedInterpreter extends Thread
 	/**
 	 * An interpreter per base thread
 	 */
-	private static final ThreadLocal<ThreadedInterpreter> interpreterThread = new ThreadLocal<ThreadedInterpreter>()
+	private static final ThreadLocal<ThreadedInterpreter> INTERPRETER_THREAD = new ThreadLocal<ThreadedInterpreter>()
 	{
 		/*
 		 * (non-Javadoc)
@@ -57,7 +57,7 @@ public final class ThreadedInterpreter extends Thread
 		protected ThreadedInterpreter initialValue()
 		{
 			ThreadedInterpreter thread = new ThreadedInterpreter(Thread.currentThread());
-			threadLocals.put(thread, this);
+			THREAD_LOCALS.put(thread, this);
 			return thread;
 		}
 	};
@@ -66,7 +66,7 @@ public final class ThreadedInterpreter extends Thread
 	 * Mapping from interpreter to thread local, so that the interpreter can be
 	 * unlicked from the thread when the interpreter forks.
 	 */
-	private static final WeakHashMap<ThreadedInterpreter, ThreadLocal<ThreadedInterpreter>> threadLocals =
+	private static final WeakHashMap<ThreadedInterpreter, ThreadLocal<ThreadedInterpreter>> THREAD_LOCALS =
 			new WeakHashMap<ThreadedInterpreter, ThreadLocal<ThreadedInterpreter>>();
 
 	/**
@@ -76,7 +76,7 @@ public final class ThreadedInterpreter extends Thread
 	 */
 	public static void interpret(FilterExecutionContext context) throws Throwable
 	{
-		ThreadedInterpreter thread = getInterpreterThread();
+		ThreadedInterpreter thread = getINTERPRETER_THREAD();
 		ReflectionHandler.pushContext(thread, context);
 		thread.start(context);
 		thread.waitForResult();
@@ -87,9 +87,9 @@ public final class ThreadedInterpreter extends Thread
 	/**
 	 * @return The interpreter thread for this thread
 	 */
-	private static ThreadedInterpreter getInterpreterThread()
+	private static ThreadedInterpreter getINTERPRETER_THREAD()
 	{
-		return interpreterThread.get();
+		return INTERPRETER_THREAD.get();
 	}
 
 	/**
@@ -100,7 +100,7 @@ public final class ThreadedInterpreter extends Thread
 	 */
 	private static void clearThreadLocal(ThreadedInterpreter thisThread)
 	{
-		ThreadLocal<ThreadedInterpreter> tl = threadLocals.get(thisThread);
+		ThreadLocal<ThreadedInterpreter> tl = THREAD_LOCALS.get(thisThread);
 		tl.remove();
 	}
 

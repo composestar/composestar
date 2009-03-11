@@ -54,6 +54,9 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 {
 	private static final long serialVersionUID = -400983142236822779L;
 
+	/** Used as a separator in ID for references */
+	final char FIELD_SEP = 0x1E;
+
 	/**
 	 * Keeps a record of type references
 	 */
@@ -158,9 +161,9 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(typeRef.getReferenceId());
-		sb.append(0x1E);
+		sb.append(FIELD_SEP);
 		sb.append(refid);
-		sb.append(0x1E);
+		sb.append(FIELD_SEP);
 		sb.append(jpca.name());
 		String fullid = sb.toString();
 		if (!methodRefs.containsKey(fullid))
@@ -206,11 +209,11 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(context.getClass().getName());
-		sb.append(0x1E);
+		sb.append(FIELD_SEP);
 		sb.append(System.identityHashCode(context));
-		sb.append(0x1E);
+		sb.append(FIELD_SEP);
 		sb.append(refid);
-		sb.append(0x1E);
+		sb.append(FIELD_SEP);
 		sb.append(jpca.name());
 		String fullid = sb.toString();
 		if (!instMethodRefs.containsKey(fullid))

@@ -101,4 +101,7 @@ public class MessageInfo
 		}
 		return null;
 	}
+
+	private MessageInfo()
+	{}
 }

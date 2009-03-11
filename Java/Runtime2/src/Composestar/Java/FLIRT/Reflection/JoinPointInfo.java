@@ -120,6 +120,9 @@ public class JoinPointInfo
 		return cache;
 	}
 
+	private JoinPointInfo()
+	{}
+
 	/**
 	 * A cache of the internals data
 	 * 

@@ -23,7 +23,7 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 	// UI widgets
 	protected Combo buildDebugLevel;
 
-	protected Combo incremental;
+	// protected Combo incremental;
 
 	protected Combo runDebugLevel;
 
@@ -108,13 +108,14 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 		empty = new Label(group, SWT.NULL);
 		secretMode.setLayoutData(gd);
 
-		label = new Label(group, SWT.NULL);
-		label.setText(INCRE_TITLE);
-		incremental = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		incremental.add("False");
-		incremental.add("True");
-		empty = new Label(group, SWT.NULL);
-		incremental.setLayoutData(gd);
+		// label = new Label(group, SWT.NULL);
+		// label.setText(INCRE_TITLE);
+		// incremental = new Combo(group, SWT.BORDER | SWT.DROP_DOWN |
+		// SWT.READ_ONLY);
+		// incremental.add("False");
+		// incremental.add("True");
+		// empty = new Label(group, SWT.NULL);
+		// incremental.setLayoutData(gd);
 
 		return controls;
 	}
@@ -124,7 +125,7 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 		ComposestarEclipsePluginPlugin plugin = ComposestarEclipsePluginPlugin.getDefault();
 		IDialogSettings settings = plugin.getDialogSettings();
 		settings.put("buildDebugLevel", buildDebugLevel.getText());
-		settings.put("incremental", incremental.getText());
+		// settings.put("incremental", incremental.getText());
 		settings.put("runDebugLevel", runDebugLevel.indexOf(runDebugLevel.getText()));
 		settings.put("secretMode", secretMode.getText());
 		plugin.saveDialogSettings("");
@@ -133,7 +134,7 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 	public void loadDialogSettings(IDialogSettings settings)
 	{
 		buildDebugLevel.select(buildDebugLevel.indexOf(settings.get("buildDebugLevel")));
-		incremental.select(incremental.indexOf(settings.get("incremental")));
+		// incremental.select(incremental.indexOf(settings.get("incremental")));
 		runDebugLevel.select(settings.getInt("runDebugLevel"));
 		secretMode.select(secretMode.indexOf(settings.get("secretMode")));
 	}

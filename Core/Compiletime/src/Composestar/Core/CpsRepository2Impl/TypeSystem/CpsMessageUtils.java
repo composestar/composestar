@@ -139,7 +139,14 @@ public final class CpsMessageUtils
 				}
 			}
 		}
-		return neg != 0 ? neg : pos;
+		if (neg != 0)
+		{
+			return neg;
+		}
+		else
+		{
+			return pos;
+		}
 	}
 
 	/**
@@ -150,7 +157,7 @@ public final class CpsMessageUtils
 	 * @param propertyName
 	 * @return
 	 */
-	public static final Class<? extends CpsVariable> expectedType(String propertyName)
+	public static Class<? extends CpsVariable> expectedType(String propertyName)
 	{
 		if (PropertyNames.SELECTOR.equals(propertyName))
 		{

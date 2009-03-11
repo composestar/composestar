@@ -18,5 +18,5 @@ public interface Visitable
 	 * @param visitor
 	 * @return
 	 */
-	public Object accept(Visitor visitor);
+	Object accept(Visitor visitor);
 }

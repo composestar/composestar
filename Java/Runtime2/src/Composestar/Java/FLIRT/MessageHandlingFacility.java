@@ -519,7 +519,7 @@ public final class MessageHandlingFacility
 	/**
 	 * Cache for the simple objects
 	 */
-	private static final WeakHashMap<Object, RTCpsObject> simpleObjectCache = new WeakHashMap<Object, RTCpsObject>();
+	private static final WeakHashMap<Object, RTCpsObject> SIMPLE_OBJECT_CACHE = new WeakHashMap<Object, RTCpsObject>();
 
 	/**
 	 * Create a RTCpsObject for a given object
@@ -540,9 +540,9 @@ public final class MessageHandlingFacility
 		RTCpsObject result = ObjectManagerHandler.getObjectManager(forObject, repository);
 		if (result == null)
 		{
-			if (simpleObjectCache.containsKey(forObject))
+			if (SIMPLE_OBJECT_CACHE.containsKey(forObject))
 			{
-				return simpleObjectCache.get(forObject);
+				return SIMPLE_OBJECT_CACHE.get(forObject);
 			}
 			Concern crn = repository.get(forObject.getClass().getName(), Concern.class);
 			if (crn != null)
@@ -553,7 +553,7 @@ public final class MessageHandlingFacility
 			{
 				result = new SimpleCpsObject(forObject, null);
 			}
-			simpleObjectCache.put(forObject, result);
+			SIMPLE_OBJECT_CACHE.put(forObject, result);
 		}
 		return result;
 	}

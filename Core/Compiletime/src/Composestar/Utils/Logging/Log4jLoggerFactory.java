@@ -20,13 +20,8 @@ import org.apache.log4j.spi.LoggerFactory;
  * 
  * @author Michiel Hendriks
  */
-public class Log4jLoggerFactory implements LoggerFactory, ILoggerFactory
+public class Log4jLoggerFactory implements LoggerFactory
 {
-	public Log4jLoggerFactory()
-	{
-		SafeLogger.setFactory(this);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -37,13 +32,4 @@ public class Log4jLoggerFactory implements LoggerFactory, ILoggerFactory
 	{
 		return new CPSLogger(name);
 	}
-
-	/**
-	 * Will be called by SafeLogger
-	 */
-	public ILogger createLogger(String name)
-	{
-		return CPSLogger.getCPSLogger(name);
-	}
-
 }

@@ -18,30 +18,30 @@ public interface FlowTransition extends Serializable
 	/**
 	 * A normal transition
 	 */
-	public static final int FLOW_NEXT_TRANSITION = 1;
+	static final int FLOW_NEXT_TRANSITION = 1;
 
 	/**
 	 * The false transition in a branch
 	 */
-	public static final int FLOW_FALSE_TRANSITION = 2;
+	static final int FLOW_FALSE_TRANSITION = 2;
 
 	/**
 	 * The true transition in a branch
 	 */
-	public static final int FLOW_TRUE_TRANSITION = 3;
+	static final int FLOW_TRUE_TRANSITION = 3;
 
 	/**
 	 * @return Returns the type.
 	 */
-	public int getType();
+	int getType();
 
 	/**
 	 * @return Returns the endNode.
 	 */
-	public FlowNode getEndNode();
+	FlowNode getEndNode();
 
 	/**
 	 * @return Returns the startNode.
 	 */
-	public FlowNode getStartNode();
+	FlowNode getStartNode();
 }

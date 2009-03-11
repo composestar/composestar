@@ -38,9 +38,6 @@ import java.lang.annotation.Target;
  * 
  * @author Michiel Hendriks
  */
-/**
- * @author mhendrik
- */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented
