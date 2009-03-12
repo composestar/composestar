@@ -162,7 +162,7 @@ public class ModuleTask extends Task
 
 		resources.inject(module);
 		String mname = module.getModuleName();
-		if (mname == null || mname.isEmpty())
+		if (mname == null || mname.length() == 0)
 		{
 			mname = moduleClass.getName();
 		}

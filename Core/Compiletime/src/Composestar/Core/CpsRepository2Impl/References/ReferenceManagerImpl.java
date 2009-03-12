@@ -102,7 +102,7 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 		{
 			throw new NullPointerException("Reference ID is null");
 		}
-		if (refid.isEmpty())
+		if (refid.length() == 0)
 		{
 			throw new IllegalArgumentException("Reference ID is empty");
 		}
@@ -155,7 +155,7 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 		{
 			throw new NullPointerException("Reference ID is null");
 		}
-		if (refid.isEmpty())
+		if (refid.length() == 0)
 		{
 			throw new IllegalArgumentException("Reference ID is empty");
 		}
@@ -203,7 +203,7 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 		{
 			throw new NullPointerException("Reference ID is null");
 		}
-		if (refid.isEmpty())
+		if (refid.length() == 0)
 		{
 			throw new IllegalArgumentException("Reference ID is empty");
 		}
@@ -247,7 +247,7 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 		{
 			throw new NullPointerException("Reference ID is null");
 		}
-		if (refid.isEmpty())
+		if (refid.length() == 0)
 		{
 			throw new IllegalArgumentException("Reference ID is empty");
 		}

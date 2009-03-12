@@ -43,7 +43,7 @@ public abstract class ReferenceTestBase<T> extends TestCase
 	public void testGetReferenceId()
 	{
 		assertNotNull(ref.getReferenceId());
-		assertFalse(ref.getReferenceId().isEmpty());
+		assertFalse(ref.getReferenceId().length() == 0);
 	}
 
 	/**

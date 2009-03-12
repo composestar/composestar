@@ -59,7 +59,7 @@ public class LegacySelector extends AbstractSelector
 		{
 			throw new NullPointerException("Class selection can not be null");
 		}
-		if (classFqn.isEmpty())
+		if (classFqn.length() == 0)
 		{
 			throw new IllegalArgumentException("Class selection can not be empty");
 		}

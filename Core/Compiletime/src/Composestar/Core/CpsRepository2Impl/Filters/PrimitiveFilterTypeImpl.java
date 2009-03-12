@@ -74,7 +74,7 @@ public class PrimitiveFilterTypeImpl extends AbstractRepositoryEntity implements
 		{
 			throw new NullPointerException("filter name cannot be null");
 		}
-		if (name.isEmpty())
+		if (name.length() == 0)
 		{
 			throw new IllegalArgumentException("filter name cannot be empty");
 		}

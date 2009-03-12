@@ -71,7 +71,7 @@ public final class RTFilterActionFactory
 		{
 			return new AdviceAction();
 		}
-		if (action.getSystemName() != null && !action.getSystemName().isEmpty())
+		if (action.getSystemName() != null && action.getSystemName().length() != 0)
 		{
 			return createCustomAction(action.getSystemName());
 		}

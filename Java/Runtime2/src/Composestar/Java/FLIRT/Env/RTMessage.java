@@ -24,7 +24,6 @@
 
 package Composestar.Java.FLIRT.Env;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -98,7 +97,9 @@ public class RTMessage implements CpsMessage
 		this();
 		properties.putAll(copyFrom.properties);
 		inner = copyFrom.inner;
-		args = Arrays.copyOf(copyFrom.args, copyFrom.args.length);
+		// args = Arrays.copyOf(copyFrom.args, copyFrom.args.length);
+		args = new Object[copyFrom.args.length];
+		System.arraycopy(copyFrom.args, 0, args, 0, copyFrom.args.length);
 		direction = copyFrom.direction;
 		state = copyFrom.state;
 		returnValue = copyFrom.returnValue;
@@ -170,7 +171,10 @@ public class RTMessage implements CpsMessage
 	 */
 	public Object[] getArguments()
 	{
-		return Arrays.copyOf(args, args.length);
+		// return Arrays.copyOf(args, args.length);
+		Object[] res = new Object[args.length];
+		System.arraycopy(args, 0, res, 0, args.length);
+		return res;
 	}
 
 	/**
@@ -180,7 +184,9 @@ public class RTMessage implements CpsMessage
 	 */
 	public void setArguments(Object[] value)
 	{
-		args = Arrays.copyOf(value, value.length);
+		args = new Object[value.length];
+		System.arraycopy(value, 0, args, 0, value.length);
+		// args = Arrays.copyOf(value, value.length);
 	}
 
 	/**

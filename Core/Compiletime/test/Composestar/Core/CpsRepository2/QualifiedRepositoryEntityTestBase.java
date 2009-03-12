@@ -39,7 +39,7 @@ public abstract class QualifiedRepositoryEntityTestBase extends RepositoryEntity
 	public void testGetName()
 	{
 		assertNotNull(qre.getName());
-		assertFalse(qre.getName().isEmpty());
+		assertFalse(qre.getName().length() == 0);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public abstract class QualifiedRepositoryEntityTestBase extends RepositoryEntity
 	public void testGetFullyQualifiedName()
 	{
 		assertNotNull(qre.getFullyQualifiedName());
-		assertFalse(qre.getFullyQualifiedName().isEmpty());
+		assertFalse(qre.getFullyQualifiedName().length() == 0);
 		assertTrue(qre.getFullyQualifiedName().endsWith(qre.getName()));
 	}
 

@@ -75,7 +75,7 @@ public class CanonPropertyImpl extends AbstractRepositoryEntity implements Canon
 		{
 			throw new NullPointerException("name can not be null");
 		}
-		if (propName.isEmpty())
+		if (propName.length() == 0)
 		{
 			throw new IllegalArgumentException("name can not be empty");
 		}

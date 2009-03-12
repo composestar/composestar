@@ -25,7 +25,6 @@
 package Composestar.Core.TASMAN;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -289,13 +288,18 @@ public class ParallelTask extends TaskCollection
 		public CompositeModuleException(ModuleException[] exes)
 		{
 			super("Multiple module exceptions", Manager.MODULE_NAME);
-			exceptions = Arrays.copyOf(exes, exes.length);
+			exceptions = new ModuleException[exes.length];
+			System.arraycopy(exes, 0, exceptions, 0, exes.length);
+			// exceptions = Arrays.copyOf(exes, exes.length);
 			processModuleExceptions();
 		}
 
 		public ModuleException[] getExceptions()
 		{
-			return Arrays.copyOf(exceptions, exceptions.length);
+			// return Arrays.copyOf(exceptions, exceptions.length);
+			ModuleException[] res = new ModuleException[exceptions.length];
+			System.arraycopy(exceptions, 0, res, 0, exceptions.length);
+			return res;
 		}
 
 		protected void processModuleExceptions()

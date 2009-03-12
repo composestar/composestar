@@ -79,7 +79,7 @@ public class FilterActionImpl extends AbstractRepositoryEntity implements Filter
 		{
 			throw new NullPointerException("filter action name cannot be null");
 		}
-		if (actionName.isEmpty())
+		if (actionName.length() == 0)
 		{
 			throw new IllegalArgumentException("filter action name cannot be empty");
 		}

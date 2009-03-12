@@ -88,7 +88,7 @@ public enum PropertyPrefix
 	 */
 	public static PropertyPrefix fromString(String name) throws IllegalArgumentException
 	{
-		if (name == null || name.isEmpty())
+		if (name == null || name.length() == 0)
 		{
 			return NONE;
 		}

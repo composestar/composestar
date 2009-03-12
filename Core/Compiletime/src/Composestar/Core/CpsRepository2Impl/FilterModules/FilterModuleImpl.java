@@ -214,7 +214,7 @@ public class FilterModuleImpl extends AbstractQualifiedRepositoryEntity implemen
 	 */
 	public FMParameter getParameter(String paramName)
 	{
-		if (paramName == null || paramName.isEmpty())
+		if (paramName == null || paramName.length() == 0)
 		{
 			return null;
 		}

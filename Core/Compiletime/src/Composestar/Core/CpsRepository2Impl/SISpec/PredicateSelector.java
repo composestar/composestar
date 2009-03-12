@@ -61,7 +61,7 @@ public class PredicateSelector extends AbstractSelector
 		{
 			throw new NullPointerException("Result name can not be null");
 		}
-		if (resultName.isEmpty())
+		if (resultName.length() == 0)
 		{
 			throw new IllegalArgumentException("Result name can not be empty");
 		}
@@ -69,7 +69,7 @@ public class PredicateSelector extends AbstractSelector
 		{
 			throw new NullPointerException("Predicate expression can not be null");
 		}
-		if (predicateExpression.isEmpty())
+		if (predicateExpression.length() == 0)
 		{
 			throw new IllegalArgumentException("Predicate expression can not be empty");
 		}

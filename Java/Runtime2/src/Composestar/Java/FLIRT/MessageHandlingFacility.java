@@ -593,7 +593,7 @@ public final class MessageHandlingFacility
 					MethodInfo mi = wrap.getMethodInfo();
 					if (mi.getParameters().size() == args.length)
 					{
-						if (key != null && !key.isEmpty() && mi.getHashKey().equals(key))
+						if (key != null && key.length() != 0 && mi.getHashKey().equals(key))
 						{
 							return new CpsSelectorMethodInfo(mi);
 						}
@@ -608,7 +608,7 @@ public final class MessageHandlingFacility
 			{
 				if (mi.getName().equals(name) && mi.getParameters().size() == args.length)
 				{
-					if (key != null && !key.isEmpty() && mi.getHashKey().equals(key))
+					if (key != null && key.length() != 0 && mi.getHashKey().equals(key))
 					{
 						return new CpsSelectorMethodInfo(mi);
 					}

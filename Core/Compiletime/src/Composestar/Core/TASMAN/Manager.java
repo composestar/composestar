@@ -179,7 +179,7 @@ public class Manager
 			return;
 		}
 		String moduleid = module.getModuleName();
-		if (moduleid == null || moduleid.isEmpty())
+		if (moduleid == null || moduleid.length() == 0)
 		{
 			// Panic! No module name
 			logger.warn(String.format("Module %s does not have an ID, switching to always execute modules", module

@@ -59,7 +59,7 @@ public class CompileMarkers
 	{
 		IResource dest = null;
 
-		if (filename != null && !filename.isEmpty())
+		if (filename != null && filename.length() != 0)
 		{
 			IPath path = new Path(filename);
 			int segs = path.matchingFirstSegments(project.getLocation());
@@ -86,7 +86,7 @@ public class CompileMarkers
 				}
 				mark.setAttribute(IMarker.SEVERITY, sevr);
 			}
-			if (filename != null && !filename.isEmpty())
+			if (filename != null && filename.length() != 0)
 			{
 				mark.setAttribute(IMarker.LOCATION, filename);
 			}
@@ -105,7 +105,7 @@ public class CompileMarkers
 		int line = -1;
 		int linepos = -1;
 
-		if (logEntry == null || logEntry.isEmpty())
+		if (logEntry == null || logEntry.length() == 0)
 		{
 			return;
 		}
@@ -140,7 +140,7 @@ public class CompileMarkers
 				return;
 			}
 			filename = m.group(1);
-			if (filename != null && !filename.isEmpty())
+			if (filename != null && filename.length() != 0)
 			{
 				line = Integer.parseInt(m.group(2));
 				linepos = Integer.parseInt(m.group(3));

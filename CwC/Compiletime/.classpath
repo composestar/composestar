@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="**/.svn/" including="**/*.java|**/moduleinfo.xml|Composestar/CwC/WEAVER/ComposeStar.*|INCREconfig.xml|Platforms.xml|TASMANConfig.xml|log4j.properties" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar" sourcepath="C:/antlr"/>
-	<classpathentry kind="con" path="org.eclipse.tptp.platform.instrumentation.ui.ContainerInitializer/Build to Manage Libraries"/>
 	<classpathentry kind="lib" path="lib/weavec.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

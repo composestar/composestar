@@ -65,7 +65,7 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 		{
 			throw new NullPointerException("Type can not be null");
 		}
-		if (type.isEmpty())
+		if (type.length() == 0)
 		{
 			throw new IllegalArgumentException("Type can not be empty");
 		}
