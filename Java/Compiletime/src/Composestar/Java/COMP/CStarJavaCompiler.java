@@ -123,6 +123,8 @@ public class CStarJavaCompiler implements LangCompiler
 			}
 			else
 			{
+				targetMode = verifyTargetMode(targetMode, false);
+				sourceMode = verifyTargetMode(sourceMode, true);
 
 				Properties prop = new Properties();
 				prop.put("OUT", sourceOut.toString());
@@ -190,6 +192,46 @@ public class CStarJavaCompiler implements LangCompiler
 		}
 	}
 
+	/**
+	 * @param targetMode2
+	 * @return
+	 */
+	public String verifyTargetMode(String mode, boolean silent)
+	{
+		String javaSpec = System.getProperty("java.specification.version");
+		if (mode == null)
+		{
+			final String JSV_1_5 = "1.5";
+			if (JSV_1_5.equals(javaSpec) || javaSpec.startsWith(JSV_1_5 + "."))
+			{
+				// force 1.5 output
+				mode = JSV_1_5;
+				if (!silent)
+				{
+					logger.info(String.format("Forcing compilation to Java Specification %s", mode));
+				}
+			}
+		}
+		else
+		{
+			String[] cur = javaSpec.split("\\.");
+			String[] des = mode.split("\\.");
+			for (int i = 0; i < cur.length && i < des.length; i++)
+			{
+				if (Integer.parseInt(cur[i]) < Integer.parseInt(des[i]))
+				{
+					if (!silent)
+					{
+						logger.warn(String.format(
+								"Can not compile classes to Java Specification %s, trying %s instead", mode, javaSpec));
+					}
+					return javaSpec;
+				}
+			}
+		}
+		return mode;
+	}
+
 	public void compileDummies(Project p, Set<Source> sources) throws CompilerException
 	{
 		logger.info("Compiling dummies");
@@ -217,10 +259,12 @@ public class CStarJavaCompiler implements LangCompiler
 
 			Properties prop = new Properties();
 			prop.put("OUT", dummiesDir.toString());
+			sourceMode = verifyTargetMode(sourceMode, true);
 			if (sourceMode != null)
 			{
 				prop.put("SOURCE_MODE", sourceMode);
 			}
+			targetMode = verifyTargetMode(targetMode, false);
 			if (targetMode != null)
 			{
 				prop.put("TARGET_MODE", targetMode);

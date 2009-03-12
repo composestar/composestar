@@ -15,8 +15,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
+import Composestar.Core.Master.ModuleNames;
+import Composestar.Utils.Logging.CPSLogger;
+
 public class JarHelper
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);
+
 	HashSet<JarEntry> resources;
 
 	HashMap<Class<?>, JarEntry> classes;
@@ -34,6 +39,7 @@ public class JarHelper
 
 		File jar = new File(jarURL.toURI());
 		jarFile = new JarFile(jar);
+		boolean futureClasses = false;
 
 		Enumeration<JarEntry> entries = jarFile.entries();
 		while (entries.hasMoreElements())
@@ -43,12 +49,25 @@ public class JarHelper
 			if (classFileName.endsWith(".class"))
 			{
 				String className = classFileName.replace('/', '.').substring(0, classFileName.lastIndexOf('.'));
-				classes.put(classLoader.loadClass(className), entry);
+				try
+				{
+					classes.put(classLoader.loadClass(className), entry);
+				}
+				catch (UnsupportedClassVersionError e)
+				{
+					logger.error(String.format("Class %s in %s was compiled to an unsupported language version",
+							className, jarURL), e);
+					futureClasses = true;
+				}
 			}
 			else if (!classFileName.equals("META-INF/"))
 			{
 				resources.add(entry);
 			}
+		}
+		if (futureClasses)
+		{
+			throw new UnsupportedClassVersionError();
 		}
 	}
 
