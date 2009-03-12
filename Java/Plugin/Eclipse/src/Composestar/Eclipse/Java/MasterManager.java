@@ -1,6 +1,8 @@
 package Composestar.Eclipse.Java;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
@@ -8,6 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationType;
@@ -42,7 +45,9 @@ import Composestar.Eclipse.Core.IComposestarConstants;
 public class MasterManager
 {
 
-	public static final String EXECUTION_ENV_ID = "JavaSE-1.6";
+	public static final String EXECUTION_ENV_16 = "JavaSE-1.6";
+
+	public static final String EXECUTION_ENV_15 = "J2SE-1.5";
 
 	/**
 	 * The instance.
@@ -90,8 +95,27 @@ public class MasterManager
 			cp.addAll(ComposestarEclipsePluginPlugin.getJarClassPath(ComposestarEclipsePluginPlugin.getAbsolutePath(
 					IComposestarConstants.LIB_DIR + "ComposestarJava.jar", IComposestarJavaConstants.BUNDLE_ID)));
 
-			if (true)
+			monitor.worked(1);
+
+			monitor.subTask("Setting up execution environment");
+			IVMInstall vminstall = getJRE(EXECUTION_ENV_16, dbg);
+			if (vminstall == null)
 			{
+				dbg.Log(String.format("No compatible JRE found for %s, falling back to %s.", EXECUTION_ENV_16,
+						EXECUTION_ENV_15), Debug.MSG_WARNING);
+				vminstall = getJRE(EXECUTION_ENV_15, dbg);
+			}
+			if (vminstall == null)
+			{
+				dbg.Log(String.format("Unable to find a compatible Java execution environment for %s or %s.",
+						EXECUTION_ENV_16, EXECUTION_ENV_15), Debug.MSG_ERROR);
+				completed = false;
+				return;
+			}
+
+			if (Platform.getBundle("org.eclipse.jdt.compiler.tool") != null)
+			{
+				// only available when eclipse runs in JRE6
 				monitor.subTask("Resolving Eclipse Java compiler");
 				// this will register the eclipse java compiler as compiler
 				// service
@@ -99,35 +123,6 @@ public class MasterManager
 				cp.add(getBundlePath("org.eclipse.jdt.compiler.tool"));
 			}
 
-			monitor.worked(1);
-
-			monitor.subTask("Setting up execution environment");
-			IExecutionEnvironment exenv = JavaRuntime.getExecutionEnvironmentsManager()
-					.getEnvironment(EXECUTION_ENV_ID);
-			if (exenv == null)
-			{
-				dbg.Log(String.format("Unable to find the %s Java execution environment.", EXECUTION_ENV_ID),
-						Debug.MSG_ERROR);
-				completed = false;
-				return;
-			}
-
-			IVMInstall vminstall = exenv.getDefaultVM();
-			if (vminstall == null)
-			{
-				for (IVMInstall imvi : exenv.getCompatibleVMs())
-				{
-					vminstall = imvi;
-					break;
-				}
-			}
-			if (vminstall == null)
-			{
-				dbg.Log(String.format("Unable to find a compatible Java execution environment for %s.",
-						EXECUTION_ENV_ID), Debug.MSG_ERROR);
-				completed = false;
-				return;
-			}
 			for (LibraryLocation libloc : JavaRuntime.getLibraryLocations(vminstall))
 			{
 				cp.add(libloc.getSystemLibraryPath().makeAbsolute().toFile().toString());
@@ -175,9 +170,45 @@ public class MasterManager
 		}
 		catch (Exception e)
 		{
-			dbg.Log("Master run failure reported: " + e.getCause().getMessage(), IComposestarConstants.MSG_ERROR);
+			dbg.Log("Master run failure reported: " + e, IComposestarConstants.MSG_ERROR);
+			StringWriter sb = new StringWriter();
+			e.printStackTrace(new PrintWriter(sb));
+			dbg.Log(sb.toString(), IComposestarConstants.MSG_ERROR);
 			completed = false;
 		}
+	}
+
+	/**
+	 * @param dbg
+	 * @return
+	 */
+	private IVMInstall getJRE(String envid, Debug dbg)
+	{
+		IExecutionEnvironment exenv = JavaRuntime.getExecutionEnvironmentsManager().getEnvironment(envid);
+		if (exenv == null)
+		{
+			// dbg.Log(String.format("Unable to find the %s Java execution environment.",
+			// envid), Debug.MSG_ERROR);
+			return null;
+		}
+
+		IVMInstall vminstall = exenv.getDefaultVM();
+		if (vminstall == null)
+		{
+			for (IVMInstall imvi : exenv.getCompatibleVMs())
+			{
+				vminstall = imvi;
+				break;
+			}
+		}
+		if (vminstall == null)
+		{
+			// dbg.Log(String.format("Unable to find a compatible Java execution environment for %s.",
+			// EXECUTION_ENV_ID),
+			// Debug.MSG_ERROR);
+			return null;
+		}
+		return vminstall;
 	}
 
 	/**
@@ -216,7 +247,12 @@ public class MasterManager
 		{
 		}
 		// this one always works, but it slow
-		return (new File(ComposestarEclipsePluginPlugin.getAbsolutePath("/", bundleId))).getAbsolutePath();
+		String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/", bundleId);
+		if (path == null)
+		{
+			return null;
+		}
+		return (new File(path)).getAbsolutePath();
 	}
 
 	/**

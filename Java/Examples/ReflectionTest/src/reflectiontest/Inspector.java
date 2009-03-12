@@ -113,17 +113,14 @@ public class Inspector implements TestMethods {
 		report();
 	}
 
-	@Override
 	public void foo() {
 		report();
 	}
 
-	@Override
 	public void bar(String s) {
 		report();
 	}
 
-	@Override
 	public Object quux(int i, Object o) {
 		report();
 		return null;

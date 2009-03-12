@@ -31,6 +31,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +41,7 @@ import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
 
 import org.apache.log4j.Level;
@@ -59,6 +61,27 @@ import Composestar.Utils.Logging.LogMessage;
 public class InternalCompiler
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CStarJavaCompiler.MODULE_NAME);
+
+	private static JavaCompiler compilerService;
+
+	/**
+	 * @return A compiler service
+	 */
+	public static JavaCompiler getJavacService()
+	{
+		if (compilerService != null)
+		{
+			return compilerService;
+		}
+		ServiceLoader<JavaCompiler> services = ServiceLoader.load(JavaCompiler.class);
+		for (JavaCompiler jc : services)
+		{
+			compilerService = jc;
+			return compilerService;
+		}
+		compilerService = ToolProvider.getSystemJavaCompiler();
+		return compilerService;
+	}
 
 	/**
 	 * Compiler compliance level. Used by eclipse to emulate a certain JDK
@@ -81,9 +104,10 @@ public class InternalCompiler
 
 	protected boolean emacsLogEntries = false;
 
-	public boolean compileSources(JavaCompiler javac, Set<File> sources, File dest, Set<File> classpath,
-			boolean separate) throws CompilerException
+	public boolean compileSources(Set<File> sources, File dest, Set<File> classpath, boolean separate)
+			throws CompilerException
 	{
+		JavaCompiler javac = getJavacService();
 		DiagnosticCollector<JavaFileObject> diag = new DiagnosticCollector<JavaFileObject>();
 		StandardJavaFileManager fm = javac.getStandardFileManager(diag, null, null);
 		List<String> options = new ArrayList<String>();

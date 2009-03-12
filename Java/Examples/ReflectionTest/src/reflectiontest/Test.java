@@ -39,7 +39,6 @@ public class Test {
 
 	protected static void test2() {
 		Runnable r = new Runnable() {
-			@Override
 			public void run() {
 				A a = new A();
 				a.foo();

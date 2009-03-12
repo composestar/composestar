@@ -101,6 +101,10 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 	public static String getAbsolutePath(String path, String BundleName)
 	{
 		Bundle bundle = Platform.getBundle(BundleName);
+		if (bundle == null)
+		{
+			return null;
+		}
 		URL relativePath = bundle.getEntry(path);
 		String result;
 		try
