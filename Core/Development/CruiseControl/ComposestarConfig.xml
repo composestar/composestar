@@ -75,8 +75,8 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 				<!-- clean up old artifacts, e.a. -->
 				<antpublisher target="onsuccess" buildfile="${composestar.path}\Core\Development\CruiseControl\antextra.xml"
 					uselogger="false" anthome="${composestar.ant}" antWorkingDir="${composestar.path}" usedebug="false" />
-				<twitterex username="composestar" password="${composestar.twitter}" />
 			</onsuccess>
+			<twitterex username="composestar" password="${composestar.twitter}" />
 		</publishers>
 	</project>
 </cruisecontrol>
