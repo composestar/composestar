@@ -823,7 +823,7 @@ public class FireModel
 		CpsMessage derivedMessage;
 		try
 		{
-			derivedMessage = (CpsMessage) message.clone();
+			derivedMessage = message.clone();
 			CpsMessageUtils.update(derivedMessage, baseState.getMessage());
 		}
 		catch (CloneNotSupportedException e)
@@ -1293,7 +1293,7 @@ public class FireModel
 				CpsMessage derivedMessage;
 				try
 				{
-					derivedMessage = (CpsMessage) message.clone();
+					derivedMessage = message.clone();
 					CpsMessageUtils.update(derivedMessage, state.getMessage());
 				}
 				catch (CloneNotSupportedException e)

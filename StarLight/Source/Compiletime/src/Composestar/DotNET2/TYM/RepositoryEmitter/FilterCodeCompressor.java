@@ -605,7 +605,7 @@ public class FilterCodeCompressor
 			CpsMessage newMessage;
 			try
 			{
-				newMessage = (CpsMessage) message.clone();
+				newMessage = message.clone();
 			}
 			catch (CloneNotSupportedException e)
 			{

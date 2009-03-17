@@ -153,5 +153,5 @@ public interface CpsMessage extends Cloneable
 	/**
 	 * @see Cloneable
 	 */
-	Object clone() throws CloneNotSupportedException;
+	CpsMessage clone() throws CloneNotSupportedException;
 }

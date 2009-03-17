@@ -530,7 +530,7 @@ public class RTMessage implements CpsMessage
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
-	public Object clone() throws CloneNotSupportedException
+	public CpsMessage clone() throws CloneNotSupportedException
 	{
 		throw new CloneNotSupportedException();
 	}
