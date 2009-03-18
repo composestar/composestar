@@ -54,9 +54,9 @@ public class TestBuild implements IPlatformRunnable
 			{
 				project.refreshLocal(IResource.DEPTH_INFINITE, npm);
 			}
-			catch (CoreException e)
+			catch (ConcurrentModificationException e)
 			{
-				// just ignore for now
+				// just ignore for now, probably an eclipse bug
 			}
 			project.build(IncrementalProjectBuilder.FULL_BUILD, npm);
 
