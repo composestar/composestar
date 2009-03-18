@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
 import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.References.MethodReference;
@@ -116,14 +117,19 @@ public interface LowLevelInlineStrategy
 	 * Called when the code for a certain filteraction needs to be generated.
 	 * 
 	 * @param state The executionstate corresponding with the filteraction.
-	 */
-	void generateAction(ExecutionState state, List<String> resourceOps);
-
-	/**
-	 * Called when the code for a certain filteraction needs to be generated.
-	 * 
-	 * @param state The executionstate corresponding with the filteraction.
 	 * @param filterArgs the filter argument values, could be an empty set.
 	 */
 	void generateAction(ExecutionState state, Collection<CanonAssignment> filterArgs, List<String> resourceOps);
+
+	/**
+	 * Start of the processing of a matched filter element
+	 * 
+	 * @param matchedFilterElement
+	 */
+	void startFilterElement(FilterElement matchedFilterElement);
+
+	/**
+	 * End of the processing of a matched filter element
+	 */
+	void endFilterElement();
 }

@@ -32,6 +32,7 @@ import java.util.Stack;
 
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
 import Composestar.Core.CpsRepository2.FilterElements.MatchingExpression;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
@@ -129,6 +130,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * List of conflicts for the current method. Will be set by startInline
 	 */
 	private List<Conflict> conflicts;
+
+	private Filter currentFilter;
+
+	private FilterElement currentFilterElement;
 
 	/**
 	 * The constructor
@@ -265,6 +270,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	public void startFilter(Filter filter, int jumpLabel)
 	{
+		currentFilter = filter;
 		Block filterBlock;
 
 		currentLabelId = jumpLabel;
@@ -281,7 +287,30 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	public void endFilter()
 	{
+		currentFilter = null;
 		popBlock();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startFilterElement
+	 * (Composestar.Core.CpsRepository2.FilterElements.FilterElement)
+	 */
+	public void startFilterElement(FilterElement matchedFilterElement)
+	{
+		currentFilterElement = matchedFilterElement;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#endFilterElement
+	 * ()
+	 */
+	public void endFilterElement()
+	{
+		currentFilterElement = null;
 	}
 
 	/**
@@ -377,14 +406,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	/**
 	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#generateAction(Composestar.Core.FIRE2.model.ExecutionState)
 	 */
-	public void generateAction(ExecutionState state, List<String> resourceOps)
-	{
-		generateAction(state, null, resourceOps);
-	}
-
-	/**
-	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#generateAction(Composestar.Core.FIRE2.model.ExecutionState)
-	 */
 	public void generateAction(ExecutionState state, Collection<CanonAssignment> filterArgs, List<String> resourceOps)
 	{
 		FlowNode node = state.getFlowNode();
@@ -442,6 +463,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				new FilterActionInstruction(action.getName(), state.getMessage(), filterArgs, true, action
 						.getFlowBehavior() == FlowBehavior.RETURN);
 		instruction.setCreateJPC(action.needsJoinPointContext());
+		instruction.setFilter(currentFilter);
+		instruction.setFilterElement(currentFilterElement);
 		setBookKeeping(instruction, state, resourceOps);
 
 		empty = false;
@@ -461,6 +484,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				new FilterActionInstruction(action.getName(), state.getMessage(), filterArgs, false, action
 						.getFlowBehavior() == FlowBehavior.RETURN);
 		instruction.setCreateJPC(action.needsJoinPointContext());
+		instruction.setFilter(currentFilter);
+		instruction.setFilterElement(currentFilterElement);
 		setBookKeeping(instruction, state, resourceOps);
 
 		empty = false;
@@ -480,6 +505,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		FilterActionInstruction instruction =
 				new FilterActionInstruction(action.getName(), msg, new ArrayList<CanonAssignment>(), true, true);
 		instruction.setCreateJPC(JoinPointContextArgument.UNUSED);
+		instruction.setFilter(currentFilter);
+		instruction.setFilterElement(currentFilterElement);
 		setBookKeeping(instruction, state, resourceOps);
 		currentBlock.addInstruction(instruction);
 

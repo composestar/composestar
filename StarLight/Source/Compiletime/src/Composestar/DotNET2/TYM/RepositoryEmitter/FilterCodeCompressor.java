@@ -570,6 +570,8 @@ public class FilterCodeCompressor
 			copyLabel(filterAction, copy);
 			copy.setBookKeeping(filterAction.getBookKeeping());
 			copy.setResourceOperations(filterAction.getResourceOperations());
+			copy.setFilter(filterAction.getFilter());
+			copy.setFilterElement(filterAction.getFilterElement());
 
 			return copy;
 		}

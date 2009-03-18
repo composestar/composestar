@@ -9,6 +9,8 @@ import java.util.Collections;
 
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
 
 /**
@@ -18,6 +20,18 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsMessage;
  */
 public class FilterActionInstruction extends Instruction
 {
+	/**
+	 * The filter definition which is responsible for this filter action
+	 * instruction.
+	 */
+	private Filter filter;
+
+	/**
+	 * The filter element that resulted in this filter action. Note that this
+	 * will be null when this filter action is the result of a rejection.
+	 */
+	private FilterElement filterElement;
+
 	/**
 	 * The type of the filteraction
 	 */
@@ -188,4 +202,35 @@ public class FilterActionInstruction extends Instruction
 		neededJPC = jpc;
 	}
 
+	/**
+	 * @param value the filter to set
+	 */
+	public void setFilter(Filter value)
+	{
+		filter = value;
+	}
+
+	/**
+	 * @return the filter
+	 */
+	public Filter getFilter()
+	{
+		return filter;
+	}
+
+	/**
+	 * @param value the filterElement to set
+	 */
+	public void setFilterElement(FilterElement value)
+	{
+		filterElement = value;
+	}
+
+	/**
+	 * @return the filterElement
+	 */
+	public FilterElement getFilterElement()
+	{
+		return filterElement;
+	}
 }

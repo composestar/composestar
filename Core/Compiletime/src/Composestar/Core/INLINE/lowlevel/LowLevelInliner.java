@@ -195,6 +195,12 @@ public class LowLevelInliner
 	{
 		FilterElementBlock filterElement = filterElements.next();
 
+		FilterElement matchedFilterElement = null;
+		if (filterElement.filterElementState.getFlowNode().getRepositoryLink() instanceof FilterElement)
+		{
+			matchedFilterElement = (FilterElement) filterElement.filterElementState.getFlowNode().getRepositoryLink();
+		}
+
 		ExecutionState flowFalseExitState = filterElement.falseExit;
 		ExecutionState flowTrueExitState = filterElement.trueExit;
 
@@ -215,10 +221,12 @@ public class LowLevelInliner
 			}
 			else
 			{
+				strategy.startFilterElement(matchedFilterElement);
 				strategy.generateAction(filterElement.trueActionReturn, filterArgsFE.values(),
 						filterElement.trueRescOpsReturn);
 				strategy.generateAction(filterElement.trueActionCall, filterArgsFE.values(),
 						filterElement.trueRescOpsCall);
+				strategy.endFilterElement();
 				generateJump(flowTrueExitState);
 			}
 		}
@@ -239,10 +247,12 @@ public class LowLevelInliner
 				strategy.evalMatchingExpr(filterElement.expression);
 				strategy.beginTrueBranch();
 
+				strategy.startFilterElement(matchedFilterElement);
 				strategy.generateAction(filterElement.trueActionReturn, filterArgsFE.values(),
 						filterElement.trueRescOpsReturn);
 				strategy.generateAction(filterElement.trueActionCall, filterArgsFE.values(),
 						filterElement.trueRescOpsCall);
+				strategy.endFilterElement();
 				generateJump(flowTrueExitState);
 
 				strategy.endTrueBranch();
@@ -283,10 +293,12 @@ public class LowLevelInliner
 					strategy.evalMatchingExpr(filterElement.expression);
 					strategy.beginTrueBranch();
 
+					strategy.startFilterElement(matchedFilterElement);
 					strategy.generateAction(filterElement.trueActionReturn, filterArgsFE.values(),
 							filterElement.trueRescOpsReturn);
 					strategy.generateAction(filterElement.trueActionCall, filterArgsFE.values(),
 							filterElement.trueRescOpsCall);
+					strategy.endFilterElement();
 					generateJump(flowTrueExitState);
 
 					strategy.endTrueBranch();
@@ -309,7 +321,8 @@ public class LowLevelInliner
 	 * 
 	 * @param feState
 	 * @param result
-	 * @param fromFe
+	 * @param fromFe If true use the argument from filter element, otherwise use
+	 *            the arguments from the filter
 	 */
 	private void addFilterArguments(ExecutionState feState, Map<String, CanonAssignment> result, boolean fromFe)
 	{
