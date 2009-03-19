@@ -30,7 +30,7 @@
 		<mkdir dir="${out.dist}/lib" />
 	</target>
 
-	<target name="build" depends="init_local,compile_java,jar" description="build the java runtime" />
+	<target name="build" depends="init_local,compile_java,jar,src-jar" description="build the java runtime" />
 
 	<target name="compile_java" depends="init_local">
 		<javac srcdir="src" destdir="${out.build}" debug="${build.debug}" deprecation="${build.deprecation}">
@@ -40,7 +40,7 @@
 		</javac>
 	</target>
 
-	<target name="jar" depends="init_local">
+	<target name="jar" depends="compile_java">
 		<!--
 		<jar destfile="${out.dist}/lib/ComposestarRuntimeInterpreter.jar">
 			<fileset dir="${build.core}/Runtime/${out.build}" /> 
@@ -62,6 +62,54 @@
 			<keep pattern="Composestar.Core.LAMA.**" />
 			<keep pattern="Composestar.Java.LAMA.**" />
 		</jarjar>
+	</target>
+
+	<target name="src-jar" depends="jar" description="Create a source package for the runtime jar file">
+		<zipfileset id="java.rt.classes" src="${out.dist}/lib/ComposestarRuntimeInterpreter.jar" prefix="src/">
+			<include name="**/*.class" />
+			<exclude name="**/*$*.class" />
+		</zipfileset>
+		<script language="javascript">
+			<![CDATA[
+			importClass(java.io.File);
+			
+			var filelist = project.getReference('java.rt.classes');
+			var it = filelist.iterator();
+			
+			var resultJRT = project.createDataType('fileset');
+			resultJRT.setDir(new File(project.getBaseDir(), 'src'));
+			project.addReference('java.rt.source.javart', resultJRT);
+			
+			var resultC = project.createDataType('fileset');
+			resultC.setDir(new File(project.getProperty('build.core')+'/Compiletime/src/'));
+			project.addReference('java.rt.source.core', resultC);
+			
+			var resultJ = project.createDataType('fileset');
+			resultJ.setDir(new File(project.getProperty('build.java')+'/Compiletime/src/'));
+			project.addReference('java.rt.source.java', resultJ);
+			
+			while (it.hasNext()) {
+				var entry = ""+it.next().getName();
+				entry = entry.replace(/\.class$/, '\.java');
+				var includeEntry;
+				if (/^(Composestar\/Java\/FLIRT\/)/.test(entry)) {
+					includeEntry = resultJRT.createInclude();
+				}
+				else if (/^(Composestar\/Java\/)/.test(entry)) {
+					includeEntry = resultJ.createInclude();
+				}
+				else {
+					includeEntry = resultC.createInclude();
+				}
+				includeEntry.setName(entry);
+			}
+			]]>
+		</script>
+		<zip destfile="${out.dist}/lib/ComposestarRuntimeInterpreter-src.zip">
+			<fileset refid="java.rt.source.core" />
+			<fileset refid="java.rt.source.java" />
+			<fileset refid="java.rt.source.javart" />
+		</zip>
 	</target>
 
 	<target name="install" depends="init_eclipse,build" description="install the java runtime">
