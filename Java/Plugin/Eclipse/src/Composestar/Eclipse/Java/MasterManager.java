@@ -127,7 +127,7 @@ public class MasterManager
 			{
 				cp.add(libloc.getSystemLibraryPath().makeAbsolute().toFile().toString());
 			}
-			dbg.print("Classpath: " + cp.toString() + "\n", Debug.MSG_INFORMATION);
+			//dbg.print("Classpath: " + cp.toString() + "\n", Debug.MSG_INFORMATION);
 
 			IVMRunner runner = vminstall.getVMRunner(ILaunchManager.RUN_MODE);
 			VMRunnerConfiguration runconfig = new VMRunnerConfiguration(mainClass, cp.toArray(new String[cp.size()]));
