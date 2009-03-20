@@ -1,0 +1,15 @@
+Meta Filter Tests
+
+MetaTarget::doNothing
+doNothing : Hello World!
+MetaTarget::doProceed
+doProceed : Hello World!
+MetaTarget::doReply
+doReply   : Set through a meta filter
+MetaTarget::doReply2
+doReply2  : null
+MetaTarget::doRespond
+doRespond : Set through a meta filter
+MetaTarget::doRespond2
+doRespond2: null
+We just performed a slow operation
