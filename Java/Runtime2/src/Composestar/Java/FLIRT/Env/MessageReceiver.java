@@ -65,23 +65,7 @@ public abstract class MessageReceiver
 		msg.setSelf(receiver);
 		msg.setTarget(receiver);
 
-		// just deliver it
-		receiveMessage(msg);
-
-		// // add the message to the message queue
-		// messageQueue.produce(msg);
-		//
-		// // notify objectmanager that messagequeue is not empty
-		// notifyMessageConsumer();
-		//
-		// // wait for a response for the message
-		// Object resp = msg.getResponse();
-		// if (resp instanceof RuntimeException)
-		// {
-		// throw (RuntimeException) resp;
-		// }
-
-		return msg.getReturnValue();
+		return receiveMessage(msg);
 	}
 
 	/**
@@ -108,22 +92,7 @@ public abstract class MessageReceiver
 		msg.setTarget(receiver);
 
 		// just deliver it
-		receiveMessage(msg);
-
-		// // add the message to the objectmanager's message queue
-		// messageQueue.produce(msg);
-		//
-		// // notify objectmanager that queue is not empty
-		// notifyMessageConsumer();
-		//
-		// // wait for a response for the message
-		// Object resp = msg.getResponse();
-		// if (resp instanceof RuntimeException)
-		// {
-		// throw (RuntimeException) resp;
-		// }
-
-		return msg.getReturnValue();
+		return receiveMessage(msg);
 	}
 
 	/**

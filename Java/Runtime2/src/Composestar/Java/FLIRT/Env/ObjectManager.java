@@ -254,6 +254,12 @@ public class ObjectManager extends MessageReceiver implements RTCpsObject
 	{
 		FilterExecutionContext context = new FilterExecutionContext(this, msg);
 		InterpreterMain.interpret(context);
-		return null;
+		Object result = msg.getReturnValue();
+		synchronized (context)
+		{
+			// notify a possible waiting interpreter
+			context.freeContext();
+		}
+		return result;
 	}
 }

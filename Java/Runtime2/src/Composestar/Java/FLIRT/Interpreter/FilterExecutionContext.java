@@ -91,15 +91,38 @@ public class FilterExecutionContext
 	protected FilterElement matchedElement;
 
 	/**
+	 * If true, then this context is no longer used by the object manager
+	 */
+	protected boolean contextFree;
+
+	/**
 	 * @param man
 	 * @param msg
 	 */
 	public FilterExecutionContext(ObjectManager man, RTMessage msg)
 	{
+		contextFree = false;
 		objectManager = man;
 		message = msg;
 		filterModules = man.getFilterModules();
 		returnActions = new LinkedList<EnqueuedAction>();
+	}
+
+	/**
+	 * Free the context and notify all waiters
+	 */
+	public void freeContext()
+	{
+		contextFree = true;
+		notifyAll();
+	}
+
+	/**
+	 * @return the contextFree
+	 */
+	public boolean isContextFree()
+	{
+		return contextFree;
 	}
 
 	/**

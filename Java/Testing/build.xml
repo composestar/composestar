@@ -77,6 +77,7 @@
 				<include name="BookShelf" />
 				<include name="ReflectionTest" />
 				<include name="ConsumersProducers" />
+				<include name="MetaFilterTest" />
 				<exclude name="**/.svn/" />
 				<exclude name="**/.metadata/" />
 			</DirSet>
@@ -96,6 +97,8 @@
 				<include name="Fibonacci" />
 				<include name="BookShelf" />
 				<include name="ReflectionTest" />
+				<include name="ConsumersProducers" />
+				<include name="MetaFilterTest" />
 				<exclude name="**/.svn/" />
 				<exclude name="**/.metadata/" />
 			</DirSet>

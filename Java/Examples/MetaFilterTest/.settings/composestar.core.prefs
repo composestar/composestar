@@ -1,0 +1,7 @@
+#Fri Mar 20 13:33:08 CET 2009
+FLIRT.threaded=true
+SECRET.mode=Normal
+buildDebugLevel=WARN
+eclipse.preferences.version=1
+mainclass=mft.Main
+runDebugLevel=0

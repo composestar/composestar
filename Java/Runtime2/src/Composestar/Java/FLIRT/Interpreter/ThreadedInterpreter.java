@@ -35,8 +35,7 @@ import Composestar.Java.FLIRT.Reflection.ReflectionHandler;
 import Composestar.Java.FLIRT.Utils.SyncBuffer;
 
 /**
- * (EXPERIMENTAL) A threaded interpreter, this should open the possibility of
- * ReifiedMessage.resume().
+ * (EXPERIMENTAL) A threaded interpreter, this allows ReifiedMessage.resume().
  * 
  * @author Michiel Hendriks
  */
@@ -45,29 +44,10 @@ public final class ThreadedInterpreter extends Thread
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.INTERPRETER);
 
 	/**
-	 * An interpreter per base thread
+	 * Keep a interpreter thread per thread. Reduces thread creation
 	 */
-	private static final ThreadLocal<ThreadedInterpreter> INTERPRETER_THREAD = new ThreadLocal<ThreadedInterpreter>()
-	{
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.ThreadLocal#initialValue()
-		 */
-		@Override
-		protected ThreadedInterpreter initialValue()
-		{
-			ThreadedInterpreter thread = new ThreadedInterpreter(Thread.currentThread());
-			THREAD_LOCALS.put(thread, this);
-			return thread;
-		}
-	};
-
-	/**
-	 * Mapping from interpreter to thread local, so that the interpreter can be
-	 * unlicked from the thread when the interpreter forks.
-	 */
-	private static final WeakHashMap<ThreadedInterpreter, ThreadLocal<ThreadedInterpreter>> THREAD_LOCALS =
-			new WeakHashMap<ThreadedInterpreter, ThreadLocal<ThreadedInterpreter>>();
+	private static final WeakHashMap<Thread, ThreadedInterpreter> THREAD_INTERPS =
+			new WeakHashMap<Thread, ThreadedInterpreter>();
 
 	/**
 	 * Entry point for the interpreter. This will execute the provided context
@@ -76,7 +56,7 @@ public final class ThreadedInterpreter extends Thread
 	 */
 	public static void interpret(FilterExecutionContext context) throws Throwable
 	{
-		ThreadedInterpreter thread = getINTERPRETER_THREAD();
+		ThreadedInterpreter thread = getInterpreterThread();
 		ReflectionHandler.pushContext(thread, context);
 		thread.start(context);
 		thread.waitForResult();
@@ -87,9 +67,16 @@ public final class ThreadedInterpreter extends Thread
 	/**
 	 * @return The interpreter thread for this thread
 	 */
-	private static ThreadedInterpreter getINTERPRETER_THREAD()
+	private static ThreadedInterpreter getInterpreterThread()
 	{
-		return INTERPRETER_THREAD.get();
+		Thread curThread = Thread.currentThread();
+		ThreadedInterpreter interp = THREAD_INTERPS.get(curThread);
+		if (interp == null)
+		{
+			interp = new ThreadedInterpreter(curThread);
+			THREAD_INTERPS.put(curThread, interp);
+		}
+		return interp;
 	}
 
 	/**
@@ -100,8 +87,7 @@ public final class ThreadedInterpreter extends Thread
 	 */
 	private static void clearThreadLocal(ThreadedInterpreter thisThread)
 	{
-		ThreadLocal<ThreadedInterpreter> tl = THREAD_LOCALS.get(thisThread);
-		tl.remove();
+		THREAD_INTERPS.remove(thisThread.parentThread.get());
 	}
 
 	/**
@@ -217,6 +203,24 @@ public final class ThreadedInterpreter extends Thread
 		parentThread.clear();
 		isRunning = false;
 		wakeupForResult();
+		synchronized (context)
+		{
+			// wait for the main thread to be done with the context. if we don't
+			// do this the return value of the message might be incorrectly
+			// updated
+			try
+			{
+				if (!context.isContextFree())
+				{
+					context.wait();
+				}
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void interpret()

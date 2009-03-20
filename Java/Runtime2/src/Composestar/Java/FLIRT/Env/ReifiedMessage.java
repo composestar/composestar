@@ -144,12 +144,13 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 	 */
 	public synchronized void resume()
 	{
+		RTMessage origMessage = message;
+		message = new RTMessage(message);
 		if (state == ReifiedMessageState.PROCEEDED)
 		{
-			message.setResponse(null);
+			origMessage.setResponse(null);
 		}
 		state = ReifiedMessageState.FORKED;
-		message = new RTMessage(message);
 		lockMessage();
 		buffer.produce(new ReifiedMessageResult(ReifiedMessageAction.RESUME));
 	}
@@ -195,7 +196,7 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 		state = ReifiedMessageState.RESPONDED;
 		if (respondSupported)
 		{
-			buffer.produce(new ReifiedMessageResult(ReifiedMessageAction.REPLY));
+			buffer.produce(new ReifiedMessageResult(ReifiedMessageAction.RESPOND));
 		}
 		else
 		{
@@ -272,7 +273,8 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 				resume();
 				break;
 			case RESPONDED:
-				proceed();
+				// proceed(); // MH: Why proceed in the finish? there is nothing
+				// to wait for
 				resume();
 				break;
 			case FORKED:
