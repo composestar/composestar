@@ -33,7 +33,7 @@ TABLE.timeline TD {
 }
 
 DIV.entry {
-	width: 20px;
+	width: 10px;
 	background-color: Highlight;
 	border: 1px outset Highlight;
 }
