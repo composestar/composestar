@@ -10,6 +10,7 @@
 
 		<!-- Java build files -->
 		<delete dir="${out.build}" />
+		<delete dir="${out.build}-test" />
 		<delete dir="${out.dist}" />
 		<delete>
 			<fileset dir="src">
@@ -17,6 +18,8 @@
 			</fileset>
 			<fileset dir="test">
 				<include name="**/*.class" />
+				<include name="**/TEST-*.xml" />
+				<include name="**/TESTS-*.xml" />
 			</fileset>
 		</delete>
 
@@ -30,13 +33,6 @@
 				<include name="Cps.tokens" />
 				<include name="CpsTreeWalker.java" />
 				<include name="CpsTreeWalker.tokens" />
-			</fileset>
-		</delete>
-
-		<delete>
-			<fileset dir="test">
-				<include name="**/TEST-*.xml" />
-				<include name="**/TESTS-*.xml" />
 			</fileset>
 		</delete>
 
@@ -198,36 +194,43 @@
 	</target>
 
 	<target name="compile_tests" depends="local_init,compile">
+		<mkdir dir="${out.build}-test" />
 		<path id="lib.test">
 			<path refid="lib.core" />
 			<pathelement path="${out.build}" />
 			<pathelement location="${build.core}\Compiletime\lib\junit\junit.jar" />
 		</path>
-		<javac srcdir="test" destdir="test" classpathref="lib.test" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="test" destdir="${out.build}-test" classpathref="lib.test" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java" />
 			<exclude name="**/AssemblyInfo.java" />
 		</javac>
+		<copy todir="${out.build}-test">
+			<fileset dir="test">
+				<include name="**/*.xml" />
+				<include name="**/*.cps" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="unittest" depends="compile_tests" description="Runs JUnit tests">
-		<mkdir dir="test/test-results" />
+		<mkdir dir="${out.build}-test/test-results" />
 		<junit printsummary="on" haltonfailure="on">
 			<classpath>
 				<path refid="lib.test" />
-				<pathelement path="test" />
+				<pathelement path="${out.build}-test" />
 			</classpath>
 			<formatter type="xml" />
-			<batchtest todir="test/test-results">
-				<fileset dir="test">
+			<batchtest todir="${out.build}-test/test-results">
+				<fileset dir="${out.build}-test">
 					<include name="**/*Test.class" />
 				</fileset>
 			</batchtest>
 		</junit>
-		<junitreport todir="test">
-			<fileset dir="test/test-results">
+		<junitreport todir="${out.build}-test">
+			<fileset dir="${out.build}-test/test-results">
 				<include name="TEST-*.xml" />
 			</fileset>
-			<report format="noframes" todir="test" />
+			<report format="noframes" todir="${out.build}-test" />
 		</junitreport>
 	</target>
 

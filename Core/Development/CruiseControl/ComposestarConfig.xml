@@ -40,7 +40,7 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 		</schedule>
 		
 		<log>
-			<merge file="${composestar.path}\Core\Compiletime\test\TESTS-TestSuites.xml" />
+			<merge file="${composestar.path}\Core\Compiletime\build-test\TESTS-TestSuites.xml" />
 			<merge dir="${composestar.path}\Java\Testing" pattern="TEST-*.xml" />
 			<merge file="${composestar.path}\Core\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\StarLight\qa\checkstyle-result.xml" />
