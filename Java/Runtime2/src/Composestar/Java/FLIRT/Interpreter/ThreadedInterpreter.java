@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: InterpreterMain.java 4536 2008-12-10 21:38:16Z elmuerte $
+ * $Id$
  */
 
 package Composestar.Java.FLIRT.Interpreter;

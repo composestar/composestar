@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: CpsBaseHandler.java 4545 2009-01-20 10:07:24Z elmuerte $
+ * $Id$
  */
 
 package Composestar.Perf.Data.Xml;
