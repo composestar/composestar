@@ -83,6 +83,20 @@
 			<exclude name="**/AssemblyInfo.java" />
 			<compilerarg line="-proc:none" />
 		</javac>
+
+		<copy todir="${out.build}">
+			<!-- copy groove grammars -->
+			<fileset dir="src">
+				<include name="**/*.gpr" />
+				<include name="**/*.pro" />
+				<include name="**/*.properties" />
+				<include name="**/MANIFEST" />
+				<include name="**/moduleinfo.xml" />
+				<include name="**/*.xslt" />
+				<include name="**/*.xml" />
+				<include name="**/*.xsd" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="groove_manifest">
@@ -108,19 +122,6 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<copy todir="${out.build}">
-			<!-- copy groove grammars -->
-			<fileset dir="src">
-				<include name="**/*.gpr" />
-				<include name="**/*.pro" />
-				<include name="**/*.properties" />
-				<include name="**/MANIFEST" />
-				<include name="**/moduleinfo.xml" />
-				<include name="**/*.xslt" />
-				<include name="**/*.xml" />
-				<include name="**/*.xsd" />
-			</fileset>
-		</copy>
 		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
 
