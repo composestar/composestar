@@ -1,0 +1,8 @@
+Calculating the 5th fibonacci number: 
+5
+Calculating the 6th fibonacci number: 
+8
+Calculating the 4th fibonacci number: 
+3
+Calculating the 44th fibonacci number (this may take a while)
+701408733
