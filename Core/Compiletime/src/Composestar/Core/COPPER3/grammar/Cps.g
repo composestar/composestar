@@ -489,6 +489,8 @@ meCmpRhs
 	: fmParamList
 	| LCURLY meCmpRhsSingle (COMMA meCmpRhsSingle)* RCURLY
 	-> ^(LIST[$start] meCmpRhsSingle+)
+	| LSQUARE meCmpRhsSingle (COMMA meCmpRhsSingle)* RSQUARE
+	-> ^(LIST[$start] meCmpRhsSingle+)
 	| meCmpRhsSingle
 	;
 	

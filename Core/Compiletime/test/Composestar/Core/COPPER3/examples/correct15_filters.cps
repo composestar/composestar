@@ -51,7 +51,20 @@ concern correct05_filters in ConcernExamples
 					selector == 'foo' | (selector == 'bar' | selector == 'baz')
 				) 
 				{ selector = 'quux'; };
-			f3 : Dispatch = ( selector == {'foo', 'bar', 'baz'} ) { 
+			f3 : Dispatch = ( selector == ['foo', 'bar', 'baz'] ) { 
+				selector = 'wuux';
+				message.target = inner; 
+			};
+			f4 : Dispatch = ( selector == ['foo'] ) { 
+				selector = 'wuux';
+				message.target = inner; 
+			};
+			// curly braces are allowed, but shouldn't be used
+			f3alt : Dispatch = ( selector == {'foo', 'bar', 'baz'} ) { 
+				selector = 'wuux';
+				message.target = inner; 
+			};
+			f4alt : Dispatch = ( selector == {'foo'} ) { 
 				selector = 'wuux';
 				message.target = inner; 
 			}
