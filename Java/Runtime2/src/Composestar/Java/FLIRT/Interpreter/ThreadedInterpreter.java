@@ -256,7 +256,7 @@ public final class ThreadedInterpreter extends Thread
 			{
 				break;
 			}
-			FilterExpressionInterpreter.interpret(fex, context);
+			context.setExecutionStatus(FilterExpressionInterpreter.interpret(fex, context));
 			fex = context.getNextFilterExpression();
 		}
 		if (context.getMessageFlow() == MessageFlow.EXIT)

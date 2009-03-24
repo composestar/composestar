@@ -36,6 +36,7 @@ import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.CanonAssignmentImpl;
 import Composestar.Core.CpsRepository2Impl.FilterModules.SequentialFilterOper;
+import Composestar.Core.FILTH2.Model.ExecutionResult;
 import Composestar.Java.FLIRT.FLIRTConstants;
 import Composestar.Java.FLIRT.Actions.RTFilterAction;
 import Composestar.Java.FLIRT.Actions.RTFilterActionFactory;
@@ -60,23 +61,24 @@ public final class FilterExpressionInterpreter
 	 * @param fex
 	 * @param context
 	 */
-	public static void interpret(FilterExpression fex, FilterExecutionContext context)
+	public static ExecutionResult interpret(FilterExpression fex, FilterExecutionContext context)
 	{
 		if (fex == null)
 		{
-			return;
+			return ExecutionResult.UNSET;
 		}
 		if (fex instanceof Filter)
 		{
-			interpretFilter((Filter) fex, context);
+			return interpretFilter((Filter) fex, context);
 		}
 		else if (fex instanceof BinaryFilterOperator)
 		{
-			interpretBinOper((BinaryFilterOperator) fex, context);
+			return interpretBinOper((BinaryFilterOperator) fex, context);
 		}
 		else
 		{
 			logger.severe(String.format("Unknown filter expression type: %s", fex.getClass().getName()));
+			return ExecutionResult.UNSET;
 		}
 	}
 
@@ -86,19 +88,24 @@ public final class FilterExpressionInterpreter
 	 * @param fex
 	 * @param context
 	 */
-	public static void interpretBinOper(BinaryFilterOperator fex, FilterExecutionContext context)
+	public static ExecutionResult interpretBinOper(BinaryFilterOperator fex, FilterExecutionContext context)
 	{
 		if (fex instanceof SequentialFilterOper)
 		{
-			interpret(fex.getLHS(), context);
+			ExecutionResult lhs = interpret(fex.getLHS(), context);
 			if (context.getMessageFlow() == MessageFlow.CONTINUE)
 			{
-				interpret(fex.getRHS(), context);
+				ExecutionResult rhs = interpret(fex.getRHS(), context);
+				// the result of ';' is an "&&" of all results up to the
+				// return/exit of the message
+				lhs = lhs.and(rhs);
 			}
+			return lhs;
 		}
 		else
 		{
 			logger.severe(String.format("Unknown binary filter operator", fex.getClass().getName()));
+			return ExecutionResult.UNSET;
 		}
 	}
 
@@ -108,7 +115,7 @@ public final class FilterExpressionInterpreter
 	 * @param filter
 	 * @param context
 	 */
-	public static void interpretFilter(Filter filter, FilterExecutionContext context)
+	public static ExecutionResult interpretFilter(Filter filter, FilterExecutionContext context)
 	{
 		context.setCurrentFilter(filter);
 		context.setMatchedElement(null);
@@ -154,6 +161,7 @@ public final class FilterExpressionInterpreter
 			context.setCurrentFilter(null);
 			context.setFilterArguments(null);
 		}
+		return context.getCurrentFilterResult();
 	}
 
 	/**

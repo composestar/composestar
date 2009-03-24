@@ -391,6 +391,17 @@ public class RTFilterModule implements FilterModule
 
 	/*
 	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getDeclaredName
+	 * ()
+	 */
+	public String getDeclaredName()
+	{
+		return baseFM.getDeclaredName();
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see Composestar.Core.CpsRepository2.RepositoryEntity#getOwner()
 	 */
 	public RepositoryEntity getOwner()

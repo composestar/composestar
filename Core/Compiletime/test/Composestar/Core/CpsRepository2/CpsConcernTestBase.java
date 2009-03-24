@@ -525,6 +525,16 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		{
 			return false;
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.FilterModules.FilterModule#
+		 * getDeclaredName()
+		 */
+		public String getDeclaredName()
+		{
+			return getName();
+		}
 	}
 
 	/**

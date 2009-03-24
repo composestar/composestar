@@ -386,6 +386,16 @@ public class FilterModuleReferenceImplTest extends FilterModuleReferenceTestBase
 		{
 			return false;
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.FilterModules.FilterModule#
+		 * getDeclaredName()
+		 */
+		public String getDeclaredName()
+		{
+			return getName();
+		}
 	}
 
 }

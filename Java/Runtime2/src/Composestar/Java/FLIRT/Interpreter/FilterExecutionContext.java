@@ -26,13 +26,16 @@ package Composestar.Java.FLIRT.Interpreter;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
+import Composestar.Core.FILTH2.Model.ExecutionResult;
 import Composestar.Java.FLIRT.Actions.RTFilterAction;
 import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTFilterModule;
@@ -57,6 +60,11 @@ public class FilterExecutionContext
 	 * List of filter modules
 	 */
 	protected List<RTFilterModule> filterModules;
+
+	/**
+	 * The current execution status of filter modules
+	 */
+	protected Map<RTFilterModule, ExecutionResult> fmExecutionStatus;
 
 	/**
 	 * Filter module index
@@ -85,6 +93,12 @@ public class FilterExecutionContext
 	protected Filter currentFilter;
 
 	/**
+	 * The execution result of the current filter. Is initialized to UNSED when
+	 * the current filter is set.
+	 */
+	protected ExecutionResult currentFilterResult;
+
+	/**
 	 * The matched filter element. Set to the matched filter elements, is null
 	 * when no filter element matched.
 	 */
@@ -105,6 +119,7 @@ public class FilterExecutionContext
 		objectManager = man;
 		message = msg;
 		filterModules = man.getFilterModules();
+		fmExecutionStatus = new HashMap<RTFilterModule, ExecutionResult>();
 		returnActions = new LinkedList<EnqueuedAction>();
 	}
 
@@ -217,6 +232,7 @@ public class FilterExecutionContext
 	public void setCurrentFilter(Filter value)
 	{
 		currentFilter = value;
+		currentFilterResult = ExecutionResult.UNSET;
 	}
 
 	/**
@@ -225,6 +241,24 @@ public class FilterExecutionContext
 	public Filter getCurrentFilter()
 	{
 		return currentFilter;
+	}
+
+	/**
+	 * @return the currentFilterResult
+	 */
+	public ExecutionResult getCurrentFilterResult()
+	{
+		return currentFilterResult;
+	}
+
+	/**
+	 * Set the filter result to either true or false.
+	 * 
+	 * @param result
+	 */
+	public void setCurrentFilterResult(boolean result)
+	{
+		currentFilterResult = ExecutionResult.fromBoolean(result);
 	}
 
 	/**
@@ -238,6 +272,43 @@ public class FilterExecutionContext
 			return filterModules.get(activeFMIndex);
 		}
 		return null;
+	}
+
+	/**
+	 * The current execution status of a filter module.
+	 * 
+	 * @param filterModule
+	 * @return The current execution status of the filter module.
+	 */
+	public ExecutionResult getExecutionStatus(RTFilterModule filterModule)
+	{
+		ExecutionResult result = fmExecutionStatus.get(filterModule);
+		if (result == null)
+		{
+			result = ExecutionResult.NOT_EXECUTED;
+		}
+		return result;
+	}
+
+	/**
+	 * Update the execution status of the given filter module
+	 * 
+	 * @param filterModule
+	 * @param status
+	 */
+	public void setExecutionStatus(RTFilterModule filterModule, ExecutionResult status)
+	{
+		fmExecutionStatus.put(filterModule, status);
+	}
+
+	/**
+	 * Update the execution status of the current filter module
+	 * 
+	 * @param status
+	 */
+	public void setExecutionStatus(ExecutionResult status)
+	{
+		fmExecutionStatus.put(getCurrentFilterModule(), status);
 	}
 
 	/**

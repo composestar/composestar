@@ -53,6 +53,12 @@ public class FilterModuleImpl extends AbstractQualifiedRepositoryEntity implemen
 	private static final long serialVersionUID = 4043743753616281947L;
 
 	/**
+	 * The original declared name of this filter module (as it appear in the
+	 * source), before it was given a new name because of parameter resolving.
+	 */
+	protected String declaredName;
+
+	/**
 	 * The filter module parameter list. Could be empty.
 	 */
 	protected List<FMParameter> parameters;
@@ -88,9 +94,21 @@ public class FilterModuleImpl extends AbstractQualifiedRepositoryEntity implemen
 	public FilterModuleImpl(String filterModuleName) throws NullPointerException, IllegalArgumentException
 	{
 		super(filterModuleName);
+		declaredName = filterModuleName;
 		parameters = new ArrayList<FMParameter>();
 		variables = new LinkedHashMap<String, FilterModuleVariable>();
 		filters = new LinkedHashMap<String, Filter>();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getDeclaredName
+	 * ()
+	 */
+	public String getDeclaredName()
+	{
+		return declaredName;
 	}
 
 	/*

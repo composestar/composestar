@@ -46,6 +46,13 @@ import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference, Instantiatable<FilterModule>
 {
 	/**
+	 * @return The original name of the filter module (as it was declared).
+	 *         While resolving filter module parameters the filter module will
+	 *         be given an unique name. This returns the original name.
+	 */
+	String getDeclaredName();
+
+	/**
 	 * Check if a name is not already used by a
 	 * internal/external/condition/filter.
 	 * 

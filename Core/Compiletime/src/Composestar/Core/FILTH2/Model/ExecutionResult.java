@@ -46,5 +46,71 @@ public enum ExecutionResult
 	/**
 	 * This action has not be executed yet
 	 */
-	NOT_EXECUTED
+	NOT_EXECUTED;
+
+	/**
+	 * Convert a boolean value to an execution result.
+	 * 
+	 * @param val
+	 * @return
+	 */
+	public static ExecutionResult fromBoolean(boolean val)
+	{
+		if (val) return TRUE;
+		return FALSE;
+	}
+
+	/**
+	 * The result of (this && rhs)
+	 * 
+	 * @param rhs
+	 * @return
+	 */
+	public ExecutionResult and(ExecutionResult rhs)
+	{
+		switch (this)
+		{
+			case NOT_EXECUTED:
+			case UNSET:
+				return rhs;
+			case FALSE:
+				return FALSE;
+			case TRUE:
+				if (rhs == UNSET || rhs == NOT_EXECUTED)
+				{
+					return this;
+				}
+				return rhs;
+			default:
+				// not possible
+				return this;
+		}
+	}
+
+	/**
+	 * The result of (this || rhs)
+	 * 
+	 * @param rhs
+	 * @return
+	 */
+	public ExecutionResult or(ExecutionResult rhs)
+	{
+		switch (this)
+		{
+			case NOT_EXECUTED:
+			case UNSET:
+				return rhs;
+			case TRUE:
+				return TRUE;
+			case FALSE:
+				if (rhs == UNSET || rhs == NOT_EXECUTED)
+				{
+					return this;
+				}
+				return rhs;
+			default:
+				// not possible
+				return this;
+		}
+	}
 }
