@@ -1,9 +1,12 @@
 package Composestar.Java.DUMMER;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -85,6 +88,16 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	public void createDummy(Project project, Source source) throws ModuleException
 	{
 		currentSource = source;
+		createDummy(source.getFile(), source.getStub());
+	}
+
+	/**
+	 * @param source The original file
+	 * @param target The target dummy
+	 * @throws ModuleException
+	 */
+	public void createDummy(File source, File target) throws ModuleException
+	{
 		packageName = "";
 		packages = new ArrayList<String>();
 		dummy = new StringBuilder();
@@ -94,14 +107,18 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 		try
 		{
-			FileInputStream fis = new FileInputStream(source.getFile());
+			// TODO: what to do with char encoding?
+			Reader fis = new InputStreamReader(new FileInputStream(source)/*
+																		 * ,
+																		 * "utf8"
+																		 */);
 			// Create a scanner that reads from the input stream passed to us
 			JavaLexer lexer = new JavaLexer(fis);
-			lexer.setFilename(source.getFile().toString());
+			lexer.setFilename(source.toString());
 
 			// Create a parser that reads from the scanner
 			JavaRecognizer parser = new JavaRecognizer(lexer);
-			parser.setFilename(source.getFile().toString());
+			parser.setFilename(source.toString());
 
 			// start parsing at the compilationUnit rule
 			parser.compilationUnit();
@@ -111,7 +128,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Error while creating AST: " + e.getMessage(), ModuleNames.DUMMER);
+			throw new ModuleException("Error while creating AST: " + e.getMessage(), ModuleNames.DUMMER, e);
 		}
 
 		// create dummy
@@ -120,19 +137,19 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		// emit dummy to file
 		try
 		{
-			if (!source.getStub().getParentFile().exists() && !source.getStub().getParentFile().mkdirs())
+			if (!target.getParentFile().exists() && !target.getParentFile().mkdirs())
 			{
-				throw new ModuleException(String.format("Unable to create directory %s", source.getStub()
-						.getParentFile()), ModuleNames.DUMMER);
+				throw new ModuleException(String.format("Unable to create directory %s", target.getParentFile()),
+						ModuleNames.DUMMER);
 			}
-			BufferedWriter bw = new BufferedWriter(new FileWriter(source.getStub()));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(target));
 			bw.write(dummy.toString());
 			bw.close();
 		}
 		catch (IOException e)
 		{
 			throw new ModuleException("ERROR while trying to emit dummy source!:\n" + e.getMessage(),
-					ModuleNames.DUMMER);
+					ModuleNames.DUMMER, e);
 		}
 
 	}
@@ -864,6 +881,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				{
 					newline();
 				}
+				visitChildren(ast, "\n", INTERFACE_DEF);
 				visitChildren(ast, "\n", CLASS_DEF);
 				break;
 
@@ -1284,6 +1302,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				visitChildren(ast, " ");
 				break;
 
+			case STRICTFP:
+				out(ast.getText());
+				break;
+
 			/*
 			 * case LITERAL_assert: out("assert "); visit(child1); if (child2 !=
 			 * null) { out(" : "); visit(child2); } break;
@@ -1293,19 +1315,29 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				logger.error(String.format("Invalid type: %d text = \"%s\"", ast.getType(), ast.getText()));
 				break;
 
-			/*
-			 * The following are tokens, but I don't think JavaRecognizer ever
-			 * produces an AST with one of these types: case COMMA: case
-			 * LITERAL_implements: case LITERAL_class: case LITERAL_extends:
-			 * case EOF: case NULL_TREE_LOOKAHEAD: case BLOCK: case
-			 * LABELED_STAT: // refuse to implement on moral grounds :) case
-			 * LITERAL_import: case LBRACK: case RBRACK: case LCURLY: case
-			 * RCURLY: case LPAREN: case RPAREN: case LITERAL_else: // else is a
-			 * child of "if" AST case COLON: // part of the trinary operator
-			 * case WS: // whitespace case ESC: case HEX_DIGIT: case VOCAB: case
-			 * EXPONENT: // exponents and float suffixes are left in the
-			 * NUM_FLOAT case FLOAT_SUFFIX
-			 */
+			// The following are tokens, but I don't think JavaRecognizer ever
+			// produces an AST with one of these types:
+			// case COMMA:
+			// case LITERAL_implements:
+			// case EOF:
+			// case NULL_TREE_LOOKAHEAD:
+			// case BLOCK:
+			// case LABELED_STAT: // refuse to implement on moral grounds :)
+			// case LITERAL_import:
+			// case LBRACK:
+			// case RBRACK:
+			// case LCURLY:
+			// case RCURLY:
+			// case LPAREN:
+			// case RPAREN:
+			// case LITERAL_else: // else is a child of "if" AST
+			// case COLON: // part of the trinary operator
+			// case WS: // whitespace
+			// case ESC:
+			// case HEX_DIGIT:
+			// case EXPONENT: // exponents and float suffixes are left in the
+			// // NUM_FLOAT
+			// case FLOAT_SUFFIX:
 
 		}
 		stack.pop();
