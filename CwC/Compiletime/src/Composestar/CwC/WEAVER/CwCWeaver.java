@@ -557,6 +557,7 @@ public class CwCWeaver implements CTCommonModule
 		for (MethodInfo method : sig.getMethods(MethodRelation.ADDED))
 		{
 			CwCFunctionInfo func = (CwCFunctionInfo) method;
+			extraFuncDecls.addMethod(func);
 			createAddedFunctionAST(func, type);
 			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
 			if (filterCode != null)
