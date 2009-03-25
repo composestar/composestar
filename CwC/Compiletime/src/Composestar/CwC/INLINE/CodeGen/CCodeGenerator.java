@@ -506,7 +506,11 @@ public class CCodeGenerator extends StringCodeGenerator
 	{
 		if (headerGenerator != null)
 		{
-			headerGenerator.addMethod(method);
+			if (method != getCurrentMethod())
+			{
+				// not needed for self
+				headerGenerator.addMethod(method);
+			}
 		}
 		// because context is not relevant in C
 		StringBuffer sb = new StringBuffer();

@@ -90,6 +90,12 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.CwC.INLINE.CodeGen.AbstractHeaderFileGenerator#generateHeader
+	 * (java.io.FileWriter)
+	 */
 	@Override
 	public boolean generateHeader(FileWriter target)
 	{
@@ -126,6 +132,7 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 			return true;
 		}
 		CwCFunctionInfo cwcfunc = (CwCFunctionInfo) mi;
+		logger.debug(String.format("Generating delcration for %s", cwcfunc.getName()));
 		TNode nd = TNodeFactory.getInstance().dupTree(cwcfunc.getFunctionDeclaration().getBaseTypeAST());
 		try
 		{

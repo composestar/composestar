@@ -475,6 +475,12 @@ public class LangModelConverter implements CTCommonModule
 		{
 			ctom.setCalledMethod(getCTOMStub((FunctionDeclaration) decl));
 		}
+		else
+		{
+			logger.warn(String.format("Ignoring function call to %s from %s. Function declaration could not be found",
+					ast.getText(), cwcfunc.getName()));
+			return;
+		}
 		cwcfunc.getCallsToOtherMethods().add(ctom);
 		ctoms.add(ctom);
 	}

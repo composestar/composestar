@@ -49,11 +49,16 @@ int doPrintProgramName()
 
 int main(int argc, char *argv[])
 {
+	int (*funcPtr)(char* name) = &printProgramName;  
+	
 	__argc = argc;
 	
 	printHeaderWithVersion();
 	
   printProgramName(argv[0]);
+  
+  // function pointer test (ignored by Compose* because the message is unknown)
+  funcPtr(argv[0]);
 	
 	printf("%d+%d=%d\n", 5, 5, add(5,5));
 	printf("%d*%d=%d\n", 5, 5, divide(5,5));

@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.Master.ModuleNames;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * The abstract header file generator is used to create a header file with
@@ -42,6 +44,8 @@ import Composestar.Core.LAMA.MethodInfo;
  */
 public abstract class AbstractHeaderFileGenerator
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER + ".HeaderGen");
+
 	protected Set<MethodInfo> methods;
 
 	public AbstractHeaderFileGenerator()

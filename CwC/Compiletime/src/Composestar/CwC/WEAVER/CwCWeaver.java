@@ -532,7 +532,9 @@ public class CwCWeaver implements CTCommonModule
 					mi = findMethodByName(ctom.getMethodName());
 					if (mi == null)
 					{
-						logger.warn(String.format("Call to unknown method %s", ctom.getMethodName()), realFunc);
+						logger.warn(String.format("Call to unknown method %s (ignored)", ctom.getMethodName()),
+								realFunc);
+						continue;
 					}
 					else
 					{
