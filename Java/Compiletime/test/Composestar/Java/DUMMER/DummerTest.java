@@ -37,6 +37,11 @@ import java.util.Queue;
 import java.util.Set;
 
 import junit.framework.TestCase;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.TASMAN.Manager;
+import Composestar.Core.TASMAN.ParallelTask;
+import Composestar.Core.TASMAN.Task;
 import Composestar.Utils.CommandLineExecutor;
 
 /**
@@ -83,10 +88,7 @@ public class DummerTest extends TestCase
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
-		if (!outputDir.delete())
-		{
-			outputDir.deleteOnExit();
-		}
+		cleanOutput();
 	}
 
 	/**
@@ -125,21 +127,62 @@ public class DummerTest extends TestCase
 		}
 	}
 
-	public void testDummyGen()
+	protected void cleanOutput()
+	{
+		final Queue<File> queue = new LinkedList<File>();
+		queue.add(outputDir);
+		while (!queue.isEmpty())
+		{
+			File dir = queue.remove();
+			File[] res = dir.listFiles(new FileFilter()
+			{
+				/*
+				 * (non-Javadoc)
+				 * @see java.io.FileFilter#accept(java.io.File)
+				 */
+				public boolean accept(File pathname)
+				{
+					if (pathname.isDirectory())
+					{
+						queue.add(pathname);
+						return false;
+					}
+					if (pathname.getName().endsWith(".class"))
+					{
+						// never interested in the .class files
+						if (!pathname.delete())
+						{
+							pathname.deleteOnExit();
+						}
+					}
+					// keep .java files which were left over from failed
+					// compilations
+					return pathname.getName().endsWith(".java");
+				}
+			});
+			if (res.length == 0)
+			{
+				// delete "empty" dirs
+				if (!dir.delete())
+				{
+					dir.deleteOnExit();
+				}
+			}
+		}
+	}
+
+	public void testDummyGen() throws Exception
 	{
 		success = new HashSet<File>();
-		int cnt = 0;
+		testCnt = 0;
+		ParallelTask ptask = new ParallelTask();
+		ptask.setPerProcessor(2);
 		for (File source : sources)
 		{
-			System.out.print('.');
-			++cnt;
-			if (cnt % 80 == 0)
-			{
-				System.out.println(String.format(" %d%%", cnt * 100 / sources.size()));
-			}
-			System.out.flush();
-			createDummy(source);
+			ptask.addTask(new DummerTask(source));
 		}
+		ptask.execute(null, null);
+
 		List<File> failed = new ArrayList<File>(sources);
 		failed.removeAll(success);
 		if (failed.size() > 0)
@@ -152,6 +195,8 @@ public class DummerTest extends TestCase
 				{
 					ps.println(f.toString());
 				}
+				ps.flush();
+				out.flush();
 				out.close();
 			}
 			catch (Exception e)
@@ -161,12 +206,31 @@ public class DummerTest extends TestCase
 		assertEquals(sources.size(), success.size());
 	}
 
+	protected int testCnt;
+
+	protected synchronized void reportTest(File sourceFile)
+	{
+		System.out.print('.');
+		++testCnt;
+		if (testCnt % 80 == 0)
+		{
+			System.out.println(String.format(" %d%%", testCnt * 100 / sources.size()));
+		}
+		System.out.flush();
+	}
+
 	/**
 	 * @param source
 	 */
 	protected void createDummy(File source)
 	{
 		File target = new File(outputDir.toString() + source.toString().substring(sourceDir.toString().length()));
+
+		synchronized (sources)
+		{
+			target.getParentFile().mkdirs();
+		}
+
 		JavaDummyEmitter dummer = new JavaDummyEmitter();
 		try
 		{
@@ -175,7 +239,10 @@ public class DummerTest extends TestCase
 			// validate the dummy by compiling
 			compileDummy(target);
 
-			success.add(source);
+			synchronized (success)
+			{
+				success.add(source);
+			}
 			if (!target.delete())
 			{
 				target.deleteOnExit();
@@ -211,6 +278,30 @@ public class DummerTest extends TestCase
 		}
 	}
 
+	class DummerTask extends Task
+	{
+		File source;
+
+		public DummerTask(File forSource)
+		{
+			super();
+			source = forSource;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.TASMAN.Task#execute(Composestar.Core.TASMAN.Manager,
+		 * Composestar.Core.Resources.CommonResources)
+		 */
+		@Override
+		public void execute(Manager manager, CommonResources resources) throws ModuleException
+		{
+			reportTest(source);
+			createDummy(source);
+		}
+	}
+
 	public static void main(String[] args)
 	{
 		DummerTest dt = new DummerTest();
@@ -229,6 +320,9 @@ public class DummerTest extends TestCase
 		dt.classOut.mkdir();
 		File fl = new File(args[0]);
 		dt.sourceDir = fl.getParentFile();
+		dt.success = new HashSet<File>();
+		dt.sources = new ArrayList<File>();
 		dt.createDummy(fl);
+		dt.cleanOutput();
 	}
 }

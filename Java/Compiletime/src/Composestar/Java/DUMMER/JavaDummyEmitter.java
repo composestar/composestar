@@ -707,9 +707,9 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				visitChildren(ast, "\n", IMPORT);
 				newline();
 				newline();
-				visit(getChild(ast, CLASS_DEF));
-				visit(getChild(ast, INTERFACE_DEF));
-				visit(getChild(ast, ANNOTATION_DEF));
+				visitChildren(ast, "\n", CLASS_DEF);
+				visitChildren(ast, "\n", INTERFACE_DEF);
+				visitChildren(ast, "\n", ANNOTATION_DEF);
 				newline();
 				break;
 
@@ -840,8 +840,9 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				{
 					out("implements ");
 					visitChildren(ast, ", ", IDENT); // changed 1.5
-					out(" ");
+					// why was this here?: out(" ");
 					visit(getChild(ast, TYPE_ARGS)); // added 1.5
+					// TODO !!!! visitChildren(ast, "", DOT);
 				}
 				break;
 
@@ -927,13 +928,17 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 						// static final will be inlined
 						visit(assign);
 					}
-					// else
-					// {
-					// // create a stub assignment
-					// out(" = ");
-					// out(getDefaultReturnValue(getChild(ast,
-					// TYPE).getFirstChild().getType()));
-					// }
+					else
+					{
+						// create a stub assignment, this is required in case an
+						// interface defines a field.
+						// see tests:
+						// jacks-pass\jls\classes\field-declarations\T83h4.java
+						// jacks-pass\jls\classes\field-declarations\T83i8.java
+						// jacks-pass\jls\classes\field-declarations\T83i9.java
+						out(" = ");
+						out(getDefaultReturnValue(getChild(ast, TYPE).getFirstChild().getType()));
+					}
 				}
 				printSemi(parent);
 				if (parent != null && parent.getType() == OBJBLOCK)
