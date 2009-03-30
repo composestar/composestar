@@ -1,0 +1,57 @@
+[incoming] Child.method1
+Base.method1
+[incoming] Child.method2
+Child.method2
+[incoming] Child.method3
+Child.method3
+[incoming] Child.method4
+Child.method4
+[incoming] Child.callMethod1
+Base.callMethod1
+[outgoing] Child.method1
+[incoming] Child.method1
+Base.method1
+[incoming] Child.callMethod2
+Child.callMethod2
+[outgoing] Child.method2
+[incoming] Child.method2
+Child.method2
+[incoming] Child.callMethod3
+Child.callMethod3
+[outgoing] Child.method3
+[incoming] Child.method3
+Child.method3
+[incoming] Child.callMethod4
+Base.callMethod4
+[outgoing] Child.method4
+[incoming] Child.method4
+Child.method4
+---
+[incoming] Child.method1
+Base.method1
+[incoming] Child.method2
+Child.method2
+[incoming] Child.method3
+Child.method3
+[incoming] Child.method4
+Child.method4
+[incoming] Child.callMethod1
+Base.callMethod1
+[outgoing] Child.method1
+[incoming] Child.method1
+Base.method1
+[incoming] Child.callMethod2
+Child.callMethod2
+[outgoing] Child.method2
+[incoming] Child.method2
+Child.method2
+[incoming] Child.callMethod3
+Child.callMethod3
+[outgoing] Child.method3
+[incoming] Child.method3
+Child.method3
+[incoming] Child.callMethod4
+Base.callMethod4
+[outgoing] Child.method4
+[incoming] Child.method4
+Child.method4
