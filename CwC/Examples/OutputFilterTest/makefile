@@ -1,3 +1,9 @@
+# Program to produce
+ifeq "$(OS)" "Windows_NT"
+executable = outputfilter.exe
+else
+executable = outputfilter
+endif
 
 # List of source files
 sources = main.c  
@@ -35,7 +41,7 @@ DOWEAVE = yes
 endif
 
 .PHONY : all
-all : basictest.exe
+all : $(executable)
 
 # Make the intermediate directories
 .PHONY : init
@@ -74,7 +80,7 @@ objects += $(WOVEN)/ComposeStar.o
 weave : init $(ppSources)
 	$(COMPOSESTAR) --intermediate $(INTERMED) $(ppSources) $(concerns)	
 
-outputfilter.exe : weave $(objects)
+$(executable) : weave $(objects)
 	$(CC) -o $@ $(LDFLAGS) $(objects)
 
 else
@@ -84,7 +90,7 @@ else
 $(objects) : %.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-outputfilter.exe : $(objects)
+$(executable) : $(objects)
 	$(CC) -o $@ $(LDFLAGS) $(objects)
 
 endif

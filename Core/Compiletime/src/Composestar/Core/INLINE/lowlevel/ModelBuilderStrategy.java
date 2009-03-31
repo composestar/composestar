@@ -421,10 +421,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			// currentBlock.addInstruction(instruction);
 			// }
 		}
-		else if (FilterActionNames.DISPATCH_ACTION.equals(action.getName())
-				|| FilterActionNames.SEND_ACTION.equals(action.getName()))
+		else if (FilterActionNames.DISPATCH_ACTION.equals(action.getName()))
 		{
-			generateDispatchAction(action, state, resourceOps);
+			generateDispatchAction(action, state, resourceOps, false);
+		}
+		else if (FilterActionNames.SEND_ACTION.equals(action.getName()))
+		{
+			generateDispatchAction(action, state, resourceOps, true);
 		}
 		else if (action.getName().equals("SkipAction"))
 		{
@@ -499,7 +502,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * 
 	 * @param state The state corresponding with the action
 	 */
-	private void generateDispatchAction(FilterAction action, ExecutionState state, List<String> resourceOps)
+	private void generateDispatchAction(FilterAction action, ExecutionState state, List<String> resourceOps,
+			boolean isSend)
 	{
 		CpsMessage msg = state.getMessage();
 		FilterActionInstruction instruction =
@@ -512,9 +516,19 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 		CpsObject target = msg.getTarget();
 		CpsSelector sel = msg.getSelector();
-		if (!target.isInnerObject() || !sel.compatible(builder.getCurrentSelector()))
+		if (isSend)
 		{
-			empty = false;
+			if (!target.isSelfObject() || !sel.compatible(builder.getCurrentSelector()))
+			{
+				empty = false;
+			}
+		}
+		else
+		{
+			if (!target.isInnerObject() || !sel.compatible(builder.getCurrentSelector()))
+			{
+				empty = false;
+			}
 		}
 	}
 

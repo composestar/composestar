@@ -3,7 +3,7 @@ concern offoobar
 	filtermodule offm
 	{
 		outputfilters
-			tobar : Send = { [*.foo] *.bar } 
+			tobar : Send = (selector == 'foo') { selector = 'bar'; } 
 	}
 	
 	superimposition

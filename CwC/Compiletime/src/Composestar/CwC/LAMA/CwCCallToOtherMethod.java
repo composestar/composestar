@@ -24,33 +24,52 @@
 
 package Composestar.CwC.LAMA;
 
+import weavec.ast.TNode;
 import Composestar.Core.LAMA.CallToOtherMethod;
-import antlr.collections.AST;
 
 /**
  * @author Michiel Hendriks
  */
 public class CwCCallToOtherMethod extends CallToOtherMethod
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7757781861461653392L;
 
-	protected AST astNode;
+	protected TNode astNode;
+
+	/**
+	 * The base-call site of this call-to-method. This is a AST node which is a
+	 * child of the current scope.
+	 */
+	protected TNode scopeRootAstNode;
 
 	public CwCCallToOtherMethod()
 	{
 		super();
 	}
 
-	public void setASTNode(AST node)
+	public void setASTNode(TNode node)
 	{
 		astNode = node;
 	}
 
-	public AST getASTNode()
+	public TNode getASTNode()
 	{
 		return astNode;
+	}
+
+	/**
+	 * @param node the parentAstNode to set
+	 */
+	public void setScopeRootAstNode(TNode node)
+	{
+		scopeRootAstNode = node;
+	}
+
+	/**
+	 * @return the parentAstNode
+	 */
+	public TNode getScopeRootAstNode()
+	{
+		return scopeRootAstNode;
 	}
 }

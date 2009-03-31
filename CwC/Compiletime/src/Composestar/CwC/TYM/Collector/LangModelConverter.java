@@ -413,22 +413,22 @@ public class LangModelConverter implements CTCommonModule
 			FunctionDeclaration funcDecl)
 	{
 		TNode ast = funcDecl.getAST();
-		procCTOMAstWalker(tunit, cwcfunc, ast.getNextSibling());
+		procCTOMAstWalker(tunit, cwcfunc, ast, ast.getNextSibling());
 	}
 
-	protected void procCTOMAstWalker(TranslationUnitResult tunit, CwCFunctionInfo cwcfunc, AST ast)
+	protected void procCTOMAstWalker(TranslationUnitResult tunit, CwCFunctionInfo cwcfunc, AST scopeRootAst, AST ast)
 	{
 		for (AST sibling = ast; sibling != null; sibling = sibling.getNextSibling())
 		{
 			if (sibling.getNextSibling() != null
 					&& sibling.getNextSibling().getType() == weavec.parser.ACGrammarLexerTokenTypes.NFunctionCallArgs)
 			{
-				procCTOMAddCall(tunit, cwcfunc, sibling);
+				procCTOMAddCall(tunit, cwcfunc, scopeRootAst, sibling);
 			}
 			if (sibling.getFirstChild() != null)
 			{
 				// TODO could be changed to use a queue instead of recursion
-				procCTOMAstWalker(tunit, cwcfunc, sibling.getFirstChild());
+				procCTOMAstWalker(tunit, cwcfunc, sibling, sibling.getFirstChild());
 			}
 		}
 	}
@@ -464,12 +464,13 @@ public class LangModelConverter implements CTCommonModule
 		return calledMethod;
 	}
 
-	protected void procCTOMAddCall(TranslationUnitResult tunit, CwCFunctionInfo cwcfunc, AST ast)
+	protected void procCTOMAddCall(TranslationUnitResult tunit, CwCFunctionInfo cwcfunc, AST scopeRootAst, AST ast)
 	{
 		logger.debug(String.format("Found call to %s from %s", ast.getText(), cwcfunc.getName()));
 		CwCCallToOtherMethod ctom = new CwCCallToOtherMethod();
 		ctom.setMethodName(ast.getText());
-		ctom.setASTNode(ast);
+		ctom.setScopeRootAstNode((TNode) scopeRootAst);
+		ctom.setASTNode((TNode) ast);
 		Declaration decl = tunit.getRootScope().get(CNamespaceKind.OBJECT, ast.getText());
 		if (decl instanceof FunctionDeclaration)
 		{

@@ -549,7 +549,19 @@ public class CwCWeaver implements CTCommonModule
 					logger.info(String.format("Weaving call to function %s from %s.%s", ctom.getMethodName(), concern
 							.getFullyQualifiedName(), func.getName()), realFunc);
 					containsFilterCode = true;
-					processOutputFilterCode((CwCCallToOtherMethod) ctom, func, filterCode, imports);
+
+					// What we do is replace the current function call with a
+					// call to a newly generated function that contains the
+					// filter code
+
+					String stubMethod =
+							String.format("__%s_%s_%d", func.getName(), ctom.getCalledMethod().getName(), System
+									.identityHashCode(ctom));
+					CwCFunctionInfo stubFunc = (CwCFunctionInfo) ctom.getCalledMethod().getClone(stubMethod, type);
+					extraFuncDecls.addMethod(stubFunc);
+					createAddedFunctionAST(stubFunc, type, "OutputFilter");
+					processFilterCode(stubFunc, filterCode, imports);
+					((CwCCallToOtherMethod) ctom).getASTNode().setText(stubMethod);
 				}
 			}
 		}
@@ -782,18 +794,20 @@ public class CwCWeaver implements CTCommonModule
 	 * @param fc the generated filter code
 	 * @param imports
 	 */
+	@Deprecated
 	protected void processOutputFilterCode(CwCCallToOtherMethod ctom, CwCFunctionInfo func, FilterCode fc,
-			Set<String> imports)
+			Set<String> imports, HeaderFileGenerator extraFuncDecls)
 	{
-		String code =
-				codeGen.generate(fc, ctom, inlinerRes.getMethodId(ctom.getCalledMethod()), func, inlinerRes
-						.getMethodId(func));
-		logger.debug(code);
-		TNode fcAst = generateCodeAST(code, func, imports);
-		if (fcAst == null)
-		{
-			return;
-		}
+	// String code =
+	// codeGen.generate(fc, ctom,
+	// inlinerRes.getMethodId(ctom.getCalledMethod()), func, inlinerRes
+	// .getMethodId(func));
+	// logger.debug(code);
+	// TNode fcAst = generateCodeAST(code, func, imports);
+	// if (fcAst == null)
+	// {
+	// return;
+	// }
 	}
 
 	/**
@@ -862,6 +876,17 @@ public class CwCWeaver implements CTCommonModule
 	 */
 	protected void createAddedFunctionAST(CwCFunctionInfo func, CwCFile type)
 	{
+		createAddedFunctionAST(func, type, "Added");
+	}
+
+	/**
+	 * Creates the WeaveC data structure for this added function.
+	 * 
+	 * @param func
+	 * @param comment
+	 */
+	protected void createAddedFunctionAST(CwCFunctionInfo func, CwCFile type, String comment)
+	{
 		TNode fast = TNodeFactory.getInstance().dupTree(func.getFunctionDeclaration().getAST());
 		TNode bast = TNodeFactory.getInstance().dupTree(func.getFunctionDeclaration().getBaseTypeAST());
 
@@ -887,8 +912,8 @@ public class CwCWeaver implements CTCommonModule
 		nfast.addChild(fdecl);
 		nfast.doubleLink();
 
-		setMetaInfo(nfast, RecursionMode.FOREST, 1, String.format("<Composestar/CwC/SIGN/Added#%s.%s>", func.parent()
-				.getFullName(), func.getName()), -1);
+		setMetaInfo(nfast, RecursionMode.FOREST, 1, String.format("<Composestar/CwC/SIGN/%s#%s.%s>", comment, func
+				.parent().getFullName(), func.getName()), -1);
 
 		FunctionDeclaration olddecl = func.getFunctionDeclaration();
 		FunctionDeclaration newdecl =
