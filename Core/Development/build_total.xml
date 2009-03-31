@@ -85,6 +85,7 @@
 	<target name="publish">
 		<antcall target="publish_java" inheritRefs="true" />
 		<antcall target="publish_starlight" inheritRefs="true" />
+		<antcall target="publish_cwc" inheritRefs="true" />
 	</target>
 
 	<target name="publish_java" depends="init" if="enabled.java" description="Create installer for Compose*/Java">
@@ -93,6 +94,10 @@
 
 	<target name="publish_starlight" depends="init" if="enabled.starlight" description="Create installer for Compose* StarLight">
 		<ant target="build_installer" dir="${build.starlight}" inheritRefs="true" />
+	</target>
+
+	<target name="publish_cwc" depends="init" if="enabled.cwc" description="Create installer for Compose*/C">
+		<ant target="publish" dir="${build.cwc}" inheritRefs="true" />
 	</target>
 
 	<!-- uninstall tasks -->

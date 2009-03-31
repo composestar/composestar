@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/CwC/Install" default="publish" xmlns:cs="antlib:Composestar">
+
+	<condition property="build.core" value="../../Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="../../Core/common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}/common.xml" />
+
+	<description>Compose*/C (WeaveC) Installer</description>
+
+	<target name="clean" depends="init" description="clean the test environment">
+		<delete dir="${out.build}" />
+		<delete dir="${out.dist}" />
+	</target>
+
+	<target name="init_local" depends="init">
+		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
+	</target>
+
+	<target name="build" depends="init_local" description="build a package">
+		<copy todir="${out.build}">
+			<fileset dir="${build.core}/Compiletime/dist">
+				<exclude name="META-INF/**" />
+			</fileset>
+			<fileset dir="${build.cwc}/Compiletime/dist">
+				<!-- we can not distribute weavec -->
+				<exclude name="**/weavec.jar" />
+			</fileset>
+			<fileset dir="${build.cwc}/Compiletime/src/Composestar/CwC/WEAVER">
+				<include name="ComposeStar.*" />
+			</fileset>
+			<fileset dir="${basedir}">
+				<include name="composestar.*" />
+				<include name="README.TXT" />
+			</fileset>
+			<fileset dir="${build.core}/Resources/Licenses">
+				<include name="lgpl-2.1.txt" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="publish" depends="build">
+		<zip destfile="${out.dist}/ComposestarC_${version.cwc}.${version.build}.zip">
+			<fileset dir="${out.build}" />
+		</zip>
+	</target>
+
+</project>
