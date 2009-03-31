@@ -859,10 +859,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 						}
 						child = child.getNextSibling();
 					}
-					// visitChildren(ast, ", ", IDENT); // changed 1.5
-					// // why was this here?: out(" ");
-					// visit(getChild(ast, TYPE_ARGS)); // added 1.5
-					// // TODO !!!! visitChildren(ast, "", DOT);
 				}
 				break;
 
@@ -971,6 +967,15 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case ASSIGN:
+				// surrounce it in braces, see:
+				// jacks-pass\jls\definite-assignment\expressions\assignment-expressions\T1617cdup4.java
+				// jacks-pass\jls\definite-assignment\expressions\assignment-expressions\T1617sdup4.java
+
+				boolean braceit = parent.getType() != EXPR && parent.getType() != VARIABLE_DEF;
+				if (braceit)
+				{
+					out("(");
+				}
 				if (child2 != null)
 				{
 					visit(child1);
@@ -981,6 +986,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				{
 					out(" = ");
 					visit(child1);
+				}
+				if (braceit)
+				{
+					out(")");
 				}
 				break;
 
