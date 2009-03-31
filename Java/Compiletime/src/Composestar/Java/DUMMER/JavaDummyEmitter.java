@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -707,9 +708,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				visitChildren(ast, "\n", IMPORT);
 				newline();
 				newline();
-				visitChildren(ast, "\n", CLASS_DEF);
-				visitChildren(ast, "\n", INTERFACE_DEF);
-				visitChildren(ast, "\n", ANNOTATION_DEF);
+				visitChildren(ast, "\n", CLASS_DEF, INTERFACE_DEF, ANNOTATION_DEF);
 				newline();
 				break;
 
@@ -839,10 +838,31 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				if (hasChildren(ast))
 				{
 					out("implements ");
-					visitChildren(ast, ", ", IDENT); // changed 1.5
-					// why was this here?: out(" ");
-					visit(getChild(ast, TYPE_ARGS)); // added 1.5
-					// TODO !!!! visitChildren(ast, "", DOT);
+					AST child = ast.getFirstChild();
+					int cnt = 0;
+					while (child != null)
+					{
+						switch (child.getType())
+						{
+							case IDENT:
+								if (cnt > 0)
+								{
+									out(", ");
+								}
+								cnt++;
+							case TYPE_ARGS:
+							case DOT:
+								visit(child);
+								break;
+							default:
+								break;
+						}
+						child = child.getNextSibling();
+					}
+					// visitChildren(ast, ", ", IDENT); // changed 1.5
+					// // why was this here?: out(" ");
+					// visit(getChild(ast, TYPE_ARGS)); // added 1.5
+					// // TODO !!!! visitChildren(ast, "", DOT);
 				}
 				break;
 
@@ -862,28 +882,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case OBJBLOCK:
-				if (visitChildren(ast, "\n", VARIABLE_DEF))
-				{
-					newline();
-				}
-				if (visitChildren(ast, "\n", STATIC_INIT))
-				{
-					newline();
-				}
-				if (visitChildren(ast, "\n", INSTANCE_INIT))
-				{
-					newline();
-				}
-				if (visitChildren(ast, "\n", CTOR_DEF))
-				{
-
-				}
-				if (visitChildren(ast, "\n", METHOD_DEF))
-				{
-					newline();
-				}
-				visitChildren(ast, "\n", INTERFACE_DEF);
-				visitChildren(ast, "\n", CLASS_DEF);
+				visitChildren(ast, "\n", VARIABLE_DEF, STATIC_INIT, INSTANCE_INIT, CTOR_DEF, METHOD_DEF, INTERFACE_DEF,
+						CLASS_DEF);
 				break;
 
 			case CTOR_DEF:
@@ -1353,13 +1353,15 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		return visitChildren(ast, separator, ALL);
 	}
 
-	private boolean visitChildren(AST ast, String separator, int type)
+	private boolean visitChildren(AST ast, String separator, int... types)
 	{
 		boolean ret = false;
 		AST child = ast.getFirstChild();
+		Arrays.sort(types);
+		boolean visitall = Arrays.binarySearch(types, ALL) > -1;
 		while (child != null)
 		{
-			if (type == ALL || child.getType() == type)
+			if (visitall || Arrays.binarySearch(types, child.getType()) > -1)
 			{
 				if (child != ast.getFirstChild())
 				{
