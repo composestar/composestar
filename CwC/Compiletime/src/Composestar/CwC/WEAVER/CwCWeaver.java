@@ -522,6 +522,8 @@ public class CwCWeaver implements CTCommonModule
 				processFilterCode(realFunc, filterCode, imports);
 			}
 
+			Map<MethodInfo, String> ctomStubs = new HashMap<MethodInfo, String>();
+
 			for (CallToOtherMethod ctom : realFunc.getCallsToOtherMethods())
 			{
 				// check if this method was added, in which case the call to
@@ -550,17 +552,26 @@ public class CwCWeaver implements CTCommonModule
 							.getFullyQualifiedName(), func.getName()), realFunc);
 					containsFilterCode = true;
 
-					// What we do is replace the current function call with a
-					// call to a newly generated function that contains the
-					// filter code
+					// cache called method stubs, because the filter code
+					// doesn't change, and this way less stubs are created
+					String stubMethod = ctomStubs.get(ctom.getCalledMethod());
 
-					String stubMethod =
-							String.format("__%s_%s_%d", func.getName(), ctom.getCalledMethod().getName(), System
-									.identityHashCode(ctom));
-					CwCFunctionInfo stubFunc = (CwCFunctionInfo) ctom.getCalledMethod().getClone(stubMethod, type);
-					extraFuncDecls.addMethod(stubFunc);
-					createAddedFunctionAST(stubFunc, type, "OutputFilter");
-					processFilterCode(stubFunc, filterCode, imports);
+					if (stubMethod == null)
+					{
+						// What we do is replace the current function call with
+						// a
+						// call to a newly generated function that contains the
+						// filter code
+						stubMethod =
+								String.format("__%s_%s_%d", func.getName(), ctom.getCalledMethod().getName(), System
+										.identityHashCode(ctom));
+						CwCFunctionInfo stubFunc = (CwCFunctionInfo) ctom.getCalledMethod().getClone(stubMethod, type);
+						extraFuncDecls.addMethod(stubFunc);
+						createAddedFunctionAST(stubFunc, type, "OutputFilter");
+						processFilterCode(stubFunc, filterCode, imports);
+						ctomStubs.put(ctom.getCalledMethod(), stubMethod);
+					}
+
 					((CwCCallToOtherMethod) ctom).getASTNode().setText(stubMethod);
 				}
 			}
