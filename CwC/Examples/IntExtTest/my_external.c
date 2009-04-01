@@ -1,0 +1,4 @@
+char* realBar()
+{
+	return "bar";
+}
