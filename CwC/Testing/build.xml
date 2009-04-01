@@ -68,6 +68,7 @@
 		<maketest dir="${build.cwc}/Examples/IDEALSCase" />
 		<maketest dir="${build.cwc}/Examples/Memoize" />
 		<maketest dir="${build.cwc}/Examples/OutputFilterTest" />
+		<maketest dir="${build.cwc}/Examples/IntExtTest" />
 	</target>
 
 	<target name="exec_tests" depends="init">
@@ -77,6 +78,8 @@
 				<include name="**/fibonacci" />
 				<include name="**/outputfilter.exe" />
 				<include name="**/outputfilter" />
+				<include name="**/intexttest.exe" />
+				<include name="**/intexttest" />
 			</fileset>
 		</cs:test>
 	</target>
