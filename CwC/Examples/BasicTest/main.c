@@ -49,7 +49,7 @@ int doPrintProgramName()
 
 int main(int argc, char *argv[])
 {
-	int (*funcPtr)(char* name) = &printProgramName;  
+	void (*funcPtr)(char* name) = &printProgramName;  
 	
 	__argc = argc;
 	
