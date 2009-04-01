@@ -146,8 +146,17 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 		try
 		{
 			nd.doubleLink();
-			// method name
-			nd.getFirstChild().getFirstChild().setText(mi.getName());
+			// method name (might not be the first child)
+			TNode nameNode = nd.getFirstChild().getFirstChild();
+			while (nameNode.getType() != ACGrammarTokenTypes.ID)
+			{
+				nameNode = nameNode.getNextSibling();
+				if (nameNode == null)
+				{
+					return false;
+				}
+			}
+			nameNode.setText(cwcfunc.getName());
 
 			// remove implementation
 			TNode body = nd.getFirstChild().getLastSibling();

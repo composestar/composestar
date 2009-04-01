@@ -901,7 +901,19 @@ public class CwCWeaver implements CTCommonModule
 		TNode fast = TNodeFactory.getInstance().dupTree(func.getFunctionDeclaration().getAST());
 		TNode bast = TNodeFactory.getInstance().dupTree(func.getFunctionDeclaration().getBaseTypeAST());
 
-		fast.getFirstChild().setText(func.getName());
+		TNode nameNode = fast.getFirstChild();
+		while (nameNode.getType() != ACGrammarTokenTypes.ID)
+		{
+			nameNode = nameNode.getNextSibling();
+			if (nameNode == null)
+			{
+				logger.error(String.format("Unable to find the name node for added function: %s.%s",
+						type.getFullName(), func.getName()));
+				return;
+			}
+		}
+		nameNode.setText(func.getName());
+
 		TNode bodyAST = TNodeFactory.getInstance().create(ACGrammarTokenTypes.NCompoundStatement, "{");
 		if (codeGen.hasReturnValue(func))
 		{
