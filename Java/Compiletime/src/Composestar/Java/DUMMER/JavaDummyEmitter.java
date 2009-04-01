@@ -43,7 +43,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private static final int ROOT_ID = 0;
 
-	private static int ALL = -1;
+	private static final int ALL = -1;
 
 	private static String[] tokenNames;
 
@@ -61,13 +61,16 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private ASTFactory factory = new ASTFactory();
 
+	static
+	{
+		setupTokenNames();
+	}
+
 	/**
 	 * Constructor
 	 */
 	public JavaDummyEmitter()
-	{
-		setupTokenNames();
-	}
+	{}
 
 	public void createDummies(Project project, Set<Source> sources) throws ModuleException
 	{
@@ -556,6 +559,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	private static void setupTokenNames()
 	{
+		if (tokenNames != null)
+		{
+			return;
+		}
 		tokenNames = new String[200];
 		for (int i = 0; i < tokenNames.length; i++)
 		{
