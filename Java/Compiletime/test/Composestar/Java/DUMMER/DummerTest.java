@@ -176,7 +176,7 @@ public class DummerTest extends TestCase
 		success = new HashSet<File>();
 		testCnt = 0;
 		ParallelTask ptask = new ParallelTask();
-		ptask.setPerProcessor(2);
+		ptask.setPerProcessor(1);
 		for (File source : sources)
 		{
 			ptask.addTask(new DummerTask(source));

@@ -61,6 +61,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private ASTFactory factory = new ASTFactory();
 
+	private Stack<String> defAssignVal = new Stack<String>();
+
 	static
 	{
 		setupTokenNames();
@@ -939,8 +941,19 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 						// jacks-pass\jls\classes\field-declarations\T83h4.java
 						// jacks-pass\jls\classes\field-declarations\T83i8.java
 						// jacks-pass\jls\classes\field-declarations\T83i9.java
-						out(" = ");
-						out(getDefaultReturnValue(getChild(ast, TYPE).getFirstChild().getType()));
+
+						// EXPR
+						// .. = 103
+						// .... i 68
+						// .... 1 158
+
+						defAssignVal.push(getDefaultReturnValue(getChild(ast, TYPE).getFirstChild().getType()));
+						visit(assign);
+						defAssignVal.pop();
+
+						// out(" = ");
+						// out(getDefaultReturnValue(getChild(ast,
+						// TYPE).getFirstChild().getType()));
 					}
 				}
 				printSemi(parent);
@@ -977,22 +990,39 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				// surrounce it in braces, see:
 				// jacks-pass\jls\definite-assignment\expressions\assignment-expressions\T1617cdup4.java
 				// jacks-pass\jls\definite-assignment\expressions\assignment-expressions\T1617sdup4.java
-
 				boolean braceit = parent.getType() != EXPR && parent.getType() != VARIABLE_DEF;
 				if (braceit)
 				{
 					out("(");
 				}
+
+				String repl = null;
+				if (!defAssignVal.isEmpty())
+				{
+					// will be the case in variable initializers
+					repl = defAssignVal.peek();
+				}
+
 				if (child2 != null)
 				{
-					visit(child1);
+					substVisit(child1, repl, ASSIGN, IDENT);
 					out(" = ");
-					visit(child2);
+					substVisit(child2, repl, ASSIGN, IDENT);
 				}
 				else
 				{
 					out(" = ");
-					visit(child1);
+					if (child1.getType() == EXPR && child1.getFirstChild().getType() == ASSIGN || repl == null)
+					{
+						// only allow expression in case of an assignment child,
+						// this is for example the case in: var x = y = 1;
+						substVisit(child1, repl, ASSIGN, IDENT, EXPR);
+					}
+					else
+					{
+						substVisit(child1, repl, ASSIGN, IDENT);
+					}
+
 				}
 				if (braceit)
 				{
@@ -1094,14 +1124,28 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				out("new ");
 				// skip TYPE_ARGS
 				visit(child2);
-				if (child3.getType() != ARRAY_DECLARATOR)
+				AST declType = child3;
+				if (child3.getType() == TYPE_ARGS)
+				{
+					declType = child3.getNextSibling();
+				}
+				if (declType.getType() == ARRAY_DECLARATOR)
+				{
+					visit(declType);
+				}
+				else
 				{
 					out("(");
-				}
-				visit(getChild(ast, ELIST));
-				if (child3.getType() != ARRAY_DECLARATOR)
-				{
+					visit(getChild(ast, ELIST));
 					out(")");
+				}
+				declType = declType.getNextSibling();
+				if (declType != null && declType.getType() == OBJBLOCK)
+				{
+					// anonymous types
+					startBlock();
+					visit(declType);
+					endBlock();
 				}
 				break;
 
@@ -1134,10 +1178,19 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case TYPECAST:
+				if (parent.getType() == DOT)
+				{
+					// because we get a field access of the cast item;
+					out("(");
+				}
 				out("(");
 				visit(child1);
 				out(") ");
 				visit(child2);
+				if (parent.getType() == DOT)
+				{
+					out(")");
+				}
 				break;
 
 			case LITERAL_switch:
@@ -1167,16 +1220,19 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case IDENT:
+				if (packageDefinition)
+				{
+					packages.add(ast.getText());
+				}
+				out(ast.getText());
+				break;
+
 			case NUM_INT:
 			case NUM_LONG:
 			case CHAR_LITERAL:
 			case STRING_LITERAL:
 			case NUM_FLOAT:
 			case NUM_DOUBLE:
-				if (packageDefinition)
-				{
-					packages.add(ast.getText());
-				}
 				out(ast.getText());
 				break;
 
@@ -1362,6 +1418,34 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 		}
 		stack.pop();
+	}
+
+	/**
+	 * Visit the child only if repl is null and the child's type is not in the
+	 * list of types
+	 * 
+	 * @param child1
+	 * @param repl
+	 * @param types
+	 */
+	private void substVisit(AST child, String repl, int... types)
+	{
+		if (repl == null)
+		{
+			visit(child);
+		}
+		else
+		{
+			Arrays.sort(types);
+			if (Arrays.binarySearch(types, child.getType()) > -1)
+			{
+				visit(child);
+			}
+			else
+			{
+				out(repl);
+			}
+		}
 	}
 
 	private boolean visitChildren(AST ast, String separator)
