@@ -97,7 +97,7 @@
 	</target>
 
 	<target name="publish_cwc" depends="init" if="enabled.cwc" description="Create installer for Compose*/C">
-		<ant target="publish" dir="${build.cwc}" inheritRefs="true" />
+		<ant target="publish" dir="${build.cwc}/Installer" inheritRefs="true" />
 	</target>
 
 	<!-- uninstall tasks -->
