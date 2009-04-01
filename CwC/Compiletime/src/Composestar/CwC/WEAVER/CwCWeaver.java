@@ -519,7 +519,7 @@ public class CwCWeaver implements CTCommonModule
 				logger.info(String.format("Weaving function %s.%s", concern.getFullyQualifiedName(), func.getName()),
 						realFunc);
 				containsFilterCode = true;
-				processFilterCode(realFunc, filterCode, imports);
+				processInputFilterCode(realFunc, filterCode, imports);
 			}
 
 			Map<MethodInfo, String> ctomStubs = new HashMap<MethodInfo, String>();
@@ -568,7 +568,7 @@ public class CwCWeaver implements CTCommonModule
 						CwCFunctionInfo stubFunc = (CwCFunctionInfo) ctom.getCalledMethod().getClone(stubMethod, type);
 						extraFuncDecls.addMethod(stubFunc);
 						createAddedFunctionAST(stubFunc, type, "OutputFilter");
-						processFilterCode(stubFunc, filterCode, imports);
+						processOutputFilterCode(ctom, stubFunc, filterCode, imports);
 						ctomStubs.put(ctom.getCalledMethod(), stubMethod);
 					}
 
@@ -587,7 +587,7 @@ public class CwCWeaver implements CTCommonModule
 			{
 				logger.info(String.format("Weaving function %s.%s", concern.getFullyQualifiedName(), func.getName()));
 				containsFilterCode = true;
-				processFilterCode(func, filterCode, imports);
+				processInputFilterCode(func, filterCode, imports);
 			}
 		}
 
@@ -723,14 +723,45 @@ public class CwCWeaver implements CTCommonModule
 	 * @param func
 	 * @param fc
 	 */
-	protected void processFilterCode(CwCFunctionInfo func, FilterCode fc, Set<String> imports)
+	protected void processInputFilterCode(CwCFunctionInfo func, FilterCode fc, Set<String> imports)
 	{
 		TNode fcAst = generateCodeAST(codeGen.generate(fc, func, inlinerRes.getMethodId(func)), func, imports);
 		if (fcAst == null)
 		{
 			return;
 		}
+		injectFilterCode(func, fcAst);
+	}
 
+	/**
+	 * Inject the filter code at the beginning of the method implementation.
+	 * 
+	 * @param rootScope
+	 * @param func
+	 * @param fc
+	 */
+	protected void processOutputFilterCode(CallToOtherMethod ctom, CwCFunctionInfo stubFunc, FilterCode fc,
+			Set<String> imports)
+	{
+		String code =
+				codeGen.generate(fc, ctom, inlinerRes.getMethodId(ctom.getCalledMethod()), ctom.getCalledMethod(),
+						inlinerRes.getMethodId(ctom.getCalledMethod()));
+		TNode fcAst = generateCodeAST(code, (CwCFunctionInfo) ctom.getCalledMethod(), imports);
+		if (fcAst == null)
+		{
+			return;
+		}
+		injectFilterCode(stubFunc, fcAst);
+	}
+
+	/**
+	 * Inject the produced filter code in the function's AST
+	 * 
+	 * @param func
+	 * @param fcAst
+	 */
+	protected void injectFilterCode(CwCFunctionInfo func, TNode fcAst)
+	{
 		// inject AST into function node
 		TNode functionAST = func.getFunctionDeclaration().getAST();
 		functionAST.doubleLink();
@@ -809,16 +840,15 @@ public class CwCWeaver implements CTCommonModule
 	protected void processOutputFilterCode(CwCCallToOtherMethod ctom, CwCFunctionInfo func, FilterCode fc,
 			Set<String> imports, HeaderFileGenerator extraFuncDecls)
 	{
-	// String code =
-	// codeGen.generate(fc, ctom,
-	// inlinerRes.getMethodId(ctom.getCalledMethod()), func, inlinerRes
-	// .getMethodId(func));
-	// logger.debug(code);
-	// TNode fcAst = generateCodeAST(code, func, imports);
-	// if (fcAst == null)
-	// {
-	// return;
-	// }
+		String code =
+				codeGen.generate(fc, ctom, inlinerRes.getMethodId(ctom.getCalledMethod()), func, inlinerRes
+						.getMethodId(func));
+		logger.debug(code);
+		TNode fcAst = generateCodeAST(code, func, imports);
+		if (fcAst == null)
+		{
+			return;
+		}
 	}
 
 	/**

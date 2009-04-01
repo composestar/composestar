@@ -257,17 +257,17 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append(indent(onReturn, 2));
 			sb.append("\t}\n");
 		}
-		if (filterDirection == FilterDirection.INPUT)
+		// if (filterDirection == FilterDirection.INPUT)
+		// {
+		if (hasReturnValue(method))
 		{
-			if (hasReturnValue(method))
-			{
-				sb.append("\treturn returnValue;\n");
-			}
-			else
-			{
-				sb.append("\treturn;\n");
-			}
+			sb.append("\treturn returnValue;\n");
 		}
+		else
+		{
+			sb.append("\treturn;\n");
+		}
+		// }
 		if (hasFmCond)
 		{
 			sb.append("} /* end filter module condition check */\n");

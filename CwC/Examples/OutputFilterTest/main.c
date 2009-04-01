@@ -5,6 +5,12 @@
  */
 
 #include <stdio.h>
+#include "ComposeStar.h" // for JPC
+
+void reportCall(JoinPointContext* jpc)
+{
+	// nop, we are just interested in the generated output filter code
+}
 
 int foo(int a, int b, int c)
 {
