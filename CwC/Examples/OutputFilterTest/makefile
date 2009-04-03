@@ -6,7 +6,7 @@ executable = outputfilter
 endif
 
 # List of source files
-sources = main.c  
+sources = main.c other.c
 objects := $(patsubst %.c,%.o,$(sources))
 
 # List of concerns

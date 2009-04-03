@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include "ComposeStar.h" // for JPC
+#include "other.h"
 
 void reportCall(JoinPointContext* jpc)
 {
@@ -111,5 +112,6 @@ int main(int argc, char *argv[])
 	t7();
 	t8();
 	t9();
+	otherT1();
 	return 0;
 }
