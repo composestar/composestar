@@ -61,8 +61,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private ASTFactory factory = new ASTFactory();
 
-	private Stack<String> defAssignVal = new Stack<String>();
-
 	static
 	{
 		setupTokenNames();
@@ -314,6 +312,57 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	}
 
 	/**
+	 * Return a default value which is not compiletime constant
+	 * 
+	 * @param tokentype
+	 * @return
+	 */
+	private String getDefaultNonFinalValue(AST token)
+	{
+		int tokentype = token.getType();
+		if (tokentype == LITERAL_int)
+		{
+			return "(new Integer(0).intValue())";
+		}
+		else if (tokentype == LITERAL_short)
+		{
+			return "(new Integer(0).shortValue())";
+		}
+		else if (tokentype == LITERAL_long)
+		{
+			return "(new Long(0).longValue())";
+		}
+		else if (tokentype == LITERAL_byte)
+		{
+			return "(new Integer(0).byteValue())";
+		}
+		else if (tokentype == LITERAL_double)
+		{
+			return "(new Double(0.0).doubleValue())";
+		}
+		else if (tokentype == LITERAL_float)
+		{
+			return "(new Float(0.0f).floatValue())";
+		}
+		else if (tokentype == LITERAL_boolean)
+		{
+			return "(new Boolean(false).booleanValue())";
+		}
+		else if (tokentype == LITERAL_char)
+		{
+			return "(new Character('\\0').charValue())";
+		}
+		else if ("String".equals(token.getText()))
+		{
+			return "(new String())";
+		}
+		else
+		{
+			return "null";
+		}
+	}
+
+	/**
 	 * Returns the package name parsed from the source.
 	 */
 	private String getPackageName()
@@ -471,7 +520,11 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			else if (ast.getType() == CTOR_DEF)
 			{
 				AST ctorcall = getChild(methodBody, CTOR_CALL);
-				if (ctorcall == null)
+				if (ctorcall != null)
+				{
+					out("this(");
+				}
+				else
 				{
 					ctorcall = getChild(methodBody, SUPER_CTOR_CALL);
 					if (ctorcall != null)
@@ -479,16 +532,27 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 						out("super(");
 					}
 				}
-				else
+				if (ctorcall == null)
 				{
-					out("this(");
+					// TODO: might be a more difficult constructor:
+					// test-data\jacks-pass\jls\classes\constructor-declarations\constructor-body\explicit-constructor-invocations\T8851e1.java
+					// test-data\jacks-pass\jls\classes\constructor-declarations\constructor-body\explicit-constructor-invocations\T8851q1.java
+					// test-data\jacks-pass\jls\classes\constructor-declarations\constructor-body\explicit-constructor-invocations\T8851q2.java
 				}
+
 				if (ctorcall != null)
 				{
 					visitChildren(getChild(ctorcall, ELIST), ", ");
 					out(");");
 					newline();
 				}
+
+				// // make sure assignments are done in order to satisfy the
+				// final
+				// // modifier
+				// onlyPairAssignments = true;
+				// deepVisitChildren(methodBody, ";\n", ASSIGN);
+				// onlyPairAssignments = false;
 			}
 			endBlock();
 			newline();
@@ -917,10 +981,12 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				// variable declarations. Why? because non-static final
 				// variables are usually set in constructors, but methods no
 				// longer contain bodies.
-				if (assign == null && !hasChild(mods, "static"))
-				{
-					mods = filterChildren(mods, "final");
-				}
+
+				// No longer needed because ctor bodies will contain assignments
+				// if (assign == null && !hasChild(mods, "static"))
+				// {
+				// mods = filterChildren(mods, "final");
+				// }
 
 				visit(mods);
 				visit(getChild(ast, TYPE));
@@ -942,19 +1008,18 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 						// jacks-pass\jls\classes\field-declarations\T83i8.java
 						// jacks-pass\jls\classes\field-declarations\T83i9.java
 
-						// EXPR
-						// .. = 103
-						// .... i 68
-						// .... 1 158
-
-						defAssignVal.push(getDefaultReturnValue(getChild(ast, TYPE).getFirstChild().getType()));
-						visit(assign);
-						defAssignVal.pop();
-
-						// out(" = ");
-						// out(getDefaultReturnValue(getChild(ast,
-						// TYPE).getFirstChild().getType()));
+						out(" = ");
+						// use non static values (for final fields and
+						// interfaces) -> prevents inlining
+						out(getDefaultNonFinalValue(getChild(ast, TYPE).getFirstChild()));
 					}
+				}
+				else if (getChild(mods, FINAL) != null)
+				{
+					// make sure final values are initialized (not a
+					// non-constant value) -> prevents inlining
+					out(" = ");
+					out(getDefaultNonFinalValue(getChild(ast, TYPE).getFirstChild()));
 				}
 				printSemi(parent);
 				if (parent != null && parent.getType() == OBJBLOCK)
@@ -996,33 +1061,16 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 					out("(");
 				}
 
-				String repl = null;
-				if (!defAssignVal.isEmpty())
-				{
-					// will be the case in variable initializers
-					repl = defAssignVal.peek();
-				}
-
 				if (child2 != null)
 				{
-					substVisit(child1, repl, ASSIGN, IDENT);
+					visit(child1);
 					out(" = ");
-					substVisit(child2, repl, ASSIGN, IDENT);
+					visit(child2);
 				}
 				else
 				{
 					out(" = ");
-					if (child1.getType() == EXPR && child1.getFirstChild().getType() == ASSIGN || repl == null)
-					{
-						// only allow expression in case of an assignment child,
-						// this is for example the case in: var x = y = 1;
-						substVisit(child1, repl, ASSIGN, IDENT, EXPR);
-					}
-					else
-					{
-						substVisit(child1, repl, ASSIGN, IDENT);
-					}
-
+					visit(child1);
 				}
 				if (braceit)
 				{
@@ -1166,14 +1214,14 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 			case INSTANCE_INIT:
 				startBlock();
-				visit(child1);
+				// visit(child1);
 				endBlock();
 				break;
 
 			case STATIC_INIT:
 				out("static ");
 				startBlock();
-				visit(child1);
+				// visit(child1);
 				endBlock();
 				break;
 
@@ -1418,34 +1466,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 		}
 		stack.pop();
-	}
-
-	/**
-	 * Visit the child only if repl is null and the child's type is not in the
-	 * list of types
-	 * 
-	 * @param child1
-	 * @param repl
-	 * @param types
-	 */
-	private void substVisit(AST child, String repl, int... types)
-	{
-		if (repl == null)
-		{
-			visit(child);
-		}
-		else
-		{
-			Arrays.sort(types);
-			if (Arrays.binarySearch(types, child.getType()) > -1)
-			{
-				visit(child);
-			}
-			else
-			{
-				out(repl);
-			}
-		}
 	}
 
 	private boolean visitChildren(AST ast, String separator)
