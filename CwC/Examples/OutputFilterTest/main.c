@@ -8,6 +8,8 @@
 #include "ComposeStar.h" // for JPC
 #include "other.h"
 
+extern void otherT2();
+
 void reportCall(JoinPointContext* jpc)
 {
 	// nop, we are just interested in the generated output filter code
@@ -113,5 +115,7 @@ int main(int argc, char *argv[])
 	t8();
 	t9();
 	otherT1();
+	// TODO: this is passed through the output filters because the target is unknown
+	otherT2();
 	return 0;
 }

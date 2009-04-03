@@ -72,6 +72,9 @@ ifeq ($(DOWEAVE), yes)
 $(objects) : %.o : $(WOVEN)/%.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
+other2.o : %.o : other2.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
 # Add the ComposeStar.c file to the list
 objects += $(WOVEN)/ComposeStar.o
 
@@ -80,17 +83,17 @@ objects += $(WOVEN)/ComposeStar.o
 weave : init $(ppSources)
 	$(COMPOSESTAR) --intermediate $(INTERMED) $(ppSources) $(concerns)	
 
-$(executable) : weave $(objects)
-	$(CC) -o $@ $(LDFLAGS) $(objects)
+$(executable) : weave $(objects) other2.o
+	$(CC) -o $@ $(LDFLAGS) $(objects) other2.o
 
 else
 
 # Compile without weaving
 
-$(objects) : %.o : %.c
+$(objects) other2.o : %.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(executable) : $(objects)
-	$(CC) -o $@ $(LDFLAGS) $(objects)
+$(executable) : $(objects) other2.o
+	$(CC) -o $@ $(LDFLAGS) $(objects) other2.o
 
 endif

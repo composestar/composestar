@@ -5,7 +5,7 @@ concern offoobar
 		outputfilters
 			report : Before(selector = 'reportCall') = (selector == 'foo');
 			tobar : Send = (selector == 'foo') { selector = 'bar'; };
-			other : Send = (selector == 'otherT1') { selector = 't1'; }  
+			other : Send = (selector == ['otherT1', 'otherT2']) { selector = 't1'; }  
 	}
 	
 	superimposition

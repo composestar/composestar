@@ -3,5 +3,6 @@
 
 void otherT1()
 {
-	printf("otherT1");
+	printf("otherT1\n");
 }
+
