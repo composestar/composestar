@@ -923,6 +923,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 									out(", ");
 								}
 								cnt++;
+								visit(child);
+								break;
 							case TYPE_ARGS:
 							case DOT:
 								visit(child);
