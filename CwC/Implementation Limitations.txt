@@ -30,6 +30,9 @@
 	target difficult.
 	
 [5] no outputfilter support.
+
+-> With the latest builds (and 0.9.2) this functionality is supported. Used
+  stub methods to handle the filter code.
 	
 [6] no support for custom objects/sources which can be required by filter
 	actions. The include directives can be inlines. But the final compile action
