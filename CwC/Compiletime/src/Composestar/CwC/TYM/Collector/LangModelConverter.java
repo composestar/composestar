@@ -563,7 +563,7 @@ public class LangModelConverter implements CTCommonModule
 	protected void createExternalType()
 	{
 		externalType = new CwCType();
-		externalType.setFullName("[externals]");
+		externalType.setFullName(CwCType.EXTERN_NAME);
 		externalType.setName(externalType.getName());
 		// not registered for obvious reasons
 	}

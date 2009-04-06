@@ -51,6 +51,13 @@ public class CwCType extends Type implements LocationProvider
 {
 	private static final long serialVersionUID = -447789582637518491L;
 
+	/**
+	 * Name used for the CwCFile instance that combines all external functions.
+	 * The CwCFile instance with this name is 'fake' and should be handled with
+	 * care.
+	 */
+	public static final String EXTERN_NAME = "[extern]";
+
 	protected transient TypeDeclaration typeDecl;
 
 	protected transient CType cType;
@@ -79,6 +86,18 @@ public class CwCType extends Type implements LocationProvider
 	{
 		this();
 		cType = ct;
+	}
+
+	/**
+	 * @return True if this instance is an "extern" function collection. Which
+	 *         means that it is not an actual C file, but a special file that
+	 *         contains all function declarations which did not exist in the
+	 *         current program.
+	 * @see #EXTERN_NAME
+	 */
+	public boolean isExternCollection()
+	{
+		return EXTERN_NAME.equals(getFullName());
 	}
 
 	/**
@@ -195,7 +214,11 @@ public class CwCType extends Type implements LocationProvider
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (ERelationType.METHOD_RETURN_CLASS.equals(argumentName))
+		if (isExternCollection())
+		{
+			// nop
+		}
+		else if (ERelationType.METHOD_RETURN_CLASS.equals(argumentName))
 		{
 			return new UnitResult(methodReturnTypes);
 		}
