@@ -5,6 +5,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar" sourcepath="C:/antlr"/>
-	<classpathentry kind="lib" path="lib/weavec.jar"/>
+	<classpathentry kind="lib" path="lib/weavec.jar" sourcepath="C:/local/mhendrik/weavec/src"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

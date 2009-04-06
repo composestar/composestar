@@ -944,6 +944,23 @@ public class CwCWeaver implements CTCommonModule
 		}
 		nameNode.setText(func.getName());
 
+		// remove "extern" from the declaration
+		bast.doubleLink();
+		TNode props = bast.getFirstChild();
+		while (props != null)
+		{
+			if (props.getType() == ACGrammarTokenTypes.LITERAL_extern)
+			{
+				TNode tmp = props;
+				props = props.getNextSibling();
+				tmp.removeSelf();
+			}
+			else
+			{
+				props = props.getNextSibling();
+			}
+		}
+
 		TNode bodyAST = TNodeFactory.getInstance().create(ACGrammarTokenTypes.NCompoundStatement, "{");
 		if (codeGen.hasReturnValue(func))
 		{

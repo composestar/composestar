@@ -58,6 +58,7 @@ import Composestar.Core.CpsRepository2.References.ReferenceManager;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2Impl.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
@@ -112,6 +113,11 @@ public class LangModelConverter implements CTCommonModule
 
 	// used for resolving CTOM stubs
 	protected Set<CwCFunctionInfo> cfucns;
+
+	/**
+	 * A dummy type used for external methods.
+	 */
+	protected CwCType externalType;
 
 	public LangModelConverter()
 	{}
@@ -517,8 +523,48 @@ public class LangModelConverter implements CTCommonModule
 			}
 			else
 			{
-				logger.debug("Unable to find actual declaration of method " + stub.getName());
+				logger.debug("Unable to find actual declaration of method (assuming external reference)"
+						+ stub.getName());
+				if (externalType == null)
+				{
+					createExternalType();
+				}
+				// only add methods once
+				for (MethodInfo tf : externalType.getMethods())
+				{
+					if (stub.checkEquals(tf))
+					{
+						func = (CwCFunctionInfo) tf;
+						break;
+					}
+				}
+				if (func == null)
+				{
+					if (stub.getFunctionDeclaration().getAST() == null)
+					{
+						logger
+								.warn(String
+										.format(
+												"No AST associated with declaration \"%s\", function will be ignored in output filters.",
+												stub.getName()));
+					}
+					else
+					{
+						externalType.addMethod(stub);
+					}
+				}
 			}
 		}
+	}
+
+	/**
+	 * Create a dummy type to store the external method references
+	 */
+	protected void createExternalType()
+	{
+		externalType = new CwCType();
+		externalType.setFullName("[externals]");
+		externalType.setName(externalType.getName());
+		// not registered for obvious reasons
 	}
 }
