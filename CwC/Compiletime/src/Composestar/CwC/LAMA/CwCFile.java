@@ -61,6 +61,13 @@ public class CwCFile extends Type implements LocationProvider
 
 	protected String sourceFile;
 
+	/**
+	 * Name used for the CwCFile instance that combines all external functions.
+	 * The CwCFile instance with this name is 'fake' and should be handled with
+	 * care.
+	 */
+	public static final String EXTERN_NAME = "[extern]";
+
 	public CwCFile()
 	{
 		super();
@@ -181,7 +188,11 @@ public class CwCFile extends Type implements LocationProvider
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (ERelationType.PARENT_NAMESPACE.equals(argumentName))
+		if (isExternCollection())
+		{
+			// nop
+		}
+		else if (ERelationType.PARENT_NAMESPACE.equals(argumentName))
 		{
 			return new UnitResult(langNamespace);
 		}
@@ -230,6 +241,18 @@ public class CwCFile extends Type implements LocationProvider
 	public int getLinePosition()
 	{
 		return 0;
+	}
+
+	/**
+	 * @return True if this instance is an "extern" function collection. Which
+	 *         means that it is not an actual C file, but a special file that
+	 *         contains all function declarations which did not exist in the
+	 *         current program.
+	 * @see #EXTERN_NAME
+	 */
+	public boolean isExternCollection()
+	{
+		return EXTERN_NAME.equals(getFullName());
 	}
 
 }

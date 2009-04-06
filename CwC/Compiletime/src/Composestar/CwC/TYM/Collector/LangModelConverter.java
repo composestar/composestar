@@ -117,7 +117,7 @@ public class LangModelConverter implements CTCommonModule
 	/**
 	 * A dummy type used for external methods.
 	 */
-	protected CwCType externalType;
+	protected CwCFile externalType;
 
 	public LangModelConverter()
 	{}
@@ -562,8 +562,8 @@ public class LangModelConverter implements CTCommonModule
 	 */
 	protected void createExternalType()
 	{
-		externalType = new CwCType();
-		externalType.setFullName(CwCType.EXTERN_NAME);
+		externalType = new CwCFile();
+		externalType.setFullName(CwCFile.EXTERN_NAME);
 		externalType.setName(externalType.getName());
 		// not registered for obvious reasons
 	}
