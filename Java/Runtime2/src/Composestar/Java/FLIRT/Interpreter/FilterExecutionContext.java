@@ -93,7 +93,7 @@ public class FilterExecutionContext
 	protected Filter currentFilter;
 
 	/**
-	 * The execution result of the current filter. Is initialized to UNSED when
+	 * The execution result of the current filter. Is initialized to UNSET when
 	 * the current filter is set.
 	 */
 	protected ExecutionResult currentFilterResult;
