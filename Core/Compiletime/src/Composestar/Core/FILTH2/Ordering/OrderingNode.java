@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import Composestar.Core.FILTH2.Model.Action;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 
 /**
  * A node used in the generation of all possible orders
@@ -40,7 +40,7 @@ public class OrderingNode
 	/**
 	 * The associated action
 	 */
-	protected Action action;
+	protected ImposedFilterModule ifm;
 
 	/**
 	 * Incoming edges
@@ -58,18 +58,18 @@ public class OrderingNode
 		outgoing = new HashSet<OrderingEdge>();
 	}
 
-	public OrderingNode(Action inaction)
+	public OrderingNode(ImposedFilterModule imposedFM)
 	{
 		this();
-		action = inaction;
+		ifm = imposedFM;
 	}
 
 	/**
 	 * @return the associated action, is null for the root node
 	 */
-	public Action getAction()
+	public ImposedFilterModule getImposedFilterModule()
 	{
-		return action;
+		return ifm;
 	}
 
 	/**
@@ -115,9 +115,9 @@ public class OrderingNode
 	@Override
 	public String toString()
 	{
-		if (action != null)
+		if (ifm != null)
 		{
-			return action.getName();
+			return ifm.getFilterModule().getFullyQualifiedName();
 		}
 		else
 		{

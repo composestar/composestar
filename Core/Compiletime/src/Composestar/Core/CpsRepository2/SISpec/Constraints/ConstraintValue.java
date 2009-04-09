@@ -22,44 +22,21 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.SISpec;
+package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
-import Composestar.Core.CpsRepository2.SISpec.ConditionConstraintValueTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConditionConstraintValueImpl;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
+ * Interface used for all values of a filter module constraint. This interface
+ * is used to group the filter module reference and superimposition condition.
+ * 
  * @author Michiel Hendriks
  */
-public class ConditionConstraintValueImplTest extends ConditionConstraintValueTestBase
+public interface ConstraintValue extends RepositoryEntity
 {
-
-	/*
-	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		ccv = new ConditionConstraintValueImpl(cond);
-		re = ccv;
-	}
-
 	/**
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConditionConstraintValueImpl#ConditionConstraintValueImpl(Composestar.Core.CpsRepository2.SISpec.SICondition)}
-	 * .
+	 * @return The the value as string. This would be in most cases the fully
+	 *         qualified names.
 	 */
-	public void testConditionConstraintValueImpl()
-	{
-		try
-		{
-			new ConditionConstraintValueImpl(null);
-			fail();
-		}
-		catch (NullPointerException e)
-		{
-		}
-	}
-
+	String getStringValue();
 }

@@ -37,10 +37,10 @@ import Composestar.Core.CpsRepository2.FilterModules.Internal;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.SISpec.AnnotationBinding;
 import Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding;
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
 import Composestar.Core.CpsRepository2.SISpec.SICondition;
 import Composestar.Core.CpsRepository2.SISpec.SISpecification;
 import Composestar.Core.CpsRepository2.SISpec.Selector;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 
 /**
@@ -583,7 +583,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * addFilterModuleConstraint (Composestar.Core.CpsRepository2.SISpec
 		 * .FilterModuleConstraint)
 		 */
-		public void addFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
+		public void addFilterModuleConstraint(Constraint fmc) throws NullPointerException
 		{}
 
 		/*
@@ -631,7 +631,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 		 * getFilterModuleConstraints()
 		 */
-		public Collection<FilterModuleConstraint> getFilterModuleConstraints()
+		public Collection<Constraint> getFilterModuleConstraints()
 		{
 			return null;
 		}
@@ -704,7 +704,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * removeFilterModuleConstraint (Composestar.Core.CpsRepository2.SISpec
 		 * .FilterModuleConstraint)
 		 */
-		public FilterModuleConstraint removeFilterModuleConstraint(FilterModuleConstraint fmc)
+		public Constraint removeFilterModuleConstraint(Constraint fmc)
 				throws NullPointerException
 		{
 			return null;

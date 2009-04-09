@@ -38,7 +38,9 @@ import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintFactory;
 import Composestar.Core.CpsRepository2Impl.References.ReferenceManagerImpl;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConstraintFactoryImpl;
 import Composestar.Core.EMBEX.EmbeddedSources;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
@@ -91,6 +93,8 @@ public class COPPER implements CTCommonModule
 	 * Reference manager
 	 */
 	protected ReferenceManager refman;
+
+	protected ConstraintFactory constraintFactory;
 
 	public COPPER()
 	{}
@@ -151,6 +155,7 @@ public class COPPER implements CTCommonModule
 			refman = new ReferenceManagerImpl();
 			resources.put(ReferenceManager.RESOURCE_KEY, refman);
 		}
+		constraintFactory = new ConstraintFactoryImpl();
 
 		errorCnt = 0;
 
@@ -232,6 +237,7 @@ public class COPPER implements CTCommonModule
 			w.setFilterFactory(filterTypeFactory);
 			w.setEmbeddedSourceManager(embeddedSourceManager);
 			w.setReferenceManager(refman);
+			w.setConstraintFactory(constraintFactory);
 			try
 			{
 				w.concern();

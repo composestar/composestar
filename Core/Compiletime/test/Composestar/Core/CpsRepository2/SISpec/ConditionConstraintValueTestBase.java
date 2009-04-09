@@ -26,6 +26,7 @@ package Composestar.Core.CpsRepository2.SISpec;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConditionConstraintValue;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 
 /**
@@ -50,7 +51,7 @@ public abstract class ConditionConstraintValueTestBase extends RepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.SISpec.ConditionConstraintValue#getCondition()}
+	 * {@link Composestar.Core.CpsRepository2.SISpec.Constraints.ConditionConstraintValue#getCondition()}
 	 * .
 	 */
 	public void testGetCondition()

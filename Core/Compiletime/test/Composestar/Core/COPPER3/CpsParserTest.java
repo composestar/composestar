@@ -41,6 +41,7 @@ import org.apache.log4j.BasicConfigurator;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2Impl.RepositoryImpl;
 import Composestar.Core.CpsRepository2Impl.References.ReferenceManagerImpl;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConstraintFactoryImpl;
 
 /**
  * @author Michiel Hendriks
@@ -133,6 +134,7 @@ public class CpsParserTest extends TestCase
 		w.setReferenceManager(new ReferenceManagerImpl());
 		w.setSourceFile(file);
 		w.setFilterTypeMapping(new FilterTypeMapping(repos));
+		w.setConstraintFactory(new ConstraintFactoryImpl());
 		FilterTypeFactory fact = new FilterTypeFactory(repos);
 		fact.setTypeMapping(w.filterTypes);
 		fact.setAllowCustomFilterTypeCreation(true);

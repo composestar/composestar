@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2009 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,41 +22,29 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.SISpec;
+package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraintValueTestBase;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
  * @author Michiel Hendriks
  */
-public class FilterModuleConstraintValueImplTest extends FilterModuleConstraintValueTestBase
+public class ExcludeConstraint extends StructuralConstraint
 {
+	private static final long serialVersionUID = 8984180159388624601L;
 
-	/*
-	 * (non-Javadoc)
-	 * @seeComposestar.Core.CpsRepository2.SuperImposition.
-	 * FilterModuleConstraintValueTestBase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		fmcv = new FilterModuleConstraintValueImpl(fmr);
-		re = fmcv;
-	}
+	public static final String NAME = "exclude";
 
 	/**
-	 * 
+	 * @param lhsValue
+	 * @param rhsValue
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 */
-	public void testCtor()
+	public ExcludeConstraint(FilterModuleConstraintValue lhsValue, FilterModuleConstraintValue rhsValue)
+			throws NullPointerException, IllegalArgumentException
 	{
-		try
-		{
-			new FilterModuleConstraintValueImpl(null);
-			fail();
-		}
-		catch (NullPointerException e)
-		{
-		}
+		super(NAME, lhsValue, rhsValue);
 	}
+
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2009 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,20 +22,29 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SISpec;
+package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
+
+import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
- * A constraint value that uses a superimposition condition for its value. Only
- * a few constraint types accept this value and only for a select places. It can
- * be used to define conditional filter module execution. Only local (in this
- * superimposition block) conditions can be references.
- * 
  * @author Michiel Hendriks
  */
-public interface ConditionConstraintValue extends ConstraintValue
+public class IncludeConstraint extends StructuralConstraint
 {
+	private static final long serialVersionUID = -5271581886685924901L;
+
+	public static final String NAME = "include";
+
 	/**
-	 * @return The associated condition constraint value.
+	 * @param lhsValue
+	 * @param rhsValue
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 */
-	SICondition getCondition();
+	public IncludeConstraint(FilterModuleConstraintValue lhsValue, FilterModuleConstraintValue rhsValue)
+			throws NullPointerException, IllegalArgumentException
+	{
+		super(NAME, lhsValue, rhsValue);
+	}
+
 }

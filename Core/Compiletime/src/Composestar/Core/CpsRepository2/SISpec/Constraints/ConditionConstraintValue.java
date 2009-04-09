@@ -22,21 +22,22 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SISpec;
+package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.SISpec.SICondition;
 
 /**
- * Interface used for all values of a filter module constraint. This interface
- * is used to group the filter module reference and superimposition condition.
+ * A constraint value that uses a superimposition condition for its value. Only
+ * a few constraint types accept this value and only for a select places. It can
+ * be used to define conditional filter module execution. Only local (in this
+ * superimposition block) conditions can be references.
  * 
  * @author Michiel Hendriks
  */
-public interface ConstraintValue extends RepositoryEntity
+public interface ConditionConstraintValue extends ConstraintValue
 {
 	/**
-	 * @return The the value as string. This would be in most cases the fully
-	 *         qualified names.
+	 * @return The associated condition constraint value.
 	 */
-	String getStringValue();
+	SICondition getCondition();
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2009 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,51 +22,27 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.SISpec;
+package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraintTestBase;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
  * @author Michiel Hendriks
  */
-public class FilterModuleConstraintImplTest extends FilterModuleConstraintTestBase
+public class OrderingConstraint extends BinaryConstraint
 {
+	private static final long serialVersionUID = 6190724523817484420L;
 
-	/*
-	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		fmc = new FilterModuleConstraintImpl(FMC_TYPE);
-		re = fmc;
-	}
+	public static final String NAME = "pre";
 
 	/**
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SISpec.FilterModuleConstraintImpl#FilterModuleConstraintImpl(java.lang.String)}
-	 * .
+	 * @param type
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 */
-	public void testFilterModuleConstraintImpl()
+	public OrderingConstraint(FilterModuleConstraintValue lhs, FilterModuleConstraintValue rhs)
+			throws NullPointerException, IllegalArgumentException
 	{
-		try
-		{
-			new FilterModuleConstraintImpl(null);
-			fail();
-		}
-		catch (NullPointerException e)
-		{
-		}
-		try
-		{
-			new FilterModuleConstraintImpl("");
-			fail();
-		}
-		catch (IllegalArgumentException e)
-		{
-		}
+		super(NAME, lhs, rhs);
 	}
-
 }

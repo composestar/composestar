@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2009 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,21 +22,30 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SISpec;
+package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
-import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
- * A constraint value that references either a filter module in this concern or
- * a filter module in an external concern. The linked reference needs to be
- * resolved.
- * 
  * @author Michiel Hendriks
  */
-public interface FilterModuleConstraintValue extends ConstraintValue
+public class CondConstraint extends ControllConstraint
 {
+	private static final long serialVersionUID = 8984180159388624601L;
+
+	public static final String NAME = "cond";
+
 	/**
-	 * @return A soft-reference to a filter module.
+	 * @param lhsValue
+	 * @param rhsValue
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
 	 */
-	FilterModuleReference getFilterModuleReference();
+	public CondConstraint(ConstraintValue lhsValue, FilterModuleConstraintValue rhsValue) throws NullPointerException,
+			IllegalArgumentException
+	{
+		super(NAME, lhsValue, rhsValue);
+	}
+
 }

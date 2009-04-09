@@ -22,44 +22,21 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.SISpec;
+package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
-import Composestar.Core.CpsRepository2.SISpec.ConditionConstraintValueTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConditionConstraintValueImpl;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
+ * A constraint value that references either a filter module in this concern or
+ * a filter module in an external concern. The linked reference needs to be
+ * resolved.
+ * 
  * @author Michiel Hendriks
  */
-public class ConditionConstraintValueImplTest extends ConditionConstraintValueTestBase
+public interface FilterModuleConstraintValue extends ConstraintValue
 {
-
-	/*
-	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		ccv = new ConditionConstraintValueImpl(cond);
-		re = ccv;
-	}
-
 	/**
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConditionConstraintValueImpl#ConditionConstraintValueImpl(Composestar.Core.CpsRepository2.SISpec.SICondition)}
-	 * .
+	 * @return A soft-reference to a filter module.
 	 */
-	public void testConditionConstraintValueImpl()
-	{
-		try
-		{
-			new ConditionConstraintValueImpl(null);
-			fail();
-		}
-		catch (NullPointerException e)
-		{
-		}
-	}
-
+	FilterModuleReference getFilterModuleReference();
 }

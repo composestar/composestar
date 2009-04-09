@@ -28,17 +28,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.TestCase;
 import Composestar.Core.FILTH2.Execution.Simulator;
 import Composestar.Core.FILTH2.Model.Action;
-import Composestar.Core.FILTH2.Model.CondConstraint;
 import Composestar.Core.FILTH2.Model.ExecutionResult;
-import Composestar.Core.FILTH2.Model.OrderingConstraint;
-import Composestar.Core.FILTH2.Model.PhantomAction;
-import Composestar.Core.FILTH2.Model.SkipConstraint;
-import Composestar.Core.FILTH2.Ordering.OrderGenerator;
 
 /**
  * @author Michiel Hendriks
@@ -85,136 +79,147 @@ public class ExecutionTest extends TestCase
 
 	public void testNoControlConstraints()
 	{
-		System.out.println("testNoControlConstraints");
-		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
-		for (List<Action> order : results)
-		{
-			System.out.println(order);
-			assertTrue(sim.simulate(order));
-			printExecution(order);
-		}
+	// System.out.println("testNoControlConstraints");
+	// Set<List<Action>> results = OrderGenerator.generate(actions, -1);
+	// for (List<Action> order : results)
+	// {
+	// System.out.println(order);
+	// assertTrue(sim.simulate(order));
+	// printExecution(order);
+	// }
 	}
 
 	public void testCondConstraints()
 	{
-		System.out.println("testCondConstraints");
-		System.out.println(new CondConstraint(actions.get(1), actions.get(2)));
-		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
-		for (List<Action> order : results)
-		{
-			System.out.println(order);
-			assertTrue(sim.simulate(order));
-			printExecution(order);
-		}
+	// System.out.println("testCondConstraints");
+	// System.out.println(new CondConstraint(actions.get(1), actions.get(2)));
+	// Set<List<Action>> results = OrderGenerator.generate(actions, -1);
+	// for (List<Action> order : results)
+	// {
+	// System.out.println(order);
+	// assertTrue(sim.simulate(order));
+	// printExecution(order);
+	// }
 	}
 
 	public void testCondPreConstraints()
 	{
-		System.out.println("testCondPreConstraints");
-		System.out.println(new CondConstraint(actions.get(1), actions.get(2)));
-		System.out.println(new OrderingConstraint(actions.get(0), actions.get(1)));
-		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
-		for (List<Action> order : results)
-		{
-			System.out.println(order);
-			assertTrue(sim.simulate(order));
-			printExecution(order);
-		}
+	// System.out.println("testCondPreConstraints");
+	// System.out.println(new CondConstraint(actions.get(1), actions.get(2)));
+	// System.out.println(new OrderingConstraint(actions.get(0),
+	// actions.get(1)));
+	// Set<List<Action>> results = OrderGenerator.generate(actions, -1);
+	// for (List<Action> order : results)
+	// {
+	// System.out.println(order);
+	// assertTrue(sim.simulate(order));
+	// printExecution(order);
+	// }
 	}
 
 	public void testSkipConstraints()
 	{
-		System.out.println("testSkipConstraints");
-		System.out.println(new SkipConstraint(actions.get(1), actions.get(2), actions.get(0)));
-		System.out.println(new OrderingConstraint(actions.get(0), actions.get(1)));
-		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
-		for (List<Action> order : results)
-		{
-			System.out.println(order);
-			assertTrue(sim.simulate(order));
-			printExecution(order);
-		}
+	// System.out.println("testSkipConstraints");
+	// System.out.println(new SkipConstraint(actions.get(1), actions.get(2),
+	// actions.get(0)));
+	// System.out.println(new OrderingConstraint(actions.get(0),
+	// actions.get(1)));
+	// Set<List<Action>> results = OrderGenerator.generate(actions, -1);
+	// for (List<Action> order : results)
+	// {
+	// System.out.println(order);
+	// assertTrue(sim.simulate(order));
+	// printExecution(order);
+	// }
 	}
 
 	public void testComboTT()
 	{
-		System.out.println("testComboTT");
-		System.out.println(new OrderingConstraint(actions.get(1), actions.get(2)));
-		System.out.println(new CondConstraint(actions.get(0), actions.get(1)));
-		Action resAct = new PhantomAction("R");
-		System.out.println(new SkipConstraint(actions.get(1), actions.get(3), resAct));
-
-		fakeResults.clear();
-		fakeResults.put(resAct, ExecutionResult.FALSE);
-
-		fakeResults.put(actions.get(0), ExecutionResult.TRUE);
-		fakeResults.put(actions.get(1), ExecutionResult.TRUE);
-
-		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
-		for (List<Action> order : results)
-		{
-			System.out.println(order);
-			assertTrue(sim.simulate(order));
-			printExecution(order);
-			assertEquals(ExecutionResult.TRUE, sim.getResult(actions.get(0)));
-			assertEquals(ExecutionResult.TRUE, sim.getResult(actions.get(1)));
-			assertEquals(ExecutionResult.UNSET, sim.getResult(actions.get(2)));
-			assertEquals(ExecutionResult.FALSE, sim.getResult(actions.get(3)));
-		}
+	// System.out.println("testComboTT");
+	// System.out.println(new OrderingConstraint(actions.get(1),
+	// actions.get(2)));
+	// System.out.println(new CondConstraint(actions.get(0), actions.get(1)));
+	// Action resAct = new PhantomAction("R");
+	// System.out.println(new SkipConstraint(actions.get(1), actions.get(3),
+	// resAct));
+	//
+	// fakeResults.clear();
+	// fakeResults.put(resAct, ExecutionResult.FALSE);
+	//
+	// fakeResults.put(actions.get(0), ExecutionResult.TRUE);
+	// fakeResults.put(actions.get(1), ExecutionResult.TRUE);
+	//
+	// Set<List<Action>> results = OrderGenerator.generate(actions, -1);
+	// for (List<Action> order : results)
+	// {
+	// System.out.println(order);
+	// assertTrue(sim.simulate(order));
+	// printExecution(order);
+	// assertEquals(ExecutionResult.TRUE, sim.getResult(actions.get(0)));
+	// assertEquals(ExecutionResult.TRUE, sim.getResult(actions.get(1)));
+	// assertEquals(ExecutionResult.UNSET, sim.getResult(actions.get(2)));
+	// assertEquals(ExecutionResult.FALSE, sim.getResult(actions.get(3)));
+	// }
 	}
 
 	public void testComboTF()
 	{
-		System.out.println("testComboTF");
-		System.out.println(new OrderingConstraint(actions.get(1), actions.get(2)));
-		System.out.println(new CondConstraint(actions.get(0), actions.get(1)));
-		Action resAct = new PhantomAction("R");
-		System.out.println(new SkipConstraint(actions.get(1), actions.get(3), resAct));
-
-		fakeResults.clear();
-		fakeResults.put(resAct, ExecutionResult.FALSE);
-
-		fakeResults.put(actions.get(0), ExecutionResult.TRUE);
-		fakeResults.put(actions.get(1), ExecutionResult.FALSE);
-
-		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
-		for (List<Action> order : results)
-		{
-			System.out.println(order);
-			assertTrue(sim.simulate(order));
-			printExecution(order);
-			assertEquals(ExecutionResult.TRUE, sim.getResult(actions.get(0)));
-			assertEquals(ExecutionResult.FALSE, sim.getResult(actions.get(1)));
-			assertEquals(ExecutionResult.UNSET, sim.getResult(actions.get(2)));
-			assertEquals(ExecutionResult.UNSET, sim.getResult(actions.get(3)));
-		}
+	// System.out.println("testComboTF");
+	// System.out.println(new OrderingConstraint(actions.get(1),
+	// actions.get(2)));
+	// System.out.println(new CondConstraint(actions.get(0), actions.get(1)));
+	// Action resAct = new PhantomAction("R");
+	// System.out.println(new SkipConstraint(actions.get(1), actions.get(3),
+	// resAct));
+	//
+	// fakeResults.clear();
+	// fakeResults.put(resAct, ExecutionResult.FALSE);
+	//
+	// fakeResults.put(actions.get(0), ExecutionResult.TRUE);
+	// fakeResults.put(actions.get(1), ExecutionResult.FALSE);
+	//
+	// Set<List<Action>> results = OrderGenerator.generate(actions, -1);
+	// for (List<Action> order : results)
+	// {
+	// System.out.println(order);
+	// assertTrue(sim.simulate(order));
+	// printExecution(order);
+	// assertEquals(ExecutionResult.TRUE, sim.getResult(actions.get(0)));
+	// assertEquals(ExecutionResult.FALSE, sim.getResult(actions.get(1)));
+	// assertEquals(ExecutionResult.UNSET, sim.getResult(actions.get(2)));
+	// assertEquals(ExecutionResult.UNSET, sim.getResult(actions.get(3)));
+	// }
 	}
 
 	public void testComboFF()
 	{
-		System.out.println("testComboFF");
-		System.out.println(new OrderingConstraint(actions.get(1), actions.get(2)));
-		System.out.println(new CondConstraint(actions.get(0), actions.get(1)));
-		Action resAct = new PhantomAction("R");
-		System.out.println(new SkipConstraint(actions.get(1), actions.get(3), resAct));
-
-		fakeResults.clear();
-		fakeResults.put(resAct, ExecutionResult.FALSE);
-
-		fakeResults.put(actions.get(0), ExecutionResult.FALSE);
-		fakeResults.put(actions.get(1), ExecutionResult.FALSE);
-
-		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
-		for (List<Action> order : results)
-		{
-			System.out.println(order);
-			assertTrue(sim.simulate(order));
-			printExecution(order);
-			assertEquals(ExecutionResult.FALSE, sim.getResult(actions.get(0)));
-			assertEquals(ExecutionResult.NOT_EXECUTED, sim.getResult(actions.get(1)));
-			assertEquals(ExecutionResult.NOT_EXECUTED, sim.getResult(actions.get(2)));
-			assertEquals(ExecutionResult.UNSET, sim.getResult(actions.get(3)));
-		}
+	// System.out.println("testComboFF");
+	// System.out.println(new OrderingConstraint(actions.get(1),
+	// actions.get(2)));
+	// System.out.println(new CondConstraint(actions.get(0), actions.get(1)));
+	// Action resAct = new PhantomAction("R");
+	// System.out.println(new SkipConstraint(actions.get(1), actions.get(3),
+	// resAct));
+	//
+	// fakeResults.clear();
+	// fakeResults.put(resAct, ExecutionResult.FALSE);
+	//
+	// fakeResults.put(actions.get(0), ExecutionResult.FALSE);
+	// fakeResults.put(actions.get(1), ExecutionResult.FALSE);
+	//
+	// Set<List<Action>> results = OrderGenerator.generate(actions, -1);
+	// for (List<Action> order : results)
+	// {
+	// System.out.println(order);
+	// assertTrue(sim.simulate(order));
+	// printExecution(order);
+	// assertEquals(ExecutionResult.FALSE, sim.getResult(actions.get(0)));
+	// assertEquals(ExecutionResult.NOT_EXECUTED,
+	// sim.getResult(actions.get(1)));
+	// assertEquals(ExecutionResult.NOT_EXECUTED,
+	// sim.getResult(actions.get(2)));
+	// assertEquals(ExecutionResult.UNSET, sim.getResult(actions.get(3)));
+	// }
 	}
 
 	protected void printExecution(List<Action> order)

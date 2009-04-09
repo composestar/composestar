@@ -59,6 +59,7 @@ import Composestar.Core.CpsRepository2.FMParams.*;
 import Composestar.Core.CpsRepository2.Meta.*;
 import Composestar.Core.CpsRepository2.References.*;
 import Composestar.Core.CpsRepository2.SISpec.*;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.*;
 import Composestar.Core.CpsRepository2.TypeSystem.*;
 
 import Composestar.Core.CpsRepository2Impl.*;
@@ -68,6 +69,7 @@ import Composestar.Core.CpsRepository2Impl.Filters.*;
 import Composestar.Core.CpsRepository2Impl.FMParams.*;
 import Composestar.Core.CpsRepository2Impl.References.*;
 import Composestar.Core.CpsRepository2Impl.SISpec.*;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.*;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.*;
 
 import Composestar.Core.EMBEX.EmbeddedSource;
@@ -1276,10 +1278,6 @@ constraint [SISpecification si]
 // throws CpsSemanticException
 	: ^(CONSTRAINT opr=IDENTIFIER 
 		{
-			FilterModuleConstraint fmc = new FilterModuleConstraintImpl($opr.text);
-			setLocInfo(fmc, opr);
-			si.addFilterModuleConstraint(fmc);
-			repository.add(fmc);
 			List<ConstraintValue> args = new ArrayList<ConstraintValue>();
 			
 			if (si.getOwner() == null || !(si.getOwner() instanceof CpsConcern)) 
@@ -1325,9 +1323,18 @@ constraint [SISpecification si]
 		{
 			try {
 				try {
-					fmc.setArguments(args);
+					Constraint fmc = constraintFactory.createConstraint($opr.text, args);
+					setLocInfo(fmc, opr);
+					si.addFilterModuleConstraint(fmc);
+					repository.add(fmc);
 				}
 				catch (IllegalArgumentException e) {
+					throw new CpsSemanticException(e.getMessage(), input, opr);
+				}
+				catch (InstantiationException e) {
+					throw new CpsSemanticException(e.getMessage(), input, opr);
+				}
+				catch (NullPointerException e) {
 					throw new CpsSemanticException(e.getMessage(), input, opr);
 				}
 			}

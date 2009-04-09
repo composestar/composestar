@@ -22,14 +22,10 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.SISpec;
+package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import Composestar.Core.CpsRepository2.SISpec.ConstraintValue;
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
@@ -37,7 +33,7 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
  * 
  * @author Michiel Hendriks
  */
-public class FilterModuleConstraintImpl extends AbstractRepositoryEntity implements FilterModuleConstraint
+public abstract class BinaryConstraint extends AbstractRepositoryEntity implements Constraint
 {
 	private static final long serialVersionUID = -7452451542459968398L;
 
@@ -47,9 +43,14 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 	protected String constraintType;
 
 	/**
-	 * Contains the argument values.
+	 * The left hand side value
 	 */
-	protected List<ConstraintValue> arguments;
+	protected ConstraintValue lhs;
+
+	/**
+	 * The right hand side value
+	 */
+	protected ConstraintValue rhs;
 
 	/**
 	 * Create a filter module constraint of a given type
@@ -58,7 +59,8 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 	 * @throws NullPointerException
 	 * @throws IllegalArgumentException
 	 */
-	public FilterModuleConstraintImpl(String type) throws NullPointerException, IllegalArgumentException
+	protected BinaryConstraint(String type, ConstraintValue lhsValue, ConstraintValue rhsValue)
+			throws NullPointerException, IllegalArgumentException
 	{
 		super();
 		if (type == null)
@@ -70,7 +72,8 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 			throw new IllegalArgumentException("Type can not be empty");
 		}
 		constraintType = type;
-		arguments = new ArrayList<ConstraintValue>();
+		lhs = lhsValue;
+		rhs = rhsValue;
 	}
 
 	/*
@@ -80,39 +83,18 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 	 */
 	public String getConstraintType()
 	{
-
 		return constraintType;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint
-	 * #getArguments()
+	 * @see
+	 * Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint#getArguments
+	 * ()
 	 */
-	public List<ConstraintValue> getArguments()
+	public ConstraintValue[] getArguments()
 	{
-		return Collections.unmodifiableList(arguments);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint
-	 * #setArguments(java.util.List)
-	 */
-	public void setArguments(List<ConstraintValue> args) throws NullPointerException, IllegalArgumentException
-	{
-		if (args == null)
-		{
-			throw new NullPointerException();
-		}
-		if (args.size() < 2 || args.size() > 3)
-		{ // TODO needs to be fixed to actually check the data w.r.t. the
-			// constraint type
-			throw new IllegalArgumentException(String.format("%s takes 2 arguments, received %d", getConstraintType(),
-					args.size()));
-		}
-		arguments.clear();
-		arguments.addAll(args);
+		return new ConstraintValue[] { lhs, rhs };
 	}
 
 	/*
@@ -126,14 +108,14 @@ public class FilterModuleConstraintImpl extends AbstractRepositoryEntity impleme
 		sb.append(constraintType);
 		sb.append('(');
 		int i = 0;
-		for (ConstraintValue val : arguments)
+		for (ConstraintValue cv : getArguments())
 		{
 			if (i > 0)
 			{
 				sb.append(',');
 			}
 			++i;
-			sb.append(val.getStringValue());
+			sb.append(cv.getStringValue());
 		}
 		sb.append(')');
 		return sb.toString();

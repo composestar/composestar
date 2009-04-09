@@ -22,49 +22,48 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.SISpec;
+package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
-import Composestar.Core.CpsRepository2.References.FilterModuleReference;
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.SICondition;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConditionConstraintValue;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
- * A filter module constraint that uses a filter module reference.
+ * A constraint value that use a condition defined in the superimposition block.
  * 
  * @author Michiel Hendriks
  */
-public class FilterModuleConstraintValueImpl extends AbstractRepositoryEntity implements FilterModuleConstraintValue
+public class ConditionConstraintValueImpl extends AbstractRepositoryEntity implements ConditionConstraintValue
 {
-	private static final long serialVersionUID = 1752409162279862032L;
+	private static final long serialVersionUID = -4636856061276353316L;
 
 	/**
-	 * A reference to a filter module.
+	 * The superimposition condition to use
 	 */
-	protected FilterModuleReference filterModuleReference;
+	protected SICondition condition;
 
 	/**
-	 * @param fmr The filter module reference
-	 * @throws NullPointerException Thrown when the filter module reference is
-	 *             null.
+	 * @param cond
+	 * @throws NullPointerException Thrown when the condition is null
 	 */
-	public FilterModuleConstraintValueImpl(FilterModuleReference fmr) throws NullPointerException
+	public ConditionConstraintValueImpl(SICondition cond) throws NullPointerException
 	{
 		super();
-		if (fmr == null)
+		if (cond == null)
 		{
 			throw new NullPointerException();
 		}
-		filterModuleReference = fmr;
+		condition = cond;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraintValue
-	 * #getFilterModuleReference()
+	 * @see Composestar.Core.CpsRepository2.SISpec.ConditionConstraintValue
+	 * #getCondition()
 	 */
-	public FilterModuleReference getFilterModuleReference()
+	public SICondition getCondition()
 	{
-		return filterModuleReference;
+		return condition;
 	}
 
 	/*
@@ -74,6 +73,6 @@ public class FilterModuleConstraintValueImpl extends AbstractRepositoryEntity im
 	 */
 	public String getStringValue()
 	{
-		return filterModuleReference.getReferenceId();
+		return condition.getFullyQualifiedName();
 	}
 }

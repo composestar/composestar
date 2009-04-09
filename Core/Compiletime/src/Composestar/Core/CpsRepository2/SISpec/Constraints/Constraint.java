@@ -22,9 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SISpec;
-
-import java.util.List;
+package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 
@@ -34,8 +32,7 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
  * 
  * @author Michiel Hendriks
  */
-// TODO this interface might need to be adjusted to blend in with FILTH
-public interface FilterModuleConstraint extends RepositoryEntity
+public interface Constraint extends RepositoryEntity
 {
 	/**
 	 * @return The constraint type. This is one of the following values: pre,
@@ -45,19 +42,7 @@ public interface FilterModuleConstraint extends RepositoryEntity
 	String getConstraintType();
 
 	/**
-	 * Set the arguments of this constraint. This overrides the previously set
-	 * arguments.
-	 * 
-	 * @param args The list of arguments
-	 * @throws NullPointerException Thrown when the list is null.
-	 * @throws IllegalArgumentException Thrown when the list of arguments
-	 *             contains invalid values.
+	 * @return The arguments for this constraint
 	 */
-	void setArguments(List<ConstraintValue> args) throws NullPointerException, IllegalArgumentException;
-
-	/**
-	 * @return The arguments for the given constraint. The type and number of
-	 *         the arguments depends on the constraint type.
-	 */
-	List<ConstraintValue> getArguments();
+	ConstraintValue[] getArguments();
 }

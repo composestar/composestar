@@ -22,10 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SISpec;
-
-import java.util.ArrayList;
-import java.util.List;
+package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
@@ -33,15 +30,15 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 /**
  * @author Michiel Hendriks
  */
-public abstract class FilterModuleConstraintTestBase extends RepositoryEntityTestBase
+public abstract class ConstraintTestBase extends RepositoryEntityTestBase
 {
 	protected static final String FMC_TYPE = "pre";
 
-	protected FilterModuleConstraint fmc;
+	protected Constraint fmc;
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint#getConstraintType()}
+	 * {@link Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint#getConstraintType()}
 	 * .
 	 */
 	public void testGetConstraintType()
@@ -51,43 +48,13 @@ public abstract class FilterModuleConstraintTestBase extends RepositoryEntityTes
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint#setArguments(java.util.List)}
+	 * {@link Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint#setArguments(java.util.List)}
 	 * .
 	 */
 	public void testSetArguments()
 	{
 		assertNotNull(fmc.getArguments());
-		assertEquals(0, fmc.getArguments().size());
-
-		List<ConstraintValue> cvs = new ArrayList<ConstraintValue>();
-		ConstraintValue cv = new DummyCV();
-		try
-		{
-			fmc.setArguments(cvs);
-		}
-		catch (IllegalArgumentException e)
-		{
-		}
-		assertEquals(0, fmc.getArguments().size());
-		cvs.add(cv);
-		cvs.add(cv);
-		assertEquals(0, fmc.getArguments().size());
-		fmc.setArguments(cvs);
-		assertEquals(2, fmc.getArguments().size());
-		assertTrue(fmc.getArguments().contains(cv));
-		cvs.add(cv);
-		assertEquals(2, fmc.getArguments().size());
-		fmc.setArguments(cvs);
-		assertEquals(3, fmc.getArguments().size());
-
-		try
-		{
-			fmc.setArguments(null);
-			fail();
-		}
-		catch (NullPointerException e)
-		{
-		}
+		assertEquals(0, fmc.getArguments().length);
 	}
 
 	/**

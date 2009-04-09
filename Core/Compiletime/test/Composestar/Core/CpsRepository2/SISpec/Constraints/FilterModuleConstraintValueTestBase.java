@@ -22,11 +22,12 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.SISpec;
+package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
  * @author Michiel Hendriks
@@ -50,7 +51,7 @@ public abstract class FilterModuleConstraintValueTestBase extends RepositoryEnti
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraintValue#getFilterModuleReference()}
+	 * {@link Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue#getFilterModuleReference()}
 	 * .
 	 */
 	public void testGetFilterModuleReference()

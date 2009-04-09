@@ -37,6 +37,7 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
 import Composestar.Core.CpsRepository2.Meta.FileInformation;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 import Composestar.Core.CpsRepository2.References.ReferenceManager;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintFactory;
 import Composestar.Core.EMBEX.EmbeddedSources;
 import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.Master.ModuleNames;
@@ -87,6 +88,11 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	 * 
 	 */
 	protected EmbeddedSources embeddedSourceManager;
+
+	/**
+	 * 
+	 */
+	protected ConstraintFactory constraintFactory;
 
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
@@ -145,6 +151,14 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	public void setEmbeddedSourceManager(EmbeddedSources srcMan)
 	{
 		embeddedSourceManager = srcMan;
+	}
+
+	/**
+	 * @param constraintFactory the constraintFactory to set
+	 */
+	public void setConstraintFactory(ConstraintFactory factory)
+	{
+		constraintFactory = factory;
 	}
 
 	/**

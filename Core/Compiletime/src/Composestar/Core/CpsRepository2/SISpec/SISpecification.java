@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.CpsConcern;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
 
 /**
  * This interface encapsulates all elements of the superimposition block in the
@@ -160,7 +161,7 @@ public interface SISpecification extends QualifiedRepositoryEntity
 	 * @param constraint The constraint to add
 	 * @throws NullPointerException Thrown when the constraint is null
 	 */
-	void addFilterModuleConstraint(FilterModuleConstraint constraint) throws NullPointerException;
+	void addFilterModuleConstraint(Constraint constraint) throws NullPointerException;
 
 	/**
 	 * Remove a filter module constraint.
@@ -170,14 +171,14 @@ public interface SISpecification extends QualifiedRepositoryEntity
 	 *         removed.
 	 * @throws NullPointerException Thrown when the constraint is null
 	 */
-	FilterModuleConstraint removeFilterModuleConstraint(FilterModuleConstraint constraint) throws NullPointerException;
+	Constraint removeFilterModuleConstraint(Constraint constraint) throws NullPointerException;
 
 	/**
 	 * @return All registered filter module constraints in the superimposition
 	 *         instance. Returns an empty set when no constraints where
 	 *         registered. The returned collection is real only.
 	 */
-	Collection<FilterModuleConstraint> getFilterModuleConstraints();
+	Collection<Constraint> getFilterModuleConstraints();
 
 	/**
 	 * Register a condition to this superimposition instance. Conditions should

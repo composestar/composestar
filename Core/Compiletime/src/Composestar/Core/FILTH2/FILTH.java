@@ -24,11 +24,7 @@
 
 package Composestar.Core.FILTH2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ModuleSetting;
@@ -38,18 +34,11 @@ import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.CpsRepository2.SIInfo.Superimposed;
-import Composestar.Core.CpsRepository2.SISpec.ConstraintValue;
 import Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding;
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
 import Composestar.Core.CpsRepository2Impl.SIInfo.ImposedFilterModuleImpl;
 import Composestar.Core.CpsRepository2Impl.SISpec.FilterModuleBindingImpl;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH2.Model.Action;
-import Composestar.Core.FILTH2.Model.Constraint;
-import Composestar.Core.FILTH2.Model.ConstraintFactory;
-import Composestar.Core.FILTH2.Model.PhantomAction;
-import Composestar.Core.FILTH2.Model.StructuralConstraint;
-import Composestar.Core.FILTH2.Model.ConstraintFactory.ConstraintCreationException;
 import Composestar.Core.FILTH2.Ordering.OrderGenerator;
 import Composestar.Core.FILTH2.Validation.StructuralValidation;
 import Composestar.Core.Master.CTCommonModule;
@@ -88,16 +77,7 @@ public class FILTH implements CTCommonModule
 	@ModuleSetting(ID = "max", name = "Maximum Orders", isAdvanced = true)
 	protected int maxOrders = 4;
 
-	/**
-	 * Mapping from action name to action. Used to find existing actions.
-	 */
-	protected Map<String, Action> actions;
-
-	/**
-	 * Mapping from constraint to its definition, used for error reporting on
-	 * the constraints.
-	 */
-	protected Map<Constraint, FilterModuleConstraint> constraints;
+	protected Set<Constraint> constraints;
 
 	protected Repository repository;
 
@@ -146,17 +126,7 @@ public class FILTH implements CTCommonModule
 		defaultFMBinding = new FilterModuleBindingImpl();
 		defaultFMBinding.setFilterModuleReference(defaultInnerDispatch);
 
-		timer.start("Creating actions");
-		actions = new HashMap<String, Action>();
-		for (FilterModule fm : repository.getAll(FilterModule.class))
-		{
-			actions.put(fm.getFullyQualifiedName(), new Action(fm.getFullyQualifiedName()));
-		}
-		timer.stop();
-		timer.start("Loading constraint specification");
-		constraints = new HashMap<Constraint, FilterModuleConstraint>();
-		loadConstraintSpecification();
-		timer.stop();
+		constraints = repository.getAllSet(Constraint.class);
 
 		boolean allOK = true;
 		for (Superimposed si : repository.getAllSet(Superimposed.class))
@@ -189,27 +159,9 @@ public class FILTH implements CTCommonModule
 	 */
 	protected boolean generateFilterModuleOrder(Concern concern, Superimposed sinfo)
 	{
-		Map<Action, ImposedFilterModule> concernActions = new HashMap<Action, ImposedFilterModule>();
-		// Add filter modules as actions
-		for (ImposedFilterModule fms : sinfo.getFilterModules())
-		{
-			Action act = actions.get(fms.getFilterModule().getFullyQualifiedName());
-			if (act != null)
-			{
-				concernActions.put(act, fms);
-			}
-			else
-			{
-				logger.error(String.format("Unknown filter module %s in the order for %s", fms.getFilterModule()
-						.getFullyQualifiedName(), concern.getFullyQualifiedName()));
-				return false;
-			}
-		}
-
-		List<List<ImposedFilterModule>> fmorders = new LinkedList<List<ImposedFilterModule>>();
-
 		timer.start("Creating orders for %s", concern.getFullyQualifiedName());
-		Set<List<Action>> orders = OrderGenerator.generate(concernActions.keySet(), maxOrders);
+		Set<List<ImposedFilterModule>> orders =
+				OrderGenerator.generate(sinfo.getFilterModules(), constraints, maxOrders);
 		timer.stop();
 
 		ImposedFilterModule difm = new ImposedFilterModuleImpl(defaultFMBinding);
@@ -219,55 +171,55 @@ public class FILTH implements CTCommonModule
 		// convert the ordered action lists to filter module ordering lists and
 		// validate the generated list to conform to the constraints
 		timer.start("Convert orders for %s", concern.getFullyQualifiedName());
-		for (List<Action> order : orders)
+		for (List<ImposedFilterModule> order : orders)
 		{
-			List<ImposedFilterModule> fmorder = new ArrayList<ImposedFilterModule>();
 			boolean isValidOrder = true;
-			for (Action action : order)
-			{
-				// Check if structural constraints are met
-				for (Constraint constraint : action.getConstraints(StructuralConstraint.class))
-				{
-					if (!constraint.isValidOrder(order, null))
-					{
-						FilterModuleConstraint def = constraints.get(constraint);
-						logger.warn(String.format("Constraint %s is not met in this selected order: %s",
-								def.toString(), order), def);
-						isValidOrder = false;
-						break;
-					}
-				}
-				if (!isValidOrder)
-				{
-					break;
-				}
-				ImposedFilterModule fms = concernActions.get(action);
-				if (fms != null)
-				{
-					fmorder.add(fms);
-				}
-				else
-				{
-					logger.error(String.format("Unknown action %s in the order for %s", action.getName(), concern
-							.getFullyQualifiedName()));
-					return false;
-				}
-			}
+			// for (Action action : order)
+			// {
+			// // Check if structural constraints are met
+			// for (Constraint constraint :
+			// action.getConstraints(StructuralConstraint.class))
+			// {
+			// if (!constraint.isValidOrder(order, null))
+			// {
+			// Constraint def = constraints.get(constraint);
+			// logger.warn(String.format("Constraint %s is not met in this selected order: %s",
+			// def.toString(), order), def);
+			// isValidOrder = false;
+			// break;
+			// }
+			// }
+			// if (!isValidOrder)
+			// {
+			// break;
+			// }
+			// ImposedFilterModule fms = concernActions.get(action);
+			// if (fms != null)
+			// {
+			// fmorder.add(fms);
+			// }
+			// else
+			// {
+			// logger.error(String.format("Unknown action %s in the order for %s",
+			// action.getName(), concern
+			// .getFullyQualifiedName()));
+			// return false;
+			// }
+			// }
 
 			if (isValidOrder)
 			{
 				// add the default dispatch filter
-				fmorder.add(difm);
-				fmorders.add(fmorder);
-				sinfo.addFilterModuleOrder(fmorder);
+				order.add(difm);
+				sinfo.addFilterModuleOrder(order);
 			}
 		}
 		timer.stop();
 
 		// add the filter module orders
-		if (fmorders.size() > 0)
+		if (orders.size() > 0)
 		{
-			if (fmorders.size() > 1)
+			if (orders.size() > 1)
 			{
 				logger.warn(String.format("Multiple Filter Module orderings possible for concern %s", concern
 						.getFullyQualifiedName()), concern);
@@ -298,37 +250,5 @@ public class FILTH implements CTCommonModule
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * Add the constraint specifications to the action
-	 * 
-	 * @param actions
-	 */
-	protected void loadConstraintSpecification()
-	{
-		for (FilterModuleConstraint fmc : repository.getAll(FilterModuleConstraint.class))
-		{
-			List<ConstraintValue> args = fmc.getArguments();
-			List<Action> acts = new ArrayList<Action>();
-			for (ConstraintValue element : args)
-			{
-				Action act = actions.get(element.getStringValue());
-				if (act == null)
-				{
-					act = new PhantomAction(element.getStringValue());
-					actions.put(element.getStringValue(), act);
-				}
-				acts.add(act);
-			}
-			try
-			{
-				constraints.put(ConstraintFactory.createConstraint(fmc.getConstraintType(), acts), fmc);
-			}
-			catch (ConstraintCreationException e)
-			{
-				logger.error(e.getMessage(), fmc);
-			}
-		}
 	}
 }

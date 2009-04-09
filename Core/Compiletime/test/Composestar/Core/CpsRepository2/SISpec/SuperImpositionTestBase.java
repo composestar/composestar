@@ -31,6 +31,8 @@ import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
@@ -46,7 +48,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	protected FilterModuleBinding fmb1, fmb2;
 
-	protected FilterModuleConstraint fmc1, fmc2;
+	protected Constraint fmc1, fmc2;
 
 	protected Selector sel1, sel2;
 
@@ -133,7 +135,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SISpec.SISpecificationImpl#addFilterModuleConstraint(Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SISpec.SISpecificationImpl#addFilterModuleConstraint(Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint)}
 	 * .
 	 */
 	public void testAddFilterModuleConstraint()
@@ -266,7 +268,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 	 */
 	public void testGetFilterModuleConstraints()
 	{
-		Collection<FilterModuleConstraint> fmcs = si.getFilterModuleConstraints();
+		Collection<Constraint> fmcs = si.getFilterModuleConstraints();
 		assertNotNull(fmcs);
 		assertTrue(fmcs.isEmpty());
 		si.addFilterModuleConstraint(fmc1);
@@ -400,7 +402,7 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SISpec.SISpecificationImpl#removeFilterModuleConstraint(Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint)}
+	 * {@link Composestar.Core.CpsRepository2Impl.SISpec.SISpecificationImpl#removeFilterModuleConstraint(Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint)}
 	 * .
 	 */
 	public void testRemoveFilterModuleConstraint()
@@ -526,11 +528,11 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 		{}
 	}
 
-	protected static class DummyFMC extends AbstractRepositoryEntity implements FilterModuleConstraint
+	protected static class DummyFMC extends AbstractRepositoryEntity implements Constraint
 	{
 		private static final long serialVersionUID = -7463428959390953212L;
 
-		public List<ConstraintValue> getArguments()
+		public ConstraintValue[] getArguments()
 		{
 			return null;
 		}

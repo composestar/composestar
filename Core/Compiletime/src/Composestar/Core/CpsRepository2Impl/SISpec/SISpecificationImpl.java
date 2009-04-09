@@ -33,10 +33,10 @@ import java.util.Set;
 
 import Composestar.Core.CpsRepository2.SISpec.AnnotationBinding;
 import Composestar.Core.CpsRepository2.SISpec.FilterModuleBinding;
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
 import Composestar.Core.CpsRepository2.SISpec.SICondition;
 import Composestar.Core.CpsRepository2.SISpec.SISpecification;
 import Composestar.Core.CpsRepository2.SISpec.Selector;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 
 /**
@@ -72,7 +72,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 	/**
 	 * Filter module constraint
 	 */
-	protected Set<FilterModuleConstraint> filterModuleConstraints;
+	protected Set<Constraint> filterModuleConstraints;
 
 	/**
 	 * Create a new instance
@@ -82,7 +82,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 		super(NAME);
 		annotationBindings = new HashSet<AnnotationBinding>();
 		filterModuleBindings = new HashSet<FilterModuleBinding>();
-		filterModuleConstraints = new HashSet<FilterModuleConstraint>();
+		filterModuleConstraints = new HashSet<Constraint>();
 		selectors = new HashMap<String, Selector>();
 		conditions = new HashMap<String, SICondition>();
 	}
@@ -145,7 +145,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 	 * addFilterModuleConstraint
 	 * (Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint)
 	 */
-	public void addFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
+	public void addFilterModuleConstraint(Constraint fmc) throws NullPointerException
 	{
 		if (fmc == null)
 		{
@@ -224,7 +224,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 	 * getFilterModuleConstraints()
 	 */
-	public Collection<FilterModuleConstraint> getFilterModuleConstraints()
+	public Collection<Constraint> getFilterModuleConstraints()
 	{
 		return Collections.unmodifiableCollection(filterModuleConstraints);
 	}
@@ -329,7 +329,7 @@ public class SISpecificationImpl extends AbstractQualifiedRepositoryEntity imple
 	 * removeFilterModuleConstraint
 	 * (Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint)
 	 */
-	public FilterModuleConstraint removeFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
+	public Constraint removeFilterModuleConstraint(Constraint fmc) throws NullPointerException
 	{
 		if (fmc == null)
 		{

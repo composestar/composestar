@@ -22,44 +22,42 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.SISpec;
+package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
-import Composestar.Core.CpsRepository2.SISpec.ConditionConstraintValueTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConditionConstraintValueImpl;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValueTestBase;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.FilterModuleConstraintValueImpl;
 
 /**
  * @author Michiel Hendriks
  */
-public class ConditionConstraintValueImplTest extends ConditionConstraintValueTestBase
+public class FilterModuleConstraintValueImplTest extends FilterModuleConstraintValueTestBase
 {
 
 	/*
 	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.
+	 * FilterModuleConstraintValueTestBase#setUp()
 	 */
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		ccv = new ConditionConstraintValueImpl(cond);
-		re = ccv;
+		fmcv = new FilterModuleConstraintValueImpl(fmr);
+		re = fmcv;
 	}
 
 	/**
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConditionConstraintValueImpl#ConditionConstraintValueImpl(Composestar.Core.CpsRepository2.SISpec.SICondition)}
-	 * .
+	 * 
 	 */
-	public void testConditionConstraintValueImpl()
+	public void testCtor()
 	{
 		try
 		{
-			new ConditionConstraintValueImpl(null);
+			new FilterModuleConstraintValueImpl(null);
 			fail();
 		}
 		catch (NullPointerException e)
 		{
 		}
 	}
-
 }

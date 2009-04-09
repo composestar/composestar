@@ -28,22 +28,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Map.Entry;
 
-import Composestar.Core.CpsRepository2.SISpec.FilterModuleConstraint;
-import Composestar.Core.FILTH2.Model.Action;
-import Composestar.Core.FILTH2.Model.Constraint;
-import Composestar.Core.FILTH2.Model.ExcludeConstraint;
-import Composestar.Core.FILTH2.Model.IncludeConstraint;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ExcludeConstraint;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.IncludeConstraint;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Algorithm to detect structural constraint conflicts between the
- * include/exclude constraints.
+ * include/exclude constraints. NOTE: This algorithm will assume that
+ * include/exclude only contain FilterModuleConstraintValue as arguments
  * 
  * @author Michiel Hendriks
  */
@@ -60,46 +58,49 @@ public final class StructuralValidation
 	 * @param constraints
 	 * @return
 	 */
-	public static boolean isValid(Map<Constraint, FilterModuleConstraint> constraints)
+	public static boolean isValid(Set<Constraint> constraints)
 	{
-		for (Entry<Constraint, FilterModuleConstraint> entry : constraints.entrySet())
+		Set<IncludeConstraint> incl = new HashSet<IncludeConstraint>();
+		Set<ExcludeConstraint> excl = new HashSet<ExcludeConstraint>();
+
+		for (Constraint entry : constraints)
 		{
-			if (!(entry.getKey() instanceof ExcludeConstraint))
+			if (entry instanceof ExcludeConstraint)
 			{
-				continue;
+				excl.add((ExcludeConstraint) entry);
 			}
-			Action left = entry.getKey().getLeft();
-			Action right = entry.getKey().getRight();
-			Set<Constraint> visited = new HashSet<Constraint>();
-			if (hasIncludePath(left, right, visited) || hasIncludePath(right, left, visited))
+			else if (entry instanceof IncludeConstraint)
 			{
-				if (entry.getValue() != null)
-				{
-					logger.error(String.format("Constraint %s conflicts with include constraints: %s", entry.getKey(),
-							visited), entry.getValue());
-				}
-				else
-				{
-					logger.error(String.format("Constraint %s conflicts with include constraints: %s", entry.getKey(),
-							visited));
-				}
+				incl.add((IncludeConstraint) entry);
+			}
+		}
+
+		for (ExcludeConstraint entry : excl)
+		{
+			ConstraintValue[] args = entry.getArguments();
+			Set<IncludeConstraint> visited = new HashSet<IncludeConstraint>();
+			if (hasIncludePath(args[0].getStringValue(), args[1].getStringValue(), incl, visited)
+					|| hasIncludePath(args[1].getStringValue(), args[0].getStringValue(), incl, visited))
+			{
+				logger.error(String.format("Constraint %s conflicts with include constraints: %s", entry, visited));
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private static boolean hasIncludePath(Action source, Action target, Set<Constraint> visited)
+	private static boolean hasIncludePath(String source, String target, Set<IncludeConstraint> constraints,
+			Set<IncludeConstraint> visited)
 	{
 		visited.clear();
-		Queue<Action> openNodes = new LinkedList<Action>();
+		Queue<String> openNodes = new LinkedList<String>();
 		// actually path == visited
-		List<Action> path = new ArrayList<Action>();
-		Action current = source;
-		while (current != null && current != target)
+		List<String> path = new ArrayList<String>();
+		String current = source;
+		while (current != null && !current.equals(target))
 		{
 			path.add(current);
-			current = selectOpenNode(current, target, openNodes, path, visited);
+			current = selectOpenNode(current, target, openNodes, path, constraints, visited);
 		}
 		return current != null;
 	}
@@ -113,20 +114,15 @@ public final class StructuralValidation
 	 * @param path
 	 * @return
 	 */
-	private static Action selectOpenNode(Action current, Action target, Queue<Action> openNodes, List<Action> path,
-			Set<Constraint> visited)
+	private static String selectOpenNode(String current, String target, Queue<String> openNodes, List<String> path,
+			Set<IncludeConstraint> constraints, Set<IncludeConstraint> visited)
 	{
-		for (IncludeConstraint incc : current.getConstraints(IncludeConstraint.class))
+		for (IncludeConstraint incc : constraints)
 		{
-			Action act = incc.getRight();
-			if (current == act)
+			String val = incc.getArguments()[0].getStringValue();
+			if (!openNodes.contains(val) && !path.contains(val))
 			{
-				// because constraints are added to both sides
-				act = incc.getLeft();
-			}
-			if (!openNodes.contains(act) && !path.contains(act))
-			{
-				openNodes.add(act);
+				openNodes.add(val);
 				visited.add(incc);
 			}
 		}

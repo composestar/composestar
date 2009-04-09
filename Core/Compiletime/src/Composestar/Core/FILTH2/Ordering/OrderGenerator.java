@@ -31,11 +31,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
-import Composestar.Core.FILTH2.Model.Action;
-import Composestar.Core.FILTH2.Model.Constraint;
-import Composestar.Core.FILTH2.Model.StructuralConstraint;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ControllConstraint;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.OrderingConstraint;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -62,21 +64,22 @@ public final class OrderGenerator
 	 * @param maxOrders if >0 limit the maximum orders to this number
 	 * @return
 	 */
-	public static Set<List<Action>> generate(Collection<Action> actions, int maxOrders)
+	public static Set<List<ImposedFilterModule>> generate(Collection<ImposedFilterModule> actions,
+			Set<Constraint> constraints, int maxOrders)
 	{
 		OrderingNode rootNode = new OrderingNode();
-		Set<OrderingNode> nodes = createGraph(actions, rootNode);
+		Set<OrderingNode> nodes = createGraph(actions, constraints, rootNode);
 		Set<List<OrderingNode>> tmpResult = new HashSet<List<OrderingNode>>();
 		traverseAll(rootNode, new ArrayList<OrderingNode>(), nodes, tmpResult, maxOrders);
 
-		Set<List<Action>> result = new HashSet<List<Action>>();
+		Set<List<ImposedFilterModule>> result = new HashSet<List<ImposedFilterModule>>();
 		for (List<OrderingNode> sorder : tmpResult)
 		{
-			List<Action> sres = new ArrayList<Action>();
+			List<ImposedFilterModule> sres = new ArrayList<ImposedFilterModule>();
 			sorder.remove(0); // remove the root node
 			for (OrderingNode node : sorder)
 			{
-				sres.add(node.getAction());
+				sres.add(node.getImposedFilterModule());
 			}
 			result.add(sres);
 		}
@@ -92,38 +95,53 @@ public final class OrderGenerator
 	 * @param rootNode
 	 * @return
 	 */
-	protected static Set<OrderingNode> createGraph(Collection<Action> actions, OrderingNode rootNode)
+	protected static Set<OrderingNode> createGraph(Collection<ImposedFilterModule> actions,
+			Set<Constraint> constraints, OrderingNode rootNode)
 	{
 		Set<OrderingNode> result = new HashSet<OrderingNode>();
-		Map<Action, OrderingNode> lookup = new HashMap<Action, OrderingNode>();
+		Map<String, OrderingNode> lookup = new HashMap<String, OrderingNode>();
 		// create all nodes
-		for (Action action : actions)
+		for (ImposedFilterModule action : actions)
 		{
 			OrderingNode node = new OrderingNode(action);
 			result.add(node);
-			lookup.put(action, node);
+			lookup.put(action.getFilterModule().getFullyQualifiedName(), node);
 			new OrderingEdge(rootNode, node);
 		}
-		// create edges using the constraints
-		for (Entry<Action, OrderingNode> entry : lookup.entrySet())
+
+		for (Constraint constraint : constraints)
 		{
-			for (Constraint constraint : entry.getKey().getConstraints())
+			if (constraint instanceof OrderingConstraint || constraint instanceof ControllConstraint)
 			{
-				if (constraint instanceof StructuralConstraint)
-				{
-					// these don't dictate an order
-					// Ordering constraint and Control constraint do
-					continue;
-				}
-				if (entry.getKey() != constraint.getLeft())
+				ConstraintValue[] args = constraint.getArguments();
+				if (args.length < 2)
 				{
 					continue;
 				}
-				OrderingNode dest = lookup.get(constraint.getRight());
-				if (dest != null)
+				if (!(args[0] instanceof FilterModuleConstraintValue))
 				{
-					new OrderingEdge(entry.getValue(), dest);
+					// filter Skip,Cond constraints which have a non FM first
+					// argument
+					continue;
 				}
+				if (!(args[1] instanceof FilterModuleConstraintValue))
+				{
+					// this should probably never happen
+					continue;
+				}
+				OrderingNode n1 = lookup.get(args[0].getStringValue());
+				if (n1 == null)
+				{
+					// doesn't exist, so don't create an edge
+					continue;
+				}
+				OrderingNode n2 = lookup.get(args[1].getStringValue());
+				if (n2 == null)
+				{
+					// doesn't exist, so don't create an edge
+					continue;
+				}
+				new OrderingEdge(n1, n2);
 			}
 		}
 		return result;
