@@ -71,6 +71,9 @@ public class MainClass {
 			System.out.println("An ErrorFilterException was raised.");
 		}
 		fbq.success();
+		
+		DoubleFMSI dfmsi = new DoubleFMSI();
+		dfmsi.run();
 	}
 	
 	public void nop() {
