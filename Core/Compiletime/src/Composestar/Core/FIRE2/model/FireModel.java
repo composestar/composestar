@@ -162,7 +162,7 @@ public class FireModel
 	 * HashMap that maps the basic FlowNodes to the corresponding
 	 * ExtendedFlowNodes.
 	 */
-	private Map<FlowNode, ExtendedFlowNode> flowNodeMap;
+	private Map<LayeredFlowNode, ExtendedFlowNode> flowNodeLookup;
 
 	/**
 	 * FlowNodes from the conditional filter module superimposition
@@ -247,7 +247,7 @@ public class FireModel
 	 */
 	private void createFlowModel()
 	{
-		flowNodeMap = new HashMap<FlowNode, ExtendedFlowNode>();
+		flowNodeLookup = new HashMap<LayeredFlowNode, ExtendedFlowNode>();
 		extendedFlowModels = new ExtendedFlowModel[2];
 
 		fmConditionFlowNodes = new ExtendedFlowNode[2][filterModules.length];
@@ -261,6 +261,25 @@ public class FireModel
 		extendedFlowModels[OUTPUT_FILTERS] = new ExtendedFlowModel();
 		createFlowNodes(OUTPUT_FILTERS);
 		createFlowTransitions(OUTPUT_FILTERS);
+	}
+
+	/**
+	 * Get the extended flow node for a given base node in a given layer
+	 * 
+	 * @param baseNode
+	 * @param layer
+	 * @return
+	 */
+	private ExtendedFlowNode getExtendedFlowNode(FlowNode baseNode, int layer)
+	{
+		LayeredFlowNode lookup = new LayeredFlowNode(baseNode, layer);
+		ExtendedFlowNode node = flowNodeLookup.get(lookup);
+		if (node == null)
+		{
+			logger.fatal(String
+					.format("No extended flow node for base node %s in layer %d", baseNode.toString(), layer));
+		}
+		return node;
 	}
 
 	/**
@@ -278,7 +297,7 @@ public class FireModel
 			{
 				ExtendedFlowNode extendedNode = new ExtendedFlowNode(node);
 				extendedFlowModels[filterLocation].nodes.add(extendedNode);
-				flowNodeMap.put(node, extendedNode);
+				flowNodeLookup.put(new LayeredFlowNode(node, i), extendedNode);
 			}
 
 			// If filter module condition, add node:
@@ -289,13 +308,13 @@ public class FireModel
 				fmConditionFlowNodes[filterLocation][i] = fmCondNode;
 
 				// true transition
-				ExtendedFlowNode startNode = flowNodeMap.get(flowModels[filterLocation][i].getStartNode());
+				ExtendedFlowNode startNode = getExtendedFlowNode(flowModels[filterLocation][i].getStartNode(), i);
 				ExtendedFlowTransition trueTransition = new ExtendedFlowTransition(fmCondNode, startNode);
 				fmCondNode.transitions.add(trueTransition);
 				extendedFlowModels[filterLocation].transitions.add(trueTransition);
 
 				// false transition
-				ExtendedFlowNode endNode = flowNodeMap.get(flowModels[filterLocation][i].getEndNode());
+				ExtendedFlowNode endNode = getExtendedFlowNode(flowModels[filterLocation][i].getEndNode(), i);
 				ExtendedFlowTransition falseTransition = new ExtendedFlowTransition(fmCondNode, endNode);
 				fmCondNode.transitions.add(falseTransition);
 				extendedFlowModels[filterLocation].transitions.add(falseTransition);
@@ -319,13 +338,13 @@ public class FireModel
 			else
 			{
 				FlowNode startNode = flowModels[filterLocation][0].getStartNode();
-				ExtendedFlowNode extendedStartNode = flowNodeMap.get(startNode);
+				ExtendedFlowNode extendedStartNode = getExtendedFlowNode(startNode, 0);
 				extendedFlowModels[filterLocation].startNode = extendedStartNode;
 			}
 
 			// End node
 			FlowNode endNode = flowModels[filterLocation][filterModules.length - 1].getEndNode();
-			ExtendedFlowNode extendedEndNode = flowNodeMap.get(endNode);
+			ExtendedFlowNode extendedEndNode = getExtendedFlowNode(endNode, filterModules.length - 1);
 			extendedFlowModels[filterLocation].endNode = extendedEndNode;
 		}
 	}
@@ -341,7 +360,7 @@ public class FireModel
 		{
 			for (FlowNode node : flowModels[filterLocation][i].getNodesEx())
 			{
-				ExtendedFlowNode extendedNode = flowNodeMap.get(node);
+				ExtendedFlowNode extendedNode = getExtendedFlowNode(node, i);
 
 				if (!node.containsName(FlowNode.END_NODE))
 				{
@@ -349,7 +368,7 @@ public class FireModel
 					for (FlowTransition transition : node.getTransitionsEx())
 					{
 						FlowNode endNode = transition.getEndNode();
-						ExtendedFlowNode endExtendedNode = flowNodeMap.get(endNode);
+						ExtendedFlowNode endExtendedNode = getExtendedFlowNode(endNode, i);
 						ExtendedFlowTransition extendedTransition =
 								new ExtendedFlowTransition(extendedNode, endExtendedNode, transition);
 						extendedNode.transitions.add(extendedTransition);
@@ -360,7 +379,7 @@ public class FireModel
 				{
 					// An end node
 					FlowNode endNode = flowModels[filterLocation][i + 1].getStartNode();
-					ExtendedFlowNode endExtendedNode = flowNodeMap.get(endNode);
+					ExtendedFlowNode endExtendedNode = getExtendedFlowNode(endNode, i + 1);
 					ExtendedFlowTransition extendedTransition =
 							new ExtendedFlowTransition(extendedNode, endExtendedNode);
 					extendedNode.transitions.add(extendedTransition);
@@ -540,7 +559,7 @@ public class FireModel
 			// There is no base end state corresponding with the end state, so
 			// create extendedEndState from scratch:
 			FlowNode endNode = flowModels[state.filterPosition][state.layer].getEndNode();
-			ExtendedFlowNode extendedEndNode = flowNodeMap.get(endNode);
+			ExtendedFlowNode extendedEndNode = getExtendedFlowNode(endNode, state.layer);
 
 			extendedEndState =
 					new ExtendedExecutionState(state.model, extendedEndNode, state.getMessage(),
@@ -908,11 +927,11 @@ public class FireModel
 	 * @param baseTransition
 	 * @return
 	 */
-	private FlowTransition getExtendedFlowTransition(ExecutionTransition baseTransition)
+	private FlowTransition getExtendedFlowTransition(ExecutionTransition baseTransition, int layer)
 	{
 		ExecutionState startState = baseTransition.getStartState();
 		FlowNode startNode = startState.getFlowNode();
-		ExtendedFlowNode extendedStartNode = flowNodeMap.get(startNode);
+		ExtendedFlowNode extendedStartNode = getExtendedFlowNode(startNode, layer);
 		if (extendedStartNode == null)
 		{
 			return null;
@@ -920,7 +939,7 @@ public class FireModel
 
 		ExecutionState endState = baseTransition.getEndState();
 		FlowNode endNode = endState.getFlowNode();
-		ExtendedFlowNode extendedEndNode = flowNodeMap.get(endNode);
+		ExtendedFlowNode extendedEndNode = getExtendedFlowNode(endNode, layer);
 		if (extendedEndNode == null)
 		{
 			return null;
@@ -1386,7 +1405,7 @@ public class FireModel
 		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, CpsMessage message,
 				int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
 		{
-			super(flowNodeMap.get(baseState.getFlowNode()), message, baseState.getStateType());
+			super(getExtendedFlowNode(baseState.getFlowNode(), layer), message, baseState.getStateType());
 
 			this.model = model;
 			this.baseState = baseState;
@@ -1412,7 +1431,7 @@ public class FireModel
 		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, CpsMessage message,
 				int stateType, int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
 		{
-			super(flowNodeMap.get(baseState.getFlowNode()), message, stateType);
+			super(getExtendedFlowNode(baseState.getFlowNode(), layer), message, stateType);
 
 			this.model = model;
 			this.baseState = baseState;
@@ -1476,7 +1495,7 @@ public class FireModel
 		public ExtendedExecutionTransition(ExtendedExecutionState startState, ExtendedExecutionState endState,
 				ExecutionTransition baseTransition)
 		{
-			super(baseTransition.getLabel(), getExtendedFlowTransition(baseTransition));
+			super(baseTransition.getLabel(), getExtendedFlowTransition(baseTransition, startState.layer));
 
 			this.startState = startState;
 			this.endState = endState;
@@ -1833,4 +1852,76 @@ public class FireModel
 
 	}
 
+	/**
+	 * Class used to aid the flow node to extended node lookup, because there
+	 * needs to be an distinguishing between the various layers.
+	 */
+	static class LayeredFlowNode
+	{
+		int layer;
+
+		FlowNode node;
+
+		public LayeredFlowNode(FlowNode inNode, int inLayer)
+		{
+			layer = inLayer;
+			node = inNode;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + layer;
+			result = prime * result + ((node == null) ? 0 : node.hashCode());
+			return result;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+			{
+				return true;
+			}
+			if (obj == null)
+			{
+				return false;
+			}
+			if (getClass() != obj.getClass())
+			{
+				return false;
+			}
+			LayeredFlowNode other = (LayeredFlowNode) obj;
+			if (layer != other.layer)
+			{
+				return false;
+			}
+			if (node != other.node)
+			{
+				return false;
+			}
+			if (node == null)
+			{
+				if (other.node != null)
+				{
+					return false;
+				}
+			}
+			else if (!node.equals(other.node))
+			{
+				return false;
+			}
+			return true;
+		}
+	}
 }
