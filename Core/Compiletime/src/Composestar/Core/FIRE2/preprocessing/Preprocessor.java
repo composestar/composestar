@@ -8,16 +8,15 @@ package Composestar.Core.FIRE2.preprocessing;
 
 import groove.explore.DefaultScenario;
 import groove.explore.result.Acceptor;
-import groove.explore.result.EmptyAcceptor;
-import groove.explore.result.EmptyResult;
 import groove.explore.result.FinalStateAcceptor;
 import groove.explore.result.Result;
-import groove.explore.result.SizedResult;
 import groove.explore.strategy.BranchingStrategy;
 import groove.explore.strategy.LinearStrategy;
 import groove.graph.Graph;
 import groove.io.AspectGxl;
+import groove.io.AspectualViewGps;
 import groove.io.LayedOutXml;
+import groove.io.URLLoaderFactory;
 import groove.lts.GTS;
 import groove.lts.GraphState;
 import groove.trans.GraphGrammar;
@@ -28,6 +27,8 @@ import groove.view.aspect.AspectGraph;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +40,6 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
-import Composestar.Core.FIRE2.preprocessing.io.StreamGpsLoader;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
@@ -236,30 +236,17 @@ public class Preprocessor implements CTCommonModule
 		try
 		{
 			CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
-			URL genUrl = Preprocessor.class.getResource(GRAMMAR_FLOW);
-			String fileName = genUrl.getFile().replaceAll("%20", " ");
-			logger.debug("Loading grammar: " + fileName);
-
-			StreamGpsLoader sgpsl = new StreamGpsLoader();
 			timer.start("Loading grammars");
-			generateFlowGrammar = sgpsl.unmarshal(Preprocessor.class, GRAMMAR_FLOW);
-			runtimeGrammar = sgpsl.unmarshal(Preprocessor.class, GRAMMAR_EXEC);
-			timer.stop();
+			URL url = Preprocessor.class.getResource(GRAMMAR_FLOW);
+			logger.debug("Loading grammar: " + url);
+			AspectualViewGps sgpsl = URLLoaderFactory.getLoader(url);
+			generateFlowGrammar = sgpsl.unmarshal(url);
 
-			// // Groove's own limited loading mechanism
-			// timer.start("Loading grammars");
-			// // load from directory:
-			// AspectualViewGps gpsLoader = new AspectualViewGps();
-			//
-			// File f = new File(genUrl.getFile().replaceAll("%20", " "));
-			//
-			// generateFlowGrammar = gpsLoader.unmarshal(f);
-			//
-			// URL runUrl = Preprocessor.class.getResource(GRAMMAR_EXEC);
-			// runtimeGrammar = gpsLoader.unmarshal(new
-			// File(runUrl.getFile().replaceAll("%20", " ")));
-			//
-			// timer.stop();
+			url = Preprocessor.class.getResource(GRAMMAR_EXEC);
+			logger.debug("Loading grammar: " + url);
+			sgpsl = URLLoaderFactory.getLoader(url);
+			runtimeGrammar = sgpsl.unmarshal(url);
+			timer.stop();
 		}
 		catch (Exception exc)
 		{
@@ -289,70 +276,15 @@ public class Preprocessor implements CTCommonModule
 		return grooveAst;
 	}
 
-	// /**
-	// * Create a GraphGRammar for the given view and start graph
-	// *
-	// * @param view
-	// * @param startGraph
-	// * @return
-	// */
-	// private GraphGrammar getGrammar(DefaultGrammarView view, Graph
-	// startGraph)
-	// {
-	// GraphGrammar result = new GraphGrammar(view.getName());
-	// for (RuleView ruleView : view.getRuleMap().values())
-	// {
-	// try
-	// {
-	// // only add the enabled rules
-	// if (ruleView.isEnabled())
-	// {
-	// SystemProperties properties = new SystemProperties();
-	// AspectualRuleView rv = new AspectualRuleView(((AspectualRuleView)
-	// ruleView).getAspectGraph(),
-	// ruleView.getNameLabel(), properties);
-	// result.add(rv.toRule());
-	// }
-	// }
-	// catch (FormatException exc)
-	// {
-	// for (String error : exc.getErrors())
-	// {
-	// // TODO: better errors
-	// logger.error(String.format("Format error in %s: %s",
-	// ruleView.getNameLabel(), error));
-	// }
-	// return null;
-	// }
-	// }
-	// result.setProperties(view.getProperties());
-	// result.setStartGraph(startGraph);
-	// try
-	// {
-	// result.setFixed();
-	// }
-	// catch (FormatException e)
-	// {
-	// // TODO: better errors
-	// logger.error(e);
-	// return null;
-	// }
-	// return result;
-	// }
-
 	private Graph generateFlow(Graph ast)
 	{
-		DefaultScenario<GraphState> scenario = new DefaultScenario<GraphState>();
-		scenario.setStrategy(new LinearStrategy());
-		Result<GraphState> result = new SizedResult<GraphState>(1);
-		scenario.setResult(result);
-		FinalStateAcceptor acceptor = new FinalStateAcceptor();
-		scenario.setAcceptor(acceptor);
+		DefaultScenario scenario = new DefaultScenario(new LinearStrategy(), new FinalStateAcceptor(new Result(1)));
 
 		GraphGrammar gram;
 		synchronized (generateFlowGrammar)
 		{
-			generateFlowGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(ast)));
+			generateFlowGrammar
+					.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(ast), null));
 			try
 			{
 				gram = generateFlowGrammar.toGrammar();
@@ -366,27 +298,26 @@ public class Preprocessor implements CTCommonModule
 
 		GTS gts = new GTS(gram);
 
-		scenario.setGTS(gts);
-		scenario.setState(gts.startState());
-
+		Result result = null;
+		disableOutput();
 		try
 		{
+			scenario.prepare(gts, gts.startState());
 			result = scenario.play();
 		}
-		catch (InterruptedException e)
+		finally
 		{
-			logger.error(e);
-			return null;
+			enableOutput();
 		}
 
-		if (result.getResult().isEmpty())
+		if (result.getValue().isEmpty())
 		{
 			// TODO nice error
 			throw new RuntimeException("FlowGraph could not be generated!");
 		}
 		else
 		{
-			GraphState state = result.getResult().iterator().next();
+			GraphState state = result.getValue().iterator().next();
 			return state.getGraph();
 		}
 	}
@@ -398,16 +329,13 @@ public class Preprocessor implements CTCommonModule
 
 	private GTS execute(Graph flowGraph)
 	{
-		DefaultScenario<Object> scenario = new DefaultScenario<Object>();
-		scenario.setStrategy(new BranchingStrategy());
-		scenario.setResult(new EmptyResult<Object>());
-		Acceptor<Object> acceptor = new EmptyAcceptor();
-		scenario.setAcceptor(acceptor);
+		DefaultScenario scenario = new DefaultScenario(new BranchingStrategy(), new Acceptor());
 
 		GraphGrammar gram;
 		synchronized (runtimeGrammar)
 		{
-			runtimeGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(flowGraph)));
+			runtimeGrammar.setStartGraph(new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(flowGraph),
+					null));
 			try
 			{
 				gram = runtimeGrammar.toGrammar();
@@ -420,17 +348,15 @@ public class Preprocessor implements CTCommonModule
 		}
 		GTS gts = new GTS(gram);
 
-		scenario.setGTS(gts);
-		scenario.setState(gts.startState());
-
+		disableOutput();
 		try
 		{
+			scenario.prepare(gts, gts.startState());
 			scenario.play();
 		}
-		catch (InterruptedException e)
+		finally
 		{
-			logger.error(e);
-			return null;
+			enableOutput();
 		}
 		return gts;
 	}
@@ -457,5 +383,45 @@ public class Preprocessor implements CTCommonModule
 			preprocessModule(module);
 			timer.stop();
 		}
+	}
+
+	protected PrintStream stdErr, stdOut;
+
+	protected int outputCnt;
+
+	protected void disableOutput()
+	{
+		++outputCnt;
+		if (outputCnt == 1)
+		{
+			stdErr = System.err;
+			stdOut = System.out;
+			System.setErr(new PrintStream(new NullOutputStream()));
+			System.setOut(new PrintStream(new NullOutputStream()));
+		}
+	}
+
+	protected void enableOutput()
+	{
+		--outputCnt;
+		if (outputCnt <= 0)
+		{
+			System.setErr(stdErr);
+			System.setOut(stdOut);
+			stdErr = null;
+			stdOut = null;
+			outputCnt = 0;
+		}
+	}
+
+	static class NullOutputStream extends OutputStream
+	{
+		/*
+		 * (non-Javadoc)
+		 * @see java.io.OutputStream#write(int)
+		 */
+		@Override
+		public void write(int b) throws IOException
+		{}
 	}
 }

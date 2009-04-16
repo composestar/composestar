@@ -4,7 +4,7 @@ Class-Path:  antlr.jar
  log4j-1.2.14.jar 
  prolog.jar 
  castor-0_9_5_2.jar 
- groove-3_0_1.jar 
+ groove-3_2_1.jar 
  groove-gxl-1_0.jar 
  jgraph-5_10_1.jar 
  xerces-2_6_0-xercesImpl.jar
