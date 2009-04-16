@@ -24,14 +24,7 @@
 
 package Composestar.Core.FILTH2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import junit.framework.TestCase;
-import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
-import Composestar.Core.FILTH2.Model.Action;
 
 /**
  * Performs validation of conflicts in the structural constraints.
@@ -40,9 +33,9 @@ import Composestar.Core.FILTH2.Model.Action;
  */
 public class StructuralValidationTest extends TestCase
 {
-	protected List<Action> actions;
-
-	protected Map<Constraint, Constraint> constraints;
+	// protected List<Action> actions;
+	//
+	// protected Map<Constraint, Constraint> constraints;
 
 	/*
 	 * (non-Javadoc)
@@ -52,12 +45,12 @@ public class StructuralValidationTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		actions = new ArrayList<Action>();
-		actions.add(new Action("A"));
-		actions.add(new Action("B"));
-		actions.add(new Action("C"));
-		actions.add(new Action("D"));
-		constraints = new HashMap<Constraint, Constraint>();
+		// actions = new ArrayList<Action>();
+		// actions.add(new Action("A"));
+		// actions.add(new Action("B"));
+		// actions.add(new Action("C"));
+		// actions.add(new Action("D"));
+		// constraints = new HashMap<Constraint, Constraint>();
 	}
 
 	/*
@@ -68,8 +61,8 @@ public class StructuralValidationTest extends TestCase
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
-		actions = null;
-		constraints = null;
+		// actions = null;
+		// constraints = null;
 	}
 
 	public void testConflict0()

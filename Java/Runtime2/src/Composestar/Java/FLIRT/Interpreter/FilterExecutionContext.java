@@ -35,7 +35,7 @@ import java.util.Queue;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
-import Composestar.Core.FILTH2.Model.ExecutionResult;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionResult;
 import Composestar.Java.FLIRT.Actions.RTFilterAction;
 import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTFilterModule;

@@ -24,6 +24,10 @@
 
 package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
+import java.util.List;
+
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager;
 import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
@@ -47,4 +51,19 @@ public class ExcludeConstraint extends StructuralConstraint
 		super(NAME, lhsValue, rhsValue);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
+	 */
+	public boolean evalConstraint(List<ConstraintValue> order, ExecutionManager exec)
+	{
+		// if either one is not present it is ok
+		if (order.indexOf(lhs) == -1 || order.indexOf(rhs) == -1)
+		{
+			return true;
+		}
+		// both are present
+		return false;
+	}
 }

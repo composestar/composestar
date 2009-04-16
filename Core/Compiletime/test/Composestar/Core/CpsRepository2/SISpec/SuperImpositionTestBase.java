@@ -33,6 +33,7 @@ import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
 import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
@@ -544,6 +545,11 @@ public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityT
 
 		public void setArguments(List<ConstraintValue> args) throws NullPointerException, IllegalArgumentException
 		{}
+
+		public boolean evalConstraint(List<ConstraintValue> order, ExecutionManager exec)
+		{
+			return false;
+		}
 	}
 
 	protected static class DummySel extends AbstractQualifiedRepositoryEntity implements Selector

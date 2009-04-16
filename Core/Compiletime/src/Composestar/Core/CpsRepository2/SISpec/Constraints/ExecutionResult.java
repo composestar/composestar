@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.FILTH2.Model;
+package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
 /**
  * Defines the execution result of an action

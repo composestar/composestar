@@ -29,11 +29,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import Composestar.Core.FILTH2.Model.Action;
-import Composestar.Core.FILTH2.Model.Constraint;
-import Composestar.Core.FILTH2.Model.ExecutionManager;
-import Composestar.Core.FILTH2.Model.ExecutionResult;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionResult;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -47,27 +48,27 @@ public class Simulator implements ExecutionManager
 	/**
 	 * Contains the execution results for each action
 	 */
-	protected Map<Action, ExecutionResult> results;
+	protected Map<ConstraintValue, ExecutionResult> results;
 
 	/**
 	 * Contains a flag for each action to see if it is executable
 	 */
-	protected Map<Action, Boolean> executable;
+	protected Map<ConstraintValue, Boolean> executable;
 
 	/**
 	 * Results set when the action is executed
 	 */
-	protected Map<Action, ExecutionResult> fakeResults;
+	protected Map<ConstraintValue, ExecutionResult> fakeResults;
 
 	/**
 	 * The executed list
 	 */
-	protected List<Action> executed;
+	protected List<ConstraintValue> executed;
 
 	public Simulator()
 	{
-		results = new HashMap<Action, ExecutionResult>();
-		executable = new HashMap<Action, Boolean>();
+		results = new HashMap<ConstraintValue, ExecutionResult>();
+		executable = new HashMap<ConstraintValue, Boolean>();
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class Simulator implements ExecutionManager
 	 * 
 	 * @param res
 	 */
-	public void setFakeResults(Map<Action, ExecutionResult> res)
+	public void setFakeResults(Map<ConstraintValue, ExecutionResult> res)
 	{
 		fakeResults = res;
 	}
@@ -83,7 +84,7 @@ public class Simulator implements ExecutionManager
 	/**
 	 * @return the list of actually executed actions
 	 */
-	public List<Action> getExecuted()
+	public List<ConstraintValue> getExecuted()
 	{
 		return Collections.unmodifiableList(executed);
 	}
@@ -95,19 +96,19 @@ public class Simulator implements ExecutionManager
 	 * @param order
 	 * @return
 	 */
-	public boolean simulate(List<Action> order)
+	public boolean simulate(List<ConstraintValue> order, Set<Constraint> constraints)
 	{
-		executed = new ArrayList<Action>();
+		executed = new ArrayList<ConstraintValue>();
 		results.clear();
 		executable.clear();
 		// init the tables
-		for (Action action : order)
+		for (ConstraintValue action : order)
 		{
 			setExecutable(action, true);
 			setResult(action, ExecutionResult.NOT_EXECUTED);
 		}
 		// simulate
-		for (Action action : order)
+		for (ConstraintValue action : order)
 		{
 			if (isExecutable(action))
 			{
@@ -123,12 +124,12 @@ public class Simulator implements ExecutionManager
 			}
 			else
 			{
-				logger.info(String.format("Action %s is not executable, skipping", action.getName()));
+				logger.info(String.format("Action %s is not executable, skipping", action.getStringValue()));
 			}
 			// check constraints
-			for (Constraint constraint : action.getConstraints())
+			for (Constraint constraint : constraints)
 			{
-				if (!constraint.isValidOrder(order, this))
+				if (!constraint.evalConstraint(order, this))
 				{
 					logger.error(String.format("Constraint %s violated", constraint.toString()));
 					return false;
@@ -141,10 +142,10 @@ public class Simulator implements ExecutionManager
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.FILTH2.Model.ExecutionManager#getResult(Composestar.
-	 * Core.FILTH2.Model.Action)
+	 * Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager#getResult
+	 * (Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue)
 	 */
-	public ExecutionResult getResult(Action action)
+	public ExecutionResult getResult(ConstraintValue action)
 	{
 		if (results.containsKey(action))
 		{
@@ -160,11 +161,11 @@ public class Simulator implements ExecutionManager
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.FILTH2.Model.ExecutionManager#isExecutable(Composestar
-	 * .Core.FILTH2.Model.Action)
+	 * @seeComposestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager#
+	 * isExecutable
+	 * (Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue)
 	 */
-	public boolean isExecutable(Action action)
+	public boolean isExecutable(ConstraintValue action)
 	{
 		if (executable.containsKey(action))
 		{
@@ -175,11 +176,12 @@ public class Simulator implements ExecutionManager
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * Composestar.Core.FILTH2.Model.ExecutionManager#setExecutable(Composestar
-	 * .Core.FILTH2.Model.Action, boolean)
+	 * @seeComposestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager#
+	 * setExecutable
+	 * (Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue,
+	 * boolean)
 	 */
-	public void setExecutable(Action action, boolean value)
+	public void setExecutable(ConstraintValue action, boolean value)
 	{
 		executable.put(action, value);
 	}
@@ -187,10 +189,11 @@ public class Simulator implements ExecutionManager
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.FILTH2.Model.ExecutionManager#setResult(Composestar.
-	 * Core.FILTH2.Model.Action, Composestar.Core.FILTH2.Model.ExecutionResult)
+	 * Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager#setResult
+	 * (Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue,
+	 * Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionResult)
 	 */
-	public void setResult(Action action, ExecutionResult result)
+	public void setResult(ConstraintValue action, ExecutionResult result)
 	{
 		results.put(action, result);
 	}

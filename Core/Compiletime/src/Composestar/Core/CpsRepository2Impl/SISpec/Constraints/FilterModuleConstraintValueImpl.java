@@ -76,4 +76,51 @@ public class FilterModuleConstraintValueImpl extends AbstractRepositoryEntity im
 	{
 		return filterModuleReference.getReferenceId();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((filterModuleReference == null) ? 0 : filterModuleReference.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		FilterModuleConstraintValueImpl other = (FilterModuleConstraintValueImpl) obj;
+		if (filterModuleReference == null)
+		{
+			if (other.filterModuleReference != null)
+			{
+				return false;
+			}
+		}
+		else if (!filterModuleReference.getReferenceId().equals(other.filterModuleReference.getReferenceId()))
+		{
+			return false;
+		}
+		return true;
+	}
 }

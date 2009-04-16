@@ -24,24 +24,22 @@
 
 package Composestar.Core.FILTH2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionResult;
 import Composestar.Core.FILTH2.Execution.Simulator;
-import Composestar.Core.FILTH2.Model.Action;
-import Composestar.Core.FILTH2.Model.ExecutionResult;
 
 /**
  * @author Michiel Hendriks
  */
 public class ExecutionTest extends TestCase
 {
-	protected List<Action> actions;
+	protected List<ConstraintValue> actions;
 
-	protected Map<Action, ExecutionResult> fakeResults;
+	protected Map<ConstraintValue, ExecutionResult> fakeResults;
 
 	protected Simulator sim;
 
@@ -53,16 +51,16 @@ public class ExecutionTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		actions = new ArrayList<Action>();
-		actions.add(new Action("A"));
-		actions.add(new Action("B"));
-		actions.add(new Action("C"));
-		actions.add(new Action("D"));
-		sim = new Simulator();
-		fakeResults = new HashMap<Action, ExecutionResult>();
-		fakeResults.put(actions.get(0), ExecutionResult.FALSE);
-		fakeResults.put(actions.get(1), ExecutionResult.TRUE);
-		sim.setFakeResults(fakeResults);
+		// actions = new ArrayList<Action>();
+		// actions.add(new Action("A"));
+		// actions.add(new Action("B"));
+		// actions.add(new Action("C"));
+		// actions.add(new Action("D"));
+		// sim = new Simulator();
+		// fakeResults = new HashMap<Action, ExecutionResult>();
+		// fakeResults.put(actions.get(0), ExecutionResult.FALSE);
+		// fakeResults.put(actions.get(1), ExecutionResult.TRUE);
+		// sim.setFakeResults(fakeResults);
 	}
 
 	/*
@@ -222,11 +220,11 @@ public class ExecutionTest extends TestCase
 	// }
 	}
 
-	protected void printExecution(List<Action> order)
+	protected void printExecution(List<ConstraintValue> order)
 	{
 		System.out.print("[");
 		int i = 0;
-		for (Action action : order)
+		for (ConstraintValue action : order)
 		{
 			if (i > 0)
 			{

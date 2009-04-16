@@ -24,6 +24,7 @@
 
 package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
+import java.util.Arrays;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
@@ -36,6 +37,19 @@ import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraint
  */
 public final class ConstraintFactoryImpl implements ConstraintFactory
 {
+	/**
+	 * @param name
+	 * @param args
+	 * @return
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 */
+	public Constraint createConstraint(String name, ConstraintValue... args) throws NullPointerException,
+			IllegalArgumentException, InstantiationException
+	{
+		return createConstraint(name, Arrays.asList(args));
+	}
 
 	/*
 	 * (non-Javadoc)

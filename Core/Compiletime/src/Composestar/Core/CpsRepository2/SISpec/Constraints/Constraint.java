@@ -24,6 +24,8 @@
 
 package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
+import java.util.List;
+
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
@@ -45,4 +47,17 @@ public interface Constraint extends RepositoryEntity
 	 * @return The arguments for this constraint
 	 */
 	ConstraintValue[] getArguments();
+
+	/**
+	 * This method will be called for all constraints. It should return true if
+	 * the provided order is legal according to this constraint.
+	 * 
+	 * @param order The current order of constraint values (usually generated
+	 *            from the ImposedFilterModules)
+	 * @param exec The execution manager. This will be null in case of static
+	 *            analysis during compile time to validate the non-control
+	 *            constraints.
+	 * @return True if this constraint holds
+	 */
+	public boolean evalConstraint(List<ConstraintValue> order, ExecutionManager exec);
 }

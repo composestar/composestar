@@ -174,39 +174,6 @@ public class FILTH implements CTCommonModule
 		for (List<ImposedFilterModule> order : orders)
 		{
 			boolean isValidOrder = true;
-			// for (Action action : order)
-			// {
-			// // Check if structural constraints are met
-			// for (Constraint constraint :
-			// action.getConstraints(StructuralConstraint.class))
-			// {
-			// if (!constraint.isValidOrder(order, null))
-			// {
-			// Constraint def = constraints.get(constraint);
-			// logger.warn(String.format("Constraint %s is not met in this selected order: %s",
-			// def.toString(), order), def);
-			// isValidOrder = false;
-			// break;
-			// }
-			// }
-			// if (!isValidOrder)
-			// {
-			// break;
-			// }
-			// ImposedFilterModule fms = concernActions.get(action);
-			// if (fms != null)
-			// {
-			// fmorder.add(fms);
-			// }
-			// else
-			// {
-			// logger.error(String.format("Unknown action %s in the order for %s",
-			// action.getName(), concern
-			// .getFullyQualifiedName()));
-			// return false;
-			// }
-			// }
-
 			if (isValidOrder)
 			{
 				// add the default dispatch filter

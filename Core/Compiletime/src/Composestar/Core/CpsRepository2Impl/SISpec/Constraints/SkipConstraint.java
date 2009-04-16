@@ -24,7 +24,11 @@
 
 package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
+import java.util.List;
+
 import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionResult;
 import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
@@ -61,5 +65,31 @@ public class SkipConstraint extends ControllConstraint
 	public ConstraintValue[] getArguments()
 	{
 		return new ConstraintValue[] { lhs, rhs, result };
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
+	 * Composestar.Core.FILTH2.Model.ExecutionManager)
+	 */
+	public boolean evalConstraint(List<ConstraintValue> order, ExecutionManager exec)
+	{
+		if (exec != null)
+		{
+			if (exec.getResult(lhs) == ExecutionResult.TRUE)
+			{
+				exec.setExecutable(rhs, false);
+				ExecutionResult execres = exec.getResult(result);
+				if (execres == ExecutionResult.NOT_EXECUTED)
+				{
+					// this should actually never happen
+					return false;
+				}
+				exec.setResult(rhs, execres);
+			}
+		}
+		// condition constraints never invalidate an order
+		return true;
 	}
 }

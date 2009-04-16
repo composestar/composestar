@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2009 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -21,11 +21,13 @@
  *
  * $Id$
  */
-package Composestar.Core.FILTH2.Model;
+
+package Composestar.Core.CpsRepository2.SISpec.Constraints;
 
 /**
- * Defines the interface that keeps track of the execution and return value of
- * actions
+ * This interface provides access to the execution results, and executability,
+ * of constraint values. It is used by the constraint in the
+ * {@link Constraint#evalConstraint(java.util.List, ExecutionManager)}
  * 
  * @author Michiel Hendriks
  */
@@ -37,7 +39,7 @@ public interface ExecutionManager
 	 * @param action
 	 * @return
 	 */
-	ExecutionResult getResult(Action action);
+	ExecutionResult getResult(ConstraintValue action);
 
 	/**
 	 * Set the execution result
@@ -45,7 +47,7 @@ public interface ExecutionManager
 	 * @param action
 	 * @param result
 	 */
-	void setResult(Action action, ExecutionResult result);
+	void setResult(ConstraintValue action, ExecutionResult result);
 
 	/**
 	 * Changes the executability of an action, called by cond() and skip()
@@ -53,7 +55,7 @@ public interface ExecutionManager
 	 * @param action
 	 * @param value
 	 */
-	void setExecutable(Action action, boolean value);
+	void setExecutable(ConstraintValue action, boolean value);
 
 	/**
 	 * Returns true if an action is executable
@@ -61,6 +63,5 @@ public interface ExecutionManager
 	 * @param action
 	 * @return
 	 */
-	boolean isExecutable(Action action);
-
+	boolean isExecutable(ConstraintValue action);
 }

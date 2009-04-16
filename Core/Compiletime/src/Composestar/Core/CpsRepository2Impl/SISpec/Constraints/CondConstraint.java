@@ -24,7 +24,11 @@
 
 package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
+import java.util.List;
+
 import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionResult;
 import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
@@ -48,4 +52,22 @@ public class CondConstraint extends ControllConstraint
 		super(NAME, lhsValue, rhsValue);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
+	 * Composestar.Core.FILTH2.Model.ExecutionManager)
+	 */
+	public boolean evalConstraint(List<ConstraintValue> order, ExecutionManager exec)
+	{
+		if (exec != null)
+		{
+			if (exec.getResult(lhs) != ExecutionResult.TRUE)
+			{
+				exec.setExecutable(rhs, false);
+			}
+		}
+		// condition constraints never invalidate an order
+		return true;
+	}
 }

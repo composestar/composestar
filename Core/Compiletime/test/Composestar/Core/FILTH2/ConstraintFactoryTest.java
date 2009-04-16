@@ -25,10 +25,14 @@
 package Composestar.Core.FILTH2;
 
 import junit.framework.TestCase;
-import Composestar.Core.FILTH2.Model.Action;
-import Composestar.Core.FILTH2.Model.ConstraintFactory;
-import Composestar.Core.FILTH2.Model.PhantomAction;
-import Composestar.Core.FILTH2.Model.ConstraintFactory.ConstraintCreationException;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Meta.SourceInformation;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.SISpec.SICondition;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConditionConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
+import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.ConstraintFactoryImpl;
 
 /**
  * Test the ConstraintFactory
@@ -37,7 +41,9 @@ import Composestar.Core.FILTH2.Model.ConstraintFactory.ConstraintCreationExcepti
  */
 public class ConstraintFactoryTest extends TestCase
 {
-	protected Action a1, a2, a3;
+	protected ConstraintValue a1, a2, a3;
+
+	protected ConstraintFactoryImpl constraintFactory;
 
 	/*
 	 * (non-Javadoc)
@@ -46,9 +52,10 @@ public class ConstraintFactoryTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		a1 = new PhantomAction("A1");
-		a2 = new PhantomAction("A2");
-		a3 = new PhantomAction("A3");
+		constraintFactory = new ConstraintFactoryImpl();
+		a1 = new DummyFMCV();
+		a2 = new DummyFMCV();
+		a3 = new DummyCCV();
 	}
 
 	/**
@@ -58,9 +65,9 @@ public class ConstraintFactoryTest extends TestCase
 	{
 		try
 		{
-			ConstraintFactory.createConstraint("pre", a1, a2);
+			constraintFactory.createConstraint("pre", a1, a2);
 		}
-		catch (ConstraintCreationException e)
+		catch (Exception e)
 		{
 			fail(e.getMessage());
 		}
@@ -73,9 +80,9 @@ public class ConstraintFactoryTest extends TestCase
 	{
 		try
 		{
-			ConstraintFactory.createConstraint("include", a1, a2);
+			constraintFactory.createConstraint("include", a1, a2);
 		}
-		catch (ConstraintCreationException e)
+		catch (Exception e)
 		{
 			fail(e.getMessage());
 		}
@@ -88,9 +95,9 @@ public class ConstraintFactoryTest extends TestCase
 	{
 		try
 		{
-			ConstraintFactory.createConstraint("exclude", a1, a2);
+			constraintFactory.createConstraint("exclude", a1, a2);
 		}
-		catch (ConstraintCreationException e)
+		catch (Exception e)
 		{
 			fail(e.getMessage());
 		}
@@ -103,9 +110,24 @@ public class ConstraintFactoryTest extends TestCase
 	{
 		try
 		{
-			ConstraintFactory.createConstraint("cond", a1, a2);
+			constraintFactory.createConstraint("cond", a1, a2);
 		}
-		catch (ConstraintCreationException e)
+		catch (Exception e)
+		{
+			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void testCondCreation2()
+	{
+		try
+		{
+			constraintFactory.createConstraint("cond", a3, a2);
+		}
+		catch (Exception e)
 		{
 			fail(e.getMessage());
 		}
@@ -118,9 +140,24 @@ public class ConstraintFactoryTest extends TestCase
 	{
 		try
 		{
-			ConstraintFactory.createConstraint("skip", a1, a2, a3);
+			constraintFactory.createConstraint("skip", a1, a2, a3);
 		}
-		catch (ConstraintCreationException e)
+		catch (Exception e)
+		{
+			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void testSkipCreation2()
+	{
+		try
+		{
+			constraintFactory.createConstraint("skip", a3, a2, a1);
+		}
+		catch (Exception e)
 		{
 			fail(e.getMessage());
 		}
@@ -133,10 +170,10 @@ public class ConstraintFactoryTest extends TestCase
 	{
 		try
 		{
-			ConstraintFactory.createConstraint("pre", a1);
-			fail("ConstraintCreationException expected");
+			constraintFactory.createConstraint("pre", a1);
+			fail("Exception expected");
 		}
-		catch (ConstraintCreationException e)
+		catch (Exception e)
 		{
 		}
 	}
@@ -148,10 +185,10 @@ public class ConstraintFactoryTest extends TestCase
 	{
 		try
 		{
-			ConstraintFactory.createConstraint("pre", a1, a2, a3);
-			fail("ConstraintCreationException expected");
+			constraintFactory.createConstraint("pre", a1, a2, a3);
+			fail("Exception expected");
 		}
-		catch (ConstraintCreationException e)
+		catch (Exception e)
 		{
 		}
 	}
@@ -163,11 +200,160 @@ public class ConstraintFactoryTest extends TestCase
 	{
 		try
 		{
-			ConstraintFactory.createConstraint("this_constraint_does_not_exist", a1, a2, a3);
-			fail("ConstraintCreationException expected");
+			constraintFactory.createConstraint("this_constraint_does_not_exist", a1, a2, a3);
+			fail("Exception expected");
 		}
-		catch (ConstraintCreationException e)
+		catch (Exception e)
 		{
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void testInvalidValueTypes()
+	{
+		try
+		{
+			constraintFactory.createConstraint("pre", a3, a1);
+			constraintFactory.createConstraint("include", a3, a1);
+			constraintFactory.createConstraint("exclude", a3, a1);
+			fail("Exception expected");
+		}
+		catch (Exception e)
+		{
+		}
+	}
+
+	static class DummyFMCV implements FilterModuleConstraintValue
+	{
+		private static final long serialVersionUID = 1L;
+
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.SISpec.Constraints.
+		 * FilterModuleConstraintValue#getFilterModuleReference()
+		 */
+		public FilterModuleReference getFilterModuleReference()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue
+		 * #getStringValue()
+		 */
+		public String getStringValue()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CpsRepository2.RepositoryEntity#getOwner()
+		 */
+		public RepositoryEntity getOwner()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#getSourceInformation
+		 * ()
+		 */
+		public SourceInformation getSourceInformation()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#setOwner(Composestar
+		 * .Core.CpsRepository2.RepositoryEntity)
+		 */
+		public RepositoryEntity setOwner(RepositoryEntity newOwner)
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#setSourceInformation
+		 * (Composestar.Core.CpsRepository2.Meta.SourceInformation)
+		 */
+		public void setSourceInformation(SourceInformation srcInfo)
+		{}
+	}
+
+	static class DummyCCV implements ConditionConstraintValue
+	{
+		private static final long serialVersionUID = 1L;
+
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.SISpec.Constraints.
+		 * ConditionConstraintValue#getCondition()
+		 */
+		public SICondition getCondition()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue
+		 * #getStringValue()
+		 */
+		public String getStringValue()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CpsRepository2.RepositoryEntity#getOwner()
+		 */
+		public RepositoryEntity getOwner()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#getSourceInformation
+		 * ()
+		 */
+		public SourceInformation getSourceInformation()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#setOwner(Composestar
+		 * .Core.CpsRepository2.RepositoryEntity)
+		 */
+		public RepositoryEntity setOwner(RepositoryEntity newOwner)
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#setSourceInformation
+		 * (Composestar.Core.CpsRepository2.Meta.SourceInformation)
+		 */
+		public void setSourceInformation(SourceInformation srcInfo)
+		{}
 	}
 }

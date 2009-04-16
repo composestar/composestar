@@ -24,6 +24,11 @@
 
 package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
+import java.util.List;
+
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ConstraintValue;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionManager;
+import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionResult;
 import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValue;
 
 /**
@@ -44,5 +49,32 @@ public class OrderingConstraint extends BinaryConstraint
 			throws NullPointerException, IllegalArgumentException
 	{
 		super(NAME, lhs, rhs);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
+	 */
+	public boolean evalConstraint(List<ConstraintValue> order, ExecutionManager exec)
+	{
+		int lidx = order.indexOf(lhs);
+		int ridx = order.indexOf(rhs);
+		if (lidx == -1 || ridx == -1)
+		{
+			// if either action is not present this constraint, is also correct
+			return true;
+		}
+		// at this point both actions are present in the order and their
+		// position must be validated
+		if (exec != null)
+		{
+			if (exec.getResult(lhs) == ExecutionResult.NOT_EXECUTED)
+			{
+				// lhs did not execute, therefore rhs may not execute either
+				exec.setExecutable(rhs, false);
+			}
+		}
+		return lidx < ridx;
 	}
 }
