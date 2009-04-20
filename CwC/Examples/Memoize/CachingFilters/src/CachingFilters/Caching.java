@@ -36,10 +36,9 @@ import Composestar.Core.CpsRepository2Impl.Filters.PrimitiveFilterTypeImpl;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
-import Composestar.Core.SECRET3.Config.ConflictRule.RuleType;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.Resource;
+import Composestar.Core.SECRET3.Model.RuleType;
 import Composestar.CwC.Filters.CustomCwCFilters;
 
 /**
@@ -95,7 +94,7 @@ public class Caching implements CustomCwCFilters
 	 */
 	public void registerSecretResources(SECRETResources resources)
 	{
-		Resource rsc = ResourceType.createResource("cache", false);
+		Resource rsc = new Resource("cache");
 		rsc.addVocabulary("read");
 		rsc.addVocabulary("write");
 		resources.addResource(rsc);

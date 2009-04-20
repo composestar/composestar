@@ -24,18 +24,14 @@
 
 package Composestar.Core.SECRET3;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import Composestar.Core.CpsRepository2.Concern;
@@ -44,12 +40,11 @@ import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.ModuleResourceManager;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.MetaResource;
-import Composestar.Core.SECRET3.Config.OperationSequence;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
-import Composestar.Core.SECRET3.Config.OperationSequence.GraphLabel;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.ExecModelOperationSequence;
+import Composestar.Core.SECRET3.Model.OperationSequence;
+import Composestar.Core.SECRET3.Model.Resource;
+import Composestar.Core.SECRET3.Model.ExecModelOperationSequence.GraphLabel;
 
 /**
  * Resource manager for SECRET
@@ -73,7 +68,7 @@ public class SECRETResources implements ModuleResourceManager
 	/**
 	 * Operation sequences extracted from the configuration sources.
 	 */
-	protected SortedSet<OperationSequence> opSequences;
+	protected Set<OperationSequence> opSequences;
 
 	protected Map<String, ConcernAnalysis> concernAnalyses;
 
@@ -88,7 +83,7 @@ public class SECRETResources implements ModuleResourceManager
 	{
 		resources = new HashMap<String, Resource>();
 		rules = new HashSet<ConflictRule>();
-		opSequences = new TreeSet<OperationSequence>(new OperationSequenceComparator());
+		opSequences = new HashSet<OperationSequence>();
 		concernAnalyses = new HashMap<String, ConcernAnalysis>();
 	}
 
@@ -126,7 +121,7 @@ public class SECRETResources implements ModuleResourceManager
 	 */
 	public Collection<Resource> getResources()
 	{
-		return Collections.unmodifiableCollection(resources.values());
+		return new HashSet<Resource>(resources.values());
 	}
 
 	/**
@@ -141,36 +136,44 @@ public class SECRETResources implements ModuleResourceManager
 	{
 		if (resc == null)
 		{
-			return false;
+			throw new NullPointerException("Resource cannot be null");
 		}
-		if (resc instanceof MetaResource)
+		if (resc.isWildcard())
 		{
-			throw new IllegalArgumentException("Can not add MetaResources to the resource list");
+			throw new IllegalArgumentException("Cannot add wildcard resource");
 		}
-		String key = resc.getName().toLowerCase();
-		if (resources.containsKey(key))
+		Set<String> keys = new HashSet<String>(resc.getAliases());
+		keys.add(resc.getName());
+
+		// lookup the name and alias
+		for (String key : keys)
 		{
-			resources.get(key).addVocabulary(resc.getVocabulary());
-			return false;
+			if (resources.containsKey(key))
+			{
+				resources.get(key).addVocabulary(resc.getVocabulary());
+				return false;
+			}
 		}
-		else
+
+		resources.put(resc.getName(), resc);
+		for (String alias : resc.getAliases())
 		{
-			resources.put(key, resc);
-			return true;
+			resources.put(alias, resc);
 		}
+		return true;
 	}
 
 	/**
-	 * @param key the name of the resource
+	 * @param resourceName the name of the resource
 	 * @return the resource with the given name, or null when it doesn't exist
 	 */
-	public Resource getResource(String key)
+	public Resource getResource(String resourceName)
 	{
-		if (key == null)
+		if (resourceName == null)
 		{
-			throw new IllegalArgumentException("Key can not be null");
+			throw new IllegalArgumentException("Resource name can not be null");
 		}
-		return resources.get(key.toLowerCase());
+		return resources.get(resourceName.toLowerCase());
 	}
 
 	/**
@@ -188,9 +191,9 @@ public class SECRETResources implements ModuleResourceManager
 	/**
 	 * @return a sorted list of configured operation sequences
 	 */
-	public SortedSet<OperationSequence> getOperationSequences()
+	public Set<OperationSequence> getOperationSequences()
 	{
-		return Collections.unmodifiableSortedSet(opSequences);
+		return Collections.unmodifiableSet(opSequences);
 	}
 
 	/**
@@ -283,14 +286,18 @@ public class SECRETResources implements ModuleResourceManager
 		}
 		for (Resource r : from.resources.values())
 		{
-			Resource copyr = ResourceType.createResource(r.getName(), true);
+			Resource copyr = new Resource(r.getName(), r.getAliases());
 			copyr.addVocabulary(r.getVocabulary());
 			addResource(copyr);
 		}
-		for (OperationSequence os : from.opSequences)
+		for (OperationSequence opsec : from.opSequences)
 		{
-			OperationSequence copyos = new OperationSequence();
-			copyos.setPriority(os.getPriority());
+			if (!(opsec instanceof ExecModelOperationSequence))
+			{
+				continue;
+			}
+			ExecModelOperationSequence os = (ExecModelOperationSequence) opsec;
+			ExecModelOperationSequence copyos = new ExecModelOperationSequence();
 			for (GraphLabel lbl : os.getLabels())
 			{
 				copyos.addLabel(lbl.getLabel(), lbl.getType().toString());
@@ -300,9 +307,9 @@ public class SECRETResources implements ModuleResourceManager
 				Resource r = getResource(entry.getKey().getName());
 				if (r == null)
 				{
-					r = ResourceType.createResource(entry.getKey().getName(), true);
-					if (!r.getType().isMeta())
+					if (Resource.isValidName(entry.getKey().getName()))
 					{
+						r = new Resource(entry.getKey().getName());
 						addResource(r);
 					}
 				}
@@ -314,9 +321,9 @@ public class SECRETResources implements ModuleResourceManager
 			Resource r = getResource(cr.getResource().getName());
 			if (r == null)
 			{
-				r = ResourceType.createResource(cr.getResource().getName(), true);
-				if (!r.getType().isMeta())
+				if (Resource.isValidName(cr.getResource().getName()))
 				{
+					r = new Resource(cr.getResource().getName());
 					addResource(r);
 				}
 			}
@@ -329,26 +336,6 @@ public class SECRETResources implements ModuleResourceManager
 			{
 				// TODO: handle error
 			}
-		}
-	}
-
-	/**
-	 * Comparator for the sorted operation sequence list
-	 * 
-	 * @author Michiel Hendriks
-	 */
-	public static final class OperationSequenceComparator implements Comparator<OperationSequence>, Serializable
-	{
-		private static final long serialVersionUID = 3545184344171267662L;
-
-		public int compare(OperationSequence o1, OperationSequence o2)
-		{
-			int r = o1.getPriority() - o2.getPriority();
-			if (r != 0)
-			{
-				return r;
-			}
-			return o1.hashCode() - o2.hashCode();
 		}
 	}
 }

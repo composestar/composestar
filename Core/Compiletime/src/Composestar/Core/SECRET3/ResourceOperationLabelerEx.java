@@ -29,23 +29,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import Composestar.Core.CpsRepository2.Concern;
-import Composestar.Core.CpsRepository2.FilterModules.Filter;
-import Composestar.Core.CpsRepository2.Filters.PrimitiveFilterType;
+import Composestar.Core.CpsRepository2.Filters.FilterAction;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.regex.LabelSequence;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.MatcherEx;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.SECRET3.Config.OperationSequence;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.OperationSequence.GraphLabel;
-import Composestar.Core.SECRET3.Config.OperationSequence.LabelType;
+import Composestar.Core.SECRET3.Model.ExecModelOperationSequence;
+import Composestar.Core.SECRET3.Model.FilterActionOperationSequence;
+import Composestar.Core.SECRET3.Model.OperationSequence;
+import Composestar.Core.SECRET3.Model.Resource;
+import Composestar.Core.SECRET3.Model.ExecModelOperationSequence.GraphLabel;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -63,12 +61,16 @@ public class ResourceOperationLabelerEx implements Labeler
 	 */
 	protected static final LabelSequence DEFAULT_SEQUENCE = new LabelSequence();
 
-	protected Map<Resource, SortedMap<PrioGraphLabel, LabelSequence>> labelMapping;
+	protected Map<Resource, Map<GraphLabel, LabelSequence>> labelMapping;
+
+	protected Map<Resource, Map<FilterAction, LabelSequence>> filterActionMapping;
 
 	/**
 	 * The operation map for the current resource.
 	 */
-	protected SortedMap<PrioGraphLabel, LabelSequence> currentMap;
+	protected Map<GraphLabel, LabelSequence> currentLabelMap;
+
+	protected Map<FilterAction, LabelSequence> currentFAMap;
 
 	/**
 	 * Current selected concern
@@ -84,7 +86,8 @@ public class ResourceOperationLabelerEx implements Labeler
 
 	public ResourceOperationLabelerEx()
 	{
-		labelMapping = new HashMap<Resource, SortedMap<PrioGraphLabel, LabelSequence>>();
+		labelMapping = new HashMap<Resource, Map<GraphLabel, LabelSequence>>();
+		filterActionMapping = new HashMap<Resource, Map<FilterAction, LabelSequence>>();
 	}
 
 	public ResourceOperationLabelerEx(SECRETResources inresources)
@@ -101,25 +104,48 @@ public class ResourceOperationLabelerEx implements Labeler
 	 */
 	protected void configure()
 	{
-		for (OperationSequence seq : resources.getOperationSequences())
+		for (OperationSequence os : resources.getOperationSequences())
 		{
-			Set<GraphLabel> lbls = seq.getLabels();
-			for (Entry<Resource, List<String>> resops : seq.getOperations().entrySet())
+			if (os instanceof ExecModelOperationSequence)
 			{
-				SortedMap<PrioGraphLabel, LabelSequence> resmap = labelMapping.get(resops.getKey());
-				if (resmap == null)
+				ExecModelOperationSequence seq = (ExecModelOperationSequence) os;
+				Set<GraphLabel> lbls = seq.getLabels();
+				for (Entry<Resource, List<String>> resops : seq.getOperations().entrySet())
 				{
-					resmap = new TreeMap<PrioGraphLabel, LabelSequence>();
-					labelMapping.put(resops.getKey(), resmap);
+					Map<GraphLabel, LabelSequence> resmap = labelMapping.get(resops.getKey());
+					if (resmap == null)
+					{
+						resmap = new HashMap<GraphLabel, LabelSequence>();
+						labelMapping.put(resops.getKey(), resmap);
+					}
+					for (GraphLabel lbl : lbls)
+					{
+						LabelSequence ops = resmap.get(lbl);
+						if (ops == null)
+						{
+							ops = new LabelSequence();
+							resmap.put(lbl, ops);
+						}
+						ops.addLabels(resops.getValue());
+					}
 				}
-				for (GraphLabel lbl : lbls)
+			}
+			else if (os instanceof FilterActionOperationSequence)
+			{
+				FilterActionOperationSequence faos = (FilterActionOperationSequence) os;
+				for (Entry<Resource, List<String>> resops : os.getOperations().entrySet())
 				{
-					PrioGraphLabel plbl = new PrioGraphLabel(lbl, seq.getPriority());
-					LabelSequence ops = resmap.get(plbl);
+					Map<FilterAction, LabelSequence> resmap = filterActionMapping.get(resops.getKey());
+					if (resmap == null)
+					{
+						resmap = new HashMap<FilterAction, LabelSequence>();
+						filterActionMapping.put(resops.getKey(), resmap);
+					}
+					LabelSequence ops = resmap.get(faos.getFilterAction());
 					if (ops == null)
 					{
 						ops = new LabelSequence();
-						resmap.put(plbl, ops);
+						resmap.put(faos.getFilterAction(), ops);
 					}
 					ops.addLabels(resops.getValue());
 				}
@@ -153,19 +179,47 @@ public class ResourceOperationLabelerEx implements Labeler
 	 */
 	public LabelSequence getLabels(ExecutionTransition transition)
 	{
-		if (currentMap == null)
+		// TODO: read from rhs of compare operators and assignments
+		// TODO: write from lhs of assignments
+		boolean rwMsgProps = false;
+
+		if (currentLabelMap == null && currentFAMap == null && !rwMsgProps)
 		{
 			return DEFAULT_SEQUENCE;
 		}
 		LabelSequence seq = new LabelSequence();
-		for (Entry<PrioGraphLabel, LabelSequence> entry : currentMap.entrySet())
+
+		if (currentFAMap != null)
 		{
-			if (hasLabel(transition, entry.getKey()))
+			FilterAction filterAction = getFilterAction(transition);
+			LabelSequence faseq = currentFAMap.get(filterAction);
+			if (faseq != null)
 			{
-				seq.addLabels(entry.getValue().getLabelsEx());
+				seq.addLabels(faseq.getLabelsEx());
+			}
+		}
+
+		if (currentLabelMap != null)
+		{
+			for (Entry<GraphLabel, LabelSequence> entry : currentLabelMap.entrySet())
+			{
+				if (hasLabel(transition, entry.getKey()))
+				{
+					seq.addLabels(entry.getValue().getLabelsEx());
+				}
 			}
 		}
 		return seq;
+	}
+
+	protected FilterAction getFilterAction(ExecutionTransition transition)
+	{
+		if (transition.getStartState().getFlowNode().containsName(FlowNode.FILTER_ACTION_NODE))
+		{
+			FlowNode node = transition.getStartState().getFlowNode();
+			return (FilterAction) node.getRepositoryLink();
+		}
+		return null;
 	}
 
 	/*
@@ -178,61 +232,44 @@ public class ResourceOperationLabelerEx implements Labeler
 	{
 		List<String> result = new ArrayList<String>();
 
-		String filterAction = null;
-		if (transition.getStartState().getFlowNode().containsName(FlowNode.FILTER_ACTION_NODE))
+		// TODO: read from rhs of compare operators and assignments
+		// TODO: write from lhs of assignments
+		// boolean rwMsgProps = false;
+
+		// FilterAction filterAction = getFilterAction(transition);
+
+		for (OperationSequence os : resources.getOperationSequences())
 		{
-			// filter the operations for filter action (should be done during
-			// weaving).
-			FlowNode node = transition.getStartState().getFlowNode();
-			Filter flt = (Filter) node.getRepositoryLink();
-			if (flt.getType() instanceof PrimitiveFilterType)
+			if (!(os instanceof ExecModelOperationSequence))
 			{
-				PrimitiveFilterType filter = (PrimitiveFilterType) flt.getType();
-
-				if (node.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
-				{
-					filterAction = filter.getAcceptCallAction().getName();
-				}
-				else if (node.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
-				{
-					filterAction = filter.getRejectCallAction().getName();
-				}
-				else if (node.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
-				{
-					filterAction = filter.getAcceptReturnAction().getName();
-				}
-				else if (node.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
-				{
-					filterAction = filter.getRejectReturnAction().getName();
-				}
+				continue;
 			}
-		}
+			ExecModelOperationSequence seq = (ExecModelOperationSequence) os;
 
-		for (OperationSequence seq : resources.getOperationSequences())
-		{
 			for (GraphLabel lbl : seq.getLabels())
 			{
-				if (filterAction != null && lbl.getType() == LabelType.Node && lbl.getLabel().equals(filterAction))
-				{
-					int idx = result.indexOf(FILTER_ACTION_SEPARATOR);
-					if (idx > -1)
-					{
-						if (idx != result.size() - 1)
-						{
-							logger
-									.error("Multiple operation sequences for this filter action with different precedence.");
-						}
-						else
-						{
-							logger.info("Multiple operation sequences for this filter action.");
-						}
-					}
-					else
-					{
-						result.add(FILTER_ACTION_SEPARATOR);
-					}
-					continue;
-				}
+				// if (filterAction != null && lbl.getType() == LabelType.Node
+				// && lbl.getLabel().equals(filterAction))
+				// {
+				// int idx = result.indexOf(FILTER_ACTION_SEPARATOR);
+				// if (idx > -1)
+				// {
+				// if (idx != result.size() - 1)
+				// {
+				// logger
+				// .error("Multiple operation sequences for this filter action with different precedence.");
+				// }
+				// else
+				// {
+				// logger.info("Multiple operation sequences for this filter action.");
+				// }
+				// }
+				// else
+				// {
+				// result.add(FILTER_ACTION_SEPARATOR);
+				// }
+				// continue;
+				// }
 
 				if (hasLabel(transition, lbl))
 				{
@@ -273,85 +310,7 @@ public class ResourceOperationLabelerEx implements Labeler
 	public void setCurrentResource(Resource resource)
 	{
 		currentResource = resource;
-		currentMap = labelMapping.get(currentResource);
-	}
-
-	/**
-	 * A GraphLabel with a set prioroty. A high priority has a low number.
-	 */
-	class PrioGraphLabel extends GraphLabel implements Comparable<PrioGraphLabel>
-	{
-		private static final long serialVersionUID = 3315141462371399026L;
-
-		/**
-		 * The prioirity of this label.
-		 */
-		protected int priority;
-
-		public PrioGraphLabel(GraphLabel base, int inpriority)
-		{
-			super(base.getLabel(), base.getType());
-			priority = inpriority;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Comparable#compareTo(java.lang.Object)
-		 */
-		public int compareTo(PrioGraphLabel o)
-		{
-			int res = priority - o.priority;
-			if (res != 0)
-			{
-				return res;
-			}
-			res = label.compareTo(o.label);
-			if (res != 0)
-			{
-				return res;
-			}
-			return type.compareTo(o.type);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode()
-		{
-			final int prime = 31;
-			int result = super.hashCode();
-			result = prime * result + priority;
-			return result;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (this == obj)
-			{
-				return true;
-			}
-			if (!super.equals(obj))
-			{
-				return false;
-			}
-			if (getClass() != obj.getClass())
-			{
-				return false;
-			}
-			final PrioGraphLabel other = (PrioGraphLabel) obj;
-			if (priority != other.priority)
-			{
-				return false;
-			}
-			return true;
-		}
-
+		currentLabelMap = labelMapping.get(currentResource);
+		currentFAMap = filterActionMapping.get(currentResource);
 	}
 }

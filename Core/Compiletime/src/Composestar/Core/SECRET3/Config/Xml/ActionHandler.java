@@ -32,9 +32,9 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.OperationSequence;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
+import Composestar.Core.SECRET3.Model.ExecModelOperationSequence;
+import Composestar.Core.SECRET3.Model.OperationSequence;
+import Composestar.Core.SECRET3.Model.Resource;
 
 /**
  * Processes the &lt;action&gt; element in the SECRET configuration.
@@ -63,7 +63,7 @@ public class ActionHandler extends CpsBaseHandler
 	/**
 	 * The newly created action
 	 */
-	protected OperationSequence action;
+	protected ExecModelOperationSequence action;
 
 	/**
 	 * Temporary storage for the label type which is stored in the attribute
@@ -109,20 +109,17 @@ public class ActionHandler extends CpsBaseHandler
 		if (state == 0 && "action".equals(currentName))
 		{
 			state = STATE_ACTION;
-			action = new OperationSequence();
-			try
-			{
-				action.setPriority(Integer.parseInt(attributes.getValue("priority")));
-			}
-			catch (NumberFormatException e)
-			{
-				action.setPriority(0);
-			}
+			action = new ExecModelOperationSequence();
 		}
 		else if (state == STATE_ACTION && "label".equals(currentName))
 		{
 			state = STATE_LABEL;
 			currentLt = attributes.getValue("type");
+			if ("filteraction".equalsIgnoreCase(currentLt))
+			{
+				// FIXME: support user configuration of filteraction actions?
+				// action = null;
+			}
 		}
 		else if (state == STATE_ACTION && "sequence".equals(currentName))
 		{
@@ -130,24 +127,26 @@ public class ActionHandler extends CpsBaseHandler
 			try
 			{
 				String rescName = attributes.getValue("resource");
-				ResourceType rescType = ResourceType.parse(rescName);
-				if (rescType == ResourceType.Custom)
+				if (rescName != null)
 				{
-					currentResource = resources.getResource(rescName.trim());
+					rescName = rescName.trim();
 				}
-				else if (!rescType.isMeta())
+
+				if (Resource.isValidName(rescName))
 				{
-					currentResource = resources.getResource(rescType.toString());
+					currentResource = resources.getResource(rescName);
+					if (currentResource == null)
+					{
+						currentResource = new Resource(rescName);
+						resources.addResource(currentResource);
+					}
 				}
 
 				if (currentResource == null)
 				{
-					currentResource = ResourceType.createResource(rescName, false);
-					if (!currentResource.getType().isMeta())
-					{
-						resources.addResource(currentResource);
-					}
+					throw new SAXParseException(String.format("Invalid resource name %s", rescName), locator);
 				}
+
 			}
 			catch (IllegalArgumentException e)
 			{
@@ -171,22 +170,31 @@ public class ActionHandler extends CpsBaseHandler
 		super.endElement(uri, localName, name);
 		if (state == STATE_ACTION && "action".equals(currentName))
 		{
-			if (action.getOperations().size() > 0 && action.getLabels().size() > 0)
+			if (action != null)
 			{
-				resources.addOperationSequence(action);
+				if (action.getOperations().size() > 0 && action.getLabels().size() > 0)
+				{
+					resources.addOperationSequence(action);
+				}
 			}
 			returnHandler();
 		}
 		else if (state == STATE_LABEL && "label".equals(currentName))
 		{
 			state = STATE_ACTION;
-			try
+			if (action != null)
 			{
-				action.addLabel(charData.toString().trim(), currentLt);
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new SAXParseException(e.getMessage(), locator, e);
+				if (!"filteraction".equalsIgnoreCase(currentLt))
+				{
+					try
+					{
+						action.addLabel(charData.toString().trim(), currentLt);
+					}
+					catch (IllegalArgumentException e)
+					{
+						throw new SAXParseException(e.getMessage(), locator, e);
+					}
+				}
 			}
 		}
 		else if (state == STATE_SEQUENCE && "sequence".equals(currentName))
@@ -194,7 +202,10 @@ public class ActionHandler extends CpsBaseHandler
 			state = STATE_ACTION;
 			try
 			{
-				action.addOperations(currentResource, charData.toString().trim());
+				if (action != null)
+				{
+					action.addOperations(currentResource, charData.toString().trim());
+				}
 			}
 			catch (IllegalArgumentException e)
 			{

@@ -21,6 +21,7 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
+@Deprecated
 public class Resource implements Serializable
 {
 	private static final long serialVersionUID = -7687830358361188988L;

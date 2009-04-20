@@ -64,7 +64,8 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.ConflictRule;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.RuleType;
 import Composestar.DotNET2.LAMA.DotNETMethodInfo;
 import Composestar.DotNET2.LAMA.DotNETType;
 import Composestar.DotNET2.MASTER.StarLightMaster;
@@ -276,7 +277,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 					weaveSpec.getConflictRules().addNewConflictRule();
 			rule.setPattern(cr.getPattern().toString());
 			rule.setResource(cr.getResource().getName());
-			rule.setConstraint(cr.getType() == ConflictRule.RuleType.Constraint);
+			rule.setConstraint(cr.getType() == RuleType.Constraint);
 			rule.setMessage(cr.getMessage());
 		}
 	}

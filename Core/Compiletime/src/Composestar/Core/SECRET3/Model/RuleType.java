@@ -21,14 +21,19 @@
  *
  * $Id$
  */
-
 package Composestar.Core.SECRET3.Model;
 
 /**
- *
- * @author Michiel Hendriks
+ * The type of the conflict rule
  */
-public class Rule
+public enum RuleType
 {
-
+	/**
+	 * A constraint must not match any path
+	 */
+	Constraint,
+	/**
+	 * An assertion must match part of a graph
+	 */
+	Assertion
 }

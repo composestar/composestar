@@ -35,9 +35,8 @@ import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.MatcherEx;
 import Composestar.Core.FIRE2.util.regex.AbstractMatcher.MatchTrace;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.Resource;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -231,7 +230,7 @@ public class FilterSetAnalysis implements Serializable
 		{
 			for (Resource resource : resources.getResources())
 			{
-				if (rule.getResource().getType() == ResourceType.Wildcard || rule.getResource().equals(resource))
+				if (rule.getResource().isWildcard() || rule.getResource().equals(resource))
 				{
 					labeler.setCurrentResource(resource);
 					AbstractMatcher matcher = new MatcherEx(rule.getPattern(), execModel, labeler);

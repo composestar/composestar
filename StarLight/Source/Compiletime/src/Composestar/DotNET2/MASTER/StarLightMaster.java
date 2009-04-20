@@ -22,10 +22,10 @@ import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
-import Composestar.Core.SECRET3.Config.ConflictRule.RuleType;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.Resource;
+import Composestar.Core.SECRET3.Model.RuleType;
+import Composestar.Core.SECRET3.Model.WildcardResource;
 
 import composestar.dotNET2.tym.entities.ArrayOfKeyValueSetting;
 import composestar.dotNET2.tym.entities.ConfigurationContainer;
@@ -145,7 +145,7 @@ public class StarLightMaster extends Master
 					{
 						continue;
 					}
-					Resource r = ResourceType.createResource(re.getName(), false);
+					Resource r = new Resource(re.getName());
 					String[] words = re.getOperations().split(",");
 					r.addVocabulary(Arrays.asList(words));
 					sresc.addResource(r);
@@ -162,24 +162,20 @@ public class StarLightMaster extends Master
 			{
 				try
 				{
-					ResourceType rt = ResourceType.parse(cre.getResource());
-					Resource r;
-					if (rt == ResourceType.Custom)
-					{
-						r = sresc.getResource(cre.getResource());
-					}
-					else
-					{
-						r = sresc.getResource(rt.toString());
-					}
+					Resource r = sresc.getResource(cre.getResource().trim());
 					if (r == null)
 					{
-						r = ResourceType.createResource(cre.getResource(), true);
-						if (!r.getType().isMeta())
+						if (Resource.isValidName(cre.getResource().trim()))
 						{
+							r = new Resource(cre.getResource());
 							sresc.addResource(r);
 						}
+						else if (WildcardResource.WILDCARD.equals(cre.getResource().trim()))
+						{
+							r = WildcardResource.instance();
+						}
 					}
+
 					RuleType ruletype;
 					if (cre.getConstraint())
 					{

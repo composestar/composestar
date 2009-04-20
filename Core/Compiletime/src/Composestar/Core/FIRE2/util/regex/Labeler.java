@@ -9,7 +9,7 @@ import java.util.Set;
 
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
-import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Model.Resource;
 
 /**
  * Interface used by SECRET to label nodes in the FIRE execution model for

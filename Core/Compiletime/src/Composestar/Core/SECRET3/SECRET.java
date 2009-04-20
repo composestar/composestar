@@ -32,11 +32,12 @@ import Composestar.Core.FIRE2.util.regex.RegularTransition;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.OperationSequence;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
 import Composestar.Core.SECRET3.Config.Xml.XmlConfiguration;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.FilterActionOperationSequence;
+import Composestar.Core.SECRET3.Model.OperationSequence;
+import Composestar.Core.SECRET3.Model.Resource;
+import Composestar.Core.SECRET3.Model.WildcardResource;
 import Composestar.Core.SECRET3.Report.SECRETReport;
 import Composestar.Core.SECRET3.Report.XMLReport;
 import Composestar.Utils.Logging.CPSLogger;
@@ -147,7 +148,7 @@ public class SECRET implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		if (true)
+		if (false)
 		{
 			logger
 					.warn("SECRET has been disabled because it has not been (properly) updated to the canonical filter model");
@@ -256,9 +257,7 @@ public class SECRET implements CTCommonModule
 		// load operation sequences from filter action
 		for (FilterAction fact : resources.repository().getAll(FilterAction.class))
 		{
-			OperationSequence opseq = new OperationSequence();
-			opseq.addLabel(fact.getName(), "node");
-			secretResources.addOperationSequence(opseq);
+			OperationSequence opseq = new FilterActionOperationSequence(fact);
 			if (fact.getResourceOperations() == null || fact.getResourceOperations().length() == 0)
 			{
 				if (!fact.getName().equals("ContinueAction") && !fact.getName().equals("SubstitutionAction")
@@ -269,6 +268,7 @@ public class SECRET implements CTCommonModule
 				}
 				continue;
 			}
+			secretResources.addOperationSequence(opseq);
 			String[] resops = fact.getResourceOperations().split(";");
 			for (String resop : resops)
 			{
@@ -281,22 +281,23 @@ public class SECRET implements CTCommonModule
 				Resource resc = null;
 				try
 				{
-					ResourceType rescType = ResourceType.parse(op[0]);
-					if (rescType == ResourceType.Custom)
-					{
-						resc = secretResources.getResource(op[0].trim());
-					}
-					else if (!rescType.isMeta())
-					{
-						resc = secretResources.getResource(rescType.toString());
-					}
-
+					resc = secretResources.getResource(op[0].trim());
 					if (resc == null)
 					{
-						resc = ResourceType.createResource(op[0], false);
-						if (!resc.getType().isMeta())
+						if (Resource.isValidName(op[0].trim()))
 						{
+							resc = new Resource(op[0]);
 							secretResources.addResource(resc);
+						}
+						else if (WildcardResource.WILDCARD.equals(op[0].trim()))
+						{
+							resc = WildcardResource.instance();
+						}
+						else
+						{
+							logger.error(String.format(
+									"%s used an invalid resource name \"%s\" in the resource operation list", fact
+											.getName(), op[0]));
 						}
 					}
 				}
@@ -363,9 +364,8 @@ public class SECRET implements CTCommonModule
 				copy.removeAll(entry.getKey().getVocabulary());
 				if (copy.size() > 0)
 				{
-					logger.warn(String.format(
-							"Unknown resource operations used for resource \"%s\": %s; Used in actions for: %s", entry
-									.getKey().getName(), copy.toString(), opseq.getLabels().toString()));
+					logger.warn(String.format("Unknown resource operations used for resource \"%s\": %s", entry
+							.getKey().getName(), copy.toString()));
 					// add them to the resource, they might be used in rules
 					entry.getKey().addVocabulary(copy);
 				}
@@ -373,7 +373,7 @@ public class SECRET implements CTCommonModule
 		}
 		for (ConflictRule rule : secretResources.getRules())
 		{
-			if (rule.getResource().getType().isMeta())
+			if (rule.getResource().isWildcard())
 			{
 				continue;
 			}

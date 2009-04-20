@@ -24,6 +24,9 @@
 
 package Composestar.Core.SECRET3.Config.Xml;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -32,8 +35,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
+import Composestar.Core.SECRET3.Model.Resource;
 
 /**
  * Processes the &lt;resource&gt; element in the SECRET configuration.
@@ -50,6 +52,12 @@ public class ResourceHandler extends CpsBaseHandler
 	 * The creates resource type
 	 */
 	protected Resource resc;
+
+	protected String rescName;
+
+	protected Set<String> aliases;
+
+	protected Set<String> vocab;
 
 	/**
 	 * Set to true when this resource instance replaces a previously defined
@@ -98,19 +106,36 @@ public class ResourceHandler extends CpsBaseHandler
 		if (state == 0 && "resource".equals(currentName))
 		{
 			state = STATE_RESC;
-			try
+			resc = null;
+			rescName = attributes.getValue("name");
+			if (rescName != null)
 			{
-				resc = ResourceType.createResource(attributes.getValue("name"), false);
+				rescName = rescName.trim();
 			}
-			catch (IllegalArgumentException e)
+			if (!Resource.isValidName(rescName))
 			{
-				throw new SAXParseException(e.toString(), locator);
+				throw new SAXParseException(String.format("Invalid resource name: %s", rescName), locator);
 			}
+			aliases = new HashSet<String>();
+			vocab = new HashSet<String>();
 			replaceResc = Boolean.parseBoolean(attributes.getValue("override"));
 		}
 		else if (state == STATE_RESC && "operation".equals(currentName))
 		{
 			// nop
+		}
+		else if (state == STATE_RESC && "alias".equals(currentName))
+		{
+			String alias = attributes.getValue("name");
+			if (alias != null)
+			{
+				alias = alias.trim();
+			}
+			if (!Resource.isValidName(alias))
+			{
+				throw new SAXParseException(String.format("Invalid resource name: %s", alias), locator);
+			}
+			aliases.add(alias);
 		}
 		else
 		{
@@ -129,25 +154,30 @@ public class ResourceHandler extends CpsBaseHandler
 		super.endElement(uri, localName, name);
 		if (state == STATE_RESC && "resource".equals(currentName))
 		{
+			resc = new Resource(rescName, aliases);
 			if (replaceResc)
 			{
 				Resource r2 = resources.getResource(resc.getName());
 				r2.clearVocabulary();
 			}
 			// will automatically merge if needed
+			resc.addVocabulary(vocab);
 			resources.addResource(resc);
+			vocab = null;
+			aliases = null;
 			returnHandler();
 		}
 		else if (state == STATE_RESC && "operation".equals(currentName))
 		{
-			if (resc != null)
+			String w = charData.toString().trim();
+			if (w.length() > 0)
 			{
-				String w = charData.toString().trim();
-				if (w.length() > 0)
-				{
-					resc.addVocabulary(w);
-				}
+				vocab.add(w);
 			}
+		}
+		else if (state == STATE_RESC && "alias".equals(currentName))
+		{
+			// nop
 		}
 		else
 		{

@@ -14,8 +14,8 @@ import java.util.List;
 
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.Resource;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.Resource;
 
 /**
  * A detected conflict. Conflicts are associated with a selector to a filterset,

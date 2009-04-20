@@ -33,10 +33,10 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
-import Composestar.Core.SECRET3.Config.ConflictRule.RuleType;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.Resource;
+import Composestar.Core.SECRET3.Model.RuleType;
+import Composestar.Core.SECRET3.Model.WildcardResource;
 
 /**
  * Processes XML &lt;rule&gt; declarations in the SECRET configuration
@@ -86,7 +86,7 @@ public class RuleHandler extends CpsBaseHandler
 		if (state == 0 && "rule".equals(currentName))
 		{
 			state = STATE_RULE;
-			ConflictRule.RuleType rt = RuleType.Constraint;
+			RuleType rt = RuleType.Constraint;
 			if ("assertion".equalsIgnoreCase(attributes.getValue("type")))
 			{
 				rt = RuleType.Assertion;
@@ -96,23 +96,27 @@ public class RuleHandler extends CpsBaseHandler
 			try
 			{
 				String rescName = attributes.getValue("resource");
-				ResourceType rescType = ResourceType.parse(rescName);
-				if (rescType == ResourceType.Custom)
+				if (rescName != null)
 				{
-					resc = resources.getResource(rescName.trim());
+					rescName = rescName.trim();
 				}
-				else if (!rescType.isMeta())
+				if (WildcardResource.WILDCARD.equals(rescName))
 				{
-					resc = resources.getResource(rescType.toString());
+					resc = WildcardResource.instance();
+				}
+				else if (Resource.isValidName(rescName))
+				{
+					resc = resources.getResource(rescName);
+					if (resc == null)
+					{
+						resc = new Resource(rescName);
+						resources.addResource(resc);
+					}
 				}
 
 				if (resc == null)
 				{
-					resc = ResourceType.createResource(rescName, true);
-					if (!resc.getType().isMeta())
-					{
-						resources.addResource(resc);
-					}
+					throw new SAXParseException(String.format("Invalid resource name %s", rescName), locator);
 				}
 			}
 			catch (IllegalArgumentException e)

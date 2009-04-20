@@ -567,12 +567,14 @@ way to fit your requirements.
 					<xsl:value-of select="position()" />
 				</em>
 			</h2>
+			<!-- 
 			<dl>
 				<dt>Priority</dt>
 				<dd>
 					<xsl:value-of select="@priority" />
 				</dd>
 			</dl>
+			 -->
 
 			<h4>For labels</h4>
 			<ul class="labels">

@@ -19,6 +19,7 @@ import Composestar.Core.FIRE2.util.regex.RegularPattern;
  * A conflict rule. Either an constraint (must not match) or an assertion (must
  * match).
  */
+@Deprecated
 public class ConflictRule implements Serializable
 {
 	/**

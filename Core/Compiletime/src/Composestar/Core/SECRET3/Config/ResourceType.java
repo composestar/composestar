@@ -28,6 +28,7 @@ package Composestar.Core.SECRET3.Config;
  * 
  * @author Michiel Hendriks
  */
+@Deprecated
 public enum ResourceType
 {
 	/**

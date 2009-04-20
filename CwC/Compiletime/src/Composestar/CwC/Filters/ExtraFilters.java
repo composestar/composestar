@@ -37,10 +37,9 @@ import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.Master.Master;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.ResourceType;
-import Composestar.Core.SECRET3.Config.ConflictRule.RuleType;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.Resource;
+import Composestar.Core.SECRET3.Model.RuleType;
 import Composestar.CwC.INLINE.CodeGen.CTimerActionCodeGenerator;
 import Composestar.CwC.INLINE.CodeGen.CTraceActionCodeGenerator;
 import Composestar.Utils.Logging.CPSLogger;
@@ -116,7 +115,7 @@ public class ExtraFilters implements CustomCwCFilters
 	 */
 	public void registerSecretResources(SECRETResources resources)
 	{
-		Resource rsc = ResourceType.createResource("timer", false);
+		Resource rsc = new Resource("timer");
 		rsc.addVocabulary("read");
 		rsc.addVocabulary("write");
 		resources.addResource(rsc);

@@ -31,6 +31,7 @@ import java.util.Collection;
  * 
  * @author Michiel Hendriks
  */
+@Deprecated
 public class CustomResource extends Resource
 {
 	private static final long serialVersionUID = -6629060849011765123L;

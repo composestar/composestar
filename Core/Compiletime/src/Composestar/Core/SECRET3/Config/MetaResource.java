@@ -33,6 +33,7 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
+@Deprecated
 public final class MetaResource extends Resource
 {
 	private static final long serialVersionUID = -6159814813704593170L;

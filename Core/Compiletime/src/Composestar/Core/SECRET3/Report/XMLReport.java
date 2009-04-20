@@ -58,10 +58,12 @@ import Composestar.Core.SECRET3.ConcernAnalysis;
 import Composestar.Core.SECRET3.Conflict;
 import Composestar.Core.SECRET3.FilterSetAnalysis;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.ConflictRule;
-import Composestar.Core.SECRET3.Config.OperationSequence;
-import Composestar.Core.SECRET3.Config.Resource;
-import Composestar.Core.SECRET3.Config.OperationSequence.GraphLabel;
+import Composestar.Core.SECRET3.Model.ConflictRule;
+import Composestar.Core.SECRET3.Model.ExecModelOperationSequence;
+import Composestar.Core.SECRET3.Model.FilterActionOperationSequence;
+import Composestar.Core.SECRET3.Model.OperationSequence;
+import Composestar.Core.SECRET3.Model.Resource;
+import Composestar.Core.SECRET3.Model.ExecModelOperationSequence.GraphLabel;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -230,12 +232,22 @@ public class XMLReport implements SECRETReport
 		for (OperationSequence seq : secretResources.getOperationSequences())
 		{
 			Element resElm = xmlDoc.createElement("action");
-			resElm.setAttribute("priority", Integer.toString(seq.getPriority()));
-			for (GraphLabel lbl : seq.getLabels())
+			if (seq instanceof ExecModelOperationSequence)
+			{
+				ExecModelOperationSequence emseq = (ExecModelOperationSequence) seq;
+				for (GraphLabel lbl : emseq.getLabels())
+				{
+					Element opElm = xmlDoc.createElement("label");
+					opElm.setAttribute("type", lbl.getType().toString().toLowerCase());
+					opElm.setTextContent(lbl.getLabel());
+					resElm.appendChild(opElm);
+				}
+			}
+			else if (seq instanceof FilterActionOperationSequence)
 			{
 				Element opElm = xmlDoc.createElement("label");
-				opElm.setAttribute("type", lbl.getType().toString().toLowerCase());
-				opElm.setTextContent(lbl.getLabel());
+				opElm.setAttribute("type", "filteraction");
+				opElm.setTextContent(((FilterActionOperationSequence) seq).getFilterAction().getName());
 				resElm.appendChild(opElm);
 			}
 			for (Entry<Resource, List<String>> op : seq.getOperations().entrySet())
