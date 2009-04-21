@@ -32,7 +32,12 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import Composestar.Core.CpsRepository2.Concern;
+import Composestar.Core.CpsRepository2.PropertyPrefix;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.CanonProperty;
+import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
 import Composestar.Core.CpsRepository2.Filters.FilterAction;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.regex.LabelSequence;
@@ -60,6 +65,16 @@ public class ResourceOperationLabelerEx implements Labeler
 	 * Empty sequence
 	 */
 	protected static final LabelSequence DEFAULT_SEQUENCE = new LabelSequence();
+
+	/**
+	 * The read operation
+	 */
+	private static final String READ_OP = "read";
+
+	/**
+	 * The write operation
+	 */
+	private static final String WRITE_OP = "write";
 
 	protected Map<Resource, Map<GraphLabel, LabelSequence>> labelMapping;
 
@@ -181,7 +196,9 @@ public class ResourceOperationLabelerEx implements Labeler
 	{
 		// TODO: read from rhs of compare operators and assignments
 		// TODO: write from lhs of assignments
-		boolean rwMsgProps = false;
+		FlowNode fnode = transition.getStartState().getFlowNode();
+		boolean rwMsgProps =
+				fnode.containsName(FlowNode.COMPARE_STATEMENT_NODE) || fnode.containsName(FlowNode.ASSIGNMENT_NODE);
 
 		if (currentLabelMap == null && currentFAMap == null && !rwMsgProps)
 		{
@@ -196,6 +213,55 @@ public class ResourceOperationLabelerEx implements Labeler
 			if (faseq != null)
 			{
 				seq.addLabels(faseq.getLabelsEx());
+			}
+		}
+
+		if (rwMsgProps)
+		{
+			if (fnode.getRepositoryLink() instanceof MECompareStatement)
+			{
+				MECompareStatement cmp = (MECompareStatement) fnode.getRepositoryLink();
+				if (cmp.getLHS().getPrefix() == PropertyPrefix.MESSAGE)
+				{
+					if (currentResource.getName().equals(cmp.getLHS().getName()))
+					{
+						seq.addLabel(READ_OP);
+					}
+				}
+				for (CpsVariable cpsvar : cmp.getRHS())
+				{
+					if (cpsvar instanceof CanonProperty)
+					{
+						if (((CanonProperty) cpsvar).getPrefix() == PropertyPrefix.MESSAGE)
+						{
+							if (currentResource.getName().equals(((CanonProperty) cpsvar).getName()))
+							{
+								seq.addLabel(READ_OP);
+							}
+						}
+					}
+				}
+			}
+			else if (fnode.getRepositoryLink() instanceof CanonAssignment)
+			{
+				CanonAssignment asgn = (CanonAssignment) fnode.getRepositoryLink();
+				if (asgn.getProperty().getPrefix() == PropertyPrefix.MESSAGE)
+				{
+					if (currentResource.getName().equals(asgn.getProperty().getName()))
+					{
+						seq.addLabel(WRITE_OP);
+					}
+				}
+				if (asgn.getValue() instanceof CanonProperty)
+				{
+					if (((CanonProperty) asgn.getValue()).getPrefix() == PropertyPrefix.MESSAGE)
+					{
+						if (currentResource.getName().equals(((CanonProperty) asgn.getValue()).getName()))
+						{
+							seq.addLabel(READ_OP);
+						}
+					}
+				}
 			}
 		}
 

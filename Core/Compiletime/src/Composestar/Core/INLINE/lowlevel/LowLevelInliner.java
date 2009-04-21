@@ -55,7 +55,6 @@ import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SECRET3.SECRETResources;
-import Composestar.Core.SECRET3.Config.ResourceType;
 
 /**
  * The inlining engine which also uses lowlevel constructs like jumps. This
@@ -114,9 +113,12 @@ public class LowLevelInliner
 		isFMCondition = new StateType(FlowNode.FM_CONDITION_NODE);
 
 		excludeResources = new HashSet<String>();
-		excludeResources.add(ResourceType.Message.toString());
-		excludeResources.add(ResourceType.Target.toString());
-		excludeResources.add(ResourceType.Selector.toString());
+		excludeResources.add("message");
+		excludeResources.add("message.target");
+		excludeResources.add("message.sender");
+		excludeResources.add("message.self");
+		excludeResources.add("message.server");
+		excludeResources.add("message.selector");
 	}
 
 	/**

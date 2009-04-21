@@ -273,6 +273,12 @@ public class SECRET implements CTCommonModule
 			for (String resop : resops)
 			{
 				String[] op = resop.split("\\.");
+				if (op.length == 3)
+				{
+					// doesn't happen often
+					// for example: message.target.write
+					op = new String[] { op[0] + "." + op[1], op[2] };
+				}
 				if (op.length != 2)
 				{
 					continue;
