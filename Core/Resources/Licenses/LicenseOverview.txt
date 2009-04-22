@@ -17,6 +17,6 @@ BSD Like
 Mozilla Public License 1.1
   Javassist
   
-Public Domain
-  ANTLR
+BSD (3-clause)
+  ANTLR 3
   
