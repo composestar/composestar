@@ -3,11 +3,11 @@ package BasicTests;
 import Composestar.Java.FLIRT.Actions.ErrorFilterException;
 
 public class MainClass {
-	
+
 	protected static Class<?> testClass;
 	protected static final String foo;
 	protected final String bar;
-	
+
 	static {
 		// static init block test
 		foo = "sdfsdfsdf";
@@ -15,16 +15,14 @@ public class MainClass {
 			Class<?> c = Class.forName("BasicTests.MainClass");
 			Class.forName("BasicTests.MainClass");
 			testClass = Class.forName("BasicTests.MainClass");
+		} catch (Exception e) {
 		}
-		catch (Exception e)
-		{}
 	}
-	
-	public MainClass()
-	{
+
+	public MainClass() {
 		bar = "sdfsdf";
 	}
-	
+
 	public static void main(String[] args) {
 		TypeTests typeTests = new TypeTests();
 		System.out.println("Bool:		" + typeTests.dummyBool());
@@ -71,18 +69,22 @@ public class MainClass {
 			System.out.println("An ErrorFilterException was raised.");
 		}
 		fbq.success();
-		
+
 		DoubleFMSI dfmsi = new DoubleFMSI();
 		dfmsi.run();
+
+		SysFuncTestOne sfto = new SysFuncTestOne();
+		String res = sfto.toString();
+		//System.out.println(res); // see bug #...
 	}
-	
+
 	public void nop() {
 		int i = 0;
 		switch (i) {
-			case DummyTester.X:
-				break;
-			case DummyTester.Y:
-				break;
+		case DummyTester.X:
+			break;
+		case DummyTester.Y:
+			break;
 		}
 	}
 }
