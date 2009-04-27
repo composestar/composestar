@@ -73,9 +73,10 @@ public class MainClass {
 		DoubleFMSI dfmsi = new DoubleFMSI();
 		dfmsi.run();
 
+		// see bug #2779331
 		SysFuncTestOne sfto = new SysFuncTestOne();
 		String res = sfto.toString();
-		//System.out.println(res); // see bug #...
+		System.out.println(res); 
 	}
 
 	public void nop() {

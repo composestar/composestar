@@ -1362,7 +1362,22 @@ public class Sign implements CTCommonModule
 			if (!signature.hasMethod(method))
 			{
 				// TODO null check on TypeReference
-				MethodInfo newMethod = cloneMethod(method, method.getName(), concern.getTypeReference().getReference());
+				Type type = concern.getTypeReference().getReference();
+
+				// Lookup the original method and clone that (in order to
+				// preserve some internal methodinfo data). For example, the in
+				// JavaMethodInfo the correct "Method" reference will be
+				// preferred.
+				for (MethodInfo mi : type.getMethods())
+				{
+					if (mi.checkEquals(method))
+					{
+						method = mi;
+						break;
+					}
+				}
+
+				MethodInfo newMethod = cloneMethod(method, method.getName(), type);
 				MethodInfoWrapperImpl wrapper = new MethodInfoWrapperImpl(newMethod, MethodStatus.UNKNOWN);
 				signature.addMethodInfoWrapper(wrapper);
 				change = true;

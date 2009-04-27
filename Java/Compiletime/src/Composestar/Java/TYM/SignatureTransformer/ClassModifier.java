@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javassist.ClassPool;
@@ -53,6 +54,8 @@ public class ClassModifier
 		{
 			Method theMethod = ((JavaMethodInfo) m).theMethod;
 			int modifiers = theMethod.getModifiers();
+			// don't declare stuff native
+			modifiers = javassist.Modifier.clear(modifiers, javassist.Modifier.NATIVE);
 			CtClass returnClass = null;
 			if (!m.returnTypeString.equals(""))
 			{
@@ -156,7 +159,29 @@ public class ClassModifier
 
 			if (signature != null)
 			{
-				Collection<MethodInfo> methods = signature.getMethods(MethodRelation.ADDED);
+				Collection<MethodInfo> methods = new HashSet<MethodInfo>(signature.getMethods(MethodRelation.ADDED));
+				Collection<MethodInfo> normMethods = signature.getMethods(MethodRelation.NORMAL);
+				for (MethodInfo mi : normMethods)
+				{
+					if (!mi.isDeclaredHere())
+					{
+						if (mi instanceof JavaMethodInfo)
+						{
+							if (javassist.Modifier.isFinal(((JavaMethodInfo) mi).theMethod.getModifiers()))
+							{
+								// ignore final methods
+								continue;
+							}
+							if (javassist.Modifier.isStatic(((JavaMethodInfo) mi).theMethod.getModifiers()))
+							{
+								// ignore static methods
+								continue;
+							}
+						}
+						logger.debug(String.format("Adding non overridden method: %s", mi.toString()));
+						methods.add(mi);
+					}
+				}
 				if (methods.size() > 0)
 				{
 					addMethods(methods, ct);

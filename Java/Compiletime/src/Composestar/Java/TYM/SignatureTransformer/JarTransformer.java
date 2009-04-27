@@ -8,7 +8,9 @@ import java.util.EnumSet;
 
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
+import Composestar.Core.CpsRepository2.SIInfo.ImposedFilterModule;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH2.DefaultInnerDispatchNames;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Signatures.MethodRelation;
 import Composestar.Core.LAMA.Signatures.Signature;
@@ -68,7 +70,7 @@ public class JarTransformer
 				{
 					Collection<MethodInfo> sigChanges =
 							signature.getMethods(EnumSet.of(MethodRelation.ADDED, MethodRelation.REMOVED));
-					if (sigChanges.size() > 0)
+					if (sigChanges.size() > 0 || hasInputFilters(concern))
 					{
 						ClassWrapper cw = new ClassWrapper(c, concern, null);
 
@@ -102,5 +104,29 @@ public class JarTransformer
 			// go wrong
 			throw new ModuleException("Error while transforming classes: " + e.getMessage(), "SITRA");
 		}
+	}
+
+	/**
+	 * @param concern
+	 * @return
+	 */
+	protected boolean hasInputFilters(Concern concern)
+	{
+		if (concern.getSuperimposed() == null)
+		{
+			return false;
+		}
+		for (ImposedFilterModule ifm : concern.getSuperimposed().getFilterModules())
+		{
+			if (DefaultInnerDispatchNames.FQN_FILTER_MODULE.equals(ifm.getFilterModule().getFullyQualifiedName()))
+			{
+				continue;
+			}
+			if (ifm.getFilterModule().getInputFilterExpression() != null)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

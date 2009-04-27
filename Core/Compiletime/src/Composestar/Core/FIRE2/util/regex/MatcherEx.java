@@ -105,7 +105,7 @@ public class MatcherEx extends AbstractMatcher
 	 */
 	private void processExecModel(ExecutionState startState)
 	{
-		logger.info("Processing exec module for " + startState.getMessage().toString() + " with pattern: "
+		logger.debug("Processing exec module for " + startState.getMessage().toString() + " with pattern: "
 				+ pattern.toString());
 		done = new HashSet<CombinedState>();
 		todo = new Stack<CombinedState>();
