@@ -98,7 +98,7 @@ public final class FilterExpressionInterpreter
 				ExecutionResult rhs = interpret(fex.getRHS(), context);
 				// the result of ';' is an "&&" of all results up to the
 				// return/exit of the message
-				lhs = lhs.and(rhs);
+				lhs = lhs.softAnd(rhs);
 			}
 			return lhs;
 		}

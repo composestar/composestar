@@ -62,11 +62,94 @@ public enum ExecutionResult
 
 	/**
 	 * The result of (this && rhs)
+	 * <table border="1">
+	 * <tr>
+	 * <th>hard AND</th>
+	 * <th>True</th>
+	 * <th>False</th>
+	 * <th>Unset</th>
+	 * </tr>
+	 * <tr>
+	 * <th>True</th>
+	 * <td>True</td>
+	 * <td>False</td>
+	 * <td>False</td>
+	 * </tr>
+	 * <tr>
+	 * <th>False</th>
+	 * <td>False</td>
+	 * <td>False</td>
+	 * <td>False</td>
+	 * </tr>
+	 * <tr>
+	 * <th>Unset</th>
+	 * <td>False</td>
+	 * <td>False</td>
+	 * <td>Unset</td>
+	 * </tr>
+	 * </table>
 	 * 
 	 * @param rhs
 	 * @return
 	 */
-	public ExecutionResult and(ExecutionResult rhs)
+	public ExecutionResult hardAnd(ExecutionResult rhs)
+	{
+		switch (this)
+		{
+			case NOT_EXECUTED:
+			case UNSET:
+				if (rhs == NOT_EXECUTED || rhs == UNSET)
+				{
+					return rhs;
+				}
+				return FALSE;
+			case FALSE:
+				return FALSE;
+			case TRUE:
+				if (rhs == TRUE)
+				{
+					return TRUE;
+				}
+				return FALSE;
+			default:
+				// not possible
+				return this;
+		}
+	}
+
+	/**
+	 * The result of (this && rhs) *
+	 * <table border="1">
+	 * <tr>
+	 * <th>soft AND</th>
+	 * <th>True</th>
+	 * <th>False</th>
+	 * <th>Unset</th>
+	 * </tr>
+	 * <tr>
+	 * <th>True</th>
+	 * <td>True</td>
+	 * <td>False</td>
+	 * <td>True</td>
+	 * </tr>
+	 * <tr>
+	 * <th>False</th>
+	 * <td>False</td>
+	 * <td>False</td>
+	 * <td>False</td>
+	 * </tr>
+	 * <tr>
+	 * <th>Unset</th>
+	 * <td>True</td>
+	 * <td>False</td>
+	 * <td>Unset</td>
+	 * </tr>
+	 * </table>
+	 * 
+	 * @param rhs
+	 * @return
+	 */
+	public ExecutionResult softAnd(ExecutionResult rhs)
 	{
 		switch (this)
 		{
@@ -89,11 +172,37 @@ public enum ExecutionResult
 
 	/**
 	 * The result of (this || rhs)
+	 * <table border="1">
+	 * <tr>
+	 * <th>sort OR</th>
+	 * <th>True</th>
+	 * <th>False</th>
+	 * <th>Unset</th>
+	 * </tr>
+	 * <tr>
+	 * <th>True</th>
+	 * <td>True</td>
+	 * <td>True</td>
+	 * <td>True</td>
+	 * </tr>
+	 * <tr>
+	 * <th>False</th>
+	 * <td>True</td>
+	 * <td>False</td>
+	 * <td>False</td>
+	 * </tr>
+	 * <tr>
+	 * <th>Unset</th>
+	 * <td>True</td>
+	 * <td>False</td>
+	 * <td>Unset</td>
+	 * </tr>
+	 * </table>
 	 * 
 	 * @param rhs
 	 * @return
 	 */
-	public ExecutionResult or(ExecutionResult rhs)
+	public ExecutionResult softOr(ExecutionResult rhs)
 	{
 		switch (this)
 		{
@@ -110,6 +219,41 @@ public enum ExecutionResult
 				return rhs;
 			default:
 				// not possible
+				return this;
+		}
+	}
+
+	/**
+	 * The result of !this
+	 * <table border="1">
+	 * <tr>
+	 * <th>Not</th>
+	 * <th>True</th>
+	 * <th>False</th>
+	 * <th>Unset</th>
+	 * </tr>
+	 * <tr>
+	 * <th></th>
+	 * <td>False</td>
+	 * <td>True</td>
+	 * <td>Unset</td>
+	 * </tr>
+	 * </table>
+	 * 
+	 * @param rhs
+	 * @return
+	 */
+	public ExecutionResult not()
+	{
+		switch (this)
+		{
+			case TRUE:
+				return FALSE;
+			case FALSE:
+				return TRUE;
+			case NOT_EXECUTED:
+			case UNSET:
+			default:
 				return this;
 		}
 	}
