@@ -13,7 +13,6 @@ public class Consumer implements Runnable
 		consume = consumeItems;
 	}
 
-	@Override
 	public void run()
 	{
 		while (consume > 0)

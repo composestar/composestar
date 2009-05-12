@@ -13,7 +13,6 @@ public class Producer implements Runnable
 		produce = produceItems;
 	}
 
-	@Override
 	public void run()
 	{
 		while (produce > 0)
