@@ -76,13 +76,18 @@ public class Preprocessor implements CTCommonModule
 
 	protected FIRE2Resources fire2Resources;
 
-	public Preprocessor()
-	{
-		initialize();
-	}
+	protected boolean initialized;
 
-	private void initialize()
+	public Preprocessor()
+	{}
+
+	private void initialize() throws ModuleException
 	{
+		if (initialized)
+		{
+			return;
+		}
+		initialized = true;
 		loadGrammars();
 	}
 
@@ -115,6 +120,7 @@ public class Preprocessor implements CTCommonModule
 
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
+		initialize();
 		fire2Resources = resources.getResourceManager(FIRE2Resources.class, true);
 		// only process superimposed filter module instances, ignore the rest
 		Set<FilterModule> filterModules = new HashSet<FilterModule>();
@@ -231,7 +237,7 @@ public class Preprocessor implements CTCommonModule
 		fire2Resources.addPreprocessingResult(module, result);
 	}
 
-	private void loadGrammars()
+	private void loadGrammars() throws ModuleException
 	{
 		try
 		{
@@ -250,9 +256,7 @@ public class Preprocessor implements CTCommonModule
 		}
 		catch (Exception exc)
 		{
-			// TODO errors
-			exc.printStackTrace();
-			// throw new RuntimeException( "Loading grammars failed", exc );
+			throw new ModuleException("Unable to load Groove Grammars", ModuleNames.FIRE, exc);
 		}
 	}
 
