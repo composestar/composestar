@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -245,11 +246,27 @@ public class Preprocessor implements CTCommonModule
 			timer.start("Loading grammars");
 			URL url = Preprocessor.class.getResource(GRAMMAR_FLOW);
 			logger.debug("Loading grammar: " + url);
+
+			// disable caching because Groove closes the JarFile
+			// which prevents the second grammar to be loaded
+			// see bug:
+			// https://sourceforge.net/support/tracker.php?aid=2790618
+			JarURLConnection conn = (JarURLConnection) url.openConnection();
+			conn.setDefaultUseCaches(false);
+
 			AspectualViewGps sgpsl = URLLoaderFactory.getLoader(url);
 			generateFlowGrammar = sgpsl.unmarshal(url);
 
 			url = Preprocessor.class.getResource(GRAMMAR_EXEC);
 			logger.debug("Loading grammar: " + url);
+
+			// disable caching because Groove closes the JarFile
+			// which prevents the second grammar to be loaded
+			// see bug:
+			// https://sourceforge.net/support/tracker.php?aid=2790618
+			conn = (JarURLConnection) url.openConnection();
+			conn.setDefaultUseCaches(false);
+
 			sgpsl = URLLoaderFactory.getLoader(url);
 			runtimeGrammar = sgpsl.unmarshal(url);
 			timer.stop();
