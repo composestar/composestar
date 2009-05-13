@@ -193,6 +193,8 @@
     	<property name="severity" value="warning"/>
 		</module>
 		
+		<module name="EqualsAvoidNull" />
+		
 	</module>
 
 </module>

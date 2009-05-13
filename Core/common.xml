@@ -294,7 +294,6 @@
 		<!-- checkstyle jars -->
 		<path id="lib.checkstyle">
 			<fileset dir="${build.core}${file.separator}Development${file.separator}checkstyle${file.separator}lib" includes="*.jar" />
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}antlr" includes="*.jar" />
 		</path>
 
 		<!-- register checkstyle task -->
