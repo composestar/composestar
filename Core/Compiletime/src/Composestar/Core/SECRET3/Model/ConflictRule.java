@@ -24,6 +24,8 @@
 
 package Composestar.Core.SECRET3.Model;
 
+import java.io.Serializable;
+
 import Composestar.Core.FIRE2.util.regex.Pattern;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.FIRE2.util.regex.RegularPattern;
@@ -31,8 +33,10 @@ import Composestar.Core.FIRE2.util.regex.RegularPattern;
 /**
  * @author Michiel Hendriks
  */
-public class ConflictRule
+public class ConflictRule implements Serializable
 {
+	private static final long serialVersionUID = 2793013419251949944L;
+
 	/**
 	 * A predefine conflict pattern that defines that a value may never be
 	 * written twice before being read

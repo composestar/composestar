@@ -108,8 +108,8 @@ public class UnreferencedOOS extends ObjectOutputStream
 		}
 		else
 		{
-			logger.error(String.format("Unknown reference type encountered '%s' with id ''", obj.getClass().getName(),
-					obj.getReferenceId()));
+			logger.error(String.format("Unknown reference type encountered '%s' with id '%s'",
+					obj.getClass().getName(), obj.getReferenceId()));
 		}
 		return obj;
 	}

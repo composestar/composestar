@@ -95,11 +95,18 @@ public class CompileHistory implements Serializable
 	public void save(File destination) throws IOException
 	{
 		OutputStream os = new FileOutputStream(destination);
-		if (FileUtils.getExtension(destination.getName()).equalsIgnoreCase(EXT_COMPRESSED))
+		try
 		{
-			os = new GZIPOutputStream(os);
+			if (FileUtils.getExtension(destination.getName()).equalsIgnoreCase(EXT_COMPRESSED))
+			{
+				os = new GZIPOutputStream(os);
+			}
+			save(os);
 		}
-		save(os);
+		finally
+		{
+			os.close();
+		}
 	}
 
 	public void save(OutputStream destination) throws IOException

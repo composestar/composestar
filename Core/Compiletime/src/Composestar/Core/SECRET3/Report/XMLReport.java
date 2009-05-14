@@ -135,7 +135,14 @@ public class XMLReport implements SECRETReport
 			{
 				FileOutputStream stylesheet =
 						new FileOutputStream(new File(outputFile.getParentFile(), "SECRETStyle.xslt"));
-				FileUtils.copy(is, stylesheet);
+				try
+				{
+					FileUtils.copy(is, stylesheet);
+				}
+				finally
+				{
+					stylesheet.close();
+				}
 				ProcessingInstruction pi =
 						xmlDoc.createProcessingInstruction("xml-stylesheet",
 								"type=\"text/xml\" href=\"SECRETStyle.xslt\"");
@@ -144,6 +151,17 @@ public class XMLReport implements SECRETReport
 			catch (IOException e)
 			{
 				logger.info("Error writing stylesheet: " + e.getLocalizedMessage());
+			}
+			finally
+			{
+				try
+				{
+					is.close();
+				}
+				catch (IOException e)
+				{
+					logger.error(e);
+				}
 			}
 		}
 

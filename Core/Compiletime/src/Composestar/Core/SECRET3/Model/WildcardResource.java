@@ -31,7 +31,9 @@ import java.util.Collection;
  */
 public final class WildcardResource extends Resource
 {
-	protected static WildcardResource inst;
+	private static final long serialVersionUID = -7316050236757403766L;
+
+	private static WildcardResource inst;
 
 	/**
 	 * The name for the wildcard

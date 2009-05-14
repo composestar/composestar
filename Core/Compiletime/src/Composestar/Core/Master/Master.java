@@ -13,6 +13,7 @@ package Composestar.Core.Master;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -630,19 +631,47 @@ public abstract class Master
 				logger.warn(String.format("Error writing timer report: %s", e));
 				return;
 			}
-			String styleSheet = "TimerResults.xslt";
-			FileOutputStream stOs;
 			try
 			{
-				stOs = new FileOutputStream(new File(timerResult.getParent(), styleSheet));
+				String styleSheet = "TimerResults.xslt";
+				FileOutputStream stOs;
+				try
+				{
+					stOs = new FileOutputStream(new File(timerResult.getParent(), styleSheet));
+				}
+				catch (FileNotFoundException e)
+				{
+					logger.warn(String.format("Error writing timer report: %s", e));
+					return;
+				}
+				try
+				{
+					CPSTimerReport report = new XMLTimerReport(trOs, stOs, styleSheet);
+					report.generateReport(CPSTimerTree.constructTree(CPSTimerRepository.getGroupTimers()));
+				}
+				finally
+				{
+					try
+					{
+						stOs.close();
+					}
+					catch (IOException e)
+					{
+						logger.error(e);
+					}
+				}
 			}
-			catch (FileNotFoundException e)
+			finally
 			{
-				logger.warn(String.format("Error writing timer report: %s", e));
-				return;
+				try
+				{
+					trOs.close();
+				}
+				catch (IOException e)
+				{
+					logger.error(e);
+				}
 			}
-			CPSTimerReport report = new XMLTimerReport(trOs, stOs, styleSheet);
-			report.generateReport(CPSTimerTree.constructTree(CPSTimerRepository.getGroupTimers()));
 		}
 	}
 

@@ -24,6 +24,7 @@
 
 package Composestar.Core.SECRET3.Model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,8 +35,10 @@ import java.util.regex.Pattern;
 /**
  * @author Michiel Hendriks
  */
-public class Resource
+public class Resource implements Serializable
 {
+	private static final long serialVersionUID = 1987806475818341139L;
+
 	protected final static Pattern RESC_NAME = Pattern.compile("[A-Za-z][A-Za-z0-9]*(.[A-Za-z][A-Za-z0-9]*)?");
 
 	/**

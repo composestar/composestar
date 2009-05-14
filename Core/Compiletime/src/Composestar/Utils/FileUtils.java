@@ -11,7 +11,6 @@ package Composestar.Utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -90,15 +89,6 @@ public final class FileUtils
 	public static String normalizeFilename(String name)
 	{
 		return name.replace('\\', '/');
-	}
-
-	/**
-	 * @deprecated use normalizeFilename
-	 */
-	@Deprecated
-	public static String fixFilename(String name)
-	{
-		return normalizeFilename(name);
 	}
 
 	/**
@@ -351,44 +341,6 @@ public final class FileUtils
 		{
 			return pathToFile;
 		}
-	}
-
-	/**
-	 * Get a file stream for the SAX parser without the Root element could not
-	 * be found exception. This is caused by a BOM character which is skipped by
-	 * this file reader.
-	 * 
-	 * @noinspection ResultOfMethodCallIgnored
-	 */
-	public static FileInputStream getCleanInputStream(File xmlFile) throws IOException
-	{
-		FileInputStream in = new FileInputStream(xmlFile);
-		int bomKount = getBOMCount(xmlFile);
-		if (bomKount > 0)
-		{
-			byte[] buf = new byte[bomKount];
-			in.read(buf);
-		}
-		return in;
-	}
-
-	/**
-	 * Get count of leading characters that denote the byte order mark, part of
-	 * the unicode standard. These make SaxParser barf
-	 */
-	private static int getBOMCount(File xmlFile) throws IOException
-	{
-		DataInputStream din = new DataInputStream(new FileInputStream(xmlFile));
-		int bomKount = 0;
-		byte b = din.readByte();
-		while (b < 0)
-		{
-			bomKount++;
-			b = din.readByte();
-		}
-		din.close();
-		// System.out.println("Skipping BOM, " + bomKount + " bytes");
-		return bomKount;
 	}
 
 	/**
