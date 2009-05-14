@@ -114,6 +114,15 @@ public class Manager
 					return new FileInputStream(file);
 				}
 			}
+
+			// try override file in the base directory
+			File file = resources.getPathResolver().getResource("TASMANConfig.xml");
+			if (file != null)
+			{
+				logger.info(String.format("Using configuration from: %s", file.toString()));
+				return new FileInputStream(file);
+			}
+
 		}
 		catch (FileNotFoundException e)
 		{

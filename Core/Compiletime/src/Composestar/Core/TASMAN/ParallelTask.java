@@ -193,29 +193,19 @@ public class ParallelTask extends TaskCollection
 	 */
 	protected void updateMaxThreads()
 	{
+		if (Boolean.getBoolean(NO_PARALLEL))
+		{
+			max = 1;
+			return;
+		}
 		if (perprocessor != 0)
 		{
-			int procs;
-			if (System.getProperty(NUM_PROCESSORS) != null)
-			{
-				procs = Integer.getInteger(NUM_PROCESSORS);
-			}
-			else
-			{
-				procs = Runtime.getRuntime().availableProcessors();
-			}
+			int procs = Integer.getInteger(NUM_PROCESSORS, Runtime.getRuntime().availableProcessors());
 			max = perprocessor * procs;
 		}
 		if (max <= 0)
 		{
 			max = tasks.size();
-		}
-		if (System.getProperty(NO_PARALLEL) != null)
-		{
-			if (Boolean.getBoolean(NO_PARALLEL))
-			{
-				max = 1;
-			}
 		}
 		if (max > tasks.size())
 		{
