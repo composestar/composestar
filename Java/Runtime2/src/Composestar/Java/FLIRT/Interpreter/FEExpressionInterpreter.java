@@ -144,7 +144,7 @@ public final class FEExpressionInterpreter
 
 				if (value == null)
 				{
-					logger.warning(String.format("Assignment fo %s without a value", asg.getProperty().getName()));
+					logger.warning(String.format("Assignment of %s without a value", asg.getProperty().getName()));
 					if (asg.getSourceInformation() != null)
 					{
 						logger.info(asg.getSourceInformation().toString());
@@ -193,7 +193,7 @@ public final class FEExpressionInterpreter
 				}
 				else
 				{
-					logger.warning(String.format("Assignment of an unknown property", asg.getProperty().getName()));
+					logger.warning(String.format("Assignment of an unknown property: %s", asg.getProperty().getName()));
 					if (asg.getSourceInformation() != null)
 					{
 						logger.info(asg.getSourceInformation().toString());

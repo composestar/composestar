@@ -84,7 +84,7 @@ public class AnnotationCollector implements CTCommonModule
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException(e.getMessage(), MODULE_NAME);
+			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
 		}
 		return ModuleReturnValue.OK;
 	}

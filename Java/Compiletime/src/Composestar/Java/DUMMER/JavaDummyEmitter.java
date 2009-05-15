@@ -72,6 +72,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	public JavaDummyEmitter()
 	{}
 
+	@Override
 	public void createDummies(Project project, Set<Source> sources) throws ModuleException
 	{
 		for (Source source : sources)
@@ -197,63 +198,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	{
 		tabs--;
 		out("}");
-	}
-
-	/**
-	 * Returns a copy of an AST without nodes that have the specified text.
-	 */
-	private AST filterChildren(AST ast, String remove)
-	{
-		if (ast == null)
-		{
-			throw new IllegalArgumentException("ast cannot be null");
-		}
-
-		if (remove == null)
-		{
-			throw new IllegalArgumentException("remove cannot be null");
-		}
-
-		AST result = factory.create(ast.getType(), ast.getText());
-		AST child = ast.getFirstChild();
-		while (child != null)
-		{
-			String text = child.getText();
-			if (!remove.equals(text))
-			{
-				// AST clone = factory.create(child);
-				AST clone = factory.dupTree(child);
-				result.addChild(clone);
-			}
-			child = child.getNextSibling();
-		}
-		return result;
-	}
-
-	private boolean hasChild(AST ast, String withText)
-	{
-		if (ast == null)
-		{
-			throw new IllegalArgumentException("ast cannot be null");
-		}
-
-		if (withText == null)
-		{
-			throw new IllegalArgumentException("remove cannot be null");
-		}
-
-		AST result = factory.create(ast.getType(), ast.getText());
-		AST child = ast.getFirstChild();
-		while (child != null)
-		{
-			String text = child.getText();
-			if (withText.equals(text))
-			{
-				return true;
-			}
-			child = child.getNextSibling();
-		}
-		return false;
 	}
 
 	/**
@@ -623,7 +567,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	/**
 	 * Maps each tokentype to a String.
 	 */
-	private static void setupTokenNames()
+	private static synchronized void setupTokenNames()
 	{
 		if (tokenNames != null)
 		{

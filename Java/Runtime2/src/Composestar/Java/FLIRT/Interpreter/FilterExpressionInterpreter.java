@@ -104,7 +104,7 @@ public final class FilterExpressionInterpreter
 		}
 		else
 		{
-			logger.severe(String.format("Unknown binary filter operator", fex.getClass().getName()));
+			logger.severe(String.format("Unknown binary filter operator: %s", fex.getClass().getName()));
 			return ExecutionResult.UNSET;
 		}
 	}
