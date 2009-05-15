@@ -111,13 +111,21 @@ public class Tool
 			{
 				if (!TimerResultsHandler.loadReport(result, report))
 				{
-					return false;
+					if (!QUIET)
+					{
+						System.out.println(String.format("Ignoring invalid report", result.toString()));
+					}
+					continue;
 				}
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace(System.err);
-				return false;
+				if (!QUIET)
+				{
+					System.out.println(String.format("Ignoring invalid report", result.toString()));
+				}
+				continue;
 			}
 			bundle.addReport(report);
 		}

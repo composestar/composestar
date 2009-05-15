@@ -431,7 +431,7 @@
 		</copy>
 
 		<ant dir="${build.core}/Development/CstarPerfTool" target="build" />
-		<java jar="${build.core}/Development/CstarPerfTool/dist/CstarPerfTool.jar" fork="true" failonerror="true">
+		<java jar="${build.core}/Development/CstarPerfTool/dist/CstarPerfTool.jar" fork="true" failonerror="false">
 			<jvmarg value="-DComposestar.Perf.Tool.quiet=true"/>
 			<jvmarg value="-DComposestar.Perf.Tool.Export.onlyLastX=100"/>
 			<arg value="${basedir}/_performance_data" />
