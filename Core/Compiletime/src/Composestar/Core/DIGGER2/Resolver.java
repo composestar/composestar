@@ -128,7 +128,7 @@ public class Resolver
 			}
 			pastStates.add(state);
 			FlowNode flowNode = state.getFlowNode();
-			if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE))
+			if (false /* flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE) */)
 			{
 				// needed for certainty checks
 				MatchingExpression cond = (MatchingExpression) flowNode.getRepositoryLink();
@@ -158,10 +158,10 @@ public class Resolver
 				// TODO: implement
 				// trail.setErrorException();
 			}
-			else if (flowNode.containsName(FlowNode.ACTION_NODE))
-			{
-				// TODO: what about other actions?
-			}
+			// else if (flowNode.containsName(FlowNode.ACTION_NODE))
+			// {
+			// // TODO: what about other actions?
+			// }
 
 			// traverse all outgoing transitions of the state
 			// in most cases there is only one outgoing transition, this

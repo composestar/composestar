@@ -232,7 +232,7 @@ public class Manager
 		}
 		if (!importance.get(imp))
 		{
-			return false || undeterministic;
+			return undeterministic;
 		}
 		// check dependencies
 		String[] deps = module.getDependencies();
@@ -256,7 +256,7 @@ public class Manager
 							logger.info(String.format(
 									"Module %s depends on all previous modules, %s did not execute successfully",
 									module.getModuleName(), res.getKey()));
-							return false || undeterministic;
+							return undeterministic;
 						}
 					}
 				}
@@ -275,14 +275,14 @@ public class Manager
 						// not executed
 						logger.info(String.format("Module %s depends on module %s which was not executed", module
 								.getModuleName(), dep));
-						return false || undeterministic;
+						return undeterministic;
 					}
 					else if (moduleResults.get(dep) != CTCommonModule.ModuleReturnValue.OK)
 					{
 						// no valid execution
 						logger.info(String.format("Module %s depends on module %s which did not return Ok", module
 								.getModuleName(), dep));
-						return false || undeterministic;
+						return undeterministic;
 					}
 				}
 			}

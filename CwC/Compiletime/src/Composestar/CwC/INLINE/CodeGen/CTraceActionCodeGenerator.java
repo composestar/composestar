@@ -226,6 +226,7 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 				{
 					case UNSIGNED:
 						base = "u";
+						break;
 					default:
 						base = "d";
 				}

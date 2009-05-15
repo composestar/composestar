@@ -599,14 +599,30 @@ public class CwCWeaver implements CTCommonModule
 		if (extraFuncDecls.hasMethods())
 		{
 			File extraH = new File(outputDir, String.format("cstarxt__%s.h", type.getFullName()));
+			FileWriter writer = null;
 			try
 			{
-				extraFuncDecls.generateHeader(new FileWriter(extraH, false));
+				writer = new FileWriter(extraH, false);
+				extraFuncDecls.generateHeader(writer);
 				imports.add("\"" + extraH.toString() + "\"");
 			}
 			catch (IOException e)
 			{
 				logger.error(e, e);
+			}
+			finally
+			{
+				if (writer != null)
+				{
+					try
+					{
+						writer.close();
+					}
+					catch (IOException e)
+					{
+						logger.error(e, e);
+					}
+				}
 			}
 		}
 		if (imports.size() > 0)
