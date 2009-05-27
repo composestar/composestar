@@ -30,8 +30,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * BACO is responsible for copying all files required to execute the compiled
  * program to the output directory.
  */
-// @ComposestarModule(ID = ModuleNames.BACO, dependsOn = {
-// ComposestarModule.DEPEND_ALL })
 public abstract class BACO implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);

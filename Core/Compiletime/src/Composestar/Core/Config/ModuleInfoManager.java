@@ -310,7 +310,7 @@ public class ModuleInfoManager
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
 		{
 			super.startElement(uri, localName, qName, attributes);
-			if (currentName.equals("moduleinfo"))
+			if ("moduleinfo".equals(currentName))
 			{
 				miHandler = new ModuleInfoHandler(reader, this);
 				reader.setContentHandler(miHandler);
@@ -328,7 +328,7 @@ public class ModuleInfoManager
 		public void endElement(String uri, String localName, String qName) throws SAXException
 		{
 			super.endElement(uri, localName, qName);
-			if (currentName.equals("moduleinfo"))
+			if ("moduleinfo".equals(currentName))
 			{
 				if (miHandler != null)
 				{

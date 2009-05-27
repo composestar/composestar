@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2009 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,27 +22,25 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.Filters;
+package Composestar.Core.CORE2;
 
 /**
+ * The severity of the conflict
+ * 
  * @author Michiel Hendriks
  */
-public final class FilterActionNames
+public enum ConflictSeverity
 {
-	public static final String DISPATCH_ACTION = "DispatchAction";
-
-	public static final String SEND_ACTION = "SendAction";
-
-	public static final String CONTINUE_ACTION = "ContinueAction";
-
-	public static final String ERROR_ACTION = "ErrorAction";
-
-	public static final String SUBSTITUTION_ACTION = "SubstitutionAction";
-
-	public static final String ADVICE_ACTION = "AdviceAction";
-
-	public static final String META_ACTION = "MetaAction";
-
-	private FilterActionNames()
-	{}
+	/**
+	 * Nothing harmful, like unused data
+	 */
+	NOTICE,
+	/**
+	 * Something might be incorrect
+	 */
+	WARNING,
+	/**
+	 * A harmful conflict
+	 */
+	ERROR
 }

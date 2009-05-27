@@ -27,8 +27,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Arjan de Roo
  */
-// @ComposestarModule(ID = ModuleNames.CORE, dependsOn = { ModuleNames.FIRE,
-// ModuleNames.FILTH }, importance = Importance.VALIDATION)
 public class Core implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CORE);
@@ -40,6 +38,11 @@ public class Core implements CTCommonModule
 	 * Conflict detection algorithm
 	 */
 	private CoreConflictDetector detector = new CoreConflictDetector();
+
+	/**
+	 * Conflicts of severity ERROR where found
+	 */
+	private boolean isErrorFree;
 
 	public Core()
 	{}
@@ -79,7 +82,7 @@ public class Core implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		// f2res = resources.getResourceManager(FIRE2Resources.class);
+		isErrorFree = true;
 		// Iterate over all concerns
 		for (Superimposed si : resources.repository().getAll(Superimposed.class))
 		{
@@ -90,7 +93,10 @@ public class Core implements CTCommonModule
 			// Check for conflicts
 			findConflicts((Concern) si.getOwner());
 		}
-		// TODO return Error when conflicts are detected
+		if (!isErrorFree)
+		{
+			return ModuleReturnValue.ERROR;
+		}
 		return ModuleReturnValue.OK;
 	}
 
@@ -117,7 +123,15 @@ public class Core implements CTCommonModule
 	{
 		for (CoreConflict conflict : conflicts)
 		{
-			logger.warn(conflict.getDescription(), conflict.getLocation());
+			if (conflict.getType().getSeverity() == ConflictSeverity.ERROR)
+			{
+				isErrorFree = false;
+				logger.error(conflict.getDescription(), conflict.getLocation());
+			}
+			else
+			{
+				logger.warn(conflict.getDescription(), conflict.getLocation());
+			}
 		}
 	}
 }

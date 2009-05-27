@@ -41,4 +41,7 @@ public final class DefaultInnerDispatchNames
 	 * The fully qualified name of the default send output filter
 	 */
 	public static final String FQN_OUTER_FILTER = FQN_FILTER_MODULE + "." + OUTPUT_FILTER;
+
+	private DefaultInnerDispatchNames()
+	{}
 }

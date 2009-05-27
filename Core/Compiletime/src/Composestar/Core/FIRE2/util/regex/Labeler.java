@@ -29,7 +29,7 @@ public interface Labeler
 	// For starlight:
 	// Composestar.StarLight.ILWeaver.CecilInliningInstructionVisitor#
 	// WeaveBookKeeping
-	public static final String FILTER_ACTION_SEPARATOR = "<FilterAction>";
+	String FILTER_ACTION_SEPARATOR = "<FilterAction>";
 
 	/**
 	 * Return label sequences for the given execution state

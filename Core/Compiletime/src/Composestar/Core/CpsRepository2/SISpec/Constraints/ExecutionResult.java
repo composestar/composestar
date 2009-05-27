@@ -56,7 +56,10 @@ public enum ExecutionResult
 	 */
 	public static ExecutionResult fromBoolean(boolean val)
 	{
-		if (val) return TRUE;
+		if (val)
+		{
+			return TRUE;
+		}
 		return FALSE;
 	}
 

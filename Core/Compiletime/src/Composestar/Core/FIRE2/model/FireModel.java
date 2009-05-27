@@ -74,8 +74,9 @@ public class FireModel
 					return INPUT_FILTERS;
 				case OUTPUT:
 					return OUTPUT_FILTERS;
+				default:
+					throw new IllegalStateException(String.format("No index value of FilterDirection value %s", this));
 			}
-			throw new IllegalStateException(String.format("No index value of FilterDirection value %s", this));
 		}
 	}
 
@@ -173,19 +174,20 @@ public class FireModel
 	 * Creates a fire model for the given concern, using the given
 	 * FilterModuleOrder.
 	 * 
-	 * @param concern The concern for which the fire model needs to be created.
+	 * @param forConcern The concern for which the fire model needs to be
+	 *            created.
 	 * @param order The FilterModuleOrder to be used.
 	 */
-	protected FireModel(FIRE2Resources resources, Concern concern, List<ImposedFilterModule> order)
+	protected FireModel(FIRE2Resources resources, Concern forConcern, List<ImposedFilterModule> order)
 	{
-		this.concern = concern;
-		if (concern.getTypeReference() == null)
+		concern = forConcern;
+		if (forConcern.getTypeReference() == null)
 		{
 			// TODO: error
 		}
 		// TODO: needs to be improved
-		selfObject = new CpsObjectImpl(concern.getTypeReference(), CpsObjectImpl.CpsObjectType.SELF);
-		innerObject = new CpsObjectImpl(concern.getTypeReference(), CpsObjectImpl.CpsObjectType.INNER);
+		selfObject = new CpsObjectImpl(forConcern.getTypeReference(), CpsObjectImpl.CpsObjectType.SELF);
+		innerObject = new CpsObjectImpl(forConcern.getTypeReference(), CpsObjectImpl.CpsObjectType.INNER);
 		initialize(order.toArray(new ImposedFilterModule[order.size()]), resources);
 	}
 
@@ -764,21 +766,6 @@ public class FireModel
 		}
 	}
 
-	// private boolean containsMethod(List methods, MethodInfo method)
-	// {
-	// Iterator iterator = methods.iterator();
-	// for (Object method1 : methods)
-	// {
-	// MethodInfo containedMethod = (MethodInfo) method1;
-	// if (containedMethod.checkEquals(method))
-	// {
-	// return true;
-	// }
-	// }
-	//
-	// return false;
-	// }
-
 	/**
 	 * Derives the correct state. If the oldState has not a generalized message
 	 * and the newstate has, the derivedState has the applied message of the
@@ -827,18 +814,6 @@ public class FireModel
 	{
 		ExtendedExecutionState result;
 
-		// if (!baseState.getMessage().isGeneralization())
-		// {
-		// result = new ExtendedExecutionState(model, baseState,
-		// baseState.getMessage(), stateType, signatureCheck,
-		// signatureCheckInfo, filterPosition, layer);
-		// }
-		// else
-		// {
-
-		// CpsMessage newStateMessage = baseState.getMessage();
-		// CpsMessage derivedMessage = deriveMessage(message,
-		// newStateMessage);
 		CpsMessage derivedMessage;
 		try
 		{
@@ -854,48 +829,10 @@ public class FireModel
 		result =
 				new ExtendedExecutionState(model, baseState, derivedMessage, stateType, signatureCheck,
 						signatureCheckInfo, filterPosition, layer);
-		// }
 
 		// Check whether the model already contains the state:
 		return existenceCheck(result);
 	}
-
-	// /**
-	// * Derives a new message that is the result of the generalized message
-	// * degeneralized to the examplemessage. For example, if the example
-	// message
-	// * is T.a and the generalizedMessage is +.b, then the derived message is
-	// T.b
-	// * (the target was generalized, so is replaced with the target from the
-	// * example message, the selector was not generalized, so is not replaced).
-	// *
-	// * @param exampleMessage
-	// * @param generalizedMessage
-	// * @return The degeneralization of the generalizedMessage with the
-	// * exampleMessage, or <code>null</code> if the generalizedMessage or
-	// * exampleMessage is <code>null</code>.
-	// */
-	// private CpsMessage deriveMessage(CpsMessage exampleMessage, CpsMessage
-	// generalizedMessage)
-	// {
-	// if (generalizedMessage == null || exampleMessage == null)
-	// {
-	// return null;
-	// }
-	//
-	// Target derivedTarget =
-	// Message.checkEquals(generalizedMessage.getTarget(),
-	// Message.UNDISTINGUISHABLE_TARGET) ? exampleMessage
-	// .getTarget()
-	// : generalizedMessage.getTarget();
-	//
-	// String derivedSelector =
-	// Message.checkEquals(generalizedMessage.getSelector(),
-	// Message.UNDISTINGUISHABLE_SELECTOR) ? exampleMessage.getSelector() :
-	// generalizedMessage.getSelector();
-	//
-	// return new Message(derivedTarget, derivedSelector);
-	// }
 
 	/**
 	 * Checks whether the given state already exists in the given model. If so,
@@ -1001,27 +938,6 @@ public class FireModel
 	{
 		return new ExtendedExecutionModel(filterPosition, methodInfo, signatureCheck);
 	}
-
-	// /**
-	// * Returns the ExecutionModel for a given target and methodinfo.
-	// *
-	// * @param filterPosition Indicates for which filters the executionmodel
-	// * should be returned, for the input filters (
-	// * <code>INPUT_FILTERS</code>) or for the output filters (
-	// * <code>OUTPUT_FILTERS</code>).
-	// * @param target The entrance target
-	// * @param methodInfo The entrance method
-	// * @param signatureCheck Indicates whether a signatureCheck needs to be
-	// * done.
-	// * @return
-	// */
-	// public ExecutionModel getExecutionModel(FilterDirection filterPosition,
-	// Target target, MethodInfo methodInfo,
-	// int signatureCheck)
-	// {
-	// return new ExtendedExecutionModel(filterPosition, target, methodInfo,
-	// signatureCheck);
-	// }
 
 	/**
 	 * Returns a message object with the given selector and the target set to
@@ -1167,16 +1083,7 @@ public class FireModel
 			for (CpsSelector selector : getDistinguishableSelectors(filterPosition))
 			{
 				message = getEntranceMessage(selector, filterDirection);
-
-				// state =
-				// executionModels[filterPosition][0].getEntranceState(message);
-
 				extendedState = getStartStateNextLayer(this, message, NO_SIGNATURE_CHECK, null, filterPosition, 0);
-
-				// extendedState = new ExtendedExecutionState(this, state,
-				// message, NO_SIGNATURE_CHECK, null,
-				// filterPosition, 0);
-
 				entranceTable.put(message, extendedState);
 			}
 
@@ -1184,14 +1091,7 @@ public class FireModel
 			CpsSelector nullsel = null;
 			message = getEntranceMessage(nullsel, filterDirection);
 
-			// state =
-			// executionModels[filterPosition][0].getEntranceState(message);
-
 			extendedState = getStartStateNextLayer(this, message, NO_SIGNATURE_CHECK, null, filterPosition, 0);
-
-			// extendedState = new ExtendedExecutionState(this, state, message,
-			// NO_SIGNATURE_CHECK, null, filterPosition,
-			// 0);
 
 			entranceTable.put(message, extendedState);
 
@@ -1205,15 +1105,8 @@ public class FireModel
 
 			CpsMessage message = getEntranceMessage(selector, filterDirection);
 
-			// ExecutionState state =
-			// executionModels[filterPosition][0].getEntranceState(message);
-
 			ExtendedExecutionState extendedState =
 					getStartStateNextLayer(this, message, NO_SIGNATURE_CHECK, null, filterPosition, 0);
-
-			// ExtendedExecutionState extendedState = new
-			// ExtendedExecutionState(this, state, message, NO_SIGNATURE_CHECK,
-			// null, filterPosition, 0);
 
 			entranceTable.put(message, extendedState);
 
@@ -1226,15 +1119,8 @@ public class FireModel
 
 			CpsMessage message = getEntranceMessage(selector, filterDirection);
 
-			// ExecutionState state =
-			// executionModels[filterPosition][0].getEntranceState(message);
-
 			ExtendedExecutionState extendedState =
 					getStartStateNextLayer(this, message, NO_SIGNATURE_CHECK, null, filterPosition, 0);
-
-			// ExtendedExecutionState extendedState = new
-			// ExtendedExecutionState(this, state, message, NO_SIGNATURE_CHECK,
-			// null, filterPosition, 0);
 
 			entranceTable.put(message, extendedState);
 
@@ -1247,9 +1133,6 @@ public class FireModel
 
 			CpsMessage message = getEntranceMessage(methodInfo, filterDirection);
 
-			// ExecutionState state =
-			// executionModels[filterPosition][0].getEntranceState(message);
-
 			ExtendedExecutionState extendedState =
 					getStartStateNextLayer(this, message, signatureCheck, methodInfo, filterPosition, 0);
 
@@ -1257,31 +1140,6 @@ public class FireModel
 
 			fullModel = false;
 		}
-
-		// public ExtendedExecutionModel(FilterDirection filterDirection, Target
-		// target, MethodInfo methodInfo,
-		// int signatureCheck)
-		// {
-		// filterPosition = filterDirection.getIndex();
-		//
-		// CpsMessage message = new Message(target, methodInfo);
-		//
-		// // ExecutionState state =
-		// // executionModels[filterPosition][0].getEntranceState(message);
-		//
-		// ExtendedExecutionState extendedState = getStartStateNextLayer(this,
-		// message, signatureCheck, methodInfo,
-		// filterPosition, 0);
-		//
-		// // ExtendedExecutionState extendedState = new
-		// // ExtendedExecutionState(this,
-		// // state, message, signatureCheck,
-		// // methodInfo, filterPosition, 0);
-		//
-		// entranceTable.put(message, extendedState);
-		//
-		// fullModel = false;
-		// }
 
 		/*
 		 * (non-Javadoc)
@@ -1878,7 +1736,7 @@ public class FireModel
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + layer;
-			result = prime * result + ((node == null) ? 0 : node.hashCode());
+			result = prime * result + (node == null ? 0 : node.hashCode());
 			return result;
 		}
 

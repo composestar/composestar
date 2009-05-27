@@ -17,7 +17,7 @@ public interface ReferenceManager
 	/**
 	 * Key for the reference manager in the common resources
 	 */
-	public static final String RESOURCE_KEY = "CpsRepository2.ReferenceManager";
+	static final String RESOURCE_KEY = "CpsRepository2.ReferenceManager";
 
 	/**
 	 * Get a type reference with the given reference id. It will create a new

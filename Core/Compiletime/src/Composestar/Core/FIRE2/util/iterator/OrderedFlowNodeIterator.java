@@ -79,6 +79,6 @@ public class OrderedFlowNodeIterator implements Iterator<FlowNode>
 
 	private static class MutableInteger
 	{
-		private int value = 0;
+		private int value;
 	}
 }

@@ -66,36 +66,36 @@ public class EmbeddedSource implements Serializable
 	}
 
 	/**
-	 * @param code
+	 * @param sourceCode
 	 */
-	public EmbeddedSource(String code)
+	public EmbeddedSource(String sourceCode)
 	{
-		this(null, null, code);
+		this(null, null, sourceCode);
 	}
 
 	/**
-	 * @param filename
-	 * @param code
+	 * @param sourceFilename
+	 * @param sourceCode
 	 */
-	public EmbeddedSource(String filename, String code)
+	public EmbeddedSource(String sourceFilename, String sourceCode)
 	{
-		this(null, filename, code);
+		this(null, sourceFilename, sourceCode);
 	}
 
 	/**
-	 * @param language
-	 * @param filename
-	 * @param code
+	 * @param sourceLanguage
+	 * @param sourceFilename
+	 * @param sourceCode
 	 */
-	public EmbeddedSource(String language, String filename, String code)
+	public EmbeddedSource(String sourceLanguage, String sourceFilename, String sourceCode)
 	{
-		if (code == null)
+		if (sourceCode == null)
 		{
-			code = "";
+			sourceCode = "";
 		}
-		this.language = language;
-		this.filename = filename;
-		this.code = code;
+		language = sourceLanguage;
+		filename = sourceFilename;
+		code = sourceCode;
 	}
 
 	/**

@@ -18,8 +18,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * Extracts the embedded sources from the concern sources and saves them to the
  * disk for further use.
  */
-// @ComposestarModule(ID = ModuleNames.EMBEX, dependsOn = { ModuleNames.COPPER
-// })
 public class EMBEX implements CTCommonModule
 {
 	public static final String EMBEDDED_PATH = "embedded";

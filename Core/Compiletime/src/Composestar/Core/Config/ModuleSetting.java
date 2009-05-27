@@ -162,7 +162,7 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 		}
 		else if (type == Integer.class)
 		{
-			if (newValue.equals(""))
+			if ("".equals(newValue))
 			{
 				value = defaultValue;
 			}
@@ -184,7 +184,7 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 		}
 		else if (type == Float.class)
 		{
-			if (newValue.equals(""))
+			if ("".equals(newValue))
 			{
 				value = defaultValue;
 			}

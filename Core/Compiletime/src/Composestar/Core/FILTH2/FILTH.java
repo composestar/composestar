@@ -55,7 +55,6 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Michiel Hendriks
  */
-// @ComposestarModule(ID = ModuleNames.FILTH, dependsOn = { ModuleNames.LOLA })
 public class FILTH implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);

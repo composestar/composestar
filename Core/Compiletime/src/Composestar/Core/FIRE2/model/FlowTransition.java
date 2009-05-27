@@ -18,17 +18,17 @@ public interface FlowTransition extends Serializable
 	/**
 	 * A normal transition
 	 */
-	static final int FLOW_NEXT_TRANSITION = 1;
+	int FLOW_NEXT_TRANSITION = 1;
 
 	/**
 	 * The false transition in a branch
 	 */
-	static final int FLOW_FALSE_TRANSITION = 2;
+	int FLOW_FALSE_TRANSITION = 2;
 
 	/**
 	 * The true transition in a branch
 	 */
-	static final int FLOW_TRUE_TRANSITION = 3;
+	int FLOW_TRUE_TRANSITION = 3;
 
 	/**
 	 * @return Returns the type.

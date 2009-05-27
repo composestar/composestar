@@ -65,8 +65,7 @@ public final class ExpressionResolver
 	 * @param reject
 	 * @return
 	 */
-	public static final MatchingExpression createExpression(ExecutionState start, ExecutionState accept,
-			ExecutionState reject)
+	public static MatchingExpression createExpression(ExecutionState start, ExecutionState accept, ExecutionState reject)
 	{
 		if (!start.getFlowNode().containsName(FlowNode.FILTER_ELEMENT_NODE))
 		{
@@ -240,7 +239,7 @@ public final class ExpressionResolver
 	 * @param replacements
 	 * @param history
 	 */
-	public static final void createReplacementMap(ExecutionState state,
+	public static void createReplacementMap(ExecutionState state,
 			Map<MatchingExpression, MatchingExpression> replacements, Set<ExecutionState> history)
 	{
 		while (true)
@@ -288,4 +287,7 @@ public final class ExpressionResolver
 			state = trans.get(trans.size() - 1).getEndState();
 		}
 	}
+
+	private ExpressionResolver()
+	{}
 }

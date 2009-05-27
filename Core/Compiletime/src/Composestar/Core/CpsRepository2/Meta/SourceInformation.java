@@ -116,12 +116,12 @@ public final class SourceInformation implements Serializable
 	}
 
 	/**
-	 * @param line the line to set
+	 * @param value the line to set
 	 * @see #line
 	 */
-	public void setLine(int line)
+	public void setLine(int value)
 	{
-		this.line = line;
+		line = value;
 	}
 
 	/**
@@ -134,12 +134,12 @@ public final class SourceInformation implements Serializable
 	}
 
 	/**
-	 * @param linePos the linePos to set
+	 * @param value the linePos to set
 	 * @see #linePos
 	 */
-	public void setLinePos(int linePos)
+	public void setLinePos(int value)
 	{
-		this.linePos = linePos;
+		linePos = value;
 	}
 
 	/*

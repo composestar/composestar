@@ -122,4 +122,7 @@ public final class InnerDispatcher
 		// no changes to the message for the send filter
 		return filter;
 	}
+
+	private InnerDispatcher()
+	{}
 }

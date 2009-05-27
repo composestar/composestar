@@ -12,5 +12,5 @@ import Composestar.Core.FIRE2.model.ExecutionState;
  */
 public interface QueryEngine
 {
-	public List<ExecutionState> matchingStates(ExecutionModel model, Query query);
+	List<ExecutionState> matchingStates(ExecutionModel model, Query query);
 }

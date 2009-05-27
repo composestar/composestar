@@ -140,11 +140,6 @@ public class ExecutionModelExtractor
 			}
 		}
 
-		// ExecutionState state = new ExecutionState( null, "" );
-		// stateTable.put( startState, state );
-		// analyseNextStates( startState, model );
-		//
-
 		resolveNonExecTransitions(executionModel);
 
 		return executionModel;
@@ -501,13 +496,6 @@ public class ExecutionModelExtractor
 		public void addTransition(ExecutionTransition transition)
 		{
 			transitions.add(transition);
-
-			// if ( !transition.getStartState().getSelector().equals( "*" )
-			// &&
-			// transition.getEndState().getSelector().equals( "*" ) )
-			// {
-			// starTransitions.addElement( transition );
-			// }
 		}
 
 		void removeTransitions(ExecutionTransition transition)
@@ -594,16 +582,16 @@ public class ExecutionModelExtractor
 		 */
 		private ExecutionState endState;
 
-		public BasicExecutionTransition(BasicExecutionState startState, String label, BasicExecutionState endState,
+		public BasicExecutionTransition(BasicExecutionState start, String label, BasicExecutionState end,
 				FlowTransition flowTransition)
 		{
 			super(label, flowTransition);
 
-			this.startState = startState;
-			this.endState = endState;
+			startState = start;
+			endState = end;
 
-			startState.addOutTransition(this);
-			endState.addInTransition(this);
+			start.addOutTransition(this);
+			end.addInTransition(this);
 		}
 
 		/**

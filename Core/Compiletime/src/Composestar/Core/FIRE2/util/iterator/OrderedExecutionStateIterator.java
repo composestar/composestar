@@ -106,7 +106,7 @@ public class OrderedExecutionStateIterator implements Iterator<ExecutionState>
 
 	private static class MutableInteger
 	{
-		private int value = 0;
+		private int value;
 	}
 
 }

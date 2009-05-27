@@ -38,7 +38,6 @@ public class CoreConflict
 	public CoreConflict(ConflictType ctype, RepositoryEntity clocation, CoreConflict ccause)
 	{
 		this(ctype, clocation);
-
 		cause = ccause;
 	}
 

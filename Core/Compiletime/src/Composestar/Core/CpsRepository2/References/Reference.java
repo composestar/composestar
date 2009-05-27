@@ -26,18 +26,16 @@ package Composestar.Core.CpsRepository2.References;
 
 import java.io.Serializable;
 
-import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
-
 /**
  * The generic interface for all references. A reference can be a
  * self-reference, in which case the reference is implemented by a type which is
  * also the reference type. An example of a self-reference is the
- * {@link FilterModule} interface which is also a {@link FilterModuleReference}.
- * In this case the filter module returns itself when the reference is
- * requested. The reference id is usually the fully qualified name of the
- * self-reference. Self-references throw an UnsupportedOperationException when
- * the {@link #setReferenceId(String)} and {@link #setReference(Object)} methods
- * are called.
+ * {@link Composestar.Core.CpsRepository2.FilterModules.FilterModule} interface
+ * which is also a {@link FilterModuleReference}. In this case the filter module
+ * returns itself when the reference is requested. The reference id is usually
+ * the fully qualified name of the self-reference. Self-references throw an
+ * UnsupportedOperationException when the {@link #setReferenceId(String)} and
+ * {@link #setReference(Object)} methods are called.
  * 
  * @author Michiel Hendriks
  */

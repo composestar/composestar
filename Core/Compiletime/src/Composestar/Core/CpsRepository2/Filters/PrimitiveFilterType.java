@@ -29,7 +29,6 @@ package Composestar.Core.CpsRepository2.Filters;
  * 
  * @author Michiel Hendriks
  */
-// FIXME reject action?
 public interface PrimitiveFilterType extends FilterType
 {
 	/**

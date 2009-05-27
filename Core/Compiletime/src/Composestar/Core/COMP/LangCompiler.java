@@ -28,7 +28,6 @@ import java.util.Set;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Config.SourceCompiler;
-import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 
 /**
@@ -58,7 +57,6 @@ public interface LangCompiler
 	 * @param p the project that has to be called
 	 * @param sources a set of sources that must be compiled by this compiler
 	 * @throws CompilerException
-	 * @throws ModuleException
 	 */
 	void compileSources(Project p, Set<Source> sources) throws CompilerException;
 

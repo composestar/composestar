@@ -26,7 +26,6 @@ package Composestar.Core.CpsRepository2.SISpec;
 
 import java.util.Collection;
 
-import Composestar.Core.CpsRepository2.CpsConcern;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
 
@@ -35,8 +34,8 @@ import Composestar.Core.CpsRepository2.SISpec.Constraints.Constraint;
  * CPS language. A CpsConcern can have a superimposition instance assigned.
  * 
  * @author Michiel Hendriks
- * @see CpsConcern#getSISpecification()
- * @see CpsConcern#setSISpecification(SISpecification)
+ * @see Composestar.Core.CpsRepository2.CpsConcern#getSISpecification()
+ * @see Composestar.Core.CpsRepository2.CpsConcern#setSISpecification(SISpecification)
  */
 public interface SISpecification extends QualifiedRepositoryEntity
 {
@@ -46,7 +45,7 @@ public interface SISpecification extends QualifiedRepositoryEntity
 	 * the superimposition section can have a fully qualified name which does
 	 * not obstruct the names of other concern elements.
 	 */
-	public static final String NAME = "@SI";
+	static final String NAME = "@SI";
 
 	/**
 	 * Add a new selector to this superimposition instance. Selectors should

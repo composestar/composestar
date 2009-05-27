@@ -14,7 +14,6 @@ import Composestar.Core.FIRE2.model.FlowModel;
 /**
  * @author Arjan de Roo
  */
-
 public class FirePreprocessingResult implements Serializable
 {
 	private static final long serialVersionUID = 4193686682386435353L;
@@ -27,16 +26,16 @@ public class FirePreprocessingResult implements Serializable
 
 	private ExecutionModel executionModelOutputFilters;
 
-	public FirePreprocessingResult(FlowModel flowModelInputFilters, ExecutionModel executionModelInputFilters,
-			FlowModel flowModelOutputFilters, ExecutionModel executionModelOutputFilters)
+	public FirePreprocessingResult(FlowModel inputFlow, ExecutionModel inputExec, FlowModel outputFlow,
+			ExecutionModel outputExec)
 	{
 		super();
 
-		this.flowModelInputFilters = flowModelInputFilters;
-		this.executionModelInputFilters = executionModelInputFilters;
+		flowModelInputFilters = inputFlow;
+		executionModelInputFilters = inputExec;
 
-		this.flowModelOutputFilters = flowModelOutputFilters;
-		this.executionModelOutputFilters = executionModelOutputFilters;
+		flowModelOutputFilters = outputFlow;
+		executionModelOutputFilters = outputExec;
 	}
 
 	/**

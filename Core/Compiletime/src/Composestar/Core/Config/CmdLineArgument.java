@@ -175,11 +175,11 @@ public class CmdLineArgument implements Serializable
 
 	/**
 	 * @see #useUnixSlashes
-	 * @param value
+	 * @param inValue
 	 */
-	public void setUseUnixSlashes(boolean value)
+	public void setUseUnixSlashes(boolean inValue)
 	{
-		useUnixSlashes = value;
+		useUnixSlashes = inValue;
 	}
 
 	/**

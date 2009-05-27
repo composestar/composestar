@@ -31,97 +31,6 @@ package Composestar.Core.CORE2;
  */
 public enum ConflictType
 {
-	@Deprecated
-	CONDITION_EXPRESSION_FALSE
-	{
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "Condition expression is the constant false";
-		}
-	},
-	@Deprecated
-	MATCHING_PART_ALWAYS_MATCHES
-	{
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "Matching part always matches";
-		}
-	},
-	@Deprecated
-	MATCHING_PART_NEVER_MATCHES
-	{
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "Matching part never matches";
-		}
-	},
-	@Deprecated
-	MATCHING_PATTERN_ALWAYS_REJECTS
-	{
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "Matching pattern always rejects";
-		}
-	},
-	@Deprecated
-	MATCHING_PATTERN_ALWAYS_ACCEPTS
-	{
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "Matching pattern always accepts";
-		}
-	},
-	@Deprecated
-	MATCHING_PATTERN_REDUNDANT
-	{
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "Redundant matching pattern";
-		}
-	},
-	@Deprecated
-	MATCHING_PATTERN_UNREACHABLE
-	{
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "Unreachable matching pattern";
-		}
-	},
 	FILTER_ELEMENT_ALWAYS_REJECTS
 	{
 		/*
@@ -132,6 +41,16 @@ public enum ConflictType
 		public String toString()
 		{
 			return "Filter element always rejects";
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.NOTICE;
 		}
 	},
 	FILTER_ELEMENT_ALWAYS_ACCEPTS
@@ -145,6 +64,16 @@ public enum ConflictType
 		{
 			return "Filter element always accepts";
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.NOTICE;
+		}
 	},
 	FILTER_ELEMENT_REDUNDANT
 	{
@@ -156,6 +85,16 @@ public enum ConflictType
 		public String toString()
 		{
 			return "Redundant filter element";
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.WARNING;
 		}
 	},
 	FILTER_ELEMENT_UNREACHABLE
@@ -169,6 +108,16 @@ public enum ConflictType
 		{
 			return "Unreachable filter element";
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.WARNING;
+		}
 	},
 	FILTER_ALWAYS_REJECTS
 	{
@@ -180,6 +129,16 @@ public enum ConflictType
 		public String toString()
 		{
 			return "Filter always rejects";
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.NOTICE;
 		}
 	},
 	FILTER_ALWAYS_ACCEPTS
@@ -193,6 +152,16 @@ public enum ConflictType
 		{
 			return "Filter always accepts";
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.NOTICE;
+		}
 	},
 	FILTER_REDUNDANT
 	{
@@ -204,6 +173,16 @@ public enum ConflictType
 		public String toString()
 		{
 			return "Redundant filter";
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.WARNING;
 		}
 	},
 	FILTER_UNREACHABLE
@@ -217,6 +196,16 @@ public enum ConflictType
 		{
 			return "Unreachable filter";
 		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.WARNING;
+		}
 	},
 	MATCHING_EXPRESSION_UNREACHABLE
 	{
@@ -229,5 +218,20 @@ public enum ConflictType
 		{
 			return "Unreachable matching expression segment";
 		}
-	}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CORE2.ConflictType#getSeverity()
+		 */
+		@Override
+		public ConflictSeverity getSeverity()
+		{
+			return ConflictSeverity.WARNING;
+		}
+	};
+
+	/**
+	 * @return The severity of the conflict
+	 */
+	public abstract ConflictSeverity getSeverity();
 }

@@ -72,4 +72,7 @@ public final class FilterTypeNames
 	 * This filter type does nothing when accepted
 	 */
 	public static final String VOID = "Void";
+
+	private FilterTypeNames()
+	{}
 }

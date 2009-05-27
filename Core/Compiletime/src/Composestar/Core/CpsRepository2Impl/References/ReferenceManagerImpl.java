@@ -55,7 +55,7 @@ public class ReferenceManagerImpl implements Serializable, ReferenceManager
 	private static final long serialVersionUID = -400983142236822779L;
 
 	/** Used as a separator in ID for references */
-	final static char FIELD_SEP = 0x1E;
+	static final char FIELD_SEP = 0x1E;
 
 	/**
 	 * Keeps a record of type references

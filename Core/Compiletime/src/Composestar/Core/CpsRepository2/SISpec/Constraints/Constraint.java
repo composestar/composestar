@@ -59,5 +59,5 @@ public interface Constraint extends RepositoryEntity
 	 *            constraints.
 	 * @return True if this constraint holds
 	 */
-	public boolean evalConstraint(List<ConstraintValue> order, ExecutionManager exec);
+	boolean evalConstraint(List<ConstraintValue> order, ExecutionManager exec);
 }

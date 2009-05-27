@@ -39,8 +39,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-// @ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER
-// }, importance = Importance.VALIDATION)
 public class Check implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CHKREP);

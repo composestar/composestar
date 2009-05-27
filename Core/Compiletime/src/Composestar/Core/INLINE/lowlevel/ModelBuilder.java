@@ -60,7 +60,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Arjan
  */
-// @ComposestarModule(ID = ModuleNames.INLINE, dependsOn = { ModuleNames.SIGN })
 public class ModelBuilder implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.INLINE);

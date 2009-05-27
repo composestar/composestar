@@ -203,11 +203,11 @@ public class FlowModelExtractor
 		}
 
 		/**
-		 * @param startNode The startNode to set.
+		 * @param start The startNode to set.
 		 */
-		public void setStartNode(FlowNode startNode)
+		public void setStartNode(FlowNode start)
 		{
-			this.startNode = startNode;
+			startNode = start;
 		}
 
 		/**
@@ -219,11 +219,11 @@ public class FlowModelExtractor
 		}
 
 		/**
-		 * @param endNode The endNode to set.
+		 * @param end The endNode to set.
 		 */
-		public void setEndNode(FlowNode endNode)
+		public void setEndNode(FlowNode end)
 		{
-			this.endNode = endNode;
+			endNode = end;
 		}
 
 		/**
@@ -321,11 +321,11 @@ public class FlowModelExtractor
 		 * 
 		 * @return
 		 */
-		public FlowTransition getTransition(FlowNode endNode)
+		public FlowTransition getTransition(FlowNode end)
 		{
 			for (FlowTransition transition : transitions)
 			{
-				if (transition.getEndNode().equals(endNode))
+				if (transition.getEndNode().equals(end))
 				{
 					return transition;
 				}
@@ -398,17 +398,17 @@ public class FlowModelExtractor
 		/**
 		 * The constructor
 		 * 
-		 * @param startNode
-		 * @param type
-		 * @param endNode
+		 * @param start
+		 * @param transType
+		 * @param end
 		 */
-		public BasicFlowTransition(int type, BasicFlowNode startNode, BasicFlowNode endNode)
+		public BasicFlowTransition(int transType, BasicFlowNode start, BasicFlowNode end)
 		{
 			super();
 
-			this.type = type;
-			this.startNode = startNode;
-			this.endNode = endNode;
+			type = transType;
+			startNode = start;
+			endNode = end;
 
 			startNode.addTransition(this);
 		}

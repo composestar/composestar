@@ -60,7 +60,6 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Arjan de Roo
  */
-// @ComposestarModule(ID = ModuleNames.FIRE, dependsOn = { ModuleNames.COPPER })
 public class Preprocessor implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);

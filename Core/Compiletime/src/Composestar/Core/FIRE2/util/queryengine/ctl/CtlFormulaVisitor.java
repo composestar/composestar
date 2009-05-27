@@ -8,31 +8,31 @@ import Composestar.Core.FIRE2.util.queryengine.Predicate;
 
 public interface CtlFormulaVisitor
 {
-	public Object visitNot(Not formula, Object arg);
+	Object visitNot(Not formula, Object arg);
 
-	public Object visitAnd(And formula, Object arg);
+	Object visitAnd(And formula, Object arg);
 
-	public Object visitOr(Or formula, Object arg);
+	Object visitOr(Or formula, Object arg);
 
-	public Object visitImplies(Implies formula, Object arg);
+	Object visitImplies(Implies formula, Object arg);
 
-	public Object visitAX(AX formula, Object arg);
+	Object visitAX(AX formula, Object arg);
 
-	public Object visitEX(EX formula, Object arg);
+	Object visitEX(EX formula, Object arg);
 
-	public Object visitAF(AF formula, Object arg);
+	Object visitAF(AF formula, Object arg);
 
-	public Object visitEF(EF formula, Object arg);
+	Object visitEF(EF formula, Object arg);
 
-	public Object visitAG(AG formula, Object arg);
+	Object visitAG(AG formula, Object arg);
 
-	public Object visitEG(EG formula, Object arg);
+	Object visitEG(EG formula, Object arg);
 
-	public Object visitAU(AU formula, Object arg);
+	Object visitAU(AU formula, Object arg);
 
-	public Object visitEU(EU formula, Object arg);
+	Object visitEU(EU formula, Object arg);
 
-	public Object visitReverse(Reverse formula, Object arg);
+	Object visitReverse(Reverse formula, Object arg);
 
-	public Object visitPredicate(Predicate predicate, Object arg);
+	Object visitPredicate(Predicate predicate, Object arg);
 }

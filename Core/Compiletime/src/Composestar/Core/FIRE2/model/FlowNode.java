@@ -25,98 +25,98 @@ public interface FlowNode extends Serializable
 	/**
 	 * Label that every node that participates in the flow contains
 	 */
-	final String FLOW_NODE = "FlowNode";
+	String FLOW_NODE = "FlowNode";
 
 	/**
 	 * Filter modules
 	 */
-	final String FILTER_MODULE_NODE = "FilterModule";
+	String FILTER_MODULE_NODE = "FilterModule";
 
 	/**
 	 * Used for all filter expression nodes
 	 */
-	final String FILTER_EXPRESSION_NODE = "FilterExpression";
+	String FILTER_EXPRESSION_NODE = "FilterExpression";
 
 	/**
 	 * Used for the sequential filter operator (';' in the language)
 	 */
-	final String SEQUENTIAL_FILTER_OPER_NODE = "SequentialFilterOper";
+	String SEQUENTIAL_FILTER_OPER_NODE = "SequentialFilterOper";
 
 	/**
 	 * A filter node (this is not a filter type)
 	 */
-	final String FILTER_NODE = "Filter";
+	String FILTER_NODE = "Filter";
 
 	/**
 	 * All filter element expressions (cor-operator, filter element, ...)
 	 */
-	final String FILTER_ELEMENT_EXPRESSION_NODE = "FilterElementExpression";
+	String FILTER_ELEMENT_EXPRESSION_NODE = "FilterElementExpression";
 
 	/**
 	 * The conditional OR operator for filter elements
 	 */
-	final String COR_NODE = "COR";
+	String COR_NODE = "COR";
 
-	final String FILTER_ELEMENT_NODE = "FilterElement";
+	String FILTER_ELEMENT_NODE = "FilterElement";
 
-	final String MATCHING_EXPRESSION_NODE = "Expression";
+	String MATCHING_EXPRESSION_NODE = "Expression";
 
-	final String MATCH_AND_NODE = "And";
+	String MATCH_AND_NODE = "And";
 
-	final String MATCH_OR_NODE = "Or";
+	String MATCH_OR_NODE = "Or";
 
-	final String MATCH_NOT_NODE = "Not";
+	String MATCH_NOT_NODE = "Not";
 
 	/**
 	 * Used for all compare statements
 	 */
-	final String COMPARE_STATEMENT_NODE = "CompareStatement";
+	String COMPARE_STATEMENT_NODE = "CompareStatement";
 
-	final String INSTANCE_MATCHING = "CmpInstance";
+	String INSTANCE_MATCHING = "CmpInstance";
 
-	final String SIGNATURE_MATCHING = "CmpSignature";
+	String SIGNATURE_MATCHING = "CmpSignature";
 
-	final String COMPATIBILITY_MATCHING = "CmpCompatible";
+	String COMPATIBILITY_MATCHING = "CmpCompatible";
 
-	final String ANNOTATION_MATCHING = "CmpAnnotation";
+	String ANNOTATION_MATCHING = "CmpAnnotation";
 
 	/**
 	 * Used for matching expression nodes that link to a condition
 	 */
-	final String CONDITION_NODE = "Condition";
+	String CONDITION_NODE = "Condition";
 
-	final String ASSIGNMENT_NODE = "Assignment";
+	String ASSIGNMENT_NODE = "Assignment";
 
 	/**
 	 * Used for a literal True in the matching expression
 	 */
-	final String TRUE_NODE = "True";
+	String TRUE_NODE = "True";
 
 	/**
 	 * Used for a literal False in the matching expression
 	 */
-	final String FALSE_NODE = "False";
+	String FALSE_NODE = "False";
 
-	final String FILTER_ACTION_NODE = "FilterAction";
+	String FILTER_ACTION_NODE = "FilterAction";
 
-	final String CONTINUE_ACTION_NODE = "ContinueFlowAction";
+	String CONTINUE_ACTION_NODE = "ContinueFlowAction";
 
-	final String EXIT_ACTION_NODE = "ExitFlowAction";
+	String EXIT_ACTION_NODE = "ExitFlowAction";
 
-	final String RETURN_ACTION_NODE = "ReturnFlowAction";
+	String RETURN_ACTION_NODE = "ReturnFlowAction";
 
-	final String REJECT_CALL_ACTION_NODE = "RejectCallAction";
+	String REJECT_CALL_ACTION_NODE = "RejectCallAction";
 
-	final String ACCEPT_CALL_ACTION_NODE = "AcceptCallAction";
+	String ACCEPT_CALL_ACTION_NODE = "AcceptCallAction";
 
-	final String REJECT_RETURN_ACTION_NODE = "RejectReturnAction";
+	String REJECT_RETURN_ACTION_NODE = "RejectReturnAction";
 
-	final String ACCEPT_RETURN_ACTION_NODE = "AcceptReturnAction";
+	String ACCEPT_RETURN_ACTION_NODE = "AcceptReturnAction";
 
 	/**
 	 * Created by FlowModel for the filter module binding conditions
 	 */
-	final String FM_CONDITION_NODE = "FilterModuleCondition";
+	String FM_CONDITION_NODE = "FilterModuleCondition";
 
 	/**
 	 * In the flowmodel of a filter module, this node marks the end of the flow
@@ -135,7 +135,7 @@ public interface FlowNode extends Serializable
 	 * Dispatch has been done. This indicates a conflict, to be reported by
 	 * SIGN.
 	 */
-	final String END_NODE = "End";
+	String END_NODE = "End";
 
 	/**
 	 * The stop node marks the exit of the filterset. The stop node is reached
@@ -145,13 +145,13 @@ public interface FlowNode extends Serializable
 	 * Continue action. Examples of actions that return the flow are the
 	 * Dispatch action and the Skip action.
 	 */
-	final String EXIT_NODE = "Exit";
+	String EXIT_NODE = "Exit";
 
 	/**
 	 * The return node marks the return through the filterset. Examples of
 	 * actions that return the flow are the Dispatch action and the Skip action.
 	 */
-	final String RETURN_NODE = "Return";
+	String RETURN_NODE = "Return";
 
 	/**
 	 * @deprecated use getTransitionsEx();

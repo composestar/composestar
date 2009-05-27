@@ -51,7 +51,7 @@ public final class ASTExporter
 	 * @param output
 	 * @param node
 	 */
-	public static final void dotExport(File output, Tree node)
+	public static void dotExport(File output, Tree node)
 	{
 		try
 		{

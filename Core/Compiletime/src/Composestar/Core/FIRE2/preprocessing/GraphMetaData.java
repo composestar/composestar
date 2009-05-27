@@ -49,7 +49,7 @@ public class GraphMetaData
 
 	protected Label linkLabel;
 
-	protected int id;
+	protected int lastId;
 
 	protected Map<String, RepositoryEntity> repositoryLinks;
 
@@ -116,34 +116,34 @@ public class GraphMetaData
 	 */
 	protected String nextIdLabel()
 	{
-		return "id#" + (++id);
+		return "id#" + (++lastId);
 	}
 
 	public void addRepositoryLink(Graph graph, Node forNode, RepositoryEntity re)
 	{
-		String id = getNodeLinkID(graph, forNode, true);
-		if (id != null)
+		String nodeid = getNodeLinkID(graph, forNode, true);
+		if (nodeid != null)
 		{
-			repositoryLinks.put(id, re);
+			repositoryLinks.put(nodeid, re);
 		}
 	}
 
 	public RepositoryEntity getRepositoryLink(Graph graph, Node forNode)
 	{
-		String id = getNodeLinkID(graph, forNode, false);
-		if (id != null)
+		String nodeid = getNodeLinkID(graph, forNode, false);
+		if (nodeid != null)
 		{
-			return repositoryLinks.get(id);
+			return repositoryLinks.get(nodeid);
 		}
 		return null;
 	}
 
 	public void addFlowNode(Graph graph, Node forNode, FlowNode fnode)
 	{
-		String id = getNodeLinkID(graph, forNode, false);
-		if (id != null)
+		String nodeid = getNodeLinkID(graph, forNode, false);
+		if (nodeid != null)
 		{
-			flowNodes.put(id, fnode);
+			flowNodes.put(nodeid, fnode);
 		}
 	}
 

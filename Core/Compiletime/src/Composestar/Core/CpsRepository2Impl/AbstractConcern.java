@@ -60,18 +60,17 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 	 * Create a new concern concern
 	 * 
 	 * @param name The name of the concern
-	 * @param namespace The namespace (optional)
+	 * @param namesp The namespace (optional)
 	 * @throws IllegalArgumentException Throw when the entity name is empty
 	 * @throws NullPointerException Thrown when the name is null
 	 */
-	protected AbstractConcern(String name, List<String> namespace) throws NullPointerException,
-			IllegalArgumentException
+	protected AbstractConcern(String name, List<String> namesp) throws NullPointerException, IllegalArgumentException
 	{
 		super(name);
-		this.namespace = new ArrayList<String>();
-		if (namespace != null)
+		namespace = new ArrayList<String>();
+		if (namesp != null)
 		{
-			this.namespace.addAll(namespace);
+			namespace.addAll(namesp);
 		}
 	}
 
