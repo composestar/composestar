@@ -159,7 +159,7 @@ public class PredicateSelectorInterpreter
 			if (errorTerm instanceof Fun)
 			{
 				Fun errorFun = (Fun) errorTerm;
-				if (errorFun.name().equals("error") && errorFun.getArg(0) instanceof Const
+				if ("error".equals(errorFun.name()) && errorFun.getArg(0) instanceof Const
 						&& errorFun.getArg(1) instanceof Const)
 				{ // it's an error/3-predicate, so let's pry the error message
 					// out of this error function

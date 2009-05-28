@@ -64,8 +64,6 @@ import Composestar.Utils.Perf.CPSTimer;
  * specification and performed on the resources. Then the specified patterns are
  * matches against the sequences of operations performed on the resources.
  */
-// @ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE },
-// importance = Importance.ADVISING)
 public class SECRET implements CTCommonModule
 {
 	public static final String CONFIG_NAME = "SECRETConfig.xml";
@@ -169,7 +167,7 @@ public class SECRET implements CTCommonModule
 
 		if (reportClass != null && reportClass.trim().length() > 0)
 		{
-			if (reportClass.equalsIgnoreCase("true"))
+			if ("true".equalsIgnoreCase(reportClass))
 			{
 				reportClass = XMLReport.class.getName();
 			}
@@ -258,8 +256,8 @@ public class SECRET implements CTCommonModule
 			OperationSequence opseq = new FilterActionOperationSequence(fact);
 			if (fact.getResourceOperations() == null || fact.getResourceOperations().length() == 0)
 			{
-				if (!fact.getName().equals("ContinueAction") && !fact.getName().equals("SubstitutionAction")
-						&& !fact.getName().equals("AdviceAction") && !fact.getName().equals("MetaAction"))
+				if (!"ContinueAction".equals(fact.getName()) && !"SubstitutionAction".equals(fact.getName())
+						&& !"AdviceAction".equals(fact.getName()) && !"MetaAction".equals(fact.getName()))
 				{
 					logger.info(String.format("Filter action \"%s\" has no resource operation information.", fact
 							.getName()));

@@ -59,11 +59,15 @@ public enum ERelationType
 
 	private String name;
 
-	ERelationType(String name)
+	ERelationType(String value)
 	{
-		this.name = name;
+		this.name = value;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Enum#toString()
+	 */
 	@Override
 	public String toString()
 	{

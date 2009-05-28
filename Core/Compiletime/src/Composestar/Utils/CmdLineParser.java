@@ -237,7 +237,7 @@ public class CmdLineParser
 				result.append(wraptoken);
 				cnt = 0;
 			}
-			if (cnt == 0 && (token.equals(" ") || token.equals("\t")))
+			if (cnt == 0 && (" ".equals(token) || "\t".equals(token)))
 			{
 				continue;
 			}
@@ -396,12 +396,12 @@ public class CmdLineParser
 		}
 
 		/**
-		 * @param value the value to set
+		 * @param val the value to set
 		 */
-		public void setValue(T value)
+		public void setValue(T val)
 		{
-			this.value = value;
-			valueSet = value != null;
+			value = val;
+			valueSet = val != null;
 		}
 
 		public boolean isSet()
@@ -419,11 +419,11 @@ public class CmdLineParser
 		/**
 		 * Set a help description to use when printing the usage
 		 * 
-		 * @param value
+		 * @param desc
 		 */
-		public void setDescription(String value)
+		public void setDescription(String desc)
 		{
-			description = value;
+			description = desc;
 		}
 
 		public String getDescription()
@@ -474,12 +474,21 @@ public class CmdLineParser
 			super(sname, lname, desc);
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Utils.CmdLineParser.Option#needsValue()
+		 */
 		@Override
 		public boolean needsValue()
 		{
 			return false;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Utils.CmdLineParser.Option#parseValue(java.lang.String)
+		 */
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -519,6 +528,11 @@ public class CmdLineParser
 			super(sname, lname, desc);
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Utils.CmdLineParser.Option#parseValue(java.lang.String)
+		 */
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -560,6 +574,11 @@ public class CmdLineParser
 			super(sname, lname, desc);
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Utils.CmdLineParser.Option#parseValue(java.lang.String)
+		 */
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -602,6 +621,11 @@ public class CmdLineParser
 			super(sname, lname, desc);
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Utils.CmdLineParser.Option#parseValue(java.lang.String)
+		 */
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -670,12 +694,21 @@ public class CmdLineParser
 			super(sname, lname, desc);
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Utils.CmdLineParser.Option#needsValue()
+		 */
 		@Override
 		public boolean needsValue()
 		{
 			return false;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Utils.CmdLineParser.Option#parseValue(java.lang.String)
+		 */
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -717,6 +750,11 @@ public class CmdLineParser
 			value = new ArrayList<String>();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Utils.CmdLineParser.Option#parseValue(java.lang.String)
+		 */
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -758,6 +796,11 @@ public class CmdLineParser
 			helpValue = "integer";
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Utils.CmdLineParser.Option#parseValue(java.lang.String)
+		 */
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -800,6 +843,11 @@ public class CmdLineParser
 			helpValue = "float";
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Utils.CmdLineParser.Option#parseValue(java.lang.String)
+		 */
 		@Override
 		public void parseValue(String rawValue)
 		{

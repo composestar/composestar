@@ -90,11 +90,11 @@ public class LowLevelInliner
 	/**
 	 * The constructor
 	 * 
-	 * @param strategy The strategy that does the actual code generation.
+	 * @param inlineStrategy The strategy that does the actual code generation.
 	 */
-	public LowLevelInliner(LowLevelInlineStrategy strategy, CommonResources resources)
+	public LowLevelInliner(LowLevelInlineStrategy inlineStrategy, CommonResources resources)
 	{
-		this.strategy = strategy;
+		strategy = inlineStrategy;
 		SECRETResources secretresc = resources.getResourceManager(SECRETResources.class);
 		if (secretresc != null)
 		{

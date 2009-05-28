@@ -455,7 +455,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	 * Composestar.Core.INLINE.CodeGen.CodeGenerator#emitMethodCall(Composestar
 	 * .Core.LAMA.MethodInfo, java.util.List, java.lang.Object)
 	 */
-	public String emitMethodCall(MethodInfo method, List<String> args, Object context)
+	public String emitMethodCall(MethodInfo toMethod, List<String> args, Object context)
 	{
 		// FIXME: it doesn't use the context
 		StringBuffer sb = new StringBuffer();
@@ -467,7 +467,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 			}
 			sb.append(args.get(i));
 		}
-		return method.getName() + "(" + sb.toString() + ")";
+		return toMethod.getName() + "(" + sb.toString() + ")";
 	}
 
 	/*

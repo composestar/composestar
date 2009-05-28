@@ -26,11 +26,11 @@ public abstract class Instruction implements Visitable
 	/**
 	 * Creates an instruction with a label.
 	 * 
-	 * @param label The label of the instruction.
+	 * @param instructionLabel The label of the instruction.
 	 */
-	public Instruction(Label label)
+	public Instruction(Label instructionLabel)
 	{
-		this.label = label;
+		label = instructionLabel;
 	}
 
 	/**
@@ -44,10 +44,10 @@ public abstract class Instruction implements Visitable
 	/**
 	 * To change the label.
 	 * 
-	 * @param label the label to set
+	 * @param value the label to set
 	 */
-	public void setLabel(Label label)
+	public void setLabel(Label value)
 	{
-		this.label = label;
+		label = value;
 	}
 }

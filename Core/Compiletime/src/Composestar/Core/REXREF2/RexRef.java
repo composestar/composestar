@@ -55,8 +55,6 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Michiel Hendriks
  */
-// @ComposestarModule(ID = ModuleNames.REXREF, dependsOn = { ModuleNames.COPPER,
-// ModuleNames.COLLECTOR })
 public class RexRef implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.REXREF);

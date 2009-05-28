@@ -1260,55 +1260,65 @@ public class FireModel
 		 */
 		private List<ExecutionTransition> outTransitions;
 
-		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, CpsMessage message,
-				int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
+		public ExtendedExecutionState(ExtendedExecutionModel mdl, ExecutionState base, CpsMessage msg, int sigCheck,
+				MethodInfo sigMethod, int fltPos, int fltLayer)
 		{
-			super(getExtendedFlowNode(baseState.getFlowNode(), layer), message, baseState.getStateType());
+			super(getExtendedFlowNode(base.getFlowNode(), fltLayer), msg, base.getStateType());
 
-			this.model = model;
-			this.baseState = baseState;
-			this.signatureCheck = signatureCheck;
-			this.signatureCheckInfo = signatureCheckInfo;
-			this.filterPosition = filterPosition;
-			this.layer = layer;
+			model = mdl;
+			baseState = base;
+			signatureCheck = sigCheck;
+			signatureCheckInfo = sigMethod;
+			filterPosition = fltPos;
+			layer = fltLayer;
 		}
 
 		/**
 		 * Constructor that provides the ability to give a different statetype
 		 * than that of the base state.
 		 * 
-		 * @param model
-		 * @param baseState
-		 * @param message
-		 * @param stateType
-		 * @param signatureCheck
-		 * @param signatureCheckInfo
-		 * @param filterPosition
-		 * @param layer
+		 * @param mdl
+		 * @param base
+		 * @param msg
+		 * @param type
+		 * @param sigCheck
+		 * @param sigMethod
+		 * @param fltPos
+		 * @param fltLayer
 		 */
-		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, CpsMessage message,
-				int stateType, int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
+		public ExtendedExecutionState(ExtendedExecutionModel mdl, ExecutionState base, CpsMessage msg, int type,
+				int sigCheck, MethodInfo sigMethod, int fltPos, int fltLayer)
 		{
-			super(getExtendedFlowNode(baseState.getFlowNode(), layer), message, stateType);
+			super(getExtendedFlowNode(base.getFlowNode(), fltLayer), msg, type);
 
-			this.model = model;
-			this.baseState = baseState;
-			this.signatureCheck = signatureCheck;
-			this.signatureCheckInfo = signatureCheckInfo;
-			this.filterPosition = filterPosition;
-			this.layer = layer;
+			model = mdl;
+			baseState = base;
+			signatureCheck = sigCheck;
+			signatureCheckInfo = sigMethod;
+			filterPosition = fltPos;
+			layer = fltLayer;
 		}
 
-		public ExtendedExecutionState(ExtendedExecutionModel model, FlowNode flowNode, CpsMessage message,
-				int stateType, int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
+		/**
+		 * @param mdl
+		 * @param flowNode
+		 * @param msg
+		 * @param type
+		 * @param sigCheck
+		 * @param sigMethod
+		 * @param fltPos
+		 * @param fltLayer
+		 */
+		public ExtendedExecutionState(ExtendedExecutionModel mdl, FlowNode flowNode, CpsMessage msg, int type,
+				int sigCheck, MethodInfo sigMethod, int fltPos, int fltLayer)
 		{
-			super(flowNode, message, stateType);
+			super(flowNode, msg, type);
 
-			this.model = model;
-			this.signatureCheck = signatureCheck;
-			this.signatureCheckInfo = signatureCheckInfo;
-			this.filterPosition = filterPosition;
-			this.layer = layer;
+			model = mdl;
+			signatureCheck = sigCheck;
+			signatureCheckInfo = sigMethod;
+			filterPosition = fltPos;
+			layer = fltLayer;
 		}
 
 		/*
@@ -1350,22 +1360,22 @@ public class FireModel
 		 */
 		private ExtendedExecutionState endState;
 
-		public ExtendedExecutionTransition(ExtendedExecutionState startState, ExtendedExecutionState endState,
-				ExecutionTransition baseTransition)
+		public ExtendedExecutionTransition(ExtendedExecutionState start, ExtendedExecutionState end,
+				ExecutionTransition base)
 		{
-			super(baseTransition.getLabel(), getExtendedFlowTransition(baseTransition, startState.layer));
+			super(base.getLabel(), getExtendedFlowTransition(base, start.layer));
 
-			this.startState = startState;
-			this.endState = endState;
-			this.baseTransition = baseTransition;
+			startState = start;
+			endState = end;
+			baseTransition = base;
 		}
 
-		public ExtendedExecutionTransition(ExtendedExecutionState startState, ExtendedExecutionState endState)
+		public ExtendedExecutionTransition(ExtendedExecutionState start, ExtendedExecutionState end)
 		{
-			super("", startState.getFlowNode().getTransition(endState.getFlowNode()));
+			super("", start.getFlowNode().getTransition(end.getFlowNode()));
 
-			this.startState = startState;
-			this.endState = endState;
+			startState = start;
+			endState = end;
 		}
 
 		/*
@@ -1505,26 +1515,26 @@ public class FireModel
 		private RepositoryEntity entity;
 
 		/**
-		 * @param baseNode
+		 * @param base
 		 */
-		public ExtendedFlowNode(FlowNode baseNode)
+		public ExtendedFlowNode(FlowNode base)
 		{
-			this.baseNode = baseNode;
+			baseNode = base;
 		}
 
 		/**
-		 * @param names
-		 * @param entity
+		 * @param nodeNames
+		 * @param reposEntity
 		 */
-		public ExtendedFlowNode(String[] names, RepositoryEntity entity)
+		public ExtendedFlowNode(String[] nodeNames, RepositoryEntity reposEntity)
 		{
-			this.names = new HashSet<String>();
-			for (String element : names)
+			names = new HashSet<String>();
+			for (String element : nodeNames)
 			{
-				this.names.add(element);
+				names.add(element);
 			}
 
-			this.entity = entity;
+			entity = reposEntity;
 		}
 
 		/**
@@ -1652,18 +1662,17 @@ public class FireModel
 		 */
 		private ExtendedFlowNode endNode;
 
-		public ExtendedFlowTransition(ExtendedFlowNode startNode, ExtendedFlowNode endNode)
+		public ExtendedFlowTransition(ExtendedFlowNode start, ExtendedFlowNode end)
 		{
-			this.startNode = startNode;
-			this.endNode = endNode;
+			startNode = start;
+			endNode = end;
 		}
 
-		public ExtendedFlowTransition(ExtendedFlowNode startNode, ExtendedFlowNode endNode,
-				FlowTransition baseTransition)
+		public ExtendedFlowTransition(ExtendedFlowNode start, ExtendedFlowNode end, FlowTransition base)
 		{
-			this(startNode, endNode);
+			this(start, end);
 
-			this.baseTransition = baseTransition;
+			baseTransition = base;
 		}
 
 		/**

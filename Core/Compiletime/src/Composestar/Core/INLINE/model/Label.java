@@ -27,9 +27,9 @@ public class Label
 		id = -1;
 	}
 
-	public Label(int id)
+	public Label(int labelId)
 	{
-		this.id = id;
+		id = labelId;
 	}
 
 	/**
@@ -41,11 +41,11 @@ public class Label
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param value the id to set
 	 */
-	public void setId(int id)
+	public void setId(int value)
 	{
-		this.id = id;
+		id = value;
 	}
 
 	/**

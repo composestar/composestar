@@ -41,7 +41,7 @@ import Composestar.Core.TASMAN.Xml.TASMANConfig;
  * 
  * @author Michiel Hendriks
  */
-public class VerifyConfig
+public final class VerifyConfig
 {
 	private VerifyConfig()
 	{}

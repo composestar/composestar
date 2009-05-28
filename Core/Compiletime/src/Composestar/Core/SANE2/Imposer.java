@@ -46,8 +46,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-// @ComposestarModule(ID = ModuleNames.SANE, dependsOn = { ModuleNames.COPPER,
-// ModuleNames.LOLA })
 public class Imposer implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SANE);

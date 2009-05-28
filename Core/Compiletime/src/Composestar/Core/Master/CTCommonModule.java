@@ -86,12 +86,12 @@ public interface CTCommonModule
 	 * Depends on the proper execution of all previous modules. In case of
 	 * incremental compilation this means that this module will always execute.
 	 */
-	public static final String DEPEND_ALL = "*";
+	String DEPEND_ALL = "*";
 
 	/**
 	 * It depends on the module that was executed before this module.
 	 */
-	public static final String DEPEND_PREVIOUS = "<";
+	String DEPEND_PREVIOUS = "<";
 
 	/**
 	 * The run function of each module is called in the same order as the

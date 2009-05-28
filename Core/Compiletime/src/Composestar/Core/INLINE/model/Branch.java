@@ -83,11 +83,11 @@ public class Branch extends Instruction
 	}
 
 	/**
-	 * @param falseBlock the falseBlock to set
+	 * @param value the falseBlock to set
 	 */
-	public void setFalseBlock(Block falseBlock)
+	public void setFalseBlock(Block value)
 	{
-		this.falseBlock = falseBlock;
+		falseBlock = value;
 	}
 
 	/**
@@ -99,11 +99,11 @@ public class Branch extends Instruction
 	}
 
 	/**
-	 * @param trueBlock the trueBlock to set
+	 * @param value the trueBlock to set
 	 */
-	public void setTrueBlock(Block trueBlock)
+	public void setTrueBlock(Block value)
 	{
-		this.trueBlock = trueBlock;
+		trueBlock = value;
 	}
 
 	/**

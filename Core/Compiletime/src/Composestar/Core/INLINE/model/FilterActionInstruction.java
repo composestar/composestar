@@ -79,23 +79,23 @@ public class FilterActionInstruction extends Instruction
 	/**
 	 * The constructor
 	 * 
-	 * @param type The type of the filteraction.
-	 * @param message The current message.
+	 * @param actionType The type of the filteraction.
+	 * @param msg The current message.
 	 * @param substitutedMessage The substituted message (substitutionpart
 	 *            applied on the current message).
-	 * @param onCall Indicates whether the action is on call (true) or on return
-	 *            (false)
-	 * @param returning Indicates whether the action returns the flow (only when
-	 *            the action is on call).
+	 * @param onCallAction Indicates whether the action is on call (true) or on
+	 *            return (false)
+	 * @param returningAction Indicates whether the action returns the flow
+	 *            (only when the action is on call).
 	 */
-	public FilterActionInstruction(String type, CpsMessage message, Collection<CanonAssignment> arguments,
-			boolean onCall, boolean returning)
+	public FilterActionInstruction(String actionType, CpsMessage msg, Collection<CanonAssignment> args,
+			boolean onCallAction, boolean returningAction)
 	{
-		this.type = type;
-		this.message = message;
-		this.onCall = onCall;
-		this.returning = returning;
-		this.arguments = arguments;
+		type = actionType;
+		message = msg;
+		onCall = onCallAction;
+		returning = returningAction;
+		arguments = args;
 	}
 
 	/**

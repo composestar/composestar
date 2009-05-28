@@ -10,19 +10,19 @@ import Composestar.Core.FIRE2.util.queryengine.Query;
 
 public interface CtlFormula extends Query
 {
-	public Object visit(CtlFormulaVisitor visitor, Object arg);
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg);
 }
 
 final class Not implements CtlFormula
 {
 	public CtlFormula subFormula;
 
-	public Not(CtlFormula subFormula)
+	public Not(CtlFormula sub)
 	{
-		this.subFormula = subFormula;
+		subFormula = sub;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitNot(this, arg);
 	}
@@ -40,13 +40,13 @@ final class And implements CtlFormula
 
 	public CtlFormula subFormula2;
 
-	public And(CtlFormula subFormula1, CtlFormula subFormula2)
+	public And(CtlFormula sub1, CtlFormula sub2)
 	{
-		this.subFormula1 = subFormula1;
-		this.subFormula2 = subFormula2;
+		subFormula1 = sub1;
+		subFormula2 = sub2;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitAnd(this, arg);
 	}
@@ -64,13 +64,13 @@ final class Or implements CtlFormula
 
 	public CtlFormula subFormula2;
 
-	public Or(CtlFormula subFormula1, CtlFormula subFormula2)
+	public Or(CtlFormula sub1, CtlFormula sub2)
 	{
-		this.subFormula1 = subFormula1;
-		this.subFormula2 = subFormula2;
+		subFormula1 = sub1;
+		subFormula2 = sub2;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitOr(this, arg);
 	}
@@ -88,13 +88,13 @@ final class Implies implements CtlFormula
 
 	public CtlFormula subFormula2;
 
-	public Implies(CtlFormula subFormula1, CtlFormula subFormula2)
+	public Implies(CtlFormula sub1, CtlFormula sub2)
 	{
-		this.subFormula1 = subFormula1;
-		this.subFormula2 = subFormula2;
+		subFormula1 = sub1;
+		subFormula2 = sub2;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitImplies(this, arg);
 	}
@@ -110,12 +110,12 @@ final class AX implements CtlFormula
 {
 	public CtlFormula subFormula;
 
-	public AX(CtlFormula subFormula)
+	public AX(CtlFormula sub)
 	{
-		this.subFormula = subFormula;
+		subFormula = sub;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitAX(this, arg);
 	}
@@ -131,12 +131,12 @@ final class EX implements CtlFormula
 {
 	public CtlFormula subFormula;
 
-	public EX(CtlFormula subFormula)
+	public EX(CtlFormula sub)
 	{
-		this.subFormula = subFormula;
+		subFormula = sub;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitEX(this, arg);
 	}
@@ -152,12 +152,12 @@ final class AF implements CtlFormula
 {
 	public CtlFormula subFormula;
 
-	public AF(CtlFormula subFormula)
+	public AF(CtlFormula sub)
 	{
-		this.subFormula = subFormula;
+		subFormula = sub;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitAF(this, arg);
 	}
@@ -173,12 +173,12 @@ final class EF implements CtlFormula
 {
 	public CtlFormula subFormula;
 
-	public EF(CtlFormula subFormula)
+	public EF(CtlFormula sub)
 	{
-		this.subFormula = subFormula;
+		subFormula = sub;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitEF(this, arg);
 	}
@@ -194,12 +194,12 @@ final class AG implements CtlFormula
 {
 	public CtlFormula subFormula;
 
-	public AG(CtlFormula subFormula)
+	public AG(CtlFormula sub)
 	{
-		this.subFormula = subFormula;
+		subFormula = sub;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitAG(this, arg);
 	}
@@ -215,12 +215,12 @@ final class EG implements CtlFormula
 {
 	public CtlFormula subFormula;
 
-	public EG(CtlFormula subFormula)
+	public EG(CtlFormula sub)
 	{
-		this.subFormula = subFormula;
+		subFormula = sub;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitEG(this, arg);
 	}
@@ -238,13 +238,13 @@ final class AU implements CtlFormula
 
 	public CtlFormula subFormula2;
 
-	public AU(CtlFormula subFormula1, CtlFormula subFormula2)
+	public AU(CtlFormula sub1, CtlFormula sub2)
 	{
-		this.subFormula1 = subFormula1;
-		this.subFormula2 = subFormula2;
+		subFormula1 = sub1;
+		subFormula2 = sub2;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitAU(this, arg);
 	}
@@ -262,13 +262,13 @@ final class EU implements CtlFormula
 
 	public CtlFormula subFormula2;
 
-	public EU(CtlFormula subFormula1, CtlFormula subFormula2)
+	public EU(CtlFormula sub1, CtlFormula sub2)
 	{
-		this.subFormula1 = subFormula1;
-		this.subFormula2 = subFormula2;
+		subFormula1 = sub1;
+		subFormula2 = sub2;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitEU(this, arg);
 	}
@@ -284,12 +284,12 @@ final class Reverse implements CtlFormula
 {
 	public CtlFormula subFormula;
 
-	public Reverse(CtlFormula subFormula)
+	public Reverse(CtlFormula sub)
 	{
-		this.subFormula = subFormula;
+		subFormula = sub;
 	}
 
-	public Object visit(CtlFormulaVisitor visitor, Object arg)
+	public <T> T visit(CtlFormulaVisitor<T> visitor, T arg)
 	{
 		return visitor.visitReverse(this, arg);
 	}

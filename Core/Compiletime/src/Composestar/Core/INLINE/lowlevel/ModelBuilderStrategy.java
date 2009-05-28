@@ -138,15 +138,15 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	/**
 	 * The constructor
 	 * 
-	 * @param builder The modelbuilder.
-	 * @param filterSetType Indicates whether this strategy is for inputfilters
+	 * @param modelBuilder The modelbuilder.
+	 * @param filterSet Indicates whether this strategy is for inputfilters
 	 *            (constant INPUT_FILTERS) or for outputfilters (constant
 	 *            OUTPUT_FILTERS)
 	 */
-	public ModelBuilderStrategy(ModelBuilder builder, FilterDirection filterSetType, BookKeepingMode inBookKeepingMode)
+	public ModelBuilderStrategy(ModelBuilder modelBuilder, FilterDirection filterSet, BookKeepingMode inBookKeepingMode)
 	{
-		this.builder = builder;
-		this.filterSetType = filterSetType;
+		builder = modelBuilder;
+		filterSetType = filterSet;
 		bookKeepingMode = inBookKeepingMode;
 	}
 
@@ -429,7 +429,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		{
 			generateDispatchAction(action, state, resourceOps, true);
 		}
-		else if (action.getName().equals("SkipAction"))
+		else if ("SkipAction".equals(action.getName()))
 		{
 			// jump to end:
 			jump(-1);

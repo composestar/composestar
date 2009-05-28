@@ -150,4 +150,7 @@ public final class ModuleNames
 	 * Filter module deparameterization
 	 */
 	public static final String DEPART = "DEPART";
+
+	private ModuleNames()
+	{}
 }

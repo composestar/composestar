@@ -34,11 +34,15 @@ public enum EUnitType
 
 	private String name;
 
-	EUnitType(String name)
+	EUnitType(String value)
 	{
-		this.name = name;
+		this.name = value;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Enum#toString()
+	 */
 	@Override
 	public String toString()
 	{

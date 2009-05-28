@@ -41,8 +41,6 @@ import Composestar.Utils.Perf.CPSTimer;
  * LOLA evaluates the superimposition selector statements in order to return the
  * program elements the filter modules should be imposed upon.
  */
-// @ComposestarModule(ID = ModuleNames.LOLA, dependsOn = { ModuleNames.COLLECTOR
-// })
 public abstract class LOLA implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);

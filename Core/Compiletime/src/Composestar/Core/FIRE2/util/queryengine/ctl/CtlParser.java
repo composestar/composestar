@@ -17,15 +17,18 @@ public class CtlParser
 		return parser.parse(pattern);
 	}
 
+	private CtlParser()
+	{}
+
 	private static class Parser
 	{
 		private Map<String, Predicate> predicates;
 
-		public Parser(Map<String, Predicate> predicates)
+		public Parser(Map<String, Predicate> preds)
 		{
-			this.predicates = predicates;
-			predicates.put("true", new True());
-			predicates.put("false", new False());
+			predicates = preds;
+			preds.put("true", new True());
+			preds.put("false", new False());
 		}
 
 		public CtlFormula parse(String pattern) throws CtlParseException
@@ -223,9 +226,9 @@ public class CtlParser
 
 		private Token bufferedToken;
 
-		public Lexer(String pattern)
+		public Lexer(String patt)
 		{
-			this.pattern = pattern.trim();
+			pattern = patt.trim();
 			pos = 0;
 		}
 
@@ -430,12 +433,12 @@ public class CtlParser
 
 		public static final int END_OF_PATTERN = 1000;
 
-		private Token(int type, String value, int position, int length)
+		private Token(int tokenType, String tokenValue, int tokenPos, int tokenLength)
 		{
-			this.type = type;
-			this.value = value;
-			this.position = position;
-			this.length = length;
+			type = tokenType;
+			value = tokenValue;
+			position = tokenPos;
+			length = tokenLength;
 		}
 
 		public int getType()

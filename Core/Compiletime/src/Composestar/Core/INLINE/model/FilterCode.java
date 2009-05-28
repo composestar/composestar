@@ -74,11 +74,11 @@ public class FilterCode implements Visitable
 	}
 
 	/**
-	 * @param instruction the instruction to set
+	 * @param value the instruction to set
 	 */
-	public void setInstruction(Instruction instruction)
+	public void setInstruction(Instruction value)
 	{
-		this.instruction = instruction;
+		instruction = value;
 	}
 
 	/**

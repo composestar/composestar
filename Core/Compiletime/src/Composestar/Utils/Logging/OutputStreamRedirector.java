@@ -73,6 +73,6 @@ public class OutputStreamRedirector extends OutputStream
 		else if (b > 32)
 		{
 			sb.append((char) b);
-		};
+		}
 	}
 }

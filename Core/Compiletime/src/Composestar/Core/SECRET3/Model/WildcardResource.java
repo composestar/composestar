@@ -40,7 +40,7 @@ public final class WildcardResource extends Resource
 	 */
 	public static final String WILDCARD = "*";
 
-	public static final WildcardResource instance()
+	public static WildcardResource instance()
 	{
 		if (inst == null)
 		{

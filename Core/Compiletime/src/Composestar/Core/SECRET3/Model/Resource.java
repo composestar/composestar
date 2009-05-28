@@ -39,7 +39,7 @@ public class Resource implements Serializable
 {
 	private static final long serialVersionUID = 1987806475818341139L;
 
-	protected final static Pattern RESC_NAME = Pattern.compile("[A-Za-z][A-Za-z0-9]*(.[A-Za-z][A-Za-z0-9]*)?");
+	protected static final Pattern RESC_NAME = Pattern.compile("[A-Za-z][A-Za-z0-9]*(.[A-Za-z][A-Za-z0-9]*)?");
 
 	/**
 	 * The name of the resource.
@@ -56,7 +56,7 @@ public class Resource implements Serializable
 	 */
 	protected Set<String> vocabulary;
 
-	public final static boolean isValidName(String name)
+	public static final boolean isValidName(String name)
 	{
 		return RESC_NAME.matcher(name).matches();
 	}

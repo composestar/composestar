@@ -47,7 +47,7 @@ import Composestar.Core.Master.ModuleNames;
  */
 public interface CodeGenerator<T> extends Visitor
 {
-	public static final String MODULE_NAME = ModuleNames.INLINE + ".CodeGen";
+	String MODULE_NAME = ModuleNames.INLINE + ".CodeGen";
 
 	/**
 	 * Generate code for the given filter code and method.

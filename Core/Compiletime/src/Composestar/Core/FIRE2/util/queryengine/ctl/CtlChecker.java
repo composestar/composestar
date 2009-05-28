@@ -47,43 +47,27 @@ public class CtlChecker
 
 	private Map<Object, CtlFormula> simplifierMap;
 
-	public CtlChecker(ExecutionModel model, String formula, Map<String, Predicate> predicates)
+	public CtlChecker(ExecutionModel execModel, String ctlFormula, Map<String, Predicate> predicates)
 	{
-		this(model, CtlParser.parse(formula, predicates));
+		this(execModel, CtlParser.parse(ctlFormula, predicates));
 	}
 
-	public CtlChecker(ExecutionModel model, CtlFormula formula)
+	public CtlChecker(ExecutionModel execModel, CtlFormula ctlFormula)
 	{
-		this.model = model;
-		origFormula = formula;
-		this.formula = formula;
+		model = execModel;
+		origFormula = ctlFormula;
+		formula = ctlFormula;
 
 		initialize();
 
-		simplify();
+		simplifyFormula();
 
-		check();
+		checkFormula();
 	}
 
 	public boolean matchesState(ExecutionState state)
 	{
 		Set<CtlFormula> satSet = satTable.get(state);
-
-		// List v = reverseTable.get(state);
-		//
-		// ExecutionState state2;
-		// Set satSet2 = null;
-		// Set reverseSatSet2 = null;
-		// List v2 = null;
-		// if (!v.isEmpty())
-		// {
-		// state2 = (ExecutionState) v.get(0);
-		// satSet2 = satTable.get(state2);
-		//
-		// reverseSatSet2 = reverseSatTable.get(state2);
-		// v2 = reverseTable.get(state2);
-		// }
-
 		return satSet.contains(formula);
 	}
 
@@ -154,14 +138,14 @@ public class CtlChecker
 		backwardStateVector.add(state);
 	}
 
-	private void simplify()
+	private void simplifyFormula()
 	{
 		Simplifier simplifier = new Simplifier();
-		CtlFormula simplified = (CtlFormula) formula.visit(simplifier, null);
+		CtlFormula simplified = formula.visit(simplifier, null);
 		formula = simplified;
 	}
 
-	private void check()
+	private void checkFormula()
 	{
 		Checker checker = new Checker();
 		formula.visit(checker, Boolean.FALSE);
@@ -183,75 +167,74 @@ public class CtlChecker
 		return satSet.contains(formula);
 	}
 
-	private class Checker implements CtlFormulaVisitor
+	private class Checker implements CtlFormulaVisitor<Boolean>
 	{
 		public Checker()
 		{
 
 		}
 
-		public Object visitAF(AF formula, Object arg)
+		public Boolean visitAF(AF af, Boolean arg)
 		{
 			return null;
 		}
 
-		public Object visitAG(AG formula, Object arg)
+		public Boolean visitAG(AG ag, Boolean arg)
 		{
 			return null;
 		}
 
-		public Object visitAnd(And formula, Object arg)
+		public Boolean visitAnd(And and, Boolean arg)
 		{
-			formula.subFormula1.visit(this, arg);
-			formula.subFormula2.visit(this, arg);
+			and.subFormula1.visit(this, arg);
+			and.subFormula2.visit(this, arg);
 
 			Iterator<ExecutionState> states = satTable.keySet().iterator();
 			while (states.hasNext())
 			{
 				ExecutionState state = states.next();
-				if (isSatisfied(state, formula.subFormula1, (Boolean) arg)
-						&& isSatisfied(state, formula.subFormula2, (Boolean) arg))
+				if (isSatisfied(state, and.subFormula1, arg) && isSatisfied(state, and.subFormula2, arg))
 				{
-					addSatisfy(state, formula, (Boolean) arg);
+					addSatisfy(state, and, arg);
 				}
 			}
 
 			return null;
 		}
 
-		public Object visitAU(AU formula, Object arg)
+		public Boolean visitAU(AU au, Boolean arg)
 		{
 			return null;
 		}
 
-		public Object visitAX(AX formula, Object arg)
+		public Boolean visitAX(AX ax, Boolean arg)
 		{
 			return null;
 		}
 
-		public Object visitEF(EF formula, Object arg)
+		public Boolean visitEF(EF ef, Boolean arg)
 		{
 			return null;
 		}
 
-		public Object visitEG(EG formula, Object arg)
+		public Boolean visitEG(EG eg, Boolean arg)
 		{
-			formula.subFormula.visit(this, arg);
+			eg.subFormula.visit(this, arg);
 
 			// iterate backward over all states:
-			Iterator<ExecutionState> enumer = backwardStateIterator((Boolean) arg);
+			Iterator<ExecutionState> enumer = backwardStateIterator(arg);
 			while (enumer.hasNext())
 			{
 				ExecutionState state = enumer.next();
 
 				// check whether current state doesn't satisfy the subformula
-				if (isSatisfied(state, formula.subFormula, (Boolean) arg))
+				if (isSatisfied(state, eg.subFormula, arg))
 				{
 					// check whether at least one next state satisfies the
 					// formula
 					// (due to backward traversal this state is already
 					// checked):
-					Iterator<ExecutionState> nextStates = getNextStates(state, (Boolean) arg);
+					Iterator<ExecutionState> nextStates = getNextStates(state, arg);
 
 					// if it hasn't any next states, this is an end state, so
 					// this
@@ -260,15 +243,15 @@ public class CtlChecker
 					// it satisfies the subformula)
 					if (!nextStates.hasNext())
 					{
-						addSatisfy(state, formula, (Boolean) arg);
+						addSatisfy(state, eg, arg);
 					}
 
 					while (nextStates.hasNext())
 					{
 						ExecutionState nextState = nextStates.next();
-						if (isSatisfied(nextState, formula, (Boolean) arg))
+						if (isSatisfied(nextState, eg, arg))
 						{
-							addSatisfy(state, formula, (Boolean) arg);
+							addSatisfy(state, eg, arg);
 							break;
 						}
 					}
@@ -278,39 +261,39 @@ public class CtlChecker
 			return null;
 		}
 
-		public Object visitEU(EU formula, Object arg)
+		public Boolean visitEU(EU eu, Boolean arg)
 		{
-			Boolean reversed = (Boolean) arg;
+			Boolean reversed = arg;
 
-			formula.subFormula1.visit(this, arg);
-			formula.subFormula2.visit(this, arg);
+			eu.subFormula1.visit(this, arg);
+			eu.subFormula2.visit(this, arg);
 
 			Iterator<ExecutionState> enumer = backwardStateIterator(reversed);
 			while (enumer.hasNext())
 			{
 				ExecutionState state = enumer.next();
 
-				if (isSatisfied(state, formula, reversed))
+				if (isSatisfied(state, eu, reversed))
 				{
 					continue;
 				}
 
 				// check whether the current state satisfies subFormula2:
-				if (isSatisfied(state, formula.subFormula2, (Boolean) arg))
+				if (isSatisfied(state, eu.subFormula2, arg))
 				{
-					addSatisfy(state, formula, reversed);
+					addSatisfy(state, eu, reversed);
 				}
 				// else check whether it satisfies subformula1 and at least one
 				// next state satisfies the formula:
-				else if (isSatisfied(state, formula.subFormula1, reversed))
+				else if (isSatisfied(state, eu.subFormula1, reversed))
 				{
 					Iterator<ExecutionState> nextStates = getNextStates(state, reversed);
 					while (nextStates.hasNext())
 					{
 						ExecutionState nextState = nextStates.next();
-						if (isSatisfied(nextState, formula, reversed))
+						if (isSatisfied(nextState, eu, reversed))
 						{
-							addSatisfy(state, formula, reversed);
+							addSatisfy(state, eu, reversed);
 							break;
 						}
 					}
@@ -320,28 +303,28 @@ public class CtlChecker
 			return null;
 		}
 
-		public Object visitEX(EX formula, Object arg)
+		public Boolean visitEX(EX ex, Boolean arg)
 		{
-			Boolean reversed = (Boolean) arg;
+			Boolean reversed = arg;
 
-			formula.subFormula.visit(this, arg);
+			ex.subFormula.visit(this, arg);
 
 			Iterator<ExecutionState> states = satTable.keySet().iterator();
 			while (states.hasNext())
 			{
 				ExecutionState state = states.next();
-				if (isSatisfied(state, formula, reversed))
+				if (isSatisfied(state, ex, reversed))
 				{
 					continue;
 				}
 
-				Iterator<ExecutionState> nextStates = getNextStates(state, (Boolean) arg);
+				Iterator<ExecutionState> nextStates = getNextStates(state, arg);
 				while (nextStates.hasNext())
 				{
 					ExecutionState nextState = nextStates.next();
-					if (isSatisfied(nextState, formula.subFormula, reversed))
+					if (isSatisfied(nextState, ex.subFormula, reversed))
 					{
-						addSatisfy(state, formula, reversed);
+						addSatisfy(state, ex, reversed);
 						break;
 					}
 				}
@@ -350,56 +333,56 @@ public class CtlChecker
 			return null;
 		}
 
-		public Object visitImplies(Implies formula, Object arg)
+		public Boolean visitImplies(Implies implies, Boolean arg)
 		{
 			return null;
 		}
 
-		public Object visitNot(Not formula, Object arg)
+		public Boolean visitNot(Not not, Boolean arg)
 		{
-			Boolean reversed = (Boolean) arg;
+			Boolean reversed = arg;
 
-			formula.subFormula.visit(this, arg);
+			not.subFormula.visit(this, arg);
 
 			Iterator<ExecutionState> states = satTable.keySet().iterator();
 			while (states.hasNext())
 			{
 				ExecutionState state = states.next();
-				if (!isSatisfied(state, formula.subFormula, reversed))
+				if (!isSatisfied(state, not.subFormula, reversed))
 				{
-					addSatisfy(state, formula, reversed);
+					addSatisfy(state, not, reversed);
 				}
 			}
 
 			return null;
 		}
 
-		public Object visitOr(Or formula, Object arg)
+		public Boolean visitOr(Or or, Boolean arg)
 		{
 			return null;
 		}
 
-		public Object visitReverse(Reverse formula, Object arg)
+		public Boolean visitReverse(Reverse reverse, Boolean arg)
 		{
-			Boolean b1 = (Boolean) arg;
+			Boolean b1 = arg;
 			Boolean b2 = !b1 ? Boolean.TRUE : Boolean.FALSE;
 
-			formula.subFormula.visit(this, b2);
+			reverse.subFormula.visit(this, b2);
 
 			Iterator<ExecutionState> states = satTable.keySet().iterator();
 			while (states.hasNext())
 			{
 				ExecutionState state = states.next();
-				if (isSatisfied(state, formula.subFormula, b2))
+				if (isSatisfied(state, reverse.subFormula, b2))
 				{
-					addSatisfy(state, formula, b1);
+					addSatisfy(state, reverse, b1);
 				}
 			}
 
 			return null;
 		}
 
-		public Object visitPredicate(Predicate predicate, Object arg)
+		public Boolean visitPredicate(Predicate predicate, Boolean arg)
 		{
 			Iterator<ExecutionState> states = satTable.keySet().iterator();
 			while (states.hasNext())
@@ -407,14 +390,14 @@ public class CtlChecker
 				ExecutionState state = states.next();
 				if (predicate.isTrue(state))
 				{
-					addSatisfy(state, predicate, (Boolean) arg);
+					addSatisfy(state, predicate, arg);
 				}
 			}
 
 			return null;
 		}
 
-		private void addSatisfy(ExecutionState state, CtlFormula formula, Boolean reversed)
+		private void addSatisfy(ExecutionState state, CtlFormula cltFormula, Boolean reversed)
 		{
 			Set<CtlFormula> satSet;
 
@@ -427,7 +410,7 @@ public class CtlChecker
 				satSet = satTable.get(state);
 			}
 
-			satSet.add(formula);
+			satSet.add(cltFormula);
 		}
 
 		private Iterator<ExecutionState> getNextStates(ExecutionState state, Boolean reversed)
@@ -461,45 +444,45 @@ public class CtlChecker
 		}
 	}
 
-	private class Simplifier implements CtlFormulaVisitor
+	private class Simplifier implements CtlFormulaVisitor<CtlFormula>
 	{
 
-		public Object visitAF(AF formula, Object arg)
+		public CtlFormula visitAF(AF af, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula.visit(this, null);
+			CtlFormula formula1 = af.subFormula.visit(this, null);
 			CtlFormula formula2 = new Not(formula1);
 			CtlFormula formula3 = new EG(formula2);
 
 			CtlFormula result = new Not(formula3);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(af, result);
 			return result;
 		}
 
-		public Object visitAG(AG formula, Object arg)
+		public CtlFormula visitAG(AG ag, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula.visit(this, null);
+			CtlFormula formula1 = ag.subFormula.visit(this, null);
 			CtlFormula formula2 = new Not(formula1);
 			CtlFormula formula3 = new EU(new True(), formula2);
 
 			CtlFormula result = new Not(formula3);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(ag, result);
 			return result;
 		}
 
-		public Object visitAnd(And formula, Object arg)
+		public CtlFormula visitAnd(And and, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula1.visit(this, null);
-			CtlFormula formula2 = (CtlFormula) formula.subFormula2.visit(this, null);
+			CtlFormula formula1 = and.subFormula1.visit(this, null);
+			CtlFormula formula2 = and.subFormula2.visit(this, null);
 
 			CtlFormula result = new And(formula1, formula2);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(and, result);
 			return result;
 		}
 
-		public Object visitAU(AU formula, Object arg)
+		public CtlFormula visitAU(AU au, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula1.visit(this, null);
-			CtlFormula formula2 = (CtlFormula) formula.subFormula2.visit(this, null);
+			CtlFormula formula1 = au.subFormula1.visit(this, null);
+			CtlFormula formula2 = au.subFormula2.visit(this, null);
 
 			CtlFormula formula3 = new Not(formula1);
 			CtlFormula formula4 = new Not(formula2);
@@ -514,105 +497,105 @@ public class CtlChecker
 			CtlFormula formula10 = new And(formula9, formula6);
 
 			CtlFormula result = formula10;
-			simplifierMap.put(formula, result);
+			simplifierMap.put(au, result);
 			return result;
 		}
 
-		public Object visitAX(AX formula, Object arg)
+		public CtlFormula visitAX(AX ax, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula.visit(this, null);
+			CtlFormula formula1 = ax.subFormula.visit(this, null);
 			CtlFormula formula2 = new Not(formula1);
 			CtlFormula formula3 = new EX(formula2);
 
 			CtlFormula result = new Not(formula3);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(ax, result);
 			return result;
 		}
 
-		public Object visitEF(EF formula, Object arg)
+		public CtlFormula visitEF(EF ef, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula.visit(this, null);
+			CtlFormula formula1 = ef.subFormula.visit(this, null);
 			CtlFormula formula2 = new EU(new True(), formula1);
 
-			simplifierMap.put(formula, formula2);
+			simplifierMap.put(ef, formula2);
 			return formula2;
 		}
 
-		public Object visitEG(EG formula, Object arg)
+		public CtlFormula visitEG(EG eg, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula.visit(this, null);
+			CtlFormula formula1 = eg.subFormula.visit(this, null);
 
 			CtlFormula result = new EG(formula1);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(eg, result);
 			return result;
 		}
 
-		public Object visitEU(EU formula, Object arg)
+		public CtlFormula visitEU(EU eu, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula1.visit(this, null);
-			CtlFormula formula2 = (CtlFormula) formula.subFormula2.visit(this, null);
+			CtlFormula formula1 = eu.subFormula1.visit(this, null);
+			CtlFormula formula2 = eu.subFormula2.visit(this, null);
 
 			CtlFormula result = new EU(formula1, formula2);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(eu, result);
 			return result;
 		}
 
-		public Object visitEX(EX formula, Object arg)
+		public CtlFormula visitEX(EX ex, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula.visit(this, null);
+			CtlFormula formula1 = ex.subFormula.visit(this, null);
 
 			CtlFormula result = new EX(formula1);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(ex, result);
 			return result;
 		}
 
-		public Object visitImplies(Implies formula, Object arg)
+		public CtlFormula visitImplies(Implies implies, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula1.visit(this, null);
-			CtlFormula formula2 = (CtlFormula) formula.subFormula2.visit(this, null);
+			CtlFormula formula1 = implies.subFormula1.visit(this, null);
+			CtlFormula formula2 = implies.subFormula2.visit(this, null);
 
 			CtlFormula formula3 = new Not(formula2);
 
 			CtlFormula formula4 = new And(formula1, formula3);
 
 			CtlFormula result = new Not(formula4);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(implies, result);
 			return result;
 		}
 
-		public Object visitNot(Not formula, Object arg)
+		public CtlFormula visitNot(Not not, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula.visit(this, null);
+			CtlFormula formula1 = not.subFormula.visit(this, null);
 
 			CtlFormula result = new Not(formula1);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(not, result);
 			return result;
 		}
 
-		public Object visitOr(Or formula, Object arg)
+		public CtlFormula visitOr(Or or, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula1.visit(this, null);
-			CtlFormula formula2 = (CtlFormula) formula.subFormula2.visit(this, null);
+			CtlFormula formula1 = or.subFormula1.visit(this, null);
+			CtlFormula formula2 = or.subFormula2.visit(this, null);
 
 			CtlFormula formula3 = new Not(formula1);
 			CtlFormula formula4 = new Not(formula2);
 			CtlFormula formula5 = new And(formula3, formula4);
 
 			CtlFormula result = new Not(formula5);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(or, result);
 			return result;
 		}
 
-		public Object visitReverse(Reverse formula, Object arg)
+		public CtlFormula visitReverse(Reverse reverse, CtlFormula arg)
 		{
-			CtlFormula formula1 = (CtlFormula) formula.subFormula.visit(this, null);
+			CtlFormula formula1 = reverse.subFormula.visit(this, null);
 
 			CtlFormula result = new Reverse(formula1);
-			simplifierMap.put(formula, result);
+			simplifierMap.put(reverse, result);
 			return result;
 		}
 
-		public Object visitPredicate(Predicate predicate, Object arg)
+		public CtlFormula visitPredicate(Predicate predicate, CtlFormula arg)
 		{
 			simplifierMap.put(predicate, predicate);
 			return predicate;
@@ -620,9 +603,9 @@ public class CtlChecker
 
 	}
 
-	public void showViewer(boolean simplified)
+	public void showViewer(boolean simplifiedView)
 	{
-		ControlPanel panel = new ControlPanel(simplified);
+		ControlPanel panel = new ControlPanel(simplifiedView);
 		Viewer viewer = new Viewer(panel, model);
 		panel.setViewer(viewer);
 	}
@@ -638,11 +621,11 @@ public class CtlChecker
 
 		private boolean simplified;
 
-		public ControlPanel(boolean simplified)
+		public ControlPanel(boolean simplifiedView)
 		{
 			super();
 
-			this.simplified = simplified;
+			simplified = simplifiedView;
 
 			init();
 		}
@@ -659,11 +642,11 @@ public class CtlChecker
 			TreeNode rootNode;
 			if (simplified)
 			{
-				rootNode = (TreeNode) formula.visit(creator, null);
+				rootNode = formula.visit(creator, null);
 			}
 			else
 			{
-				rootNode = (TreeNode) origFormula.visit(creator, null);
+				rootNode = origFormula.visit(creator, null);
 			}
 
 			tree = new JTree(rootNode);
@@ -679,10 +662,10 @@ public class CtlChecker
 
 		private boolean simplified;
 
-		public FormulaSelectionListener(Viewer viewer, boolean simplified)
+		public FormulaSelectionListener(Viewer inViewer, boolean simplifiedView)
 		{
-			this.viewer = viewer;
-			this.simplified = simplified;
+			viewer = inViewer;
+			simplified = simplifiedView;
 		}
 
 		public void valueChanged(TreeSelectionEvent event)
@@ -733,156 +716,156 @@ public class CtlChecker
 
 	}
 
-	private static class TreeCreator implements CtlFormulaVisitor
+	private static class TreeCreator implements CtlFormulaVisitor<DefaultMutableTreeNode>
 	{
 
-		public Object visitAF(AF formula, Object arg)
+		public DefaultMutableTreeNode visitAF(AF af, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(af);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula.visit(this, null);
+			DefaultMutableTreeNode child1 = af.subFormula.visit(this, null);
 			node.add(child1);
 
 			return node;
 		}
 
-		public Object visitAG(AG formula, Object arg)
+		public DefaultMutableTreeNode visitAG(AG ag, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(ag);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula.visit(this, null);
+			DefaultMutableTreeNode child1 = ag.subFormula.visit(this, null);
 			node.add(child1);
 
 			return node;
 		}
 
-		public Object visitAnd(And formula, Object arg)
+		public DefaultMutableTreeNode visitAnd(And and, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(and);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula1.visit(this, null);
+			DefaultMutableTreeNode child1 = and.subFormula1.visit(this, null);
 			node.add(child1);
 
-			DefaultMutableTreeNode child2 = (DefaultMutableTreeNode) formula.subFormula2.visit(this, null);
+			DefaultMutableTreeNode child2 = and.subFormula2.visit(this, null);
 			node.add(child2);
 
 			return node;
 		}
 
-		public Object visitAU(AU formula, Object arg)
+		public DefaultMutableTreeNode visitAU(AU au, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(au);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula1.visit(this, null);
+			DefaultMutableTreeNode child1 = au.subFormula1.visit(this, null);
 			node.add(child1);
 
-			DefaultMutableTreeNode child2 = (DefaultMutableTreeNode) formula.subFormula2.visit(this, null);
+			DefaultMutableTreeNode child2 = au.subFormula2.visit(this, null);
 			node.add(child2);
 
 			return node;
 		}
 
-		public Object visitAX(AX formula, Object arg)
+		public DefaultMutableTreeNode visitAX(AX ax, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(ax);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula.visit(this, null);
+			DefaultMutableTreeNode child1 = ax.subFormula.visit(this, null);
 			node.add(child1);
 
 			return node;
 		}
 
-		public Object visitEF(EF formula, Object arg)
+		public DefaultMutableTreeNode visitEF(EF ef, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(ef);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula.visit(this, null);
+			DefaultMutableTreeNode child1 = ef.subFormula.visit(this, null);
 			node.add(child1);
 
 			return node;
 		}
 
-		public Object visitEG(EG formula, Object arg)
+		public DefaultMutableTreeNode visitEG(EG eg, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(eg);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula.visit(this, null);
+			DefaultMutableTreeNode child1 = eg.subFormula.visit(this, null);
 			node.add(child1);
 
 			return node;
 		}
 
-		public Object visitEU(EU formula, Object arg)
+		public DefaultMutableTreeNode visitEU(EU eu, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(eu);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula1.visit(this, null);
+			DefaultMutableTreeNode child1 = eu.subFormula1.visit(this, null);
 			node.add(child1);
 
-			DefaultMutableTreeNode child2 = (DefaultMutableTreeNode) formula.subFormula2.visit(this, null);
+			DefaultMutableTreeNode child2 = eu.subFormula2.visit(this, null);
 			node.add(child2);
 
 			return node;
 		}
 
-		public Object visitEX(EX formula, Object arg)
+		public DefaultMutableTreeNode visitEX(EX ex, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(ex);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula.visit(this, null);
+			DefaultMutableTreeNode child1 = ex.subFormula.visit(this, null);
 			node.add(child1);
 
 			return node;
 		}
 
-		public Object visitImplies(Implies formula, Object arg)
+		public DefaultMutableTreeNode visitImplies(Implies implies, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(implies);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula1.visit(this, null);
+			DefaultMutableTreeNode child1 = implies.subFormula1.visit(this, null);
 			node.add(child1);
 
-			DefaultMutableTreeNode child2 = (DefaultMutableTreeNode) formula.subFormula2.visit(this, null);
+			DefaultMutableTreeNode child2 = implies.subFormula2.visit(this, null);
 			node.add(child2);
 
 			return node;
 		}
 
-		public Object visitNot(Not formula, Object arg)
+		public DefaultMutableTreeNode visitNot(Not not, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(not);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula.visit(this, null);
+			DefaultMutableTreeNode child1 = not.subFormula.visit(this, null);
 			node.add(child1);
 
 			return node;
 		}
 
-		public Object visitOr(Or formula, Object arg)
+		public DefaultMutableTreeNode visitOr(Or or, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(or);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula1.visit(this, null);
+			DefaultMutableTreeNode child1 = or.subFormula1.visit(this, null);
 			node.add(child1);
 
-			DefaultMutableTreeNode child2 = (DefaultMutableTreeNode) formula.subFormula2.visit(this, null);
+			DefaultMutableTreeNode child2 = or.subFormula2.visit(this, null);
 			node.add(child2);
 
 			return node;
 		}
 
-		public Object visitPredicate(Predicate predicate, Object arg)
+		public DefaultMutableTreeNode visitPredicate(Predicate predicate, DefaultMutableTreeNode arg)
 		{
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(predicate);
 
 			return node;
 		}
 
-		public Object visitReverse(Reverse formula, Object arg)
+		public DefaultMutableTreeNode visitReverse(Reverse reverse, DefaultMutableTreeNode arg)
 		{
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(formula);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(reverse);
 
-			DefaultMutableTreeNode child1 = (DefaultMutableTreeNode) formula.subFormula.visit(this, null);
+			DefaultMutableTreeNode child1 = reverse.subFormula.visit(this, null);
 			node.add(child1);
 
 			return node;

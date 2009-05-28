@@ -19,11 +19,11 @@ public class Jump extends Instruction
 	/**
 	 * The constructor
 	 * 
-	 * @param target The label to jump to.
+	 * @param toLabel The label to jump to.
 	 */
-	public Jump(Label target)
+	public Jump(Label toLabel)
 	{
-		this.target = target;
+		target = toLabel;
 	}
 
 	/**
