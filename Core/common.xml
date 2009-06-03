@@ -253,6 +253,27 @@
 			<fileset dir="${build.cwc}${file.separator}Compiletime${file.separator}lib" includes="*.jar" />
 		</path>
 
+		<!-- svn task -->
+		<path id="lib.svnant">
+			<fileset dir="${build.core}${file.separator}Development${file.separator}svnant${file.separator}lib" includes="*.jar" />
+		</path>
+		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant" />
+
+		<!-- initial eclipse initialization -->
+		<!-- location of Eclipse pluginsfolder -->
+		<property name="eclipse.home" value="${env.ECLIPSE_HOME}" />
+
+		<condition property="available.eclipse">
+			<available file="${eclipse.home}${file.separator}.eclipseproduct" />
+		</condition>
+
+		<!-- load antcontrib additions -->
+		<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	</target>
+
+	<target name="-init_findbugs" description="initialize findbugs tasks" unless="target.init_findbugs.done">
+		<property name="target.init_findbugs.done" value="true" />
+
 		<!-- findbugs jars -->
 		<path id="lib.findbugs">
 			<fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib" includes="*.jar" />
@@ -290,6 +311,10 @@
 				<isset property="findbugs.reportLevel" />
 			</not>
 		</condition>
+	</target>
+
+	<target name="-init_checkstyle" description="Initialize checkstyle tasks" unless="target.init_checkstyle.done">
+		<property name="target.init_checkstyle.done" value="true" />
 
 		<!-- checkstyle jars -->
 		<path id="lib.checkstyle">
@@ -310,27 +335,11 @@
 				<isset property="checkstyle.style" />
 			</not>
 		</condition>
-
-		<!-- svn task -->
-		<path id="lib.svnant">
-			<fileset dir="${build.core}${file.separator}Development${file.separator}svnant${file.separator}lib" includes="*.jar" />
-		</path>
-		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant" />
-
-		<!-- initial eclipse initialization -->
-		<!-- location of Eclipse pluginsfolder -->
-		<property name="eclipse.home" value="${env.ECLIPSE_HOME}" />
-
-		<condition property="available.eclipse">
-			<available file="${eclipse.home}${file.separator}.eclipseproduct" />
-		</condition>
-
-		<taskdef resource="net/sf/antcontrib/antlib.xml" />
 	</target>
 
 	<!-- initialize and require eclipse -->
-	<target name="init_eclipse" depends="init" unless="build.eclipse.initialized">
-		<property name="build.eclipse.initialized" value="true" />
+	<target name="init_eclipse" depends="init" unless="target.init_eclipse.done">
+		<property name="target.init_eclipse.done" value="true" />
 
 		<fail message="Eclipse was not found. Either set the 'eclipse.home' property or the 'ECLIPSE_HOME' environment variable.">
 			<condition>
@@ -432,24 +441,12 @@
 
 		<ant dir="${build.core}/Development/CstarPerfTool" target="build" />
 		<java jar="${build.core}/Development/CstarPerfTool/dist/CstarPerfTool.jar" fork="true" failonerror="false">
-			<jvmarg value="-DComposestar.Perf.Tool.quiet=true"/>
-			<jvmarg value="-DComposestar.Perf.Tool.Export.onlyLastX=100"/>
+			<jvmarg value="-DComposestar.Perf.Tool.quiet=true" />
+			<jvmarg value="-DComposestar.Perf.Tool.Export.onlyLastX=100" />
 			<arg value="${basedir}/_performance_data" />
 		</java>
 
-		<!--
-		<foreach target="-example_performance_proc" param="example.name" inheritall="true" inheritrefs="true">
-			<path>
-				<dirset dir="${basedir}">
-					<include name="_performance_data/**" />
-					<exclude name="_performance_data" />
-				</dirset>
-			</path>
-		</foreach>
-		-->
-
 		<antcall target="example_performance_xslt" inheritRefs="true" inheritAll="true" />
-
 	</target>
 
 	<target name="example_performance_xslt">

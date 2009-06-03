@@ -52,7 +52,7 @@
 		<mkdir dir="${out.qa}" />
 	</target>
 
-	<target name="findbugs" depends="init_qa" description="Execute FindBugs">
+	<target name="findbugs" depends="init_qa,-init_findbugs" description="Execute FindBugs">
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.java}${file.separator}Compiletime${file.separator}${out.build}" />
 			<class location="${build.java}${file.separator}Runtime2${file.separator}${out.build}" />
@@ -67,7 +67,7 @@
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />
 	</target>
 
-	<target name="checkstyle" depends="init_qa" description="Run CheckStyle code proof reading">
+	<target name="checkstyle" depends="init_qa,-init_checkstyle" description="Run CheckStyle code proof reading">
 		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.java">
 			<formatter type="xml" toFile="${out.qa}${file.separator}checkstyle-result.xml" />
 			<property key="config_loc" value="${bin.checkstyle}" />

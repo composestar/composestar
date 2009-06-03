@@ -43,7 +43,7 @@
 		<mkdir dir="${out.qa}" />
 	</target>
 
-	<target name="findbugs" depends="init_qa">
+	<target name="findbugs" depends="init_qa,-init_findbugs">
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.core}${file.separator}Compiletime${file.separator}${out.build}" />
 			<!--<class location="${build.core}${file.separator}Runtime${file.separator}${out.build}" />-->
@@ -54,7 +54,7 @@
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />
 	</target>
 
-	<target name="checkstyle" depends="init_qa">
+	<target name="checkstyle" depends="init_qa,-init_checkstyle">
 		<path id="lib.qa">
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
