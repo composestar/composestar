@@ -138,7 +138,6 @@
 			<fileset file="${xmltypes.jar}" />
 		</copy>
 		<copy todir="${starlight.installdir}">
-			<fileset file="src/INCREconfig.xml" />
 			<fileset file="src/TASMANConfig.xml" />
 		</copy>
 		<install_core todir="${starlight.installdir}" />

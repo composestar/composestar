@@ -33,7 +33,7 @@
 	</target>
 
 	<target name="test" description="Execute system tests">
-		<ant target="test" dir="Testing" inheritRefs="true"/>
+		<ant target="test" dir="Testing" inheritRefs="true" />
 	</target>
 
 	<target name="install" description="Install the result">

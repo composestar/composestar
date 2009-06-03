@@ -6,8 +6,8 @@
 -->
 <project name="ComposeStarCommon" xmlns:cs="antlib:Composestar">
 
-	<target name="init" unless="build.initialized">
-		<property name="build.initialized" value="true" />
+	<target name="init" unless="target.init.done">
+		<property name="target.init.done" value="true" />
 		<tstamp />
 
 		<!-- figure out the directory where common.xml is located -->
@@ -130,12 +130,10 @@
 		<condition property="anthelper.version" value="" else="2">
 			<available file="${env.SYSTEMROOT}\Microsoft.NET\Framework\v1.1.4322" type="dir" />
 		</condition>
-
 		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper${anthelper.version}.exe" failifexecutionfails="false" osfamily="windows">
 			<arg value="getsystemproperties" />
 			<arg value="${build.core}${file.separator}Development${file.separator}system.properties" />
 		</exec>
-
 		<property file="${build.core}${file.separator}Development${file.separator}system.properties" />
 
 		<!-- location of the Compose* installation -->
@@ -147,6 +145,7 @@
 		<property name="starlight.installdir" value="${user.home}${file.separator}StarLight" />
 
 		<!-- make macro -->
+		<!--
 		<macrodef name="make">
 			<attribute name="target" default="" />
 			<sequential>
@@ -159,10 +158,45 @@
 				</exec>
 			</sequential>
 		</macrodef>
+		-->
+
+		<!-- svn task -->
+		<path id="lib.svnant">
+			<fileset dir="${build.core}${file.separator}Development${file.separator}svnant${file.separator}lib" includes="*.jar" />
+		</path>
+		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant" />
+
+		<!-- initial eclipse initialization -->
+		<!-- location of Eclipse pluginsfolder -->
+		<property name="eclipse.home" value="${env.ECLIPSE_HOME}" />
+		<condition property="available.eclipse">
+			<available file="${eclipse.home}${file.separator}.eclipseproduct" />
+		</condition>
+
+		<!-- load antcontrib additions -->
+		<taskdef resource="net/sf/antcontrib/antlib.xml" />
+
+		<!-- Core -->
+		<path id="lib.core">
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib">
+				<include name="**/*.jar" />
+				<!-- these are only needed for the antlr tool -->
+				<exclude name="antrl/antlr-3.jar" />
+				<exclude name="antrl/stringtemplate-3.1b1.jar" />
+			</fileset>
+		</path>
+		<!-- /Core -->
+
+		<!-- Starlight -->
+		<path id="lib.starlight">
+			<path refid="lib.core" />
+			<fileset dir="${build.core}/Compiletime" includes="${out.jar.core}" />
+			<fileset dir="${build.starlight}/Libraries" includes="**/*.jar" />
+			<fileset dir="${build.starlight}/Source/Compiletime/lib" includes="*.jar" />
+		</path>
 
 		<!-- msbuild macro -->
 		<macrodef name="msbuild">
-
 			<attribute name="solution" />
 			<attribute name="config" default="Release" />
 			<attribute name="target" default="rebuild" />
@@ -222,53 +256,23 @@
 				</exec>
 			</sequential>
 		</macrodef>
+		<!-- /Starlight -->
 
-		<!-- register additional libraries -->
-		<path id="lib.core">
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib">
-				<include name="**/*.jar" />
-
-				<!-- these are only needed for the antlr tool -->
-				<exclude name="antrl/antlr-3.jar" />
-				<exclude name="antrl/stringtemplate-3.1b1.jar" />
-			</fileset>
-		</path>
-
+		<!-- Java -->
 		<path id="lib.java">
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
 			<fileset dir="${build.java}${file.separator}Compiletime${file.separator}lib" includes="*/*.jar" />
 		</path>
+		<!-- /Java -->
 
-		<path id="lib.starlight">
-			<path refid="lib.core" />
-			<fileset dir="${build.core}/Compiletime" includes="${out.jar.core}" />
-			<fileset dir="${build.starlight}/Libraries" includes="**/*.jar" />
-			<fileset dir="${build.starlight}/Source/Compiletime/lib" includes="*.jar" />
-		</path>
-
+		<!-- CwC -->
 		<path id="lib.cwc">
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
 			<fileset dir="${build.cwc}${file.separator}Compiletime${file.separator}lib" includes="*.jar" />
 		</path>
-
-		<!-- svn task -->
-		<path id="lib.svnant">
-			<fileset dir="${build.core}${file.separator}Development${file.separator}svnant${file.separator}lib" includes="*.jar" />
-		</path>
-		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant" />
-
-		<!-- initial eclipse initialization -->
-		<!-- location of Eclipse pluginsfolder -->
-		<property name="eclipse.home" value="${env.ECLIPSE_HOME}" />
-
-		<condition property="available.eclipse">
-			<available file="${eclipse.home}${file.separator}.eclipseproduct" />
-		</condition>
-
-		<!-- load antcontrib additions -->
-		<taskdef resource="net/sf/antcontrib/antlib.xml" />
+		<!-- /CwC -->
 	</target>
 
 	<target name="-init_findbugs" description="initialize findbugs tasks" unless="target.init_findbugs.done">
