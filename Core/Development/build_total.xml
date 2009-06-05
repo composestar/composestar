@@ -295,10 +295,10 @@
 		<antcall target="integration_clean_eclipse" inheritRefs="true" />
 	</target>
 
-	<target name="integration_clean_eclipse" depends="init_eclipse">
+	<target name="integration_clean_eclipse" depends="-init_eclipse">
 		<antcall target="-integration_clean_eclipse" inheritRefs="true" />
 	</target>
-	<target name="-integration_clean_eclipse" depends="init_eclipse" if="eclipse.clean.dropins">
+	<target name="-integration_clean_eclipse" depends="-init_eclipse" if="eclipse.clean.dropins">
 		<fail message="Eclipse dropins location equals the eclipse home directory">
 			<condition>
 				<equals arg1="${eclipse.home}" arg2="${eclipse.dropins}" />

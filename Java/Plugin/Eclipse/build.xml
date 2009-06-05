@@ -13,7 +13,7 @@
 	
 	<description>Compose*/Java Eclipse Plugin</description>
 	
-	<target name="init_local" depends="init_eclipse">
+	<target name="init_local" depends="-init_eclipse">
 		<property name="out.dist.feature"  value="${out.dist}-feature"/>
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>

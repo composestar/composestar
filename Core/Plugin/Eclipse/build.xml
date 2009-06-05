@@ -13,7 +13,7 @@
 
 	<description>Compose* Eclipse Plugin (Core)</description>
 
-	<target name="init_local" depends="init_eclipse">
+	<target name="init_local" depends="-init_eclipse">
 		<mkdir dir="${out.build}" />
 		<mkdir dir="${out.dist}" />
 	</target>

@@ -131,7 +131,7 @@
 		<!-- constructs the eclipse bundle information -->
 	</target>
 
-	<target name="-eclipse_manifest" depends="init_eclipse">
+	<target name="-eclipse_manifest" depends="-init_eclipse">
 		<!-- create bundle classpath value -->
 		<pathconvert property="composestar.core.bundle-classpath" pathsep="," dirsep="/">
 			<path>
@@ -174,7 +174,7 @@
 		<antcall target="-install_eclipse" inheritRefs="true" />
 	</target>
 
-	<target name="-install_eclipse" depends="init_eclipse">
+	<target name="-install_eclipse" depends="-init_eclipse">
 		<copy todir="${eclipse.pluginsdir.core}">
 			<fileset dir="${out.dist}" />
 		</copy>

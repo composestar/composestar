@@ -48,7 +48,7 @@
 	<target name="test" depends="test_comp,test_exec" description="Execute the Java system test." />
 
 	<!-- compile projects -->
-	<target name="test_comp" depends="init_eclipse">
+	<target name="test_comp" depends="-init_eclipse">
 		<!-- test for some of the available tools -->
 		<condition property="executable.extention" value=".exe" else="">
 			<os family="windows" />
@@ -86,7 +86,7 @@
 
 
 	<!-- execute tests -->
-	<target name="test_exec" depends="init_eclipse">
+	<target name="test_exec" depends="-init_eclipse">
 		<cs:j_test workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="composestar.java.plugin.testrun" resultOutput="${basedir}/TEST-Execution.xml">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests" />

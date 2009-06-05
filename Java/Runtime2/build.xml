@@ -47,7 +47,13 @@
 			<fileset dir="${out.build}" />
 		</jar>
 		-->
-		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" />
+		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask">
+			<classpath>
+				<fileset dir="${build.core}/Development/Ant/lib">
+					<include name="jarjar.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
 		<jarjar jarfile="${out.dist}/lib/ComposestarRuntimeInterpreter.jar">
 			<fileset dir="${out.build}" />
 			<zipfileset src="${build.core}/Compiletime/${out.jar.core}">
@@ -112,7 +118,7 @@
 		</zip>
 	</target>
 
-	<target name="install" depends="init_eclipse,build" description="install the java runtime">
+	<target name="install" depends="-init_eclipse,build" description="install the java runtime">
 		<copy todir="${eclipse.pluginsdir.java}${file.separator}">
 			<fileset dir="${out.dist}" />
 		</copy>

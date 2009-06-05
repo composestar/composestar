@@ -65,7 +65,6 @@
 		<property name="out.jar.java" value="${out.dist}${file.separator}lib${file.separator}ComposestarJava.jar" />
 		<property name="out.jar.starlight" value="${out.dist}${file.separator}StarLight.jar" />
 		<property name="out.jar.cwc" value="${out.dist}${file.separator}lib${file.separator}ComposestarCwC.jar" />
-		<property name="out.jar.visualization" value="${out.dist}${file.separator}lib${file.separator}ComposestarVisualization.jar" />
 
 		<!-- options for javac -->
 		<property name="ant.build.javac.target" value="1.5" />
@@ -134,6 +133,7 @@
 			<arg value="getsystemproperties" />
 			<arg value="${build.core}${file.separator}Development${file.separator}system.properties" />
 		</exec>
+		
 		<property file="${build.core}${file.separator}Development${file.separator}system.properties" />
 
 		<!-- location of the Compose* installation -->
@@ -143,22 +143,6 @@
 
 		<!-- final fallback -->
 		<property name="starlight.installdir" value="${user.home}${file.separator}StarLight" />
-
-		<!-- make macro -->
-		<!--
-		<macrodef name="make">
-			<attribute name="target" default="" />
-			<sequential>
-				<condition property="bin.make" value="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}make${file.separator}make" else="make">
-					<os family="windows" />
-				</condition>
-				<exec executable="${bin.make}" searchpath="true">
-					<env key="PATH" path="${env.PATH};${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}make${file.separator}" />
-					<arg value="@{target}" />
-				</exec>
-			</sequential>
-		</macrodef>
-		-->
 
 		<!-- svn task -->
 		<path id="lib.svnant">
@@ -342,7 +326,7 @@
 	</target>
 
 	<!-- initialize and require eclipse -->
-	<target name="init_eclipse" depends="init" unless="target.init_eclipse.done">
+	<target name="-init_eclipse" depends="init" unless="target.init_eclipse.done">
 		<property name="target.init_eclipse.done" value="true" />
 
 		<fail message="Eclipse was not found. Either set the 'eclipse.home' property or the 'ECLIPSE_HOME' environment variable.">
