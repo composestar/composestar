@@ -28,6 +28,8 @@ public class StreamGobbler extends Thread
 
 	private List<String> output;
 
+	private boolean finished;
+
 	/**
 	 * Constructor.
 	 * 
@@ -44,7 +46,7 @@ public class StreamGobbler extends Thread
 	 */
 	public String result()
 	{
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		Iterator<String> it = output.iterator();
 		while (it.hasNext())
 		{
@@ -69,6 +71,7 @@ public class StreamGobbler extends Thread
 	@Override
 	public void run()
 	{
+		finished = false;
 		try
 		{
 			InputStreamReader isr = new InputStreamReader(is);
@@ -96,6 +99,7 @@ public class StreamGobbler extends Thread
 	 */
 	private synchronized void done()
 	{
+		finished = true;
 		notifyAll();
 	}
 
@@ -104,6 +108,16 @@ public class StreamGobbler extends Thread
 	 */
 	public synchronized boolean waitForResult()
 	{
+		try
+		{
+			if (!finished)
+			{
+				wait();
+			}
+		}
+		catch (InterruptedException e)
+		{
+		}
 		return true;
 	}
 }

@@ -153,11 +153,20 @@ public final class Version
 			try
 			{
 				props.load(is);
-				is.close();
 			}
 			catch (IOException e)
 			{
 				props.clear();
+			}
+			finally
+			{
+				try
+				{
+					is.close();
+				}
+				catch (IOException e)
+				{
+				}
 			}
 		}
 	}

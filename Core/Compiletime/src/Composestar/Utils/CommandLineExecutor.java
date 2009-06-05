@@ -35,78 +35,10 @@ public class CommandLineExecutor
 		workingDir = wd;
 	}
 
-	/**
-	 * Executess the command and waits for it to return. WARNING: If the program
-	 * hangs this function will never return. Please note that return values
-	 * indicating error differ between programs and operating systems.
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public int exec(String command)
-	{
-		return exec(command, null);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public int exec(String command, File dir)
-	{
-		try
-		{
-
-			// "some" OSs need special treatment to be able to use built in
-			// functions
-			// shouldnt be needed, since we're not using 'built in functions'
-			// (aka 'call')
-			String osName = System.getProperty("os.name");
-			if (osName.equals("Windows NT") || osName.equals("Windows 2000") || osName.equals("Windows CE")
-					|| osName.equals("Windows XP"))
-			{
-				command = "cmd.exe /C " + command;
-			}
-			else if (osName.equals("Windows 95") || osName.equals("Windows 98") || osName.equals("Windows ME"))
-			{
-				command = "command.exe /C " + command;
-			}
-			// real operating systems handle this flawlessly
-
-			Runtime rt = Runtime.getRuntime();
-			Process proc = rt.exec(command, null, dir);
-
-			// connect error and output filters
-			// these are threads because the buffers used to hold the output
-			// data
-			// could otherwise overrun which blocks the program.
-			errorGobbler = new StreamGobbler(proc.getErrorStream());
-			outputGobbler = new StreamGobbler(proc.getInputStream());
-			errorGobbler.start();
-			outputGobbler.start();
-
-			// wait for program return.
-			int result = proc.waitFor();
-
-			// wait for the output threads
-			outputGobbler.waitForResult();
-			errorGobbler.waitForResult();
-
-			return result;
-		}
-		catch (Throwable t)
-		{
-			// TODO: New throw specific to project
-			t.printStackTrace();
-			return -1;
-		}
-	}
-
 	public int exec(List<String> cmdList) throws IOException, InterruptedException
 	{
 		String[] cmdArray = new String[cmdList.size()];
 		cmdList.toArray(cmdArray);
-
 		return exec(cmdArray);
 	}
 
