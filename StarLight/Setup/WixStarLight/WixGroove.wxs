@@ -2,12 +2,12 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id="GrooveInst">
     <DirectoryRef Id ='Binaries'>
-      <Component Id='Groove' Guid ='44A2B87B-800D-4e2e-B05C-16C2AD728FE7'>
+      <Component Id='Groove' Guid ='29AE8350-C073-4450-972F-0F7A4DBC5302'>
         <File Id='castor0_9_5_2jar' Name='castor.jar' LongName='castor-0_9_5_2.jar' DiskId='1'
                      Source='../../../Core/Compiletime/lib/groove3/castor-0_9_5_2.jar' Vital='yes'>
         </File>
-        <File Id='groove3_2_1jar' Name='groove.jar' LongName='groove-3_2_1.jar' DiskId='1'
-                     Source='../../../Core/Compiletime/lib/groove3/groove-3_2_1.jar' Vital='yes'>
+        <File Id='groove3_2_1jar' Name='groove.jar' LongName='groove-3_2_2.jar' DiskId='1'
+                     Source='../../../Core/Compiletime/lib/groove3/groove-3_2_2.jar' Vital='yes'>
         </File>
         <File Id='jgraph5_10_1jar' Name='jgraph.jar' LongName='jgraph-5_10_1.jar' DiskId='1'
                      Source='../../../Core/Compiletime/lib/groove3/jgraph-5_10_1.jar' Vital='yes'>

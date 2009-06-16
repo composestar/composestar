@@ -13,6 +13,7 @@ import groove.explore.result.Result;
 import groove.explore.strategy.BranchingStrategy;
 import groove.explore.strategy.LinearStrategy;
 import groove.graph.Graph;
+import groove.graph.GraphInfo;
 import groove.io.AspectGxl;
 import groove.io.AspectualViewGps;
 import groove.io.LayedOutXml;
@@ -285,8 +286,8 @@ public class Preprocessor implements CTCommonModule
 	{
 		try
 		{
-			AspectGxl graphSaver = new AspectGxl(new LayedOutXml());
 			AspectGraph saveGraph = AspectGraph.getFactory().fromPlainGraph(graph);
+			AspectGxl graphSaver = new AspectGxl(new LayedOutXml());
 			graphSaver.marshalGraph(saveGraph, toFile);
 		}
 		catch (IOException e)
@@ -343,7 +344,9 @@ public class Preprocessor implements CTCommonModule
 		else
 		{
 			GraphState state = result.getValue().iterator().next();
-			return state.getGraph();
+			Graph graph = state.getGraph();
+			GraphInfo.getInfo(graph, true);
+			return graph;
 		}
 	}
 

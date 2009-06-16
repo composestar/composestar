@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
 Main-Class: Composestar.Java.MASTER.JavaMaster
 Class-Path: @core@/ComposestarCORE.jar 
-  @core@/antlr.jar 
-  @core@/antlr-runtime-3.jar
-  @core@/log4j-1.2.14.jar 
-  @core@/prolog.jar
-  @core@/castor-0_9_5_2-xml.jar
-  @core@/groove-1_2_0.jar
-  @core@/jgraph.jar
-  @core@/xerces-2_6_0-xml-apis.jar
-  @core@/xerces-2_6_0-xercesImpl.jar
-  @java@/ComposestarJava.jar
-  @java@/javassist.jar
-  
+ @java@/javassist.jar 
+ @core@/antlr.jar 
+ @core@/antlr-runtime-3.jar 
+ @core@/log4j-1.2.14.jar 
+ @core@/prolog.jar 
+ @core@/castor-0_9_5_2.jar 
+ @core@/groove-3_2_2.jar 
+ @core@/groove-gxl-1_0.jar 
+ @core@/jgraph-5_10_1.jar 
+ @core@/xerces-2_6_0-xercesImpl.jar 
+ @core@/ComposestarCORE.jar 
+ @java@/ComposestarJava.jar

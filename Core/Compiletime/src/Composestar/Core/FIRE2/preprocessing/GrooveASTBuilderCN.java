@@ -27,6 +27,7 @@ package Composestar.Core.FIRE2.preprocessing;
 import groove.graph.DefaultGraph;
 import groove.graph.DefaultLabel;
 import groove.graph.Graph;
+import groove.graph.GraphInfo;
 import groove.graph.Label;
 import groove.graph.Node;
 
@@ -234,6 +235,7 @@ public class GrooveASTBuilderCN
 				break;
 		}
 		graph = new DefaultGraph();
+		GraphInfo.getInfo(graph, true);
 	}
 
 	/**

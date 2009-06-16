@@ -13,6 +13,6 @@
 	<classpathentry kind="lib" path="lib/groove3/groove-gxl-1_0.jar"/>
 	<classpathentry kind="lib" path="lib/groove3/jgraph-5_10_1.jar"/>
 	<classpathentry kind="lib" path="lib/groove3/xerces-2_6_0-xercesImpl.jar"/>
-	<classpathentry kind="lib" path="lib/groove3/groove-3_2_1.jar" sourcepath="lib/groove3/groove-3_2_1-src.zip"/>
+	<classpathentry kind="lib" path="lib/groove3/groove-3_2_2.jar" sourcepath="lib/groove3/groove-3_2_2-src.zip"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
