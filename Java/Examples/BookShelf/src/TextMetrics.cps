@@ -5,7 +5,7 @@ concern TextMetrics
 		internals
 			counter : textproc.TextMetrics;
 		inputfilters
-			counters : Dispatch = { <counter.*> counter.* }
+			counters : Dispatch = ( selector $= counter ) { target = counter; }
 	}
 	
 	superimposition

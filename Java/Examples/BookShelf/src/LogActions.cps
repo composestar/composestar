@@ -3,7 +3,8 @@ concern LogActions
 	filtermodule LogTextMetrics
 	{
 		inputfilters
-			logcnt : Log = {[*.countWords], [*.countSentences]}
+			logcnt : Log = ( selector == 'countWords' 
+				| selector == 'countSentences' )
 	}
 	
 	superimposition
@@ -14,7 +15,7 @@ concern LogActions
 		filtermodules
 			bookparts <- LogTextMetrics;
 		constraints
-			//pre(TextMetrics::Counter, LogActions::LogTextMetrics);
-			pre(LogActions::LogTextMetrics, TextMetrics::Counter);
+			//pre(TextMetrics.Counter, LogActions.LogTextMetrics);
+			pre(LogActions.LogTextMetrics, TextMetrics.Counter);
 	}
 }

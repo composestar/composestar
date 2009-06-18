@@ -5,13 +5,12 @@ concern BookObserver
 		internals
 			handler : observer.Subject;
 		inputfilters
-			obs : Dispatch = { {[*.attach], [*.detach]} handler.* };
-			bookChanges : Meta = { {[*.addChapter], [*.removeChapter]} 
-								handler.notify };
-			chapChanges : Meta = { {[*.addParagraph], [*.removeParagraph]} 
-								handler.notify };
-			paraChanges : Meta = { {[*.addText], [*.setText]} 
-								handler.notify }
+			obs : Dispatch = ( selector == ['attach', 'detach'] ) 
+				{ target = handler; };
+			changes : Meta(target = handler, selector = 'notify') = 
+				( selector == ['addChapter', 'removeChapter'] )
+				cor ( selector == ['addParagraph', 'removeParagraph'] )
+				cor ( selector == ['addText', 'setText'] )
 	}
 	
 	superimposition

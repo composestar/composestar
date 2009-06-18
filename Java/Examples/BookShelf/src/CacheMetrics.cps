@@ -3,7 +3,7 @@ concern CacheMetrics
 	filtermodule ResourceConflict(??m)
 	{
 		inputfilters
-			alwaysinval : Invalidate = { [*.??m] }
+			alwaysinval : Invalidate = ( selector == ??m )
 	}
 
 	superimposition
@@ -26,6 +26,6 @@ concern CacheMetrics
 			invalidateMethods <- InvalidateCache;
 		constraints
 			// make sure the conflict is caused
-			pre(Memoization::caching_advice,ResourceConflict);
+			pre(Memoization.caching_advice,ResourceConflict);
 	}
 }
