@@ -3,8 +3,8 @@ concern Memoization
   filtermodule caching_advice(??cached,??invalidators)
   {
     inputfilters
-      caching      : Cache      = { [*.??cached] };
-      invalidation : Invalidate = { [*.??invalidators] }
+      caching      : Cache      = ( selector == ??cached );
+      invalidation : Invalidate = ( selector == ??invalidators )
   }
   
   superimposition
