@@ -3,9 +3,11 @@ concern ErrorTestConcern
 	filtermodule ErrorTest
 	{
 		inputfilters
-			// disable calls to method Test2
-			test_error : Error(message='Compose* error filter exception') = { True ~> [*.f2] }
+			// The error filter throws an exception when the message is rejected
+			// Reject the message when the selector is f2
+			test_error : Error(message='Compose* error filter exception!') = ( !(selector == 'f2') )
 	}
+	
 	superimposition
 	{
 		selectors
