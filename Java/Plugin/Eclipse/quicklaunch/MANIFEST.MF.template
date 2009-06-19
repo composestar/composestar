@@ -9,7 +9,6 @@ Class-Path: @core@/ComposestarCORE.jar
  @core@/castor-0_9_5_2.jar 
  @core@/groove-3_2_2.jar 
  @core@/groove-gxl-1_0.jar 
- @core@/jgraph-5_10_1.jar 
  @core@/xerces-2_6_0-xercesImpl.jar 
  @core@/ComposestarCORE.jar 
  @java@/ComposestarJava.jar

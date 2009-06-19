@@ -9,5 +9,4 @@ Class-Path: ComposestarCORE.jar
  castor-0_9_5_2.jar 
  groove-3_2_2.jar 
  groove-gxl-1_0.jar 
- jgraph-5_10_1.jar 
  xerces-2_6_0-xercesImpl.jar

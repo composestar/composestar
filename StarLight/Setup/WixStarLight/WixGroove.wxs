@@ -9,9 +9,6 @@
         <File Id='groove3_2_1jar' Name='groove.jar' LongName='groove-3_2_2.jar' DiskId='1'
                      Source='../../../Core/Compiletime/lib/groove3/groove-3_2_2.jar' Vital='yes'>
         </File>
-        <File Id='jgraph5_10_1jar' Name='jgraph.jar' LongName='jgraph-5_10_1.jar' DiskId='1'
-                     Source='../../../Core/Compiletime/lib/groove3/jgraph-5_10_1.jar' Vital='yes'>
-        </File>
         <File Id='groovegxl1_0jar' Name='groovgxl.jar' LongName='groove-gxl-1_0.jar' DiskId='1'
                     Source='../../../Core/Compiletime/lib/groove3/groove-gxl-1_0.jar' Vital='yes'>
         </File>

@@ -14,5 +14,4 @@ Class-Path: ComposestarCORE.jar
  ../Binaries/castor-0_9_5_2.jar 
  ../Binaries/groove-3_2_2.jar 
  ../Binaries/groove-gxl-1_0.jar 
- ../Binaries/jgraph-5_10_1.jar 
  ../Binaries/xerces-2_6_0-xercesImpl.jar
