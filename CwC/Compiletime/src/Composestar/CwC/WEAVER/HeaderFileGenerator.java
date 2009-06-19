@@ -101,7 +101,9 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 	{
 		StringWriter sw = new StringWriter();
 		emitter = new CEmitter(sw);
+		emitter.emitDirectives = false; // not needed
 		emitter.setASTNodeClass(TNode.class.getName());
+
 		for (MethodInfo mi : methods)
 		{
 			if (!createMethodDeclaration(mi))
@@ -142,6 +144,8 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 		{
 			return false;
 		}
+		// used as comment
+		String location = String.format("// %s:%d", nd.getSource(), nd.getLocalLineNum());
 		nd = TNodeFactory.getInstance().dupTree(cwcfunc.getFunctionDeclaration().getBaseTypeAST().getNextSibling());
 		try
 		{
@@ -167,7 +171,7 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 			body.setSource(nd.getFirstChild().getSource());
 			nd.addChild(body);
 
-			body = TNodeFactory.getInstance().create(ACGrammarTokenTypes.SEMI, ";");
+			body = TNodeFactory.getInstance().create(ACGrammarTokenTypes.SEMI, "; " + location + "\n");
 			body.setLineNum(nd.getFirstChild().getLineNum());
 			body.setSource(nd.getFirstChild().getSource());
 			nd.addChild(body);
