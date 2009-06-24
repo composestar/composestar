@@ -14,12 +14,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.DUMMER.DefaultEmitter;
 import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Resources.CommonResources;
+import Composestar.Java.COMP.JavaSpecificationVersion;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 import antlr.ASTFactory;
@@ -61,6 +64,20 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private ASTFactory factory = new ASTFactory();
 
+	/**
+	 * Java source compatibility mode.
+	 */
+	@ModuleSetting(ID = "COMP.source")
+	protected String sourceMode;
+
+	/**
+	 * Target to create java byte code for.
+	 */
+	@ModuleSetting(ID = "COMP.target")
+	protected String targetMode;
+
+	private JavaSpecificationVersion versionSpec;
+
 	static
 	{
 		setupTokenNames();
@@ -72,9 +89,26 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	public JavaDummyEmitter()
 	{}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * Composestar.Core.DUMMER.DefaultEmitter#setCommonResources(Composestar
+	 * .Core.Resources.CommonResources)
+	 */
+	@Override
+	public void setCommonResources(CommonResources resc)
+	{
+		// to load the config
+		resc.inject(this);
+	}
+
 	@Override
 	public void createDummies(Project project, Set<Source> sources) throws ModuleException
 	{
+		if (sourceMode == null || sourceMode.length() == 0)
+		{
+			sourceMode = targetMode;
+		}
 		for (Source source : sources)
 		{
 			createDummy(project, source);
@@ -103,6 +137,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	public void createDummy(File source, File target) throws ModuleException
 	{
+		if (versionSpec == null)
+		{
+			versionSpec = JavaSpecificationVersion.get(sourceMode);
+		}
 		packageName = "";
 		packages = new ArrayList<String>();
 		dummy = new StringBuilder();
@@ -119,6 +157,22 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 																		 */);
 			// Create a scanner that reads from the input stream passed to us
 			JavaLexer lexer = new JavaLexer(fis);
+			if (versionSpec.assertSupported())
+			{
+				lexer.enableAssert();
+			}
+			else
+			{
+				lexer.disableAssert();
+			}
+			if (versionSpec.enumSuppported())
+			{
+				lexer.enableEnum();
+			}
+			else
+			{
+				lexer.disableEnum();
+			}
 			lexer.setFilename(source.toString());
 
 			// Create a parser that reads from the scanner
@@ -743,7 +797,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 			case IMPORT:
 				out("import ");
-				visit(ast.getFirstChild());
+				visitChildren(ast, " ");
 				out(";");
 				break;
 
