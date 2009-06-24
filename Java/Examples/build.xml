@@ -16,6 +16,7 @@
 	<target name="build" />
 	
 	<target name="clean" depends="init" description="Clean intermediate files from the examples.">
+		<delete dir=".metadata" />
 		<delete includeemptydirs="true">
 			<FileSet dir="${basedir}" >
 				<include name="*/BuildConfiguration.xml" unless="keep.buildconfiguration" />
