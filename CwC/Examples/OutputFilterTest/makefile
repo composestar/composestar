@@ -29,9 +29,18 @@ ppDirs := $(patsubst  %/,%,$(sort $(dir $(ppSources))))
 # Misc env settings
 CC = gcc -Wall
 CFLAGS = 
+
+ifeq "$(OS)" "Windows_NT"
+CP = copy
 RM = del /F /Q
 RMDIR = cmd /c rmdir /S /Q
-MKDIR = mkdir 
+MKDIR = mkdir
+else
+CP = cp
+RM = rm -f
+RMDIR = rm -R -f
+MKDIR = mkdir -p 
+endif
 
 COMPOSESTAR = java -jar ../../Testing/bin/lib/ComposestarCwC.jar 
 
@@ -49,7 +58,11 @@ init : $(ppDirs) $(WOVEN)
 
 # Creates the directories when the preprocessed files will be stored
 $(ppDirs) $(WOVEN) :
+ifeq "$(OS)" "Windows_NT"
 	-$(MKDIR) $(subst /,\,$@)
+else
+	-$(MKDIR) $@
+endif
 
 # Clean 
 .PHONY : clean
@@ -62,7 +75,11 @@ $(PREPROCESSED)/%.c : %.c
 	$(CPP) -c $(CFLAGS) -dD -C -o $@ $<
 
 ComposeStar.h :
-	copy ..\..\Compiletime\src\Composestar\CwC\WEAVER\ComposeStar.h .
+ifeq "$(OS)" "Windows_NT"
+	$(CP) ..\..\Compiletime\src\Composestar\CwC\WEAVER\ComposeStar.h .
+else
+	$(CP) ../../Compiletime/src/Composestar/CwC/WEAVER/ComposeStar.h .
+endif
 
 main.c : ComposeStar.h
 
