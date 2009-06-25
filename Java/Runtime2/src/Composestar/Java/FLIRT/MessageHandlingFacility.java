@@ -62,6 +62,8 @@ public final class MessageHandlingFacility
 
 	public static final boolean RT_DEBUG = Boolean.getBoolean("composestar.runtime.debug");
 
+	private static boolean initialized;
+
 	/**
 	 * The CPS repository, initialized on startup
 	 */
@@ -73,9 +75,14 @@ public final class MessageHandlingFacility
 	/**
 	 * Initialize the runtime environment
 	 */
-	public static synchronized void initialize(Repository repos)
+	public static synchronized boolean initialize(Repository repos)
 	{
+		if (repository != null)
+		{
+			return false;
+		}
 		repository = repos;
+		return true;
 	}
 
 	/**
@@ -131,6 +138,12 @@ public final class MessageHandlingFacility
 	 */
 	public static synchronized void handleApplicationStart(String filename, int debug, Class<?> mainclass)
 	{
+		if (initialized)
+		{
+			logger.warning("Compose* Runtime has already been initialized");
+			return;
+		}
+		initialized = true;
 		setDebugLevel(debug);
 		initialize(RepositoryLoader.load(filename, mainclass));
 	}

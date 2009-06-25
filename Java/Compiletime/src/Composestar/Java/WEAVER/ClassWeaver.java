@@ -11,6 +11,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.ModuleNames;
@@ -166,6 +167,7 @@ public class ClassWeaver
 	public void writeApplicationStart(CtClass clazz) throws ModuleException
 	{
 		String rundebuglevel = resources.configuration().getSetting("runDebugLevel");
+		File repository = resources.get(CONE.REPOSITORY_FILE_KEY);
 		String setInterpMode = "";
 		boolean useThreaded = Boolean.parseBoolean(resources.configuration().getSetting("FLIRT.threaded"));
 		if (useThreaded)
@@ -177,8 +179,9 @@ public class ClassWeaver
 		{
 			CtMethod mainmethod = clazz.getMethod("main", "([Ljava/lang/String;)V");
 			String src =
-					"Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(" + "\"repository.dat\""
-							+ "," + rundebuglevel + ", " + clazz.getName() + ".class);";
+					"Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(\""
+							+ repository.getName().replaceAll("\"", "\\\"") + "\", " + rundebuglevel + ", "
+							+ clazz.getName() + ".class);";
 			mainmethod.insertBefore(setInterpMode + src);
 		}
 		catch (Exception e)
