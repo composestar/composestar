@@ -3,16 +3,20 @@ package Composestar.Java.WEAVER;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.Project;
+import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
@@ -80,6 +84,48 @@ public class ClassWeaver
 	}
 
 	/**
+	 * Searches for the most commonly used package name in the sources
+	 * 
+	 * @param p
+	 * @return
+	 */
+	protected String findBasePackage(Project p)
+	{
+		Map<String, Integer> pkgCount = new HashMap<String, Integer>();
+		String curPkg = "";
+		int curCnt = 0;
+		for (Source s : p.getSources())
+		{
+			for (String type : p.getTypeMapping().getTypes(s))
+			{
+				String[] fqn = type.split("\\.");
+				StringBuffer sb = new StringBuffer();
+				for (String part : fqn)
+				{
+					if (sb.length() > 0)
+					{
+						sb.append(".");
+					}
+					sb.append(part);
+					String cur = sb.toString();
+					int cnt = 1;
+					if (pkgCount.containsKey(cur))
+					{
+						cnt = pkgCount.get(cur) + 1;
+					}
+					pkgCount.put(cur, cnt);
+					if (cnt > curCnt)
+					{
+						curPkg = cur;
+						curCnt = cnt;
+					}
+				}
+			}
+		}
+		return curPkg;
+	}
+
+	/**
 	 * Weaves a project.
 	 * <p>
 	 * 1. Adds the application start info to the Main Class.
@@ -117,6 +163,40 @@ public class ClassWeaver
 			}
 		}
 
+		// create the initializer class
+		StringBuffer sb = new StringBuffer();
+		String pkgName = findBasePackage(p);
+		if (pkgName != null && pkgName.length() > 0)
+		{
+			sb.append(pkgName);
+		}
+		String projectName = p.getName();
+		if (projectName != null && projectName.length() > 0)
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(".");
+			}
+			sb.append(projectName);
+		}
+		sb.append("$$cps_init");
+		String initClassName = sb.toString();
+		logger.debug(String.format("Initializer classname = %s", initClassName));
+		CtClass initClass = classpool.makeClass(initClassName);
+		writeRTInitializer(initClass);
+		try
+		{
+			initClass.writeFile(outputDir.toString());
+		}
+		catch (Exception e)
+		{
+			throw new ModuleException("Error creating initialization class " + initClassName + ": " + e.getMessage(),
+					ModuleNames.WEAVER);
+		}
+		File initClassFile = getOutputFile(outputDir, initClass);
+		weavedClasses.add(initClassFile);
+		logger.debug(String.format("Wrote file %s", initClassFile.toString()));
+
 		for (CtClass clazz : classes)
 		{
 			// weave the class and write to disk
@@ -127,12 +207,28 @@ public class ClassWeaver
 				// weaving on embedded types.
 				// if (!p.getTypeMapping().getSource(typeName).isEmbedded())
 				// {
+
 				clazz.instrument(new MethodBodyTransformer(classpool, hd, resources.repository()));
 
-				if (startobject.equals(clazz.getName()))
+				// old initialization mechanism -- remove me
+				// if (startobject.equals(clazz.getName()))
+				// {
+				// write applicationStart
+				// writeApplicationStart(clazz);
+				// }
+
+				if (clazz.isModified())
 				{
-					// write applicationStart
-					writeApplicationStart(clazz);
+					CtConstructor cinit = clazz.getClassInitializer();
+					if (cinit == null)
+					{
+						cinit = clazz.makeClassInitializer();
+						cinit.setBody(String.format("%s.class;", initClassName));
+					}
+					else
+					{
+						cinit.insertBefore(String.format("%s.class;", initClassName));
+					}
 				}
 
 				clazz.writeFile(outputDir.toString());
@@ -163,7 +259,9 @@ public class ClassWeaver
 	 * Writes the application start info in the Main Class.
 	 * 
 	 * @throws ModuleException : e.g. when main method is not found.
+	 * @Deprecated writeRTInitializer is used instead
 	 */
+	@Deprecated
 	public void writeApplicationStart(CtClass clazz) throws ModuleException
 	{
 		String rundebuglevel = resources.configuration().getSetting("runDebugLevel");
@@ -187,7 +285,42 @@ public class ClassWeaver
 		catch (Exception e)
 		{
 			throw new ModuleException("Error while trying to weave application start info: " + e.getCause() + " "
-					+ e.getMessage(), "WEAVER");
+					+ e.getMessage(), ModuleNames.WEAVER, e);
+		}
+	}
+
+	public void writeRTInitializer(CtClass clazz) throws ModuleException
+	{
+		String rundebuglevel = resources.configuration().getSetting("runDebugLevel");
+		File repository = resources.get(CONE.REPOSITORY_FILE_KEY);
+		String setInterpMode = "";
+		boolean useThreaded = Boolean.parseBoolean(resources.configuration().getSetting("FLIRT.threaded"));
+		if (useThreaded)
+		{
+			logger.debug("Setting interpreter to use threaded interpreter");
+			setInterpMode = "Composestar.Java.FLIRT.Interpreter.InterpreterMain.setInterpreterMode(true);";
+		}
+		try
+		{
+			String src =
+					"Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(\""
+							+ repository.getName().replaceAll("\"", "\\\"") + "\", " + rundebuglevel + ", "
+							+ clazz.getName() + ".class);";
+			CtConstructor initCtor = clazz.getClassInitializer();
+			if (initCtor == null)
+			{
+				initCtor = clazz.makeClassInitializer();
+				initCtor.insertBefore(setInterpMode + src);
+			}
+			else
+			{
+				initCtor.setBody(setInterpMode + src);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new ModuleException("Error while trying to create runtime initializer: " + e.getCause() + " "
+					+ e.getMessage(), ModuleNames.WEAVER, e);
 		}
 	}
 }
