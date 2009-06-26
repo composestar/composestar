@@ -175,7 +175,10 @@ public class BuildConfigXmlWriter
 		project.setAttribute("platform", p.getPlatformId());
 		project.setAttribute("language", p.getLanguage());
 		project.setAttribute("base", p.getBase().toString());
-		project.setAttribute("mainclass", p.getMainclass());
+		if (p.getMainclass() != null && p.getMainclass().length() > 0)
+		{
+			project.setAttribute("mainclass", p.getMainclass());
+		}
 		project.setAttribute("output", p.getOutputRaw());
 		project.setAttribute("intermediate", p.getIntermediateRaw());
 

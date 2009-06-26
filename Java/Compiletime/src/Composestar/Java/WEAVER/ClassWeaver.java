@@ -143,7 +143,8 @@ public class ClassWeaver
 		List<File> weavedClasses = new ArrayList<File>();
 		resources.put(JavaWeaver.WOVEN_CLASSES, weavedClasses);
 
-		String startobject = resources.configuration().getProject().getMainclass();
+		// String startobject =
+		// resources.configuration().getProject().getMainclass();
 		File outputDir = new File(p.getIntermediate(), JavaWeaver.WEAVE_PATH);
 
 		Set<CtClass> classes = new HashSet<CtClass>();
@@ -291,7 +292,15 @@ public class ClassWeaver
 
 	public void writeRTInitializer(CtClass clazz) throws ModuleException
 	{
-		String rundebuglevel = resources.configuration().getSetting("runDebugLevel");
+		int rundebuglevel;
+		try
+		{
+			rundebuglevel = Integer.parseInt(resources.configuration().getSetting("runDebugLevel"));
+		}
+		catch (NumberFormatException e)
+		{
+			rundebuglevel = 0;
+		}
 		File repository = resources.get(CONE.REPOSITORY_FILE_KEY);
 		String setInterpMode = "";
 		boolean useThreaded = Boolean.parseBoolean(resources.configuration().getSetting("FLIRT.threaded"));

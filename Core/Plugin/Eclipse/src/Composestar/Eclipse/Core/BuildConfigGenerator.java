@@ -60,7 +60,8 @@ public abstract class BuildConfigGenerator
 
 	protected Project curProject;
 
-	protected String mainclass;
+	// INFO: mainclass no longer needer as of commit 4682
+	// protected String mainclass;
 
 	protected IPath outputDir;
 
@@ -107,16 +108,17 @@ public abstract class BuildConfigGenerator
 		IEclipsePreferences settings = projectScope.getNode(IComposestarConstants.BUNDLE_ID);
 		if (settings != null)
 		{
-			mainclass = settings.get("mainclass", null);
-			try
-			{
-				curProject.setMainclass(mainclass);
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new ConfigurationException(
-						"Mainclass setting is not set. Set the mainclass in the project properties in the 'Compose*' section.");
-			}
+			// INFO: mainclass no longer needer as of commit 4682
+			// mainclass = settings.get("mainclass", null);
+			// try
+			// {
+			// curProject.setMainclass(mainclass);
+			// }
+			// catch (IllegalArgumentException e)
+			// {
+			// throw new ConfigurationException(
+			// "Mainclass setting is not set. Set the mainclass in the project properties in the 'Compose*' section.");
+			// }
 			try
 			{
 				for (String key : settings.keys())

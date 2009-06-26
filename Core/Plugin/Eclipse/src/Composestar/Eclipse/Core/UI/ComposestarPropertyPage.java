@@ -9,7 +9,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -26,7 +25,8 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 
 	protected Button fSearchButton;
 
-	protected Text mainClass;
+	// INFO: mainclass no longer needer as of commit 4682
+	// protected Text mainClass;
 
 	// Composestar settings UI widgets
 	protected Combo buildDebugLevel;
@@ -56,7 +56,8 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 	{
 		IScopeContext projectScope = new ProjectScope(project);
 		settings = projectScope.getNode(IComposestarConstants.BUNDLE_ID);
-		mainClass.setText(settings.get("mainclass", ""));
+		// INFO: mainclass no longer needer as of commit 4682
+		// mainClass.setText(settings.get("mainclass", ""));
 		buildDebugLevel.select(buildDebugLevel.indexOf(settings.get("buildDebugLevel", "WARN"))); // 2=warn
 		runDebugLevel.select(settings.getInt("runDebugLevel", 0)); // 0=error
 		// incremental.select(settings.getBoolean("incremental", false) ? 1 :
@@ -69,7 +70,8 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 	{
 		if (settings != null)
 		{
-			settings.put("mainclass", mainClass.getText().trim());
+			// INFO: mainclass no longer needer as of commit 4682
+			// settings.put("mainclass", mainClass.getText().trim());
 			settings.put("buildDebugLevel", buildDebugLevel.getText());
 			settings.putInt("runDebugLevel", runDebugLevel.getSelectionIndex());
 			// settings.putBoolean("incremental",

@@ -164,7 +164,10 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 				project.setPlatform(attributes.getValue("platform"));
 				project.setLanguage(attributes.getValue("language"));
 				project.setBase(attributes.getValue("base"));
-				project.setMainclass(attributes.getValue("mainclass"));
+				if (attributes.getIndex("mainclass") != -1)
+				{
+					project.setMainclass(attributes.getValue("mainclass"));
+				}
 				project.setOutput(attributes.getValue("output"));
 				project.setIntermediate(attributes.getValue("intermediate"));
 			}

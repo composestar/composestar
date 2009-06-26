@@ -177,7 +177,7 @@
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-		<xsd:attribute name="mainclass" type="xsd:NMTOKEN" use="required">
+		<xsd:attribute name="mainclass" type="xsd:NMTOKEN" use="optional">
 			<xsd:annotation>
 				<xsd:documentation>
 					The mainclass is the fully qualified name to the class that serves as entry point for this solution

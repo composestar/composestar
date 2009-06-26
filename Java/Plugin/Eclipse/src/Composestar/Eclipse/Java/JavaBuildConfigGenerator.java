@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -37,7 +36,6 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
@@ -69,12 +67,13 @@ public class JavaBuildConfigGenerator extends BuildConfigGenerator
 		{
 			IJavaProject jproj = JavaCore.create(project);
 
-			IType mctype = jproj.findType(mainclass);
-			if (mctype == null)
-			{
-				throw new ConfigurationException(String.format("Mainclass %s could not be found in this project",
-						mainclass));
-			}
+			// IType mctype = jproj.findType(mainclass);
+			// if (mctype == null)
+			// {
+			// throw new
+			// ConfigurationException(String.format("Mainclass %s could not be found in this project",
+			// mainclass));
+			// }
 
 			IPath path = jproj.getOutputLocation();
 			if (project.getFullPath().isPrefixOf(path))

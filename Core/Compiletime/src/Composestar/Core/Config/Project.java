@@ -394,6 +394,7 @@ public class Project implements Serializable
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	public String getMainclass()
 	{
 		return mainclass;
@@ -404,11 +405,15 @@ public class Project implements Serializable
 	 * 
 	 * @param inMainclass
 	 */
+	@Deprecated
 	public void setMainclass(String inMainclass)
 	{
 		if (inMainclass == null || inMainclass.trim().length() == 0)
 		{
-			throw new IllegalArgumentException("Mainclass can not be null or empty");
+			// throw new
+			// IllegalArgumentException("Mainclass can not be null or empty");
+			mainclass = null;
+			return;
 		}
 		mainclass = inMainclass.trim();
 	}
