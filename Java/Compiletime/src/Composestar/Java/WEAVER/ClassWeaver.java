@@ -12,7 +12,6 @@ import java.util.Set;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
-import javassist.CtMethod;
 import javassist.NotFoundException;
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.Project;
@@ -143,8 +142,6 @@ public class ClassWeaver
 		List<File> weavedClasses = new ArrayList<File>();
 		resources.put(JavaWeaver.WOVEN_CLASSES, weavedClasses);
 
-		// String startobject =
-		// resources.configuration().getProject().getMainclass();
 		File outputDir = new File(p.getIntermediate(), JavaWeaver.WEAVE_PATH);
 
 		Set<CtClass> classes = new HashSet<CtClass>();
@@ -183,69 +180,31 @@ public class ClassWeaver
 		sb.append("$$cps_init");
 		String initClassName = sb.toString();
 		logger.debug(String.format("Initializer classname = %s", initClassName));
-		CtClass initClass = classpool.makeClass(initClassName);
-		writeRTInitializer(initClass);
-		try
-		{
-			initClass.writeFile(outputDir.toString());
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException("Error creating initialization class " + initClassName + ": " + e.getMessage(),
-					ModuleNames.WEAVER);
-		}
-		File initClassFile = getOutputFile(outputDir, initClass);
-		weavedClasses.add(initClassFile);
-		logger.debug(String.format("Wrote file %s", initClassFile.toString()));
+		weavedClasses.add(writeRTInitializer(initClassName, outputDir));
 
 		for (CtClass clazz : classes)
 		{
 			// weave the class and write to disk
 			try
 			{
-				// FIXME: this is added because somehow javassist prunes and
-				// frozens types from embedded sources. So temporarily disabled
-				// weaving on embedded types.
-				// if (!p.getTypeMapping().getSource(typeName).isEmbedded())
-				// {
-
 				clazz.instrument(new MethodBodyTransformer(classpool, hd, resources.repository()));
-
-				// old initialization mechanism -- remove me
-				// if (startobject.equals(clazz.getName()))
-				// {
-				// write applicationStart
-				// writeApplicationStart(clazz);
-				// }
-
 				if (clazz.isModified())
 				{
+					// add a reference to the static class initializer so that
+					// the runtime will be initialized when this modified class
+					// is loaded.
 					CtConstructor cinit = clazz.getClassInitializer();
 					if (cinit == null)
 					{
 						cinit = clazz.makeClassInitializer();
-						cinit.setBody(String.format("%s.class;", initClassName));
 					}
-					else
-					{
-						cinit.insertBefore(String.format("%s.class;", initClassName));
-					}
+					cinit.insertBefore(String.format("%s.class;", initClassName));
 				}
 
 				clazz.writeFile(outputDir.toString());
 				File outfile = getOutputFile(outputDir, clazz);
 				weavedClasses.add(outfile);
 				logger.debug(String.format("Wrote file %s", outfile.toString()));
-
-				// }
-				// else
-				// {
-				// // simply copy the original file (for now)
-				// File srcPath = (File) resources.get(JavaCompiler.SOURCE_OUT);
-				// File dest = getOutputFile(outputDir, clazz);
-				// FileUtils.copyFile(dest, getOutputFile(srcPath, clazz));
-				// weavedClasses.add(dest);
-				// }
 			}
 			catch (Exception e)
 			{
@@ -257,41 +216,12 @@ public class ClassWeaver
 	}
 
 	/**
-	 * Writes the application start info in the Main Class.
-	 * 
-	 * @throws ModuleException : e.g. when main method is not found.
-	 * @Deprecated writeRTInitializer is used instead
+	 * Create the special initializer class. This class will initialize the
+	 * runtime when its loaded.
 	 */
-	@Deprecated
-	public void writeApplicationStart(CtClass clazz) throws ModuleException
+	protected File writeRTInitializer(String initClassName, File outputDir) throws ModuleException
 	{
-		String rundebuglevel = resources.configuration().getSetting("runDebugLevel");
-		File repository = resources.get(CONE.REPOSITORY_FILE_KEY);
-		String setInterpMode = "";
-		boolean useThreaded = Boolean.parseBoolean(resources.configuration().getSetting("FLIRT.threaded"));
-		if (useThreaded)
-		{
-			logger.debug("Setting interpreter to use threaded interpreter");
-			setInterpMode = "Composestar.Java.FLIRT.Interpreter.InterpreterMain.setInterpreterMode(true);";
-		}
-		try
-		{
-			CtMethod mainmethod = clazz.getMethod("main", "([Ljava/lang/String;)V");
-			String src =
-					"Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(\""
-							+ repository.getName().replaceAll("\"", "\\\"") + "\", " + rundebuglevel + ", "
-							+ clazz.getName() + ".class);";
-			mainmethod.insertBefore(setInterpMode + src);
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException("Error while trying to weave application start info: " + e.getCause() + " "
-					+ e.getMessage(), ModuleNames.WEAVER, e);
-		}
-	}
-
-	public void writeRTInitializer(CtClass clazz) throws ModuleException
-	{
+		CtClass clazz = classpool.makeClass(initClassName);
 		int rundebuglevel;
 		try
 		{
@@ -302,34 +232,47 @@ public class ClassWeaver
 			rundebuglevel = 0;
 		}
 		File repository = resources.get(CONE.REPOSITORY_FILE_KEY);
-		String setInterpMode = "";
 		boolean useThreaded = Boolean.parseBoolean(resources.configuration().getSetting("FLIRT.threaded"));
+		StringBuilder source = new StringBuilder();
 		if (useThreaded)
 		{
 			logger.debug("Setting interpreter to use threaded interpreter");
-			setInterpMode = "Composestar.Java.FLIRT.Interpreter.InterpreterMain.setInterpreterMode(true);";
+			source.append("Composestar.Java.FLIRT.Interpreter.InterpreterMain.setInterpreterMode(true);");
 		}
 		try
 		{
-			String src =
-					"Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(\""
-							+ repository.getName().replaceAll("\"", "\\\"") + "\", " + rundebuglevel + ", "
-							+ clazz.getName() + ".class);";
+			source.append("Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(\"");
+			source.append(repository.getName().replaceAll("\"", "\\\"")); // filename
+			source.append("\", ");
+			source.append(rundebuglevel);
+			source.append(", ");
+			source.append(clazz.getName());
+			source.append(".class);");
+
 			CtConstructor initCtor = clazz.getClassInitializer();
 			if (initCtor == null)
 			{
 				initCtor = clazz.makeClassInitializer();
-				initCtor.insertBefore(setInterpMode + src);
 			}
-			else
-			{
-				initCtor.setBody(setInterpMode + src);
-			}
+			initCtor.insertBefore(source.toString());
 		}
 		catch (Exception e)
 		{
 			throw new ModuleException("Error while trying to create runtime initializer: " + e.getCause() + " "
 					+ e.getMessage(), ModuleNames.WEAVER, e);
 		}
+
+		try
+		{
+			clazz.writeFile(outputDir.toString());
+		}
+		catch (Exception e)
+		{
+			throw new ModuleException("Error creating initialization class " + initClassName + ": " + e.getMessage(),
+					ModuleNames.WEAVER);
+		}
+		File initClassFile = getOutputFile(outputDir, clazz);
+		logger.debug(String.format("Wrote file %s", initClassFile.toString()));
+		return initClassFile;
 	}
 }
