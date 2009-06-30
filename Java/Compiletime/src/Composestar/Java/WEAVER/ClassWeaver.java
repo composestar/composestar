@@ -12,6 +12,9 @@ import java.util.Set;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
+import javassist.CtMethod;
+import javassist.CtNewMethod;
+import javassist.Modifier;
 import javassist.NotFoundException;
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.Project;
@@ -99,13 +102,13 @@ public class ClassWeaver
 			{
 				String[] fqn = type.split("\\.");
 				StringBuffer sb = new StringBuffer();
-				for (String part : fqn)
+				for (int i = 0; i < fqn.length - 1; i++)
 				{
 					if (sb.length() > 0)
 					{
 						sb.append(".");
 					}
-					sb.append(part);
+					sb.append(fqn[i]);
 					String cur = sb.toString();
 					int cnt = 1;
 					if (pkgCount.containsKey(cur))
@@ -177,7 +180,7 @@ public class ClassWeaver
 			}
 			sb.append(projectName);
 		}
-		sb.append("$$cps_init");
+		sb.append("__composestar$init");
 		String initClassName = sb.toString();
 		logger.debug(String.format("Initializer classname = %s", initClassName));
 		weavedClasses.add(writeRTInitializer(initClassName, outputDir));
@@ -192,13 +195,14 @@ public class ClassWeaver
 				{
 					// add a reference to the static class initializer so that
 					// the runtime will be initialized when this modified class
-					// is loaded.
+					// is loaded. We call a static final method so that this
+					// code won't be optimized away by a JIT
 					CtConstructor cinit = clazz.getClassInitializer();
 					if (cinit == null)
 					{
 						cinit = clazz.makeClassInitializer();
 					}
-					cinit.insertBefore(String.format("%s.class;", initClassName));
+					cinit.insertBefore(String.format("%s.init();", initClassName));
 				}
 
 				clazz.writeFile(outputDir.toString());
@@ -233,14 +237,16 @@ public class ClassWeaver
 		}
 		File repository = resources.get(CONE.REPOSITORY_FILE_KEY);
 		boolean useThreaded = Boolean.parseBoolean(resources.configuration().getSetting("FLIRT.threaded"));
-		StringBuilder source = new StringBuilder();
-		if (useThreaded)
-		{
-			logger.debug("Setting interpreter to use threaded interpreter");
-			source.append("Composestar.Java.FLIRT.Interpreter.InterpreterMain.setInterpreterMode(true);");
-		}
 		try
 		{
+			clazz.setModifiers(Modifier.PUBLIC | Modifier.FINAL);
+
+			StringBuilder source = new StringBuilder();
+			if (useThreaded)
+			{
+				logger.debug("Setting interpreter to use threaded interpreter");
+				source.append("Composestar.Java.FLIRT.Interpreter.InterpreterMain.setInterpreterMode(true);");
+			}
 			source.append("Composestar.Java.FLIRT.MessageHandlingFacility.handleApplicationStart(\"");
 			source.append(repository.getName().replaceAll("\"", "\\\"")); // filename
 			source.append("\", ");
@@ -255,6 +261,11 @@ public class ClassWeaver
 				initCtor = clazz.makeClassInitializer();
 			}
 			initCtor.insertBefore(source.toString());
+
+			// add the empty init method which is called by others, actual
+			// initialization is done by the class constructor
+			CtMethod dummyInit = CtNewMethod.make("public static final void init() {}", clazz);
+			clazz.addMethod(dummyInit);
 		}
 		catch (Exception e)
 		{
