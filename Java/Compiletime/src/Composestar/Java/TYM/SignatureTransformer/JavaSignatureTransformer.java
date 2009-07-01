@@ -6,6 +6,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SIGN2.Sign;
 import Composestar.Java.COMP.CStarJavaCompiler;
 
 /**
@@ -56,14 +57,10 @@ public class JavaSignatureTransformer implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		Boolean signaturesmodified = resources.get("signaturesmodified");
-		if (signaturesmodified != null && signaturesmodified.booleanValue()) // process
-		// only
-		// if
-		// signatures
-		// are
-		// modified
+		Boolean signaturesmodified = resources.get(Sign.SIGNATURES_MODIFIED_KEY);
+		if (signaturesmodified != null && signaturesmodified.booleanValue())
 		{
+			// process only if signatures are modified
 			File dummies = (File) resources.get(CStarJavaCompiler.DUMMY_JAR);
 			JarTransformer transformer = new JarTransformer(dummies);
 			transformer.run(resources.repository());

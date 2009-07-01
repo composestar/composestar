@@ -25,7 +25,6 @@
 package Composestar.Core.CpsRepository2Impl.SISpec.Constraints;
 
 import Composestar.Core.CpsRepository2.SISpec.Constraints.FilterModuleConstraintValueTestBase;
-import Composestar.Core.CpsRepository2Impl.SISpec.Constraints.FilterModuleConstraintValueImpl;
 
 /**
  * @author Michiel Hendriks

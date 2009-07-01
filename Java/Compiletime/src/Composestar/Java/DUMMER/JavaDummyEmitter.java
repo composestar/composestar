@@ -225,7 +225,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		{
 			String sourcename = FileUtils.removeExtension(currentSource.getFile().getName());
 			String fqn = getPackageName();
-			if (!fqn.equals(""))
+			if (!"".equals(fqn))
 			{
 				fqn += ".";
 			}

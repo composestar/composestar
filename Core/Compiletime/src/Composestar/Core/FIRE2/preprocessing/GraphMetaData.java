@@ -116,7 +116,7 @@ public class GraphMetaData
 	 */
 	protected String nextIdLabel()
 	{
-		return "id#" + (++lastId);
+		return "id#" + ++lastId;
 	}
 
 	public void addRepositoryLink(Graph graph, Node forNode, RepositoryEntity re)

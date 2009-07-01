@@ -24,7 +24,6 @@
 
 package Composestar.Core.CpsRepository2Impl.SISpec;
 
-
 /**
  * @author Michiel Hendriks
  */

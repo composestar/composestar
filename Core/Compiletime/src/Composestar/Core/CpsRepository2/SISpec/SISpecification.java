@@ -45,7 +45,7 @@ public interface SISpecification extends QualifiedRepositoryEntity
 	 * the superimposition section can have a fully qualified name which does
 	 * not obstruct the names of other concern elements.
 	 */
-	static final String NAME = "@SI";
+	final String NAME = "@SI";
 
 	/**
 	 * Add a new selector to this superimposition instance. Selectors should

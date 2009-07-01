@@ -34,7 +34,7 @@ import Composestar.Java.FLIRT.Env.JoinPointContext;
  * 
  * @author Michiel Hendriks
  */
-public class MessageInfo
+public final class MessageInfo
 {
 	/**
 	 * @return The current inner object

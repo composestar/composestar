@@ -164,7 +164,7 @@ public class DummyManager implements CTCommonModule
 			catch (CompilerException e)
 			{
 				throw new ModuleException(String.format("Error compiling dummies: %s", e.getMessage()),
-						ModuleNames.DUMMER);
+						ModuleNames.DUMMER, e);
 			}
 		}
 	}

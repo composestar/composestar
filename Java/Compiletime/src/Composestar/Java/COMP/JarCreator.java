@@ -118,4 +118,7 @@ public final class JarCreator
 			return false;
 		}
 	}
+
+	private JarCreator()
+	{}
 }

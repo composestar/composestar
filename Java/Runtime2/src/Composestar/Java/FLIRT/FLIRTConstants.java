@@ -35,4 +35,7 @@ public final class FLIRTConstants
 	 * Logger base name for all interpreter classes
 	 */
 	public static final String INTERPRETER = MODULE_NAME + ".Interp";
+
+	private FLIRTConstants()
+	{}
 }

@@ -86,7 +86,7 @@ public class FilterModuleConstraintValueImpl extends AbstractRepositoryEntity im
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((filterModuleReference == null) ? 0 : filterModuleReference.hashCode());
+		result = prime * result + (filterModuleReference == null ? 0 : filterModuleReference.hashCode());
 		return result;
 	}
 

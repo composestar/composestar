@@ -36,7 +36,7 @@ public enum EUnitType
 
 	EUnitType(String value)
 	{
-		this.name = value;
+		name = value;
 	}
 
 	/*

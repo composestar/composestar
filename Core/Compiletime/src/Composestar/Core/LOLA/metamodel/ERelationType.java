@@ -61,7 +61,7 @@ public enum ERelationType
 
 	ERelationType(String value)
 	{
-		this.name = value;
+		name = value;
 	}
 
 	/*

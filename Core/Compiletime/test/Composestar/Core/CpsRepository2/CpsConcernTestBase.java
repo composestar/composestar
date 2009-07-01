@@ -704,8 +704,7 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 		 * removeFilterModuleConstraint (Composestar.Core.CpsRepository2.SISpec
 		 * .FilterModuleConstraint)
 		 */
-		public Constraint removeFilterModuleConstraint(Constraint fmc)
-				throws NullPointerException
+		public Constraint removeFilterModuleConstraint(Constraint fmc) throws NullPointerException
 		{
 			return null;
 		}

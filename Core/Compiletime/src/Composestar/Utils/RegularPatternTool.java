@@ -45,23 +45,23 @@ public class RegularPatternTool extends Frame
 
 	private static final long serialVersionUID = 1L;
 
-	private Label lblPattern = null;
+	private Label lblPattern;
 
-	private TextField edPattern = null;
+	private TextField edPattern;
 
-	private Label lblTestInput = null;
+	private Label lblTestInput;
 
-	private TextArea txtInput = null;
+	private TextArea txtInput;
 
-	private Label lblResults = null;
+	private Label lblResults;
 
-	private TextArea txtResults = null;
+	private TextArea txtResults;
 
-	private Button btnTest = null;
+	private Button btnTest;
 
-	private Button btnQuit = null;
+	private Button btnQuit;
 
-	private Button btnNFA = null;
+	private Button btnNFA;
 
 	/**
 	 * @throws HeadlessException

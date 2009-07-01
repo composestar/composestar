@@ -15,14 +15,14 @@ import Composestar.Java.FLIRT.Env.RTFilterModule;
  * 
  * @author Michiel Hendriks
  */
-public class CastingFacility
+public final class CastingFacility
 {
 	public static final Logger logger = Logger.getLogger(FLIRTConstants.MODULE_NAME + ".CastingFacility");
 
 	/**
 	 * for a quick lookup for a cast to outer
 	 */
-	private static WeakHashMap<Object, WeakReference<Object>> internalMapping =
+	private static final WeakHashMap<Object, WeakReference<Object>> INTERNALS_MAP =
 			new WeakHashMap<Object, WeakReference<Object>>();
 
 	private CastingFacility()
@@ -36,7 +36,7 @@ public class CastingFacility
 	 */
 	public static void registerInternal(Object internal, Object outer)
 	{
-		internalMapping.put(internal, new WeakReference<Object>(outer));
+		INTERNALS_MAP.put(internal, new WeakReference<Object>(outer));
 	}
 
 	/**
@@ -47,13 +47,13 @@ public class CastingFacility
 	 */
 	public static Object getOuterForInternal(Object internal)
 	{
-		WeakReference<Object> ref = internalMapping.get(internal);
+		WeakReference<Object> ref = INTERNALS_MAP.get(internal);
 		if (ref != null)
 		{
 			Object res = ref.get();
 			if (res == null)
 			{
-				internalMapping.remove(internal);
+				INTERNALS_MAP.remove(internal);
 			}
 			return res;
 		}
@@ -67,7 +67,7 @@ public class CastingFacility
 	 * @param to
 	 * @return
 	 */
-	public synchronized static Object handleCast(Object from, String to)
+	public static synchronized Object handleCast(Object from, String to)
 	{
 		// no need to convert null
 		if (from == null)

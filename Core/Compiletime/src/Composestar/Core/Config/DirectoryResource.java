@@ -41,9 +41,9 @@ import Composestar.Utils.Logging.CPSLogger;
  * <dl>
  * <dt>?</dt>
  * <dd>Match a single character</dd>
- * <dt>*</dt>
+ * <dt></dt>
  * <dd>Match any number of characters except for file separator: /.</dd>
- * <dt>**</dt>
+ * <dt></dt>
  * <dd>Match all characters include /.</dd>
  * </dl>
  * <em>Always use forward slashes for directories.</em> Common temporary files
@@ -220,7 +220,6 @@ public class DirectoryResource extends FileCollection implements FileFilter
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Config.FileCollection#addFile(java.lang.String)
 	 */
 	@Override
@@ -272,7 +271,6 @@ public class DirectoryResource extends FileCollection implements FileFilter
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.Config.FileCollection#toString()
 	 */
 	@Override

@@ -177,6 +177,54 @@ public final class JavaSpecificationVersion implements Comparable<JavaSpecificat
 		}
 	}
 
+	/**
+	 * @param other
+	 * @return True if both versions are compatible (i.e. same major.minor)
+	 */
+	public boolean isCompatible(String other)
+	{
+		return isCompatible(get(other));
+	}
+
+	/**
+	 * @param other
+	 * @return True if both versions are compatible (i.e. same major.minor)
+	 */
+	public boolean isCompatible(JavaSpecificationVersion other)
+	{
+		return major == other.major && minor == other.minor;
+	}
+
+	/**
+	 * A language specification level. This is always a major.minor. In case of
+	 * unset values it will use 1 as major and 0 as minor. You can use this
+	 * result as the value for javac's -source and -target arguments.
+	 * 
+	 * @return Language level.
+	 */
+	public String toLevel()
+	{
+		StringBuffer sb = new StringBuffer();
+		if (major > -1)
+		{
+			sb.append(major);
+			if (minor > -1)
+			{
+				sb.append(".");
+				sb.append(minor);
+			}
+			else
+			{
+				sb.append(".0");
+			}
+		}
+		else
+		{
+			sb.append("1.0");
+		}
+		return sb.toString();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()

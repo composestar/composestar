@@ -1,7 +1,6 @@
 package Composestar.Java.TYM.TypeHarvester;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +90,7 @@ public class JarHelper
 		modifiedClasses.put(whichClass, newByteCode);
 	}
 
-	public void writeToFile(File newJarFile) throws FileNotFoundException, IOException
+	public void writeToFile(File newJarFile) throws IOException
 	{
 		JarOutputStream newJar = new JarOutputStream(new FileOutputStream(newJarFile));
 

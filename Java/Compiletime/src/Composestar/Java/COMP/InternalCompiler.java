@@ -113,7 +113,7 @@ public class InternalCompiler
 		List<String> options = new ArrayList<String>();
 		logger.debug(String.format("Java Compiler class: %s", javac.getClass().getName()));
 		// org.eclipse.jdt.internal.compiler.tool.EclipseCompiler
-		if (javac.getClass().getName().equals("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler"))
+		if ("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler".equals(javac.getClass().getName()))
 		{
 			if (complianceLevel != null && complianceLevel.length() > 0)
 			{
@@ -174,12 +174,12 @@ public class InternalCompiler
 			}
 		}
 
-		if (!javac.getClass().getName().equals("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler"))
+		if (!"org.eclipse.jdt.internal.compiler.tool.EclipseCompiler".equals(javac.getClass().getName()))
 		{
 			// eclipse's compiler doesn't create nice entries (no source info)
 			for (Diagnostic<? extends JavaFileObject> d : diag.getDiagnostics())
 			{
-				Level l = Level.INFO;
+				Level l;
 				switch (d.getKind())
 				{
 					case ERROR:
@@ -189,6 +189,8 @@ public class InternalCompiler
 					case WARNING:
 						l = Level.WARN;
 						break;
+					default:
+						l = Level.INFO;
 				}
 				String file = null;
 				if (d.getSource() != null)

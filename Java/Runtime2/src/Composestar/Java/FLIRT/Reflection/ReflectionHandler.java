@@ -38,7 +38,7 @@ import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
  * 
  * @author Michiel Hendriks
  */
-public class ReflectionHandler
+public final class ReflectionHandler
 {
 	private static final RTMessage EMPTY_MESSAGE = new RTMessage();
 

@@ -42,7 +42,7 @@ import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
  * 
  * @author Michiel Hendriks
  */
-public class JoinPointInfo
+public final class JoinPointInfo
 {
 	/**
 	 * @return The current object

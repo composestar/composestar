@@ -132,19 +132,6 @@ public class CommonResources implements Serializable
 	 * 
 	 * @param key An identifier for this resource.
 	 * @param object The object to store for this key.
-	 * @deprecated Use {@link #put(String,Object)} instead
-	 */
-	@Deprecated
-	public void add(String key, Object object)
-	{
-		put(key, object);
-	}
-
-	/**
-	 * Add a resource with a key.
-	 * 
-	 * @param key An identifier for this resource.
-	 * @param object The object to store for this key.
 	 */
 	public void put(String key, Object object)
 	{
@@ -156,11 +143,6 @@ public class CommonResources implements Serializable
 		{
 			resourcesEx.put(key, object);
 		}
-	}
-
-	public void addBoolean(String key, boolean value)
-	{
-		resources.put(key, value);
 	}
 
 	/**
@@ -182,29 +164,6 @@ public class CommonResources implements Serializable
 			return null;
 		}
 		return (T) res;
-	}
-
-	/**
-	 * Returns the resource with the specified key as a boolean.
-	 * 
-	 * @throws RuntimeException if there is no resource with the specified name,
-	 *             or if it is not a Boolean.
-	 */
-	public boolean getBoolean(String key)
-	{
-		Object resource = get(key);
-
-		if (resource == null)
-		{
-			throw new ResourceException("No resource for key '" + key + "'");
-		}
-
-		if (!(resource instanceof Boolean))
-		{
-			throw new ResourceException("Resource with key '" + key + "' is not a Boolean");
-		}
-
-		return (Boolean) resource;
 	}
 
 	/**
@@ -279,31 +238,6 @@ public class CommonResources implements Serializable
 	public void removeResourceManager(Class<? extends ModuleResourceManager> key)
 	{
 		resourceManagers.remove(key);
-	}
-
-	public <T> T create(String key, Class<T> c)
-	{
-		T resource = create(c);
-		put(key, resource);
-		return resource;
-	}
-
-	public <T> T create(Class<T> c)
-	{
-		try
-		{
-			T resource = c.newInstance();
-			inject(resource);
-			return resource;
-		}
-		catch (InstantiationException e)
-		{
-			throw new ResourceException("Could not create resource of class '" + c.getName() + "'" + e.getMessage());
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new ResourceException("Could not create resource of class '" + c.getName() + "'" + e.getMessage());
-		}
 	}
 
 	/**

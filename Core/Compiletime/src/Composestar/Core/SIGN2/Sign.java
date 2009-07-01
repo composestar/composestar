@@ -72,6 +72,11 @@ import Composestar.Utils.Logging.CPSLogger;
 // ModuleNames.FIRE, ModuleNames.FILTH })
 public class Sign implements CTCommonModule
 {
+	/**
+	 * 
+	 */
+	public static final String SIGNATURES_MODIFIED_KEY = "signaturesmodified";
+
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SIGN);
 
 	private static final String DISPATCH_FORMULA = "isDispatch";
@@ -1170,7 +1175,7 @@ public class Sign implements CTCommonModule
 			}
 		}
 
-		resources.addBoolean("signaturesmodified", signaturesmodified);
+		resources.put(SIGNATURES_MODIFIED_KEY, Boolean.valueOf(signaturesmodified));
 	}
 
 	/**

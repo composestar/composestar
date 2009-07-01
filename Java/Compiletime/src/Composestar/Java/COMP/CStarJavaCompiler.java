@@ -41,6 +41,8 @@ public class CStarJavaCompiler implements LangCompiler
 	 */
 	public static final String SOURCE_OUT = "JavaSourceOut";
 
+	public static final String JSV_1_5 = "1.5";
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	protected SourceCompiler compConfig;
@@ -162,25 +164,9 @@ public class CStarJavaCompiler implements LangCompiler
 						throw new CompilerException(e.getMessage());
 					}
 					compilerOutput = cmdExec.outputError();
-
 					if (result != 0)
 					{
-						// there was an error
-						try
-						{
-							java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
-							String lastToken = null;
-							while (st.hasMoreTokens())
-							{
-								lastToken = st.nextToken();
-								logger.error(lastToken);
-							}
-							throw new CompilerException("COMP reported errors during compilation.");
-						}
-						catch (Exception ex)
-						{
-							throw new CompilerException(ex.getMessage());
-						}
+						reportCompileError();
 					}
 				}
 			}
@@ -193,16 +179,41 @@ public class CStarJavaCompiler implements LangCompiler
 	}
 
 	/**
+	 * @throws CompilerException
+	 */
+	protected void reportCompileError() throws CompilerException
+	{
+		// there was an error
+		java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
+		String lastToken = null;
+		boolean outdatedCompiler = false;
+		while (st.hasMoreTokens())
+		{
+			lastToken = st.nextToken();
+			if (lastToken.contains("invalid flag: -implicit:none"))
+			{
+				outdatedCompiler = true;
+			}
+			logger.error(lastToken);
+		}
+		if (outdatedCompiler)
+		{
+			throw new CompilerException("The used compiler does not support the '-implicit:none' option. "
+					+ "Update your Java compiler to one compatible with 1.6 or later.");
+		}
+		throw new CompilerException("Java compiler reported errors");
+	}
+
+	/**
 	 * @param targetMode2
 	 * @return
 	 */
 	public String verifyTargetMode(String mode, boolean silent)
 	{
-		String javaSpec = System.getProperty("java.specification.version");
+		JavaSpecificationVersion curSpec = JavaSpecificationVersion.get();
 		if (mode == null)
 		{
-			final String JSV_1_5 = "1.5";
-			if (JSV_1_5.equals(javaSpec) || javaSpec.startsWith(JSV_1_5 + "."))
+			if (curSpec.isCompatible(JSV_1_5))
 			{
 				// force 1.5 output
 				mode = JSV_1_5;
@@ -214,19 +225,14 @@ public class CStarJavaCompiler implements LangCompiler
 		}
 		else
 		{
-			String[] cur = javaSpec.split("\\.");
-			String[] des = mode.split("\\.");
-			for (int i = 0; i < cur.length && i < des.length; i++)
+			if (curSpec.compareTo(JavaSpecificationVersion.get(mode)) < 0)
 			{
-				if (Integer.parseInt(cur[i]) < Integer.parseInt(des[i]))
+				if (!silent)
 				{
-					if (!silent)
-					{
-						logger.warn(String.format(
-								"Can not compile classes to Java Specification %s, trying %s instead", mode, javaSpec));
-					}
-					return javaSpec;
+					logger.warn(String.format("Can not compile classes to Java Specification %s, trying %s instead",
+							mode.toString(), curSpec.toString()));
 				}
+				return curSpec.toLevel();
 			}
 		}
 		return mode;
@@ -287,25 +293,9 @@ public class CStarJavaCompiler implements LangCompiler
 				throw new CompilerException(e.getMessage());
 			}
 			compilerOutput = cmdExec.outputError();
-
 			if (result != 0)
 			{
-				// there was an error
-				try
-				{
-					java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
-					String lastToken = null;
-					while (st.hasMoreTokens())
-					{
-						lastToken = st.nextToken();
-						logger.error(lastToken);
-					}
-					throw new CompilerException("COMP reported errors during compilation.");
-				}
-				catch (Exception ex)
-				{
-					throw new CompilerException(ex.getMessage());
-				}
+				reportCompileError();
 			}
 		}
 		logger.debug(String.format("Dummies compiled in %d ms", (System.currentTimeMillis() - time)));
@@ -321,53 +311,6 @@ public class CStarJavaCompiler implements LangCompiler
 		{
 			throw new CompilerException("Failed to create dummies.jar file");
 		}
-
-		// // old implementation
-		// Properties prop = new Properties();
-		// prop.put("JAR", dummiesJar.toString());
-		// prop.put("SOURCEDIR", dummiesDir.toString());
-		// CompilerAction action = compConfig.getAction("CreateJar");
-		//
-		// files = Collections.emptySet();
-		// String[] cmdline = action.getCmdLine(p, files, prop);
-		// logger.debug(Arrays.toString(cmdline));
-		// CommandLineExecutor cmdExec = new CommandLineExecutor();
-		// int result;
-		// try
-		// {
-		// result = cmdExec.exec(cmdline);
-		// }
-		// catch (IOException e)
-		// {
-		// throw new CompilerException(e.getMessage());
-		// }
-		// catch (InterruptedException e)
-		// {
-		// throw new CompilerException(e.getMessage());
-		// }
-		// compilerOutput = cmdExec.outputError();
-		//
-		// if (result != 0)
-		// {
-		// // there was an error
-		// try
-		// {
-		// java.util.StringTokenizer st = new
-		// java.util.StringTokenizer(compilerOutput, "\n");
-		// String lastToken = null;
-		// while (st.hasMoreTokens())
-		// {
-		// lastToken = st.nextToken();
-		// logger.error(lastToken);
-		// }
-		// throw new
-		// CompilerException("COMP reported errors during jar creations.");
-		// }
-		// catch (Exception ex)
-		// {
-		// throw new CompilerException(ex.getMessage());
-		// }
-		// }
 
 		resources.put(DUMMY_JAR, dummiesJar);
 	}

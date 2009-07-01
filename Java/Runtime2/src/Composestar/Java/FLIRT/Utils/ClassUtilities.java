@@ -35,7 +35,7 @@ import java.util.Set;
  * provided by Paul Hosler in an article for Application Development Trends:
  * http://www.adtmag.com/java/article.aspx?id=4337
  */
-final class ClassUtilities
+public final class ClassUtilities
 {
 	/**
 	 * Mapping from primitive wrapper Classes to their corresponding primitive
@@ -249,7 +249,7 @@ final class ClassUtilities
 			{
 				overriddenMethod = superclass.getMethod(methodName, parameterTypes);
 			}
-			catch (NoSuchMethodException _)
+			catch (NoSuchMethodException e)
 			{
 			}
 
@@ -275,7 +275,7 @@ final class ClassUtilities
 				{
 					overriddenMethod = anInterface1.getMethod(methodName, parameterTypes);
 				}
-				catch (NoSuchMethodException _)
+				catch (NoSuchMethodException e)
 				{
 				}
 
