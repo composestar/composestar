@@ -102,7 +102,7 @@ public class InternalCompiler
 	@ModuleSetting(ID = "COMP.target")
 	protected String targetMode;
 
-	protected boolean emacsLogEntries = false;
+	protected boolean emacsLogEntries;
 
 	public boolean compileSources(Set<File> sources, File dest, Set<File> classpath, boolean separate)
 			throws CompilerException

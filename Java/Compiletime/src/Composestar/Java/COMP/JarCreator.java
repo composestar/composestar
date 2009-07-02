@@ -48,7 +48,7 @@ public final class JarCreator
 	 *            from the filenames)
 	 * @return True when the jar file was created
 	 */
-	public static final boolean create(File output, Collection<File> files, File base)
+	public static boolean create(File output, Collection<File> files, File base)
 	{
 		try
 		{

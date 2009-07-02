@@ -30,15 +30,17 @@ package Composestar.Core.LOLA.metamodel;
 public enum ERelationType
 {
 	TYPE("Type"),
+	PARENT_TYPE("ParentType"),
 
 	// Annotations
 	ANNOTATIONS("Annotations"), ATTACHED_CLASSES("AttachedClasses"), ATTACHED_INTERFACES("AttachedInterfaces"),
-	ATTACHED_METHODS("AttachedMethods"),
-	ATTACHED_FIELDS("AttachedFields"),
-	ATTACHED_PARAMETERS("AttachedParameters"),
+	ATTACHED_METHODS("AttachedMethods"), ATTACHED_FIELDS("AttachedFields"), ATTACHED_PARAMETERS("AttachedParameters"),
+	ANNOTATION("Annotation"),
+	RETURN_ANNOTATION("ReturnAnnotation"),
 
 	// Namespace
 	PARENT_NAMESPACE("ParentNamespace"),
+	CHILD_NAMESPACES("ChildNamespaces"),
 
 	// Class
 	CLASS("Class"), CHILD_CLASSES("ChildClasses"), PARENT_CLASS("ParentClass"), CHILD_METHODS("ChildMethods"),

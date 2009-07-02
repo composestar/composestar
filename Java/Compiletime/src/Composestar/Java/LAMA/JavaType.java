@@ -20,6 +20,7 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
@@ -269,15 +270,15 @@ public class JavaType extends Type
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (getUnitType().equals(EUnitType.CLASS.toString()))
+		if (EUnitType.CLASS.equals(getUnitType()))
 		{
 			return getUnitRelationForClass(argumentName);
 		}
-		else if (getUnitType().equals(EUnitType.INTERFACE.toString()))
+		else if (EUnitType.INTERFACE.equals(getUnitType()))
 		{
 			return getUnitRelationForInterface(argumentName);
 		}
-		else if (getUnitType().equals(EUnitType.ANNOTATION.toString()))
+		else if (EUnitType.ANNOTATION.equals(getUnitType()))
 		{
 			return getUnitRelationForAnnotation(argumentName);
 		}
@@ -321,23 +322,23 @@ public class JavaType extends Type
 			}
 		}
 
-		if (argumentName.equals("AttachedClasses"))
+		if (ERelationType.ATTACHED_CLASSES.equals(argumentName))
 		{
 			return new UnitResult(resClasses);
 		}
-		else if (argumentName.equals("AttachedInterfaces"))
+		else if (ERelationType.ATTACHED_INTERFACES.equals(argumentName))
 		{
 			return new UnitResult(resInterfaces);
 		}
-		else if (argumentName.equals("AttachedMethods"))
+		else if (ERelationType.ATTACHED_METHODS.equals(argumentName))
 		{
 			return new UnitResult(resMethods);
 		}
-		else if (argumentName.equals("AttachedFields"))
+		else if (ERelationType.ATTACHED_FIELDS.equals(argumentName))
 		{
 			return new UnitResult(resFields);
 		}
-		else if (argumentName.equals("AttachedParameters"))
+		else if (ERelationType.ATTACHED_PARAMETERS.equals(argumentName))
 		{
 			return new UnitResult(resParameters);
 		}
@@ -347,43 +348,43 @@ public class JavaType extends Type
 
 	public UnitResult getUnitRelationForClass(String argumentName)
 	{
-		if (argumentName.equals("ParentNamespace"))
+		if (ERelationType.PARENT_NAMESPACE.equals(argumentName))
 		{
 			return new UnitResult(parentNS);
 		}
-		else if (argumentName.equals("ParentClass"))
+		else if (ERelationType.PARENT_CLASS.equals(argumentName))
 		{
 			return new UnitResult(superClass()); // can be null!
 		}
-		else if (argumentName.equals("ChildClasses"))
+		else if (ERelationType.CHILD_CLASSES.equals(argumentName))
 		{
 			return new UnitResult(childTypes);
 		}
-		else if (argumentName.equals("ChildMethods"))
+		else if (ERelationType.CHILD_METHODS.equals(argumentName))
 		{
 			return new UnitResult(filterMethodInfo(methods));
 		}
-		else if (argumentName.equals("ChildFields"))
+		else if (ERelationType.CHILD_FIELDS.equals(argumentName))
 		{
 			return new UnitResult(filterFieldInfo(fields));
 		}
-		else if (argumentName.equals("ParameterClass"))
+		else if (ERelationType.PARAMETER_CLASS.equals(argumentName))
 		{
 			return new UnitResult(parameterTypes);
 		}
-		else if (argumentName.equals("MethodReturnClass"))
+		else if (ERelationType.METHOD_RETURN_CLASS.equals(argumentName))
 		{
 			return new UnitResult(methodReturnTypes);
 		}
-		else if (argumentName.equals("FieldClass"))
+		else if (ERelationType.FIELD_CLASS.equals(argumentName))
 		{
 			return new UnitResult(fieldTypes);
 		}
-		else if (argumentName.equals("Implements"))
+		else if (ERelationType.IMPLEMENTS.equals(argumentName))
 		{
 			return new UnitResult(new HashSet<Type>(getImplementedInterfaces()));
 		}
-		else if (argumentName.equals("Annotations"))
+		else if (ERelationType.ANNOTATIONS.equals(argumentName))
 		{
 			Iterator<Annotation> i = getAnnotations().iterator();
 			Set<Type> res = new HashSet<Type>();
@@ -399,39 +400,39 @@ public class JavaType extends Type
 
 	public UnitResult getUnitRelationForInterface(String argumentName)
 	{
-		if (argumentName.equals("ParentNamespace"))
+		if (ERelationType.PARENT_NAMESPACE.equals(argumentName))
 		{
 			return new UnitResult(parentNS);
 		}
-		else if (argumentName.equals("ParentInterface"))
+		else if (ERelationType.PARENT_INTERFACE.equals(argumentName))
 		{
 			return new UnitResult(superClass()); // can be null!
 		}
-		else if (argumentName.equals("ChildInterfaces"))
+		else if (ERelationType.CHILD_INTERFACES.equals(argumentName))
 		{
 			return new UnitResult(childTypes);
 		}
-		else if (argumentName.equals("ChildMethods"))
+		else if (ERelationType.CHILD_METHODS.equals(argumentName))
 		{
 			return new UnitResult(filterMethodInfo(methods));
 		}
-		else if (argumentName.equals("ParameterInterface"))
+		else if (ERelationType.PARAMETER_INTERFACE.equals(argumentName))
 		{
 			return new UnitResult(parameterTypes);
 		}
-		else if (argumentName.equals("MethodReturnInterface"))
+		else if (ERelationType.METHOD_RETURN_INTERFACE.equals(argumentName))
 		{
 			return new UnitResult(methodReturnTypes);
 		}
-		else if (argumentName.equals("FieldInterface"))
+		else if (ERelationType.FIELD_INTERFACE.equals(argumentName))
 		{
 			return new UnitResult(fieldTypes);
 		}
-		else if (argumentName.equals("ImplementedBy"))
+		else if (ERelationType.IMPLEMENTED_BY.equals(argumentName))
 		{
 			return new UnitResult(implementedBy);
 		}
-		else if (argumentName.equals("Annotations"))
+		else if (ERelationType.ANNOTATIONS.equals(argumentName))
 		{
 			Iterator<Annotation> i = getAnnotations().iterator();
 			HashSet<Type> res = new HashSet<Type>();

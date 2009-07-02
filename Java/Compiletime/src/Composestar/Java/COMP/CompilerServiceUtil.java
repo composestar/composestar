@@ -51,4 +51,7 @@ public final class CompilerServiceUtil
 		}
 		return false;
 	}
+
+	private CompilerServiceUtil()
+	{}
 }

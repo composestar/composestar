@@ -15,6 +15,8 @@ import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
  * An instance of <code>JavaFieldInfo</code> represents a field object in Java.
@@ -71,23 +73,25 @@ public class JavaFieldInfo extends FieldInfo
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if ("ParentType".equals(argumentName))
+		if (ERelationType.PARENT_TYPE.equals(argumentName))
 		{
 			return new UnitResult(parent);
 		}
-		else if ("Class".equals(argumentName) && "Class".equals(getFieldType().getUnitType()))
+		else if (ERelationType.CLASS.equals(argumentName) && EUnitType.CLASS.equals(getFieldType().getUnitType()))
 		{
 			return new UnitResult(getFieldType());
 		}
-		else if ("Interface".equals(argumentName) && "Interface".equals(getFieldType().getUnitType()))
+		else if (ERelationType.INTERFACE.equals(argumentName)
+				&& ERelationType.INTERFACE.equals(getFieldType().getUnitType()))
 		{
 			return new UnitResult(getFieldType());
 		}
-		else if ("Annotation".equals(argumentName) && "Annotation".equals(getFieldType().getUnitType()))
+		else if (ERelationType.ANNOTATION.equals(argumentName)
+				&& EUnitType.ANNOTATION.equals(getFieldType().getUnitType()))
 		{
 			return new UnitResult(getFieldType());
 		}
-		else if ("Annotations".equals(argumentName))
+		else if (ERelationType.ANNOTATIONS.equals(argumentName))
 		{
 			Iterator<Annotation> i = getAnnotations().iterator();
 			Set<Type> res = new HashSet<Type>();

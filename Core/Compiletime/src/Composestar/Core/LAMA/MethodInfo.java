@@ -32,6 +32,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.LOLA.metamodel.EUnitType;
+
 public abstract class MethodInfo extends ProgramElement
 {
 
@@ -288,7 +290,7 @@ public abstract class MethodInfo extends ProgramElement
 	@Override
 	public String getUnitType()
 	{
-		return "Method";
+		return EUnitType.METHOD.toString();
 	}
 
 	@Override

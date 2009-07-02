@@ -27,6 +27,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import Composestar.Core.LOLA.metamodel.ERelationType;
+import Composestar.Core.LOLA.metamodel.EUnitType;
+
 /**
  * Namespace unit type
  * 
@@ -173,19 +176,19 @@ public class LangNamespace extends ProgramElement
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ChildNamespaces"))
+		if (ERelationType.CHILD_NAMESPACES.equals(argumentName))
 		{
 			return new UnitResult(childNamespaces);
 		}
-		else if (argumentName.equals("ParentNamespace"))
+		else if (ERelationType.PARENT_NAMESPACE.equals(argumentName))
 		{
 			return new UnitResult(parentNamespace);
 		}
-		else if (argumentName.equals("ChildClasses"))
+		else if (ERelationType.CHILD_CLASSES.equals(argumentName))
 		{
 			return new UnitResult(childClasses);
 		}
-		else if (argumentName.equals("ChildInterfaces"))
+		else if (ERelationType.CHILD_INTERFACES.equals(argumentName))
 		{
 			return new UnitResult(childInterfaces);
 		}
@@ -203,7 +206,7 @@ public class LangNamespace extends ProgramElement
 	@Override
 	public String getUnitType()
 	{
-		return "Namespace";
+		return EUnitType.NAMESPACE.toString();
 	}
 
 	/*

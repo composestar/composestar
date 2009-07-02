@@ -31,6 +31,7 @@ import java.io.Serializable;
 /**
  * @author Michiel van Oudheusden
  */
+@Deprecated
 public class ResourceUsage implements Serializable
 {
 	private static final long serialVersionUID = -4560235679437768784L;

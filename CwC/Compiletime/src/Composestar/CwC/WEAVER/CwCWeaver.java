@@ -102,8 +102,6 @@ import antlr.TokenStreamException;
  * 
  * @author Michiel Hendriks
  */
-// @ComposestarModule(ID = ModuleNames.WEAVER, dependsOn = { ModuleNames.INLINE
-// })
 public class CwCWeaver implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);
@@ -164,7 +162,7 @@ public class CwCWeaver implements CTCommonModule
 	 * If true, remove preprocessor directives from <command line>
 	 */
 	@ModuleSetting(ID = "undef-cmdline", isAdvanced = true)
-	protected boolean ppRemoveCommandline = false;
+	protected boolean ppRemoveCommandline;
 
 	public CwCWeaver()
 	{}
@@ -300,13 +298,13 @@ public class CwCWeaver implements CTCommonModule
 				if (o instanceof LineObject)
 				{
 					LineObject lo = (LineObject) o;
-					if (ppRemoveBuiltins && lo.getSource().equals("<built-in>"))
+					if (ppRemoveBuiltins && "<built-in>".equals(lo.getSource()))
 					{
 						removeItems = true;
 						oit.remove();
 						continue;
 					}
-					if (ppRemoveCommandline && lo.getSource().equals("<command line>"))
+					if (ppRemoveCommandline && "<command line>".equals(lo.getSource()))
 					{
 						oit.remove();
 						removeItems = true;

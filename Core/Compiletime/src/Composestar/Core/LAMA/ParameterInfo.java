@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import Composestar.Core.LOLA.metamodel.EUnitType;
+
 public abstract class ParameterInfo extends ProgramElement
 {
 	private static final long serialVersionUID = -1258210215588047498L;
@@ -120,7 +122,7 @@ public abstract class ParameterInfo extends ProgramElement
 	@Override
 	public String getUnitType()
 	{
-		return "Parameter";
+		return EUnitType.PARAMETER.toString();
 	}
 
 	@Override

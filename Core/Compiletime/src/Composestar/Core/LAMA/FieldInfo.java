@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import Composestar.Core.LOLA.metamodel.EUnitType;
+
 public abstract class FieldInfo extends ProgramElement
 {
 
@@ -102,7 +104,7 @@ public abstract class FieldInfo extends ProgramElement
 	@Override
 	public String getUnitType()
 	{
-		return "Field";
+		return EUnitType.FIELD.toString();
 	}
 
 	/*

@@ -23,6 +23,8 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
  * Corresponds to the MethodInfo class in the .NET framework. For more
@@ -239,31 +241,35 @@ public class DotNETMethodInfo extends MethodInfo
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class"))
+		if (ERelationType.PARENT_CLASS.equals(argumentName) && EUnitType.CLASS.equals(parent.getUnitType()))
 		{
 			return new UnitResult(parent);
 		}
-		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface"))
+		else if (ERelationType.PARENT_INTERFACE.equals(argumentName)
+				&& EUnitType.INTERFACE.equals(parent.getUnitType()))
 		{
 			return new UnitResult(parent);
 		}
-		else if (argumentName.equals("ChildParameters"))
+		else if (ERelationType.CHILD_PARAMETERS.equals(argumentName))
 		{
 			return new UnitResult(new HashSet<ParameterInfo>(parameters));
 		}
-		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class"))
+		else if (ERelationType.RETURN_CLASS.equals(argumentName)
+				&& EUnitType.CLASS.equals(getReturnType().getUnitType()))
 		{
 			return new UnitResult(getReturnType());
 		}
-		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface"))
+		else if (ERelationType.RETURN_INTERFACE.equals(argumentName)
+				&& EUnitType.INTERFACE.equals(getReturnType().getUnitType()))
 		{
 			return new UnitResult(getReturnType());
 		}
-		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation"))
+		else if (ERelationType.RETURN_ANNOTATION.equals(argumentName)
+				&& EUnitType.ANNOTATION.equals(getReturnType().getUnitType()))
 		{
 			return new UnitResult(getReturnType());
 		}
-		else if (argumentName.equals("Annotations"))
+		else if (ERelationType.ANNOTATIONS.equals(argumentName))
 		{
 			Iterator<Annotation> i = getAnnotations().iterator();
 			Set<Type> res = new HashSet<Type>();

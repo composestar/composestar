@@ -174,7 +174,7 @@ public class CStarJavaCompiler implements LangCompiler
 		finally
 		{
 			p.removeDependency(dummyDep);
-			logger.debug(String.format("Sources compiled in %d ms", (System.currentTimeMillis() - time)));
+			logger.debug(String.format("Sources compiled in %d ms", System.currentTimeMillis() - time));
 		}
 	}
 
@@ -298,7 +298,7 @@ public class CStarJavaCompiler implements LangCompiler
 				reportCompileError();
 			}
 		}
-		logger.debug(String.format("Dummies compiled in %d ms", (System.currentTimeMillis() - time)));
+		logger.debug(String.format("Dummies compiled in %d ms", System.currentTimeMillis() - time));
 
 		// create archive
 

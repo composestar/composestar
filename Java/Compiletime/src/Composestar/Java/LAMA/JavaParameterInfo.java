@@ -12,6 +12,8 @@ import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
  * An instance of <code>JavaParameterInfo</code> represents a parameter object
@@ -54,23 +56,24 @@ public class JavaParameterInfo extends ParameterInfo
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentMethod"))
+		if (ERelationType.PARENT_METHOD.equals(argumentName))
 		{
 			return new UnitResult(parent);
 		}
-		else if (argumentName.equals("Class") && parameterType().getUnitType().equals("Class"))
+		else if (ERelationType.CLASS.equals(argumentName) && EUnitType.CLASS.equals(parameterType().getUnitType()))
 		{
 			return new UnitResult(parameterType());
 		}
-		else if (argumentName.equals("Interface") && parameterType().getUnitType().equals("Interface"))
+		else if (ERelationType.INTERFACE.equals(argumentName)
+				&& ERelationType.INTERFACE.equals(parameterType().getUnitType()))
 		{
 			return new UnitResult(parameterType());
 		}
-		else if (argumentName.equals("Annotation") && parameterType().getUnitType().equals("Annotation"))
+		else if ("Annotation".equals(argumentName) && EUnitType.ANNOTATION.equals(parameterType().getUnitType()))
 		{
 			return new UnitResult(parameterType());
 		}
-		else if (argumentName.equals("Annotations"))
+		else if (ERelationType.ANNOTATIONS.equals(argumentName))
 		{
 			Iterator<Annotation> i = getAnnotations().iterator();
 			HashSet<Type> res = new HashSet<Type>();
