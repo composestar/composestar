@@ -15,14 +15,14 @@
 
 	<target name="clean" depends="init" description="Clean compile results">
 		<echo level="info">Cleaning WIX object files</echo>
+		<delete dir="Releases" />
 		<delete>
 			<fileset dir="." includes="**/*.wixobj" />
-			<fileset dir="Releases" includes="**/*.msi" />
-			<fileset dir="Releases" includes="**/*.sha1" />
 		</delete>
 	</target>
 
 	<target name="local_init" depends="init">
+		<mkdir dir="Releases" />
 
 		<!-- WIX -->
 		<property name="path.wix" value="${build.starlight}${file.separator}Development${file.separator}Wix${file.separator}" />
