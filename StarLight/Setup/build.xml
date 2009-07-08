@@ -21,6 +21,13 @@
 		<delete>
 			<fileset dir="." includes="**/*.wixobj" />
 		</delete>
+		
+		<!--
+		<dn:msbuild buildfile="StarLightSetup/StarLightSetup.wixproj">
+			<target name="Clean" />
+			<property name="Configuration" value="Release" />	
+		</dn:msbuild>
+		-->
 	</target>
 
 	<target name="local_init" depends="init">
@@ -53,8 +60,25 @@
 			<fileset file="${basedir}/../Source/Compiletime/src/TASMANConfig.xml" />
 		</copy>
 	</target>
+	
+		<target name="regpkg_wix2" depends="compile_sources">
+		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
+			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
+			<arg value="/codebase" />
+			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
+			<arg value="/wixfile:${basedir}\WixStarLight\StarLight.LanguageService.generated.wxi" />
+			<arg value="Composestar.StarLight.VisualStudio.LanguageServices.dll" />
+		</exec>
+		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
+			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
+			<arg value="/codebase" />
+			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
+			<arg value="/wixfile:${basedir}\WixStarLight\StarLightProject.generated.wxi" />
+			<arg value="Composestar.StarLight.VisualStudio.Project.dll" />
+		</exec>
+	</target>
 
-	<target name="candle" depends="copy_misc">
+	<target name="candle" depends="regpkg_wix2,copy_misc">
 		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.product" />
 		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.package" />
 		<echo level="info">ProductId = ${starlight.uuid.product}; PackageId = ${starlight.uuid.package}</echo>
@@ -114,7 +138,7 @@
 	</target>
 	-->
 
-	<target name="build" depends="compile_sources,light" description="Compile the installer files">
+	<target name="build" depends="light" description="Compile the installer files">
 	</target>
 
 	<target name="compile_sources" depends="local_init">
@@ -123,21 +147,42 @@
 		<msbuild solution="${VSProject.dir}${file.separator}StarLight.VisualStudio.Project.csproj" target="build" config="release" />
 		<msbuild solution="${VSLang.dir}${file.separator}StarLight.VisualStudio.LanguageServices.csproj" target="build" config="release" />
 		<msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuiltIn.csproj" target="build" config="release" />
-
+	</target>
+	
+	<target name="regpkg_wix3" depends="compile_sources">
 		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
 			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
 			<arg value="/codebase" />
 			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
-			<arg value="/wixfile:${basedir}\WixStarLight\StarLight.LanguageService.generated.wxi" />
+			<arg value="/wixfile:${basedir}\StarLightSetup\StarLight.LanguageService.generated.wxi" />
 			<arg value="Composestar.StarLight.VisualStudio.LanguageServices.dll" />
 		</exec>
 		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
 			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
 			<arg value="/codebase" />
 			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
-			<arg value="/wixfile:${basedir}\WixStarLight\StarLightProject.generated.wxi" />
+			<arg value="/wixfile:${basedir}\StarLightSetup\StarLightProject.generated.wxi" />
 			<arg value="Composestar.StarLight.VisualStudio.Project.dll" />
 		</exec>
+		<!-- fix the creates files to conform wix3 standards -->
+		<replace dir="StarLightSetup">
+			<include name="*.generated.wxi" />
+			<replacefilter token="[#File_" value="[#"/>
+			<replacefilter token="[$ComponentPath]" value="[ComponentPath]"/>
+		</replace>
+	</target>
+	
+	<target name="build_wix3" depends="regpkg_wix3" description="Compile the installer files">
+		<copy todir="StarLightSetup/Resources">
+			<fileset file="${basedir}/../Source/Compiletime/src/TASMANConfig.xml" />
+		</copy>
+		<dn:msbuild buildfile="StarLightSetup/StarLightSetup.wixproj">
+			<property name="StarlightVersion" value="${version.starlight}" />
+			<property name="Configuration" value="Release" />	
+		</dn:msbuild>
+		
+		<!-- TODO: create bootstrap, and copy to dist dir -->
+		
 	</target>
 
 </project>
