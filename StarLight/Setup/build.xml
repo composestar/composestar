@@ -124,19 +124,19 @@
 		<msbuild solution="${VSLang.dir}${file.separator}StarLight.VisualStudio.LanguageServices.csproj" target="build" config="release" />
 		<msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuiltIn.csproj" target="build" config="release" />
 
-		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true">
+		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
 			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
 			<arg value="/codebase" />
 			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
-			<arg value="/wixfile:WixStarLight\StarLight.LanguageService.generated.wxi" />
-			<arg value="..\Source\VSIntegration\VisualStudio.Project\bin\Release\Composestar.StarLight.VisualStudio.LanguageServices.dll" />
+			<arg value="/wixfile:${basedir}\WixStarLight\StarLight.LanguageService.generated.wxi" />
+			<arg value="Composestar.StarLight.VisualStudio.LanguageServices.dll" />
 		</exec>
-		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true">
+		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
 			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
 			<arg value="/codebase" />
 			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
-			<arg value="/wixfile:WixStarLight\StarLightProject.generated.wxi" />
-			<arg value="..\Source\VSIntegration\VisualStudio.Project\bin\Release\Composestar.StarLight.VisualStudio.Project.dll" />
+			<arg value="/wixfile:${basedir}\WixStarLight\StarLightProject.generated.wxi" />
+			<arg value="Composestar.StarLight.VisualStudio.Project.dll" />
 		</exec>
 	</target>
 
