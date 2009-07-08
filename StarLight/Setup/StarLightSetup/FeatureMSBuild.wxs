@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <?include Variables.wxi ?>
+
+    <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="MSBuildDir" Name="MSBuild">
+        <Directory Id="StarLightMSBuildDir" Name="StarLight">
+          <Component Id="MSBuildTargetBase" Guid="34eec252-f7e8-4839-8f41-5efcaaa00001">
+            <File Source="$(var.IntegrationTargetsPath)\StarLight.targets" Vital="yes" />
+            <File Source="$(var.IntegrationTargetsPath)\StarLightVersion.targets" />
+          </Component>
+
+          <Directory Id="VersionStarLightMSBuildDir" Name="$(var.ProductVersion)">
+            <Component Id="MSBuildTarget" Guid="8d34ea12-8ece-4c33-b389-a00044b78702">
+              <File Source="$(var.IntegrationTargetsPath)\StarLightImpl.targets" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.MSBuild.Tasks.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Entities.dll"  Vital="yes"/>
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.ContextInfo.dll" Vital="yes" Id="Composestar.StarLight.ContextInfo.dll.msbuild"/>
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.CoreServices.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.DataStore.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.ILAnalyzer.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.ILWeaver.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Microsoft.Practices.ObjectBuilder.dll"  Vital="yes"/>
+              <File Source="$(var.IntegrationTasksPath)\Mono.Cecil.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Antlr3.Runtime.dll"  Vital="yes"/>
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.CpsParser.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Utilities.Cecil.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Filters.dll" Vital="yes" Id="Composestar.StarLight.Filters.dll.msbuild"/>
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Weaving.dll" Vital="yes" Id="Composestar.StarLight.Weaving.dll.msbuild" />
+              <File Source="$(var.IntegrationTasksPath)\Mono.Cecil.Pdb.dll" Vital="yes" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+
+    <Feature Id="FeatureMSBuild" Level="1" Title="!(loc.FeatureMSBuildTitle)" Description="!(loc.FeatureMSBuildDesc)" Absent="disallow" InstallDefault="followParent">
+      <ComponentRef Id="MSBuildTargetBase"/>
+      <ComponentRef Id="MSBuildTarget"/>
+    </Feature>
+  </Fragment>
+</Wix>

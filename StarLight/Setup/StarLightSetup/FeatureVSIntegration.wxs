@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <?include Variables.wxi ?>
+
+    <PropertyRef Id="VS2005_ROOT_FOLDER" />
+    <PropertyRef Id="VS2005_ITEMTEMPLATES_DIR" />
+    <PropertyRef Id="VS2005_PROJECTTEMPLATES_DIR" />
+    <PropertyRef Id="VS2005PROJECTAGGREGATOR2" />
+
+    <PropertyRef Id="VS2005_IDE_VB_PROJECTSYSTEM_INSTALLED" />
+    <PropertyRef Id="VS2005_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED" />
+    <PropertyRef Id="VS2005_IDE_VJSHARP_PROJECTSYSTEM_INSTALLED" />
+    <PropertyRef Id="VS2005_SP_LEVEL" />
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="VSIntegrationDir" Name="VSIntegration">
+        <Component Id="VSIntegration" Guid="ba42b821-a160-4548-a85f-f2c26c092537">
+          <File Source="$(var.IntegrationBinPath)\Composestar.StarLight.VisualStudio.LanguageServices.dll" />
+          <File Source="$(var.IntegrationBinPath)\Composestar.StarLight.VisualStudio.Project.dll" />
+          <?include StarLight.LanguageService.generated.wxi ?>
+          <?include StarLightProject.generated.wxi ?>
+        </Component>
+
+        <Directory Id="CodeSnippetsDir" Name="CodeSnippets">
+          <Component Id="VSCodeSnippetsBase" Guid="fc7fea91-1a9d-4a63-bb62-36699f6fd415">
+            <File Source="$(var.SnippetsSources)/SnippetsIndex.xml" />
+            <RegistryKey Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Languages\CodeExpansions\StarLight" Action="createAndRemoveOnUninstall">
+              <RegistryValue Value="{076d4c2c-78a4-486d-84fa-1311212681de}" Type="string" />
+              <RegistryValue Name="DisplayName" Value="131" Type="string" />
+              <RegistryValue Name="IndexPath" Value="[VSCodeSnippetsBase]" Type="string" />
+              <RegistryValue Name="LangStringId" Value="starlight" Type="string" />
+              <RegistryValue Name="Package" Value="{a58025eb-8f26-4633-acb2-b990a691f36d}" Type="string" />
+              <RegistryValue Name="ShowRoots" Value="0" Type="integer" />
+              <RegistryValue Key="ForceCreateDirs" Name="StarLight" Value="[SnippetsDir];%MyDocs%\Code Snippets\StarLight\My Code Snippets\" Type="string" />
+              <RegistryValue Key="Paths" Name="StarLight" Value="[SnippetsDir];%MyDocs%\Code Snippets\StarLight\My Code Snippets\" Type="string" />
+            </RegistryKey>
+          </Component>
+
+          <Directory Id="SnippetsDir" Name="Snippets">
+            <Component Id="VSCodeSnippets"  Guid="fbc7e932-ea8a-4b7a-9c99-a6307ad3de58">
+              <File Source="$(var.SnippetsSources)\Snippets\concern.snippet" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="DIR_VS2005_PROJECTTEMPLATES" />
+      <Directory Id="DIR_VS2005_ITEMTEMPLATES" />
+    </DirectoryRef>
+
+    <SetDirectory Id="DIR_VS2005_PROJECTTEMPLATES" Value="[VS2005_PROJECTTEMPLATES_DIR]" Sequence="both" />
+    <SetDirectory Id="DIR_VS2005_ITEMTEMPLATES" Value="[VS2005_ITEMTEMPLATES_DIR]" Sequence="both" />
+
+    <DirectoryRef Id="DIR_VS2005_PROJECTTEMPLATES">
+      <Directory Id="StarLightProjectTemplates" Name="StarLight">
+        <Component Id="StarLightProjectTemplates" Guid="226a7b78-f3a7-4101-9023-9e4a02ac7e96">
+          <File Source="$(var.ProjectTemplatesZipPath)\ConcernProject.zip" />
+          <File Source="$(var.ProjectTemplatesZipPath)\VBConcernProject.zip" />
+          <File Source="$(var.ProjectTemplatesZipPath)\CSharpConcernProject.zip" />
+          <File Source="$(var.ProjectTemplatesZipPath)\JSharpConcernProject.zip" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DIR_VS2005_ITEMTEMPLATES">
+      <Directory Id="StarLightItemTemplates" Name="StarLight">
+        <Component Id="StarLightItemTemplates" Guid="36884165-04c9-4257-ae14-226125f19f66">
+          <File Source="$(var.ItemTemplatesZipPath)\Concern.zip" />
+          <File Source="$(var.ItemTemplatesZipPath)\Text.zip" />
+          <File Source="$(var.ItemTemplatesZipPath)\CSharpClass.zip" />
+          <File Source="$(var.ItemTemplatesZipPath)\JSharpClass.zip" />
+          <File Source="$(var.ItemTemplatesZipPath)\VBClass.zip" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <CustomActionRef Id="VS2005Setup" />
+    <InstallExecuteSequence>
+      <Custom Action="VS2005Setup" Before="InstallFinalize"><![CDATA[!FeatureVSIntegration = INSTALLSTATE_LOCAL]]></Custom>
+    </InstallExecuteSequence>
+
+    <Feature Id="FeatureVSIntegration" Level="0" Title="!(loc.FeatureVSIntegrationTitle)" Description="!(loc.FeatureVSIntegrationDesc)">
+      <Condition Level="1"><![CDATA[VS2005_ROOT_FOLDER]]></Condition>
+      <ComponentRef Id="VSIntegration"/>
+      <ComponentRef Id="VSCodeSnippetsBase"/>
+      <ComponentRef Id="VSCodeSnippets"/>
+      <ComponentRef Id="StarLightProjectTemplates"/>
+      <ComponentRef Id="StarLightItemTemplates"/>
+    </Feature>
+  </Fragment>
+</Wix>

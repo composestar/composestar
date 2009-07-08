@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?ifndef ProductVersion?>
+  <?define ProductVersion = "0.0.1" ?>
+  <?endif ?>
+
+  <?define UpgradeCode = "D7A4BED9-24C4-42f8-9C20-4CB905F54488" ?>
+
+  <!-- Relative path of the folder with the binaries -->
+  <?define ComposestarCore=..\..\..\Core\Compiletime\dist\lib?>
+  <?define IntegrationBinPath=..\..\Source\VSIntegration\VisualStudio.Project\bin\Release?>
+  <?define weaveStrategyBinPath=..\..\Source\StarLight.Weaving.BuiltIn\bin\Release?>
+  <?define IntegrationTasksPath=..\..\Source\VSIntegration\MSBuildTasks\bin\Release?>
+  <?define IntegrationTargetsPath=..\..\Source\VSIntegration\MSBuildTasks\Target?>
+  <?define SnippetsSources=..\..\Source\VSIntegration\VisualStudio.Project\bin\Release\CodeSnippets?>
+  <?define ProjectTemplatesZipPath=..\..\Source\VSIntegration\VisualStudio.Project\obj\Release?>
+  <?define ItemTemplatesZipPath=..\..\Source\VSIntegration\VisualStudio.Project\obj\Release?>
+</Include>

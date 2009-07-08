@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <?include Variables.wxi ?>
+	<String Id="ProductName">StarLight</String>
+  <String Id="ProductManufacturer">Software Engineering Group; University of Twente</String>
+  <String Id="ProductURL">http://composestar.sourceforge.net</String>
+  <String Id="ProductDescription">StarLight: Composition filters for .NET 2.0 and later.</String>
+
+  <String Id="NewerVersionDetected">A newer version of !(loc.ProductName) is already installed. Setup will now abort.</String>
+
+  <String Id="DotNet20Required">This application requires .NET Framework 2.0. Please install the .NET Framework then run this installer again.</String>
+  <String Id="JRE15Required">Java Runtime Environment 1.5 (or later) is required. Please install the Java Runtime Environment version 1.5 or later from http://www.java.com .</String>
+
+  <String Id="FeatureCompleteDesc">The base files for StarLight.</String>
+
+  <String Id="FeatureMainTitle">Base Files</String>
+  <String Id="FeatureMainDesc">The base files for StarLight.</String>
+
+  <String Id="FeatureVSIntegrationTitle">VisualStudio 2005 Integration</String>
+  <String Id="FeatureVSIntegrationDesc">Adds support for StarLight projects to VisualStudio 2005.</String>
+
+  <String Id="FeatureMSBuildTitle">MSBuild Support</String>
+  <String Id="FeatureMSBuildDesc">Adds MSBuild tasks to compile StarLight projects.</String>
+
+  <String Id="FeatureDocTitle">Documentation</String>
+  <String Id="FeatureDocDesc">Usage and developer documentation for StarLight and Composition Filters.</String>
+
+  <String Id="HelpfileShortcut">StarLight Help File</String>
+  <String Id="ARMShortcut">Annotated Reference Manual</String>
+  <String Id="ComposestarWebsite">ComposeStar Website</String>
+</WixLocalization>

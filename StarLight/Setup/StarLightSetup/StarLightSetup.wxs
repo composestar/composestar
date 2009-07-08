@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+  <?include Variables.wxi ?>
+  <Product Id="*" Name="!(loc.ProductName) $(var.ProductVersion)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="!(loc.ProductManufacturer)" UpgradeCode="$(var.UpgradeCode)">
+    <Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" InstallScope="perMachine" Description="!(loc.ProductDescription)" />
+
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion Minimum="$(var.ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
+      <UpgradeVersion Minimum="0.0.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
+    </Upgrade>
+
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" CompressionLevel="high" />
+
+    <Condition Message="!(loc.NewerVersionDetected)">
+      <![CDATA[NOT NEWERVERSIONDETECTED OR Installed]]>
+    </Condition>
+
+    <!-- check for .NET 2.0 -->
+    <PropertyRef Id="NETFRAMEWORK20"/>
+    <Condition Message="!(loc.DotNet20Required)">
+      <![CDATA[Installed OR NETFRAMEWORK20]]>
+    </Condition>
+
+    <!-- Check for JRE 1.5 -->
+    <Property Id="JAVAVERSION">
+      <RegistrySearch Id="RegJavaVersion" Type="raw" Root="HKLM" Key="Software\JavaSoft\Java Runtime Environment" Name="CurrentVersion" />
+    </Property>
+    <Condition Message="!(loc.JRE15Required)">
+      <![CDATA[Installed OR JAVAVERSION >= "1.5"]]>
+    </Condition>
+
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize"/>
+    </InstallExecuteSequence>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="BASEDIR" Name="!(loc.ProductName)">
+          <Directory Id="INSTALLDIR" Name="$(var.ProductVersion)"/>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="!(loc.ProductName) $(var.ProductVersion)" />
+      </Directory>
+    </Directory>
+
+    <Feature Id="Complete" Level="1" ConfigurableDirectory="INSTALLDIR" Title="!(loc.ProductName) $(var.ProductVersion)" Description="!(loc.FeatureCompleteDesc)" Display="expand" Absent="disallow" TypicalDefault="install">
+      <ComponentGroupRef Id="FeatureMain" />
+      <FeatureRef Id="FeatureMSBuild" />
+      <FeatureRef Id="FeatureVSIntegration" />
+      <FeatureRef Id="FeatureDocumentation" />
+      <!-- <FeatureRef Id="FeatureExamples" /> -->
+    </Feature>
+
+    <!-- The user interface -->
+    <UIRef Id="WixUI_FeatureTree" />
+    <WixVariable Id="WixUILicenseRtf" Value="Resources\license.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="Resources\bannrbmp.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="Resources\dlgbmp.bmp" />
+
+  </Product>
+</Wix>

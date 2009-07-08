@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <?include Variables.wxi ?>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="StarLightDocs" Name="Documentation">
+        <Component Id="StarLightDocs" Guid="17003696-efec-4128-9bd1-f013fa6ec4a1" KeyPath="yes">
+          <File Source="../../documentation/ComposeStar-StarLight.chm" />
+          <File Source="../../documentation/arm.pdf" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="DocsShortcuts" Guid="5b8e64d3-9c5f-464d-aa32-ee69b0bf0d77">
+        <Shortcut Id="StarLightHelpFile" Name="!(loc.HelpfileShortcut)" Target="[StarLightDocs]\ComposeStar-StarLight.chm"/>
+        <Shortcut Id="StarLightARM" Name="!(loc.ARMShortcut)" Target="[StarLightDocs]\arm.pdf"/>
+        <RegistryValue Root="HKCU" Key="Software\ComposeStar\StarLight" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="FeatureDocumentation" Level="1" Title="!(loc.FeatureDocTitle)" Description="!(loc.FeatureDocDesc)">
+      <ComponentRef Id="StarLightDocs"/>
+      <ComponentRef Id="DocsShortcuts"/>
+    </Feature>
+  </Fragment>
+</Wix>

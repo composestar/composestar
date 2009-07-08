@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Fragment>
+    <?include Variables.wxi ?>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="StarLightJavaPart" Name="lib">
+        <Component Id="FM_Compiletime" Guid="74548c4b-380c-4752-bb0d-09c61c2955ff">
+          <File Source="$(var.ComposestarCore)\antlr.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\antlr-runtime-3.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\castor-0_9_5_2.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\ComposestarCORE.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\groove-3_2_2.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\groove-gxl-1_0.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\log4j-1.2.14.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\prolog.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\xerces-2_6_0-xercesImpl.jar" Vital="yes" />
+
+          <File Source="../../Source/Compiletime/dist/StarLight.jar" Vital="yes" />
+          <File Source="../../Source/Compiletime/lib/xmltypes.jar" Vital="yes" />
+        </Component>
+      </Directory>
+
+      <Directory Id="StarLightCore" Name="CoreElements">
+        <Component Id="FM_CoreElements" Guid="d0314243-3f14-4a2f-9af1-b5232a1491e3">
+          <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.ContextInfo.dll" Vital="yes" />
+          <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.ContextInfo.xml" Vital="yes" />
+          <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Filters.dll" Vital="yes" />
+          <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Filters.xml" Vital="yes" />
+          <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Weaving.dll" Vital="yes" />
+          <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Weaving.xml" Vital="yes" />
+          <RegistryValue Action="write" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\StarLight" Root="HKLM" Type="string" Value="[StarLightCore]" />
+        </Component>
+      </Directory>
+
+      <Directory Id="StarLightWeavingStrategies" Name="WeaveStrategies">
+        <Component Id="FM_WeavingStrategies" Guid="02f68af9-6e6e-4b19-9148-8fd8ecfe99f5">
+          <File Source="$(var.weaveStrategyBinPath)\Composestar.StarLight.Weaving.BuildIn.dll" Vital="yes" />
+        </Component>
+      </Directory>
+
+      <Component Id="FM_Base" Guid="87e48609-6f57-46d9-b63d-f8680e8e1149">
+        <File Source="Resources/ComposeStarProject.ico" />
+        <File Source="Resources/ComposeStarConcern.ico" />
+        <File Source="Resources/TASMANConfig.xml" />
+
+        <!-- register .cps extension -->
+        <RegistryKey Action="createAndRemoveOnUninstall" Key=".cps" Root="HKCR" />
+        <RegistryValue Action="write" Key=".cps" Root="HKCR" Type="string" Value="ComposestarConcernFile" />
+        <RegistryKey Action="createAndRemoveOnUninstall" Key="ComposestarConcernFile" Root="HKCR" />
+        <RegistryValue Action="write" Key="ComposestarConcernFile" Root="HKCR" Type="string" Value="Compose* Concern" />
+        <RegistryKey Action="createAndRemoveOnUninstall" Key="ComposestarConcernFile/DefaultIcon"  Root="HKCR"/>
+        <RegistryValue Action="write" Key="ComposestarConcernFile/DefaultIcon" Root="HKCR" Type="string" Value="[INSTALLDIR]ComposeStarConcern.ico" />
+
+        <!-- register .cpsproj extension -->
+        <RegistryKey Action="createAndRemoveOnUninstall" Key=".cpsproj" Root="HKCR" />
+        <RegistryValue Action="write" Key=".cpsproj" Root="HKCR" Type="string" Value="StarlightProjectFile" />
+        <RegistryKey Action="createAndRemoveOnUninstall" Key="StarlightProjectFile" Root="HKCR" />
+        <RegistryValue Action="write" Key="StarlightProjectFile" Root="HKCR" Type="string" Value="StarLight Project" />
+        <RegistryKey Action="createAndRemoveOnUninstall" Key="StarlightProjectFile/DefaultIcon" Root="HKCR" />
+        <RegistryValue Action="write" Key="StarlightProjectFile/DefaultIcon" Root="HKCR" Type="string" Value="[INSTALLDIR]ComposeStarProject.ico" />
+        
+        <!-- register starlight -->
+        <RegistryKey Action="createAndRemoveOnUninstall" Key="Software\ComposeStar\StarLight\$(var.ProductVersion)" Root="HKLM" />
+        <RegistryValue Action="write" Key="Software\ComposeStar\StarLight" Root="HKLM" Name="CurrentVersion" Type="string" Value="$(var.ProductVersion)" />
+        <RegistryValue Action="write" Key="Software\ComposeStar\StarLight\$(var.ProductVersion)" Root="HKLM" Name="StarLightInstallFolder" Type="string" Value="[INSTALLDIR]" />
+        <RegistryValue Action="write" Key="Software\ComposeStar\StarLight\$(var.ProductVersion)" Root="HKLM" Name="JavaOptions" Type="string" Value="-Xmx512M" />
+        <RegistryValue Action="write" Key="Software\ComposeStar\StarLight\$(var.ProductVersion)" Root="HKLM" Name="WeaveStrategiesFolder" Type="string" Value="[StarLightWeavingStrategies]" />
+      </Component>      
+    </DirectoryRef>
+
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="FM_Shortcuts" Guid="da21f6c9-c532-4c62-bf90-613b77473a4a">
+        <util:InternetShortcut Id="ComposeStarWebsite" Name="!(loc.ComposestarWebsite)" Target="!(loc.ProductURL)"/>
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\ComposeStar\StarLight" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <ComponentGroup Id="FeatureMain">
+      <ComponentRef Id="FM_Compiletime"/>
+      <ComponentRef Id="FM_CoreElements"/>
+      <ComponentRef Id="FM_WeavingStrategies"/>
+      <ComponentRef Id="FM_Base"/>
+      <ComponentRef Id="FM_Shortcuts"/>
+    </ComponentGroup>
+
+    <!--
+    <Feature Id="FeatureMain" Level="1" Title="!(loc.FeatureMainTitle)" Description="!(loc.FeatureMainDesc)" Absent="disallow" InstallDefault="followParent">
+    </Feature>
+    -->
+  </Fragment>
+</Wix>
