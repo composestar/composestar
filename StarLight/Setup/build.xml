@@ -14,7 +14,6 @@
 	<description>Compose*/StarLight Setup. Generates the MSI installer.</description>
 
 	<target name="clean" depends="init" description="Clean compile results">
-		<echo level="info">Cleaning WIX object files</echo>
 		<delete dir="Releases" />
 		<delete dir="build" />
 		<delete dir="dist" />
@@ -22,17 +21,16 @@
 			<fileset dir="." includes="**/*.wixobj" />
 		</delete>
 		
-		<!--
 		<dn:msbuild buildfile="StarLightSetup/StarLightSetup.wixproj">
 			<target name="Clean" />
 			<property name="Configuration" value="Release" />	
 		</dn:msbuild>
-		-->
 	</target>
 
 	<target name="local_init" depends="init">
 		<mkdir dir="Releases" />
 		<mkdir dir="build" />
+		<mkdir dir="dist" />
 
 		<!-- WIX -->
 		<property name="path.wix" value="${build.starlight}${file.separator}Development${file.separator}Wix${file.separator}" />
@@ -53,92 +51,6 @@
 			</dirset>
 		</path>
 		<property name="VSSDK.path" refid="VSSDK.path.set" />
-	</target>
-
-	<target name="copy_misc" depends="local_init">
-		<copy todir="installed">
-			<fileset file="${basedir}/../Source/Compiletime/src/TASMANConfig.xml" />
-		</copy>
-	</target>
-	
-		<target name="regpkg_wix2" depends="compile_sources">
-		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
-			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
-			<arg value="/codebase" />
-			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
-			<arg value="/wixfile:${basedir}\WixStarLight\StarLight.LanguageService.generated.wxi" />
-			<arg value="Composestar.StarLight.VisualStudio.LanguageServices.dll" />
-		</exec>
-		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
-			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
-			<arg value="/codebase" />
-			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
-			<arg value="/wixfile:${basedir}\WixStarLight\StarLightProject.generated.wxi" />
-			<arg value="Composestar.StarLight.VisualStudio.Project.dll" />
-		</exec>
-	</target>
-
-	<target name="candle" depends="regpkg_wix2,copy_misc">
-		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.product" />
-		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.package" />
-		<echo level="info">ProductId = ${starlight.uuid.product}; PackageId = ${starlight.uuid.package}</echo>
-
-		<exec executable="${path.wix}candle.exe" failonerror="true">
-			<arg value="-I${wixsource.path}" />
-			<arg value="-dProductVersion=${version.starlight}" />
-			<arg value="-dProductId=${starlight.uuid.product}" />
-			<arg value="-dPackageId=${starlight.uuid.package}" />
-			<arg value="-dVariablesFile=${wixsource.path}Variables.wxi" />
-			<arg value="${wixsource.path}WixStarLight.wxs" />
-			<arg value="${wixsource.path}WixProlog.wxs" />
-			<arg value="${wixsource.path}WixDocuments.wxs" />
-			<arg value="${wixsource.path}WixXmlBeans.wxs" />
-			<arg value="${wixsource.path}WixLibs.wxs" />
-			<arg value="${wixsource.path}WixGroove.wxs" />
-			<arg value="${wixsource.path}WixAntlr.wxs" />
-			<arg value="${wixsource.path}MSBuild.wxs" />
-			<arg value="${wixsource.path}VSIntegration.wxs" />
-			<arg value="${wixsource.path}CoreElements.wxs" />
-			<arg value="-out" />
-			<arg value="build\" />
-			<arg value="-nologo" />
-		</exec>
-	</target>
-
-	<target name="light" depends="candle">
-		<exec executable="${path.wix}light.exe" failonerror="true">
-			<arg value="-out" />
-			<arg value="${msi.file}" />
-			<arg value="-b" />
-			<arg value="build\" />
-			<arg value="build\WixStarLight.wixobj" />
-			<arg value="build\WixProlog.wixobj" />
-			<arg value="build\WixLibs.wixobj" />
-			<arg value="build\WixDocuments.wixobj" />
-			<arg value="build\WixXmlBeans.wixobj" />
-			<arg value="build\WixGroove.wixobj" />
-			<arg value="build\WixAntlr.wixobj" />
-			<arg value="build\MSBuild.wixobj" />
-			<arg value="build\VSIntegration.wixobj" />
-			<arg value="build\CoreElements.wixobj" />
-			<arg value="${wixsource.path}wixui.wixlib" />
-			<arg value="-loc" />
-			<arg value="${wixsource.path}WixUI_en-us.wxl" />
-			<arg value="-nologo" />
-		</exec>
-	</target>
-
-	<!--
-	<target name="bootstrap">
-		<copy todir="C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\BootStrapper\Packages">
-			<fileset dir="C:\Program Files\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Redistributables">
-				<include name="ProjectAggregator2.msi" />
-			</fileset>
-		</copy>
-	</target>
-	-->
-
-	<target name="build" depends="light" description="Compile the installer files">
 	</target>
 
 	<target name="compile_sources" depends="local_init">
@@ -172,17 +84,14 @@
 		</replace>
 	</target>
 	
-	<target name="build_wix3" depends="regpkg_wix3" description="Compile the installer files">
+	<target name="build" depends="regpkg_wix3" description="Compile the installer files">
 		<copy todir="StarLightSetup/Resources">
 			<fileset file="${basedir}/../Source/Compiletime/src/TASMANConfig.xml" />
 		</copy>
 		<dn:msbuild buildfile="StarLightSetup/StarLightSetup.wixproj">
 			<property name="StarlightVersion" value="${version.starlight}" />
 			<property name="Configuration" value="Release" />	
-		</dn:msbuild>
-		
-		<!-- TODO: create bootstrap, and copy to dist dir -->
-		
+		</dn:msbuild>		
 	</target>
 
 </project>

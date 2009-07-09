@@ -138,8 +138,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 		#region Declarations
 	
-		private const string JavaExecutable = "java.exe";
-		private const string StarLightJar = "Compiletime\\StarLight.jar";
+		private const string JavaExecutable = "java";
+		private const string StarLightJar = "lib\\StarLight.jar";
 
 		private bool BuildErrorsEncountered;
         private DebugLevel CurrentDebugMode;
@@ -242,7 +242,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			IList<string> args = new List<string>();
 			args.Add(StarLightSettings.Instance.JavaOptions);
 			args.Add("-jar " + Quote(jarFile));
-            if (_increConfig != null) args.Add("-DINCRE.config=" + _increConfig);
 			args.Add(Quote(_repositoryFileName));
 
 			process.StartInfo.Arguments = Join(args, " ");

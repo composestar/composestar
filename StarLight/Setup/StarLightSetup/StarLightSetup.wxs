@@ -5,7 +5,7 @@
     <Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" InstallScope="perMachine" Description="!(loc.ProductDescription)" Comments="!(loc.ProductURL)" />
 
     <Upgrade Id="$(var.UpgradeCode)">
-      <UpgradeVersion Minimum="$(var.ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
+      <UpgradeVersion Minimum="$(var.ProductVersion)" IncludeMinimum="no" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
       <UpgradeVersion Minimum="0.0.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
     </Upgrade>
 

@@ -137,12 +137,12 @@
 		<property file="${build.core}${file.separator}Development${file.separator}system.properties" />
 
 		<!-- location of the Compose* installation -->
-		<condition property="starlight.installdir" value="C:${file.separator}Program Files${file.separator}StarLight">
+		<condition property="starlight.installdir" value="${env.PROGRAMFILES}/StarLight/${version.starlight}">
 			<os family="windows" />
 		</condition>
 
 		<!-- final fallback -->
-		<property name="starlight.installdir" value="${user.home}${file.separator}StarLight" />
+		<property name="starlight.installdir" value="${user.home}/StarLight/${version.starlight}" />
 
 		<!-- svn task -->
 		<path id="lib.svnant">
