@@ -9,7 +9,7 @@
           <File Source="$(var.ComposestarCore)\antlr.jar" Vital="yes" />
           <File Source="$(var.ComposestarCore)\antlr-runtime-3.jar" Vital="yes" />
           <File Source="$(var.ComposestarCore)\castor-0_9_5_2.jar" Vital="yes" />
-          <File Source="$(var.ComposestarCore)\ComposestarCORE.jar" Vital="yes" />
+          <File Source="$(var.ComposestarCore)\ComposestarCORE.jar" Vital="yes" KeyPath="yes" />
           <File Source="$(var.ComposestarCore)\groove-3_2_2.jar" Vital="yes" />
           <File Source="$(var.ComposestarCore)\groove-gxl-1_0.jar" Vital="yes" />
           <File Source="$(var.ComposestarCore)\log4j-1.2.14.jar" Vital="yes" />

@@ -8,13 +8,13 @@
         <Directory Id="StarLightMSBuildDir" Name="StarLight">
           <Component Id="MSBuildTargetBase" Guid="34eec252-f7e8-4839-8f41-5efcaaa00001">
             <File Source="$(var.IntegrationTargetsPath)\StarLight.targets" Vital="yes" />
-            <File Source="$(var.IntegrationTargetsPath)\StarLightVersion.targets" />
+            <File Source="$(var.IntegrationTargetsPath)\StarLightVersion.targets" Vital="yes" />
           </Component>
 
           <Directory Id="VersionStarLightMSBuildDir" Name="$(var.ProductVersion)">
             <Component Id="MSBuildTarget" Guid="8d34ea12-8ece-4c33-b389-a00044b78702">
               <File Source="$(var.IntegrationTargetsPath)\StarLightImpl.targets" Vital="yes" />
-              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.MSBuild.Tasks.dll" Vital="yes" />
+              <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.MSBuild.Tasks.dll" Vital="yes" KeyPath="yes" />
               <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.Entities.dll"  Vital="yes"/>
               <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.ContextInfo.dll" Vital="yes" Id="Composestar.StarLight.ContextInfo.dll.msbuild"/>
               <File Source="$(var.IntegrationTasksPath)\Composestar.StarLight.CoreServices.dll" Vital="yes" />

@@ -5,7 +5,7 @@
 
     <DirectoryRef Id="INSTALLDIR">
       <Directory Id="StarLightDocs" Name="Documentation">
-        <Component Id="StarLightDocs" Guid="17003696-efec-4128-9bd1-f013fa6ec4a1" KeyPath="yes">
+        <Component Id="StarLightDocs" Guid="17003696-efec-4128-9bd1-f013fa6ec4a1">
           <File Source="../../documentation/ComposeStar-StarLight.chm" />
           <File Source="../../documentation/arm.pdf" />
         </Component>

@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
   <?include Variables.wxi ?>
   <Product Id="*" Name="!(loc.ProductName) $(var.ProductVersion)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="!(loc.ProductManufacturer)" UpgradeCode="$(var.UpgradeCode)">
-    <Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" InstallScope="perMachine" Description="!(loc.ProductDescription)" />
+    <Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" InstallScope="perMachine" Description="!(loc.ProductDescription)" Comments="!(loc.ProductURL)" />
 
     <Upgrade Id="$(var.UpgradeCode)">
       <UpgradeVersion Minimum="$(var.ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
