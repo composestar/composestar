@@ -69,7 +69,7 @@
 	</target>
 
 	<target name="install_starlight" depends="init" if="enabled.starlight">
-		<ant target="deploy" dir="${build.starlight}" inheritRefs="true" />
+		<ant target="install" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
 	<target name="install_java" depends="init" if="enabled.java">
