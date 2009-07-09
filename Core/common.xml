@@ -63,7 +63,7 @@
 
 		<property name="out.jar.core" value="${out.dist}${file.separator}lib${file.separator}ComposestarCORE.jar" />
 		<property name="out.jar.java" value="${out.dist}${file.separator}lib${file.separator}ComposestarJava.jar" />
-		<property name="out.jar.starlight" value="${out.dist}${file.separator}StarLight.jar" />
+		<property name="out.jar.starlight" value="${out.dist}${file.separator}lib${file.separator}StarLight.jar" />
 		<property name="out.jar.cwc" value="${out.dist}${file.separator}lib${file.separator}ComposestarCwC.jar" />
 
 		<!-- options for javac -->
@@ -133,11 +133,11 @@
 			<arg value="getsystemproperties" />
 			<arg value="${build.core}${file.separator}Development${file.separator}system.properties" />
 		</exec>
-		
+
 		<property file="${build.core}${file.separator}Development${file.separator}system.properties" />
 
 		<!-- location of the Compose* installation -->
-		<condition property="starlight.installdir" value="${env.PROGRAMFILES}/StarLight/${version.starlight}">
+		<condition property="starlight.installdir" value="${env.ProgramFiles}/StarLight/${version.starlight}">
 			<os family="windows" />
 		</condition>
 

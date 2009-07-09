@@ -16,7 +16,6 @@
 	<!-- clean -->
 
 	<target name="clean" depends="init" description="clean the compilation results">
-
 		<!-- Java build files -->
 		<delete dir="${out.build}" />
 		<delete dir="${out.dist}" />
@@ -25,14 +24,11 @@
 				<include name="**/*.class" />
 			</fileset>
 		</delete>
-
 		<!-- xml beans -->
 		<delete dir="${out.xmltypes}" />
-
 	</target>
 
 	<target name="init_local" depends="init">
-
 		<!-- default path to xsd.exe (can be overridden in build.ini) -->
 		<condition property="xsd.exe" value="xsd.exe" else="${env.ProgramFiles}\Microsoft Visual Studio 8\SDK\v2.0\Bin\xsd.exe">
 			<available file="xsd.exe" filepath="${env.PATH}" />
@@ -42,19 +38,30 @@
 
 		<property name="out.xmltypes" location="../StarLightEntities/obj/xmltypes" />
 		<property name="core.jar" location="${build.core}/Compiletime/${out.jar.core}" />
-		<property name="starlight.jar" location="${out.jar.starlight}" />
 		<property name="xmltypes.jar" location="lib/xmltypes.jar" />
 		<property name="xmltypes-src.zip" location="lib/xmltypes-src.zip" />
 
 		<mkdir dir="${out.build}" />
 		<mkdir dir="${out.dist}" />
+		<mkdir dir="${out.dist}/lib" />
 		<mkdir dir="${out.xmltypes}" />
-
 	</target>
 
 	<!-- build -->
 
 	<target name="build" depends="init_local,compile,jar" description="Build the StarLight compiletime">
+		<copy todir="${out.dist}/lib">
+			<fileset file="${xmltypes.jar}" />
+			<fileset dir="../../Libraries/xmlbeans">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${out.dist}">
+			<fileset dir="src">
+				<include name="TASMANConfig.xml" />
+			</fileset>
+		</copy>
+
 		<schemavalidate>
 			<schema namespace="http://composestar.sourceforge.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
 			<schema namespace="http://composestar.sourceforge.net/schema/TASMAN" file="${build.core}/Compiletime/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd" />
@@ -66,14 +73,6 @@
 		<antcall target="test_tasmanconfig" inheritRefs="true" />
 	</target>
 
-	<target name="antlr">
-		<!--
-		<antlr target="${CSharpDummyGenerator}/Parse/csharp.g" outputdirectory="${CSharpDummyGenerator}/Parse">
-			<classpath refid="lib.dotnet"/>
-		</antlr>
-		-->
-	</target>
-
 	<target name="create_xsd" depends="init_local">
 		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="${msbuild.config}" />
 		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\${msbuild.config}" failonerror="true">
@@ -83,18 +82,13 @@
 	</target>
 
 	<target name="build_xmltypes" depends="create_xsd">
-
 		<path id="lib.xmlbeans">
 			<pathelement path="../../Libraries/xmlbeans/xbean.jar" />
 			<pathelement path="../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
 		</path>
-
 		<taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean" classpathref="lib.xmlbeans" />
-
 		<xmlbean classpathref="lib.xmlbeans" schema="${out.xmltypes}/schema1.xsd" destfile="${xmltypes.jar}" srcgendir="${out.xmltypes}" javasource="1.5" />
-
 		<zip destfile="${xmltypes-src.zip}" basedir="${out.xmltypes}" />
-
 	</target>
 
 	<target name="compile" depends="init_local,build_xmltypes">
@@ -109,12 +103,11 @@
 		<copy todir="${out.build}">
 			<fileset dir="src">
 				<include name="**/moduleinfo.xml" />
-				<include name="INCREconfig.xml" />
 				<include name="Platforms.xml" />
 				<include name="TASMANConfig.xml" />
 			</fileset>
 		</copy>
-		<jar destfile="${starlight.jar}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
+		<jar destfile="${out.jar.starlight}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
 
 	<target name="test_tasmanconfig" depends="init_local">
@@ -131,36 +124,16 @@
 
 	<!-- deploy -->
 
-	<target name="deploy" depends="build" description="Deploy the StarLight compiletime">
-		<copy todir="${starlight.installdir}\lib">
-			<fileset file="${core.jar}" />
-			<fileset file="${starlight.jar}" />
-			<fileset file="${xmltypes.jar}" />
+	<target name="install" depends="build" description="Deploy the StarLight compiletime">
+		<copy todir="${starlight.installdir}">
+			<fileset dir="${out.dist}" />
 		</copy>
 		<copy todir="${starlight.installdir}">
-			<fileset file="src/TASMANConfig.xml" />
+			<fileset dir="${build.core}/Compiletime/${out.dist}">
+				<!-- Eclipse plugin manifest -->
+				<exclude name="META-INF/**"/>
+			</fileset>
 		</copy>
-		<install_core todir="${starlight.installdir}" />
 	</target>
-
-
-	<macrodef name="install_core" description="Install the core to a given directory">
-		<attribute name="todir" description="Directory to copy the files to" />
-		<sequential>
-			<mkdir dir="@{todir}" />
-			<copy todir="@{todir}/lib">
-				<fileset dir="${out.dist}" />
-				<fileset file="${build.core}/Compiletime/lib/antlr/antlr.jar" />
-				<fileset file="${build.core}/Compiletime/lib/antlr/antlr-runtime-3.jar" />
-			</copy>
-			<copy file="${build.core}/Compiletime/lib/log4j/log4j-1.2.14.jar" todir="@{todir}/lib" />
-			<copy file="${build.core}/Compiletime/lib/prolog/prolog.jar" todir="@{todir}/lib" />
-			<copy todir="@{todir}/lib">
-				<fileset dir="${build.core}/Compiletime/lib/groove3">
-					<include name="*.jar" />
-				</fileset>
-			</copy>
-		</sequential>
-	</macrodef>
 
 </project>

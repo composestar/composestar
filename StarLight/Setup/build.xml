@@ -20,10 +20,10 @@
 		<delete>
 			<fileset dir="." includes="**/*.wixobj" />
 		</delete>
-		
+
 		<dn:msbuild buildfile="StarLightSetup/StarLightSetup.wixproj">
 			<target name="Clean" />
-			<property name="Configuration" value="Release" />	
+			<property name="Configuration" value="Release" />
 		</dn:msbuild>
 	</target>
 
@@ -60,7 +60,7 @@
 		<msbuild solution="${VSLang.dir}${file.separator}StarLight.VisualStudio.LanguageServices.csproj" target="build" config="release" />
 		<msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuiltIn.csproj" target="build" config="release" />
 	</target>
-	
+
 	<target name="regpkg_wix3" depends="compile_sources">
 		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
 			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
@@ -79,19 +79,19 @@
 		<!-- fix the creates files to conform wix3 standards -->
 		<replace dir="StarLightSetup">
 			<include name="*.generated.wxi" />
-			<replacefilter token="[#File_" value="[#"/>
-			<replacefilter token="[$ComponentPath]" value="[ComponentPath]"/>
+			<replacefilter token="[#File_" value="[#" />
+			<replacefilter token="[$ComponentPath]" value="[ComponentPath]" />
 		</replace>
 	</target>
-	
+
 	<target name="build" depends="regpkg_wix3" description="Compile the installer files">
 		<copy todir="StarLightSetup/Resources">
 			<fileset file="${basedir}/../Source/Compiletime/src/TASMANConfig.xml" />
 		</copy>
 		<dn:msbuild buildfile="StarLightSetup/StarLightSetup.wixproj">
 			<property name="StarlightVersion" value="${version.starlight}" />
-			<property name="Configuration" value="Release" />	
-		</dn:msbuild>		
+			<property name="Configuration" value="Release" />
+		</dn:msbuild>
 	</target>
 
 </project>

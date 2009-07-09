@@ -57,7 +57,6 @@
 		</copy>
 		<copy todir="${out.dist}">
 			<fileset dir="src">
-				<include name="INCREconfig.xml" />
 				<include name="TASMANConfig.xml" />
 			</fileset>
 			<fileset dir=".">

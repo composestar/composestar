@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight/CoreElements" default="build">
 
-	<property name="build.core" location="${basedir}/../../../Core"/>
-	<import file="${build.core}/common.xml"/>
+	<property name="build.core" location="${basedir}/../../../Core" />
+	<import file="${build.core}/common.xml" />
 
-		<description>StarLight CoreElements.</description>
+	<description>StarLight CoreElements.</description>
 
-	<property name="buildfile" value="StarLight.Weaving.csproj"/>
+	<property name="buildfile" value="StarLight.Weaving.csproj" />
 
 	<target name="clean" depends="init" description="Clean compile results">
-		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
+		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}" />
 	</target>
 
 	<target name="build" depends="init" description="Build the Weaving Strategies">
-		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}"/>
+		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}" />
 	</target>
 
-	<target name="deploy" depends="init" description="Deploy the Weaving Strategies">
-		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}"/>
+	<target name="install" depends="init" description="Deploy the Weaving Strategies">
+		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}" />
 	</target>
 
 </project>

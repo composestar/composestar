@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="ComposeStar/StarLight/SourceAnalyzer" default="antlr" xmlns:cs="antlib:Composestar">
 
-  <property name="build.core" location="${basedir}/../../../Core"/>
-  <import file="${build.core}/common.xml"/>
+	<property name="build.core" location="${basedir}/../../../Core" />
+	<import file="${build.core}/common.xml" />
 
-  <!--<description>...</description>-->
+	<!--<description>...</description>-->
 
-  <target name="init_local" depends="init">
-  </target>
+	<target name="init_local" depends="init">
+	</target>
 
-  <target name="antlr" depends="init_local" description="Generates the C# version of the J# grammar">
+	<target name="antlr" depends="init_local" description="Generates the C# version of the J# grammar">
 
-    <cs:antlr target="JSharp/jsharp.g"
-              outputdirectory="JSharp"
-              classpathref="lib.core"/>
+		<cs:antlr target="JSharp/jsharp.g" outputdirectory="JSharp" classpathref="lib.core" />
 
-    <cs:antlr target="JSharp/jsharp-walker.g"
-              outputdirectory="JSharp"
-              classpathref="lib.core"/>
+		<cs:antlr target="JSharp/jsharp-walker.g" outputdirectory="JSharp" classpathref="lib.core" />
 
-  </target>
+	</target>
 
-  <target name="build"/>
-  <target name="clean"/>
-  
+	<target name="build" />
+	<target name="clean" />
+
 </project>

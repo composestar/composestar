@@ -26,7 +26,7 @@
 	<target name="build" depends="build_msbuild,build_vs" description="Build the VSIntegration projects">
 	</target>
 
-	<target name="deploy" depends="deploy_msbuild,deploy_vs" description="Deploy the VSIntegration projects">
+	<target name="install" depends="deploy_msbuild,deploy_vs" description="Deploy the VSIntegration projects">
 	</target>
 
 	<target name="build_msbuild" description="Build Compose* StarLight MSBuild tasks"> 
