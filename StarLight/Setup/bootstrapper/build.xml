@@ -1,0 +1,25 @@
+<project name="StarLight/Setup/Bootstrapper" default="build">
+
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}/common.xml" />
+
+	<target name="rebuild" depends="clean,build" />
+
+	<target name="clean">
+		<delete dir="dist" />
+	</target>
+
+	<target name="build" depends="init">
+		<exec executable="${basedir}/innosetup/iscc" failonerror="yes">
+			<arg value="SetupBootstrapper.iss" />
+			<arg value="/dStarlightVersion=${version.starlight}" />
+		</exec>
+	</target>
+</project>

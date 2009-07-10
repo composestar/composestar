@@ -80,29 +80,53 @@
 		</replace>
 		-->
 	</target>
-	
+
 	<target name="build_documentation" unless="starlight.documentation">
-		<ant dir=".." target="documentation" />
+		<ant dir=".." target="documentation" inheritall="true" inheritrefs="true" />
 	</target>
 
-	<target name="build" depends="regpkg_wix3" description="Compile the installer files">
+	<target name="build_setup" depends="regpkg_wix3">
 		<copy todir="StarLightSetup/Resources">
 			<fileset file="${basedir}/../Source/Compiletime/src/TASMANConfig.xml" />
 		</copy>
-		
-		<available file="../Documentation/ComposeStar-StarLight.chm" property="starlight.documentation"/>
+
+		<available file="../Documentation/ComposeStar-StarLight.chm" property="starlight.documentation" />
 		<antcall target="build_documentation" />
-		
+
 		<dn:msbuild buildfile="StarLightSetup/StarLightSetup.wixproj">
 			<property name="StarlightVersion" value="${version.starlight}" />
 			<property name="Configuration" value="Release" />
 		</dn:msbuild>
-		
+
+		<!--
 		<copy todir="dist">
 			<fileset dir="StarLightSetup/bin/Release/en-us/">
 				<include name="*.msi" />
 			</fileset>
 		</copy>
+		-->
+	</target>
+
+	<target name="build_bootstrapper" description="Create the setup bootstrapper">
+		<ant dir="bootstrapper" inheritall="true" inheritrefs="true" />
+	</target>
+
+
+	<target name="build" depends="local_init,build_setup,build_bootstrapper" description="Compile the installer files">
+		<copy todir="build" flatten="true">
+			<fileset dir="StarLightSetup/bin/Release/en-us/">
+				<include name="*.msi" />
+			</fileset>
+			<fileset dir="bootstrapper/dist">
+				<include name="Setup.exe" />
+			</fileset>
+			<fileset dir="C:\Program Files\Visual Studio 2005 SDK">
+				<include name="*/VisualStudioIntegration/Redistributables/ProjectAggregator2.msi" />
+			</fileset>
+		</copy>
+		<zip destfile="dist/StarLight_${version.starlight}.zip">
+			<fileset dir="build" />
+		</zip>
 	</target>
 
 </project>
