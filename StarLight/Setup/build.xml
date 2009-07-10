@@ -59,27 +59,26 @@
 			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
 			<arg value="/codebase" />
 			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
-			<arg value="/wixfile:${basedir}\StarLightSetup\StarLight.LanguageService.generated.wxi" />
+			<arg value="/wixfile:${basedir}\StarLightSetup\StarLight.LanguageService.generated.wxi.tmp" />
 			<arg value="Composestar.StarLight.VisualStudio.LanguageServices.dll" />
 		</exec>
 		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true" dir="../Source/VSIntegration/VisualStudio.Project/bin/Release">
 			<env key="PATH" path="${env.PATH}:${VSSDK.path}" />
 			<arg value="/codebase" />
 			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
-			<arg value="/wixfile:${basedir}\StarLightSetup\StarLightProject.generated.wxi" />
+			<arg value="/wixfile:${basedir}\StarLightSetup\StarLightProject.generated.wxi.tmp" />
 			<arg value="Composestar.StarLight.VisualStudio.Project.dll" />
 		</exec>
 		<!-- fix the creates files to conform wix3 standards -->
+		<xslt style="regpkg_conv.xslt" in="StarLightSetup/StarLight.LanguageService.generated.wxi.tmp" out="StarLightSetup/StarLight.LanguageService.generated.wxi" />
+		<xslt style="regpkg_conv.xslt" in="StarLightSetup/StarLightProject.generated.wxi.tmp" out="StarLightSetup/StarLightProject.generated.wxi" />
+		<!--
 		<replace dir="StarLightSetup">
 			<include name="*.generated.wxi" />
 			<replacefilter token="[#File_" value="[#" />
 			<replacefilter token="[$ComponentPath]" value="[ComponentPath]" />
 		</replace>
-	</target>
-	
-	<target name="convert_regpkg">
-		<xslt style="regpkg_conv.xslt" in="StarLight.LanguageService.generated.wxi.tmp" out="StarLight.LanguageService.generated.wxi">
-		</xslt>
+		-->
 	</target>
 	
 	<target name="build_documentation" unless="starlight.documentation">

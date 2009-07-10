@@ -8,7 +8,9 @@
         <Directory Id="StarLightMSBuildDir" Name="StarLight">
           <Component Id="MSBuildTargetBase" Guid="34eec252-f7e8-4839-8f41-5efcaaa00001">
             <File Source="$(var.IntegrationTargetsPath)\StarLight.targets" Vital="yes" />
-            <File Source="$(var.IntegrationTargetsPath)\StarLightVersion.targets" Vital="yes" />
+            <File Source="$(var.IntegrationTargetsPath)\StarLightVersion.targets" Vital="yes" />            
+            <RegistryValue Action="write" Key="SOFTWARE\Microsoft\VisualStudio\8.0\MSBuild\SafeImports" Root="HKLM" Type="string" Name="StarLight.targets" Value="[StarLightMSBuildDir]StarLight.targets" />
+            <RegistryValue Action="write" Key="SOFTWARE\Microsoft\VisualStudio\8.0\MSBuild\SafeImports" Root="HKLM" Type="string" Name="StarLightVersion.targets" Value="[StarLightMSBuildDir]StarLightVersion.targets" />
           </Component>
 
           <Directory Id="VersionStarLightMSBuildDir" Name="$(var.ProductVersion)">
