@@ -86,10 +86,14 @@
 
 	<!-- build -->
 
-	<target name="msbuild_init" depends="init_local" description="Perform soms system initializing through msbuild">
+	<target name="msbuild_init" depends="init_local" description="Perform some system initializing through msbuild">
+		<pathconvert property="starlight.installdir.windows">
+			<path location="${starlight.installdir}" />
+		</pathconvert>
 		<dn:msbuild>
 			<target name="init" />
 			<property name="StarlightVersion" value="${version.starlight}" />
+			<property name="StarlightInstalldir" value="${starlight.installdir.windows}" />
 			<property name="basedir" value="${basedir}" />
 			<build>
 				<Project DefaultTargets="empty" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -104,17 +108,17 @@
 						</RegistryRead>
 
 						<!-- get old values -->
-						<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(CurrentStarlightVersion)" ValueName="StarLightInstallFolder" DefaultValue="$(ProgramFiles)\StarLight" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)">
+						<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(StarlightVersion)" ValueName="StarLightInstallFolder" DefaultValue="$(StarlightInstalldir)" >
 							<Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
 						</RegistryRead>
-						<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(CurrentStarlightVersion)" ValueName="WeaveStrategiesFolder" DefaultValue="$(ProgramFiles)\StarLight\WeaveStrategies\" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)">
+						<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="WeaveStrategiesFolder" DefaultValue="$(StarlightInstalldir)\WeaveStrategies" >
 							<Output TaskParameter="Value" PropertyName="WeaveStrategiesFolder" />
 						</RegistryRead>
 
 						<!-- update registry -->
-						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion" Value="$(StarlightVersion)" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)" />
-						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="StarLightInstallFolder" Value="$(StarLightInstallFolder)" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)" />
-						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="WeaveStrategiesFolder" Value="$(WeaveStrategiesFolder)" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)" />
+						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion" Value="$(StarlightVersion)" />
+						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="StarLightInstallFolder" Value="$(StarLightInstallFolder)" />
+						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="WeaveStrategiesFolder" Value="$(WeaveStrategiesFolder)" />
 					</Target>
 				</Project>
 			</build>
