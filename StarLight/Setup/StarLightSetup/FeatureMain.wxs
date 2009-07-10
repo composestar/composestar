@@ -16,14 +16,13 @@
           <File Source="$(var.ComposestarCore)\prolog.jar" Vital="yes" />
           <File Source="$(var.ComposestarCore)\xerces-2_6_0-xercesImpl.jar" Vital="yes" />
 
-          <File Source="../../Source/Compiletime/dist/StarLight.jar" Vital="yes" />
-          <File Source="../../Source/Compiletime/lib/xmltypes.jar" Vital="yes" />
-
-          <File Source="../../libraries/xmlbeans/jsr173_1.0_api.jar" Vital="yes" />
-          <File Source="../../libraries/xmlbeans/resolver.jar" Vital="yes" />
-          <File Source="../../libraries/xmlbeans/xbean.jar" Vital="yes" />
-          <File Source="../../libraries/xmlbeans/xbean_xpath.jar" Vital="yes" />
-          <File Source="../../libraries/xmlbeans/xmlpublic.jar" Vital="yes" />
+          <File Source="../../Source/Compiletime/dist/lib/StarLight.jar" Vital="yes" />
+          <File Source="../../Source/Compiletime/dist/lib/xmltypes.jar" Vital="yes" />
+          <File Source="../../Source/Compiletime/dist/lib/jsr173_1.0_api.jar" Vital="yes" />
+          <File Source="../../Source/Compiletime/dist/lib/resolver.jar" Vital="yes" />
+          <File Source="../../Source/Compiletime/dist/lib/xbean.jar" Vital="yes" />
+          <File Source="../../Source/Compiletime/dist/lib/xbean_xpath.jar" Vital="yes" />
+          <File Source="../../Source/Compiletime/dist/lib/xmlpublic.jar" Vital="yes" />
         </Component>
       </Directory>
 

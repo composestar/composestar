@@ -67,7 +67,7 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 				<!-- Installers -->
 				<artifactspublisher dir="${composestar.path}/Java/Installer/eclipse/dist" dest="artifacts/${project.name}/" />
 				<artifactspublisher dir="${composestar.path}/CwC/Installer/dist" dest="artifacts/${project.name}/" />
-				<artifactspublisher dir="${composestar.path}/Starlight/Setup/Releases" dest="artifacts/${project.name}/" />
+				<artifactspublisher dir="${composestar.path}/Starlight/Setup/dist" dest="artifacts/${project.name}/" />
 				<!-- QA -->
 				<artifactspublisher dir="${composestar.path}/Core/qa" dest="artifacts/${project.name}/" subdirectory="qa_core" />
 				<artifactspublisher dir="${composestar.path}/Java/qa" dest="artifacts/${project.name}/" subdirectory="qa_java" />

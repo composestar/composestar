@@ -28,20 +28,13 @@
 	</target>
 
 	<target name="local_init" depends="init">
-		<mkdir dir="Releases" />
 		<mkdir dir="build" />
 		<mkdir dir="dist" />
-
-		<!-- WIX -->
-		<property name="path.wix" value="${build.starlight}${file.separator}Development${file.separator}Wix${file.separator}" />
 
 		<property name="MSBuildTasks.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}MSBuildTasks" />
 		<property name="VSProject.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.Project" />
 		<property name="VSLang.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.LanguageServices" />
 		<property name="WeaveStrategy.dir" location="..${file.separator}Source${file.separator}StarLight.Weaving.BuiltIn" />
-		<property name="wixsource.path" value="${basedir}${file.separator}WixStarLight${file.separator}" />
-		<property name="msi.file" value="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}StarLight_${version.starlight}.msi" />
-		<property name="wixtemp.path" value="${build.starlight}${file.separator}Setup${file.separator}" />
 
 		<property name="VSTools.path" value="C:\Program Files\Microsoft Visual Studio 8\Common7\Tools" />
 
@@ -83,15 +76,34 @@
 			<replacefilter token="[$ComponentPath]" value="[ComponentPath]" />
 		</replace>
 	</target>
+	
+	<target name="convert_regpkg">
+		<xslt style="regpkg_conv.xslt" in="StarLight.LanguageService.generated.wxi.tmp" out="StarLight.LanguageService.generated.wxi">
+		</xslt>
+	</target>
+	
+	<target name="build_documentation" unless="starlight.documentation">
+		<ant dir=".." target="documentation" />
+	</target>
 
 	<target name="build" depends="regpkg_wix3" description="Compile the installer files">
 		<copy todir="StarLightSetup/Resources">
 			<fileset file="${basedir}/../Source/Compiletime/src/TASMANConfig.xml" />
 		</copy>
+		
+		<available file="../Documentation/ComposeStar-StarLight.chm" property="starlight.documentation"/>
+		<antcall target="build_documentation" />
+		
 		<dn:msbuild buildfile="StarLightSetup/StarLightSetup.wixproj">
 			<property name="StarlightVersion" value="${version.starlight}" />
 			<property name="Configuration" value="Release" />
 		</dn:msbuild>
+		
+		<copy todir="dist">
+			<fileset dir="StarLightSetup/bin/Release/en-us/">
+				<include name="*.msi" />
+			</fileset>
+		</copy>
 	</target>
 
 </project>

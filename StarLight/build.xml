@@ -181,12 +181,6 @@
 		<ant target="install" dir="Source/StarLight.Weaving.BuiltIn" inheritRefs="true" />
 		<ant target="install" dir="Source/SigExpander" inheritRefs="true" />
 		<ant target="install" dir="Source/VSIntegration/" inheritRefs="true" />
-		<copy todir="${starlight.installdir}">
-			<fileset dir="Setup/installed">
-				<include name="*.xml" />
-				<include name="*.css" />
-			</fileset>
-		</copy>
 	</target>
 
 	<!-- QA -->
