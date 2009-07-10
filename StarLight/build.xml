@@ -119,6 +119,8 @@
 						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion" Value="$(StarlightVersion)" />
 						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="StarLightInstallFolder" Value="$(StarLightInstallFolder)" />
 						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="WeaveStrategiesFolder" Value="$(WeaveStrategiesFolder)" />
+						
+						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\StarLight" Value="$(StarLightInstallFolder)\CoreElements" />
 					</Target>
 				</Project>
 			</build>
