@@ -67,7 +67,10 @@ public class PruneDir extends Task
 		{
 			File f1 = new File(basedir, (String) o1);
 			File f2 = new File(basedir, (String) o2);
-			return (int) (f1.lastModified() - f2.lastModified());
+			long res = f1.lastModified() - f2.lastModified();
+			if (res > 0) return 1;
+			if (res < 0) return -1;
+			return 0;
 		}
 	}
 }
