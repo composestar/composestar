@@ -18,6 +18,7 @@
 		<cs:pruneFiles keep="100"><!-- delete all but the last X log files -->
 			<fileset dir="${env.CCDIR}${file.separator}logs${file.separator}${projectname}">
 				<include name="*.xml" />
+				<include name="*.xml.gz" />
 			</fileset>			
 		</cs:pruneFiles>
 
