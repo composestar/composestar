@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<site>
+<site url="http://downloads.sourceforge.net/project/composestar/eclipse/current/">
 	<description url="http://composestar.sourceforge.net/">
 		Compose* Eclipse features site
 	</description>
@@ -7,7 +7,6 @@
 	<feature id="composestar.java" url="features/composestar.java_@version.java@.jar" version="@version.java@">
 		<category name="ComposestarJava"/>
 	</feature>
-
 
 	<category-def name="Composestar" label="Compose*">
 		<description></description>
