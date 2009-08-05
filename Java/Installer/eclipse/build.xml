@@ -13,6 +13,11 @@
 	<import file="${build.core}${file.separator}common.xml" />
 
 	<target name="local_init" depends="init">
+		<!-- the public location of the update site -->
+		<property name="updatesite.home" value="http://composestar.sourceforge.net/eclipse/" />
+		<!-- the base URL for the update site -->
+		<property name="updatesite.baseurl" value="http://downloads.sourceforge.net/project/composestar/eclipse/current/" />
+
 		<mkdir dir="${out.build}" />
 		<mkdir dir="${out.dist}" />
 		<mkdir dir="${out.dist}/www/features" />
@@ -49,7 +54,23 @@
 		</copy>
 	</target>
 
-	<target name="publish" depends="local_init,copy_files" description="create eclipse packages">
+	<target name="gen_site_xml" depends="local_init">
+		<!-- make sure the base exists -->
+		<echoxml file="build/site.old.xml">
+			<dummy />
+		</echoxml>
+		<!-- download current active distribution -->
+		<get src="${updatesite.home}site.xml" dest="build/site.old.xml" />
+		<!-- create the new release -->
+		<xslt in="build/site.old.xml" out="${out.dist}/www/site.xml" style="site.xslt">
+			<param name="version.core" expression="${version.core}.${version.eclipse.qualifier}" />
+			<param name="version.java" expression="${version.java}.${version.eclipse.qualifier}" />
+			<param name="updatesite.home" expression="${updatesite.home}" />
+			<param name="updatesite.baseurl" expression="${updatesite.baseurl}" />
+		</xslt>
+	</target>
+
+	<target name="publish" depends="local_init,copy_files,gen_site_xml" description="create eclipse packages">
 		<jar destfile="${out.dist}/www/features/composestar.java_${version.java}.${version.eclipse.qualifier}.jar">
 			<fileset dir="${out.build}/features/composestar.java_${version.java}.${version.eclipse.qualifier}" />
 		</jar>
@@ -66,16 +87,10 @@
 			<fileset dir="${out.build}/plugins/composestar.core.plugin_${version.java}.${version.eclipse.qualifier}" />
 		</jar>
 
-		<copy file="site.template.xml" tofile="${out.dist}/www/site.xml" overwrite="true" />
-		<replace file="${out.dist}/www/site.xml">
-			<replacefilter token="@version.core@" value="${version.core}.${version.eclipse.qualifier}" />
-			<replacefilter token="@version.java@" value="${version.java}.${version.eclipse.qualifier}" />
-		</replace>
-
 		<zip destfile="${out.dist}/composestar.java_${version.java}.${version.eclipse.qualifier}.zip">
 			<fileset dir="${out.build}" />
 		</zip>
-		
+
 		<zip destfile="${out.dist}/eclipse_updatesite_java.zip">
 			<fileset dir="${out.dist}/www" />
 		</zip>
