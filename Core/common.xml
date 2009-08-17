@@ -338,7 +338,7 @@
 		</fail>
 
 		<!-- location for the Eclipse P2 dropins of compose* -->
-		<property name="eclipse.dropins" value="${eclipse.home}" />
+		<property name="eclipse.dropins" value="${eclipse.home}/dropins/composestar/eclipse" />
 		<!-- location of Eclipse pluginsfolder -->
 		<property name="eclipse.pluginsdir" value="${eclipse.dropins}${file.separator}plugins" />
 
