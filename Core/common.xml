@@ -125,6 +125,7 @@
 		</condition>
 
 		<!-- resolve system variables -->
+		<!--
 		<property name="env.SYSTEMROOT" value="${env.SystemRoot}" />
 		<condition property="anthelper.version" value="" else="2">
 			<available file="${env.SYSTEMROOT}\Microsoft.NET\Framework\v1.1.4322" type="dir" />
@@ -135,6 +136,18 @@
 		</exec>
 
 		<property file="${build.core}${file.separator}Development${file.separator}system.properties" />
+		-->
+		
+		<touch file="${build.core}/Development/dotnetenv.properties" />
+		<ant antfile="dotnetenv.xml" dir="${build.core}/Development" target="dotnetenv" inheritAll="true" inheritRefs="true" />
+		<loadproperties srcfile="${build.core}/Development/dotnetenv.properties">
+			<filterchain>
+				<tokenfilter>
+					<!-- escape special property chars -->
+    			<replaceregex pattern="([\\])" replace="\\\\\1" flags="g"/>
+				</tokenfilter>
+			</filterchain>
+		</loadproperties>
 
 		<!-- location of the Compose* installation -->
 		<condition property="starlight.installdir" value="${env.ProgramFiles}/StarLight/${version.starlight}">
