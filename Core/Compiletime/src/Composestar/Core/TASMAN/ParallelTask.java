@@ -116,7 +116,7 @@ public class ParallelTask extends TaskCollection
 			{
 				running[i] = runtasks[threadCnt++];
 				Thread t = new Thread(group, running[i]);
-				t.setName("Parallel" + i);
+				t.setName("parallel" + i);
 				logger.debug(String.format("Starting thread %d", i));
 				t.start();
 			}
