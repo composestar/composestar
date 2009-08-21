@@ -1,0 +1,32 @@
+<Project DefaultTargets="dotnetenv" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(StarlightBasedir)\Development\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
+	</PropertyGroup>
+	<Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
+
+	<Target Name="dotnetenv">
+		<Error Text="The StarlightVersion property is not set." Condition="$(StarlightVersion) == ''" />
+		<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion">
+			<Output TaskParameter="Value" PropertyName="CurrentStarlightVersion" />
+		</RegistryRead>
+
+		<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(CurrentStarlightVersion)"
+			ValueName="StarLightInstallFolder" DefaultValue="$(ProgramFiles)\StarLight" Condition="$(StarlightVersion) == $(CurrentStarlightVersion)">
+			<Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
+		</RegistryRead>
+		<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(CurrentStarlightVersion)"
+			ValueName="WeaveStrategiesFolder" DefaultValue="$(ProgramFiles)\StarLight\WeaveStrategies\" Condition="$(StarlightVersion) == $(CurrentStarlightVersion)">
+			<Output TaskParameter="Value" PropertyName="WeaveStrategiesFolder" />
+		</RegistryRead>
+
+		<!--
+			<Message Text="CurrentStarlightVersion = $(CurrentStarlightVersion)" /> <Message Text="InstallFolder =
+			$(StarLightInstallFolder)" /> <Message Text="StrategiesFolder = $(WeaveStrategiesFolder)" />
+		-->
+
+		<WriteLinesToFile File="$(PropertyFile)" Lines="starlight.installdir=$(StarLightInstallFolder)"
+			Overwrite="false" Condition="$(StarLightInstallFolder) != ''" />
+		<WriteLinesToFile File="$(PropertyFile)" Lines="starlight.strategiesdir=$(WeaveStrategiesFolder)"
+			Overwrite="false" Condition="$(WeaveStrategiesFolder) != ''" />
+	</Target>
+</Project>
