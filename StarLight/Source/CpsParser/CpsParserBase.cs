@@ -39,6 +39,10 @@ namespace Composestar.StarLight.CpsParser
             : base(input)
         { }
 
+        public CpsParserBase(ITokenStream input, RecognizerSharedState state)
+            : base(input, state)
+        { }
+
         protected void warning(String msg, IToken t)
         { }
 
@@ -73,6 +77,11 @@ namespace Composestar.StarLight.CpsParser
         protected Object adaptorCreate(ITreeAdaptor ta, int token, String text, IToken baset)
         {
             return ta.Create(token, baset, text);
+        }
+
+        protected Object adaptorDup(ITreeAdaptor ta, Object tree)
+        {
+            return ta.DupTree(tree);
         }
     }
 }

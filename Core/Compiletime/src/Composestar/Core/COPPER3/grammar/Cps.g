@@ -751,7 +751,7 @@ scope
 			-> ^(CMPSTMT[$start] ^(OPERATOR CMP_SIGN) ^(OPERAND IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $s1.text +"'", $n1.start) } ))
 			)
 		| ASTERISK PERIOD 
-			(s3=literalOrFmParam b=bogusHelperTarget // *.bar -> selector $= bar (where bar is a "selector") -> warn?
+			(s3=literalOrFmParam b=bogusHelperTarget bs=bogusHelperSelector // *.bar -> selector $= bar (where bar is a "selector") -> warn?
 			{ if($filterElement::mpTarget == null){
 				if ($matchingPattern::isplist != 0) $filterElement::mpSelector = $bs.tree;
 				else $filterElement::mpSelector = $s3.tree; 
@@ -795,27 +795,27 @@ substitutionPart
 	: n1=identifierOrFmParam 
 		(PERIOD 
 			(n2=literalOrFmParam // foo.bar
-			-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND $n1))
-				^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n2))
+			-> ^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND[$n1.start] $n1))
+				^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND[$n2.start] $n2))
 			| ASTERISK // foo.*
-			-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND $n1))
-				^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND ^(FQN IDENTIFIER["selector"])))
+			-> ^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND[$n1.start] $n1))
+				^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND[$start] ^(FQN[$start] IDENTIFIER["selector"])))
 			)
 		| // bar
-		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'", $n1.start) }))
-			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
+		-> ^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND[$start] { adaptorCreate(adaptor, LITERAL, "'"+ $n1.text +"'", $n1.start) }))
+			^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND[$start] ^(FQN[$start] IDENTIFIER["target"])))
 		)
 	| ASTERISK PERIOD 
 		(n3=literalOrFmParam // *.bar
-		-> ^(EQUALS[$start] ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND $n3))
-			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
+		-> ^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND[$n3.start] $n3))
+			^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND[$start] ^(FQN[$start] IDENTIFIER["target"])))
 		| ASTERISK // *.*
-		-> ^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND ^(FQN IDENTIFIER["target"])))
-			^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND ^(FQN IDENTIFIER["selector"])))
+		-> ^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND[$start] ^(FQN[$start] IDENTIFIER["target"])))
+			^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND[$start] ^(FQN[$start] IDENTIFIER["selector"])))
 		)
 	| (COMMA|RCURLY) => // use first matching part
-	-> ^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND {$filterElement::mpTarget} ))
-		^(EQUALS ^(OPERAND IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND {$filterElement::mpSelector} ))
+	-> ^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["target"]) ^(OPERAND[$start] {adaptorDup(adaptor, $filterElement::mpTarget)} ))
+		^(EQUALS[$start] ^(OPERAND[$start] IDENTIFIER["legacy"] IDENTIFIER["selector"]) ^(OPERAND[$start] {adaptorDup(adaptor, $filterElement::mpSelector)} ))
 	;
 
 // $> Filter

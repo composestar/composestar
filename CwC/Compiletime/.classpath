@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/log4j/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar" sourcepath="C:/antlr"/>
 	<classpathentry kind="lib" path="lib/weavec.jar" sourcepath="C:/local/mhendrik/weavec/src"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr-2.7.7.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

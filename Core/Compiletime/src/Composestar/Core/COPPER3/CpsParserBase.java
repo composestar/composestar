@@ -26,6 +26,7 @@ package Composestar.Core.COPPER3;
 
 import org.antlr.runtime.Parser;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.TreeAdaptor;
@@ -57,6 +58,11 @@ public abstract class CpsParserBase extends Parser
 	public CpsParserBase(TokenStream input)
 	{
 		super(input);
+	}
+
+	public CpsParserBase(TokenStream input, RecognizerSharedState state)
+	{
+		super(input, state);
 	}
 
 	/**
@@ -163,6 +169,18 @@ public abstract class CpsParserBase extends Parser
 	protected Object adaptorCreate(TreeAdaptor ta, int token, String text, Token base)
 	{
 		return ta.create(token, base, text);
+	}
+
+	/**
+	 * Duplicate a tree
+	 * 
+	 * @param ta
+	 * @param tree
+	 * @return
+	 */
+	protected Object adaptorDup(TreeAdaptor ta, Object tree)
+	{
+		return ta.dupTree(tree);
 	}
 
 	/**

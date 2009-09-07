@@ -27,6 +27,7 @@ package Composestar.Core.COPPER3;
 import java.io.File;
 
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeNodeStream;
@@ -97,6 +98,11 @@ public abstract class CpsTreeWalkerBase extends TreeParser
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
 		super(input);
+	}
+
+	public CpsTreeWalkerBase(TreeNodeStream input, RecognizerSharedState state)
+	{
+		super(input, state);
 	}
 
 	/**

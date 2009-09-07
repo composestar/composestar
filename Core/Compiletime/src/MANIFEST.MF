@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
-Class-Path:  antlr.jar 
- antlr-runtime-3.jar 
+Class-Path: antlr-2.7.7.jar 
+ antlr-runtime-3.1.3.jar 
  log4j-1.2.14.jar 
  prolog.jar 
  castor-0_9_5_2.jar 
  groove-3_2_2.jar 
  groove-gxl-1_0.jar 
- xerces-2_6_0-xercesImpl.jar
+ xerces-2_6_0-xercesImpl.jar 
