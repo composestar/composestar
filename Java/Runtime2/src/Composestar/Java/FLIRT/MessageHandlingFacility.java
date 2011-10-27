@@ -46,6 +46,7 @@ import Composestar.Java.FLIRT.Env.MessageDirection;
 import Composestar.Java.FLIRT.Env.MessageState;
 import Composestar.Java.FLIRT.Env.ObjectManager;
 import Composestar.Java.FLIRT.Env.RTCpsObject;
+import Composestar.Java.FLIRT.Env.RTEvent;
 import Composestar.Java.FLIRT.Env.RTMessage;
 import Composestar.Java.FLIRT.Env.SimpleCpsObject;
 import Composestar.Java.FLIRT.Utils.InvocationException;
@@ -313,6 +314,33 @@ public final class MessageHandlingFacility
 			throw e;
 		}
 		return returnvalue;
+	}
+	
+	/**
+	 * Generic method handling
+	 * 
+	 * @param caller
+	 * @param target
+	 * @param selector
+	 * @param args
+	 * @return
+	 */
+	public static void handleEvent(RTEvent event) throws Throwable
+	{
+		ObjectManager eventOM = ObjectManagerHandler.getObjectManager(event.getPMI(), repository);
+
+		try
+		{
+			eventOM.handleEvent(event);
+		}
+		catch (RuntimeException e)
+		{
+			if (!RT_DEBUG)
+			{
+				e.fillInStackTrace();
+			}
+			throw e;
+		}
 	}
 
 	/**

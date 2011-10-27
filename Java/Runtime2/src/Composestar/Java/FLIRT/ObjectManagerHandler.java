@@ -28,9 +28,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import physdl.model.m_20sim.Model;
+import physdl.runtime.PhysicalModelInstance;
 import Composestar.Core.CpsRepository2.Concern;
 import Composestar.Core.CpsRepository2.Repository;
 import Composestar.Core.CpsRepository2.FilterModules.External;
@@ -64,6 +67,8 @@ public final class ObjectManagerHandler
 	 * who call an inner method.
 	 */
 	private static final Set<Object> UNDER_CONSTRUCTION = Collections.synchronizedSet(new HashSet<Object>());
+	
+	public static Map<String, Set<String>> fmPmiMapping;
 
 	private ObjectManagerHandler()
 	{}
@@ -133,13 +138,36 @@ public final class ObjectManagerHandler
 		List<RTFilterModule> fms = new ArrayList<RTFilterModule>();
 		for (ImposedFilterModule ifm : crn.getSuperimposed().getFilterModuleOrder())
 		{
-			RTFilterModule rtfm = new RTFilterModule(ifm.getFilterModule(), ifm.getCondition());
-			assignVariables(forObject, rtfm, repos);
-			fms.add(rtfm);
+			if (isPhysicalModelInstanceSI(forObject, ifm))
+			{
+				RTFilterModule rtfm = new RTFilterModule(ifm.getFilterModule(), ifm.getCondition());
+				assignVariables(forObject, rtfm, repos);
+				fms.add(rtfm);
+			}
 		}
 
 		ObjectManager obj = new ObjectManager(forObject, crn, fms);
 		return obj;
+	}
+	
+	private static boolean isPhysicalModelInstanceSI(Object obj, ImposedFilterModule ifm){
+		if (obj instanceof PhysicalModelInstance){
+			Set<String> modelNames = fmPmiMapping.get(ifm.getFilterModule().getName());
+			
+			if (modelNames == null){
+				return false;
+			}
+			
+			PhysicalModelInstance pmi = (PhysicalModelInstance) obj;
+			Model[] models = pmi.getPhysicalModel().getModels();
+			for (int i=0; i<models.length; i++){
+				if (modelNames.contains(models[i].getName())){
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	/**

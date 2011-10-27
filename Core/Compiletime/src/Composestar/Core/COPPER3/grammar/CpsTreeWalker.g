@@ -683,6 +683,30 @@ assignRhs [FilterModule fm, FilterType ft] returns [CpsVariable val]
 			setLocInfo(val, $l);
 			repository.add(val);
 		}
+	| v=VALUE 
+		{
+			String vvalue = $v.text;
+			val = new CpsValueImpl(vvalue);
+			setLocInfo(val, $v);
+			repository.add(val);
+		}
+	| ^(PROPERTY_ACCESS e=EVENT id=IDENTIFIER lit = LITERAL?)
+		{
+			if ($lit == null){
+				val = new CpsPropertyAccessImpl($e.text, $id.text);
+			}
+			else{
+				String lvalue = $lit.text;
+				if (lvalue.length() >= 2)
+				{
+					lvalue = unescapeLiteral(lvalue.substring(1, lvalue.length()-1));
+				}
+				else {
+					lvalue = "";
+				}
+				val = new CpsPropertyAccessImpl($e.text, $id.text, lvalue);
+			}
+		}
 	;
 
 // $<Condition Expression
@@ -780,6 +804,10 @@ cmpOperator returns [MECompareStatement cmp]
 	| CMP_SIGN 		{ cmp = new SignatureMatching(); }
 	| CMP_COMPAT  	{ cmp = new CompatibilityMatching(); }
 	| CMP_ANNOT		{ cmp = new AnnotationMatching(); }
+	| CMP_LEQ		{ cmp = new ValueMatching(ValueMatching.LEQ); }
+	| CMP_GEQ		{ cmp = new ValueMatching(ValueMatching.GEQ); }
+	| LANGLE		{ cmp = new ValueMatching(ValueMatching.LT); }
+	| RANGLE		{ cmp = new ValueMatching(ValueMatching.GT); }
 	)
 	{
 		try {
@@ -953,6 +981,14 @@ meCmpRhsSingle [FilterModule fm, CpsVariableCollection res]
 			res.add(lit); 
 			setLocInfo(lit, $l);
 			repository.add(lit);
+		}
+	| v=VALUE 
+		{
+			String vvalue = $v.text;
+			CpsValue val = new CpsValueImpl(vvalue);
+			res.add(val); 
+			setLocInfo(val, $v);
+			repository.add(val);
 		}
 	;
 

@@ -38,6 +38,7 @@ import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Core.CpsRepository2.SISpec.Constraints.ExecutionResult;
 import Composestar.Java.FLIRT.Actions.RTFilterAction;
 import Composestar.Java.FLIRT.Env.ObjectManager;
+import Composestar.Java.FLIRT.Env.RTEvent;
 import Composestar.Java.FLIRT.Env.RTFilterModule;
 import Composestar.Java.FLIRT.Env.RTMessage;
 
@@ -55,6 +56,11 @@ public class FilterExecutionContext
 	 * The current message
 	 */
 	protected RTMessage message;
+	
+	/**
+	 * The current event
+	 */
+	protected RTEvent event;
 
 	/**
 	 * List of filter modules
@@ -122,6 +128,21 @@ public class FilterExecutionContext
 		fmExecutionStatus = new HashMap<RTFilterModule, ExecutionResult>();
 		returnActions = new LinkedList<EnqueuedAction>();
 	}
+	
+	/**
+	 * @param man
+	 * @param msg
+	 */
+	public FilterExecutionContext(ObjectManager man, RTMessage msg, RTEvent event)
+	{
+		contextFree = false;
+		objectManager = man;
+		message = msg;
+		this.event = event;
+		filterModules = man.getFilterModules();
+		fmExecutionStatus = new HashMap<RTFilterModule, ExecutionResult>();
+		returnActions = new LinkedList<EnqueuedAction>();
+	}
 
 	/**
 	 * Free the context and notify all waiters
@@ -154,6 +175,14 @@ public class FilterExecutionContext
 	public RTMessage getMessage()
 	{
 		return message;
+	}
+	
+	/**
+	 * @return The current event message
+	 */
+	public RTEvent getEvent()
+	{
+		return event;
 	}
 
 	/**

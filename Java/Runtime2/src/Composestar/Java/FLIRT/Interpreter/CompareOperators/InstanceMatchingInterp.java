@@ -30,6 +30,7 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsValue;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.InstanceMatching;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
@@ -116,6 +117,9 @@ public class InstanceMatchingInterp extends CompareOperatorInterpreter<InstanceM
 					}
 				}
 			}
+		}
+		else if (lhs instanceof CpsValue && rhs instanceof CpsValue){
+			return ((CpsValue) lhs).getValue() == ((CpsValue) rhs).getValue();
 		}
 		return false;
 	}

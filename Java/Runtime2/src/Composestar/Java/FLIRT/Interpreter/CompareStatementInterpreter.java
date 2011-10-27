@@ -35,6 +35,7 @@ import Composestar.Java.FLIRT.Interpreter.CompareOperators.CompareOperatorInterp
 import Composestar.Java.FLIRT.Interpreter.CompareOperators.CompatibilityMatchingInterp;
 import Composestar.Java.FLIRT.Interpreter.CompareOperators.InstanceMatchingInterp;
 import Composestar.Java.FLIRT.Interpreter.CompareOperators.SignatureMatchingInterp;
+import Composestar.Java.FLIRT.Interpreter.CompareOperators.ValueMatchingInterp;
 
 /**
  * Generic interpreter for compare statements
@@ -57,6 +58,7 @@ public final class CompareStatementInterpreter
 		registerInterpreter(new SignatureMatchingInterp());
 		registerInterpreter(new AnnotationMatchingInterp());
 		registerInterpreter(new CompatibilityMatchingInterp());
+		registerInterpreter(new ValueMatchingInterp());
 	}
 
 	private CompareStatementInterpreter()

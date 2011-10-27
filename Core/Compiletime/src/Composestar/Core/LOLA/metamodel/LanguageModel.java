@@ -40,7 +40,7 @@ public abstract class LanguageModel
 	/**
 	 * Wrapper classes for program elements used during creation of the model;
 	 */
-	protected Class<?> mcNamespace, mcClass, mcInterface, mcType, mcMethod, mcField, mcParameter, mcAnnotation;
+	protected Class<?> mcNamespace, mcClass, mcInterface, mcType, mcMethod, mcField, mcParameter, mcAnnotation, mcModel;
 
 	public LanguageModel()
 	{
@@ -389,6 +389,14 @@ public abstract class LanguageModel
 		{
 			utAnnotation = new LanguageUnitType(mcAnnotation, EUnitType.ANNOTATION, true);
 			addLanguageUnitType(utAnnotation);
+		}
+		
+		// Define the 'Model' language unit type
+		LanguageUnitType utModel = null;
+		if (mcModel != null)
+		{
+			utModel = new LanguageUnitType(mcModel, EUnitType.MODEL, true);
+			addLanguageUnitType(utModel);
 		}
 
 		/** ******* Definition of unit relations ******** */

@@ -36,6 +36,7 @@ import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsProgramElement;
+import Composestar.Core.CpsRepository2.TypeSystem.CpsPropertyAccess;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.FilterElements.CORFilterElmOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.CanonAssignmentImpl;
@@ -44,6 +45,7 @@ import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsSelectorMethodInfo;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Java.FLIRT.FLIRTConstants;
+import Composestar.Java.FLIRT.Env.RTEvent;
 import Composestar.Java.FLIRT.Env.RTMessage;
 
 /**
@@ -132,6 +134,7 @@ public final class FEExpressionInterpreter
 				context.setFilterArguments(farg);
 			}
 			RTMessage msg = context.getMessage();
+			RTEvent event = context.getEvent();
 			for (CanonAssignment asg : fex.getAssignments())
 			{
 				if (asg.getProperty() == null)
@@ -140,7 +143,11 @@ public final class FEExpressionInterpreter
 				}
 
 				CpsVariable value =
-						FilterExpressionInterpreter.getRTObject(getValue(asg.getValue(), msg, farg), context);
+						FilterExpressionInterpreter.getRTObject(getValue(asg.getValue(), msg, context.getEvent(), farg), context);
+				
+				if (value instanceof CpsPropertyAccess){
+					value = getValuePropAccess(value, msg, event);
+				}
 
 				if (value == null)
 				{
@@ -191,6 +198,9 @@ public final class FEExpressionInterpreter
 						}
 					}
 				}
+				else if (asg.getProperty().getPrefix() == PropertyPrefix.EVENT){
+					event.setProperty(asg.getProperty().getBaseName(), value);
+				}
 				else
 				{
 					logger.warning(String.format("Assignment of an unknown property: %s", asg.getProperty().getName()));
@@ -204,15 +214,18 @@ public final class FEExpressionInterpreter
 		}
 		return false;
 	}
+	
+	
 
 	/**
 	 * Return the real value of a message, resolving possible deferred values.
 	 * 
 	 * @param var
 	 * @param msg
+	 * @param rtEvent 
 	 * @return
 	 */
-	public static CpsVariable getValue(CpsVariable var, RTMessage msg, FilterArguments farg)
+	public static CpsVariable getValue(CpsVariable var, RTMessage msg, RTEvent event, FilterArguments farg)
 	{
 		CpsVariable result = var;
 		while (result instanceof CanonProperty)
@@ -230,9 +243,39 @@ public final class FEExpressionInterpreter
 			{
 				result = msg.getProperty(prop.getBaseName());
 			}
+			else if (prop.getPrefix() == PropertyPrefix.EVENT)
+			{
+				result = event.getProperty(prop.getBaseName());
+			}
 			else if (PropertyNames.INNER.equals(prop.getName()))
 			{
 				result = msg.getInner();
+			}
+			else
+			{
+				return null;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Return the real value of a message, resolving possible deferred values.
+	 * 
+	 * @param var
+	 * @param msg
+	 * @param rtEvent 
+	 * @return
+	 */
+	public static CpsVariable getValuePropAccess(CpsVariable var, RTMessage msg, RTEvent event)
+	{
+		CpsVariable result = var;
+		if (result instanceof CpsPropertyAccess)
+		{
+			CpsPropertyAccess prop = (CpsPropertyAccess) result;
+			if (PropertyPrefix.EVENT.equals(prop.getPrefix()))
+			{
+				result = event.getProperty(prop.getProperty(), prop.getKey());
 			}
 			else
 			{

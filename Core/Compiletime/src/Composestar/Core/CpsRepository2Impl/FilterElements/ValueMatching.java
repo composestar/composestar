@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2011 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,35 +22,39 @@
  * $Id$
  */
 
-package Composestar.Core.LOLA.metamodel;
+package Composestar.Core.CpsRepository2Impl.FilterElements;
 
 /**
- * @author Michiel Hendriks
+ *
+ * @author arjan
  */
-public enum EUnitType
+public class ValueMatching extends AbstractMECmpStmt
 {
-	NAMESPACE("Namespace"), CLASS("Class"), INTERFACE("Interface"), TYPE("Type"), METHOD("Method"), FIELD("Field"),
-	PARAMETER("Parameter"), ANNOTATION("Annotation"), MODEL("Model");
+	private int compType;
+	
+	public final static int GEQ = 1;
+	public final static int LEQ = 2;
+	public final static int GT = 3;
+	public final static int LT = 4;
 
-	private String name;
-
-	EUnitType(String value)
-	{
-		name = value;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Enum#toString()
+	/**
+	 * 
 	 */
-	@Override
-	public String toString()
+	private static final long serialVersionUID = 6374956619785086468L;
+
+	/**
+	 * 
+	 */
+	public ValueMatching(int compType)
 	{
-		return name;
+		super();
+		this.compType = compType;
 	}
 
-	public boolean equals(String other)
+	public int getCompType()
 	{
-		return name.equals(other);
+		return compType;
 	}
+	
+	
 }

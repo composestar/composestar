@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2011 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,35 +22,13 @@
  * $Id$
  */
 
-package Composestar.Core.LOLA.metamodel;
+package Composestar.Core.CpsRepository2.TypeSystem;
 
 /**
- * @author Michiel Hendriks
+ *
+ * @author arjan
  */
-public enum EUnitType
+public interface CpsValue extends CpsVariable
 {
-	NAMESPACE("Namespace"), CLASS("Class"), INTERFACE("Interface"), TYPE("Type"), METHOD("Method"), FIELD("Field"),
-	PARAMETER("Parameter"), ANNOTATION("Annotation"), MODEL("Model");
-
-	private String name;
-
-	EUnitType(String value)
-	{
-		name = value;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Enum#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return name;
-	}
-
-	public boolean equals(String other)
-	{
-		return name.equals(other);
-	}
+	double getValue();
 }

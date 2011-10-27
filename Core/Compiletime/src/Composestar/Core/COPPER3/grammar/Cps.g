@@ -70,10 +70,12 @@ tokens {
 	JPCA_FULL = 'full';
 	JPCA_PARTIAL = 'partial';
 	NONE;
+	PROPERTY_ACCESS;
 	
 	TARGET = 'target';
 	SELECTOR = 'selector';
 	MESSAGE = 'message';
+	EVENT = 'event';
 	INNER = 'inner';
 	
 	TRUE = 'true';
@@ -468,6 +470,8 @@ meCompoundExpr
 meCmpLhs
 	: m=MESSAGE PERIOD identifier
 	-> IDENTIFIER[m] identifier
+	| e=EVENT PERIOD identifier
+	-> IDENTIFIER[e] identifier
 	| t=TARGET
 	-> IDENTIFIER[t]
 	| s=SELECTOR
@@ -478,7 +482,7 @@ meCmpLhs
  * The accepted compare operators
  */
 meCmpOpr
-	: CMP_INSTANCE | CMP_SIGN | CMP_COMPAT | CMP_ANNOT
+	: CMP_INSTANCE | CMP_SIGN | CMP_COMPAT | CMP_ANNOT | CMP_LEQ | CMP_GEQ | LANGLE | RANGLE
 	;
 
 /**
@@ -498,7 +502,7 @@ meCmpRhs
  * A single entry on the right hand side
  */
 meCmpRhsSingle
-	: fqn | singleFmParam | LITERAL
+	: fqn | singleFmParam | LITERAL | VALUE
 	;
 	
 /**
@@ -524,7 +528,12 @@ canonAssingLhs
  * The right hand side of the assignment
  */
 canonAssignRhs
-	: fqn | singleFmParam | LITERAL
+	: fqn | singleFmParam | LITERAL | VALUE | propertyAccess
+	;
+
+propertyAccess
+	: e=EVENT PERIOD id=identifier (LSQUARE lit = LITERAL RSQUARE)?
+	-> ^(PROPERTY_ACCESS $e $id $lit?)
 	;
 
 /**
@@ -1067,6 +1076,8 @@ CMP_INSTANCE	: '==';
 CMP_SIGN		: '$=';
 CMP_COMPAT		: '~=';
 CMP_ANNOT		: '@=';
+CMP_LEQ			: '<=';
+CMP_GEQ			: '>=';
 
 // weaving operators
 WEAVE			: '<-';
@@ -1079,6 +1090,9 @@ fragment LIT_ALT1 		: LIT_INTERNAL ('\'' LIT_INTERNAL)*;
 fragment LIT_ALT2 		: LIT_INTERNAL ('"' LIT_INTERNAL)* ;
 fragment LIT_INTERNAL 	: (LIT_ESC | '\t' | '\r' | '\n' | ~('\u0000'..'\u001f' | '\\' | '"' | '\'' ))*;
 fragment LIT_ESC 		: '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\');
+
+// double value
+VALUE			: ('0' .. '9')+ ('.' ('0' .. '9')+)?;
 
 // not really heredoc, but almost
 HEREDOC : '<<ASIS' {startHereDoc();} (' '|'\n'|'\r') .* ('\n'|'\r') { endHereDoc(); } 'ASIS;';

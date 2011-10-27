@@ -48,6 +48,21 @@ public enum PropertyPrefix
 		}
 	},
 	/**
+	 * Event properties
+	 */
+	EVENT
+	{
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString()
+		{
+			return "event";
+		}
+	},
+	/**
 	 * Filter properties
 	 */
 	FILTER
@@ -95,6 +110,9 @@ public enum PropertyPrefix
 		else if (MESSAGE.toString().equals(name))
 		{
 			return MESSAGE;
+		}
+		else if (EVENT.toString().equals(name)){
+			return EVENT;
 		}
 		else if (FILTER.toString().equals(name))
 		{

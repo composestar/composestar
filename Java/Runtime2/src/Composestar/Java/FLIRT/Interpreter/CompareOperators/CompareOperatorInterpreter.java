@@ -65,14 +65,14 @@ public abstract class CompareOperatorInterpreter<T extends MECompareStatement>
 	 */
 	public boolean matches(T expr, FilterExecutionContext context)
 	{
-		CpsVariable lhs = FEExpressionInterpreter.getValue(expr.getLHS(), context.getMessage(), null);
+		CpsVariable lhs = FEExpressionInterpreter.getValue(expr.getLHS(), context.getMessage(), context.getEvent(), null);
 		if (lhs == null)
 		{
 			return false;
 		}
 		for (CpsVariable rhs : expr.getRHS())
 		{
-			rhs = FEExpressionInterpreter.getValue(rhs, context.getMessage(), null);
+			rhs = FEExpressionInterpreter.getValue(rhs, context.getMessage(), context.getEvent(), null);
 			if (rhs != null && matches(lhs, rhs, context))
 			{
 				return true;

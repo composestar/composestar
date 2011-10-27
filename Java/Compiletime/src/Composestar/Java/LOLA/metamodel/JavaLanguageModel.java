@@ -35,6 +35,7 @@ public class JavaLanguageModel extends LanguageModel
 		mcField = Composestar.Java.LAMA.JavaFieldInfo.class;
 		mcParameter = Composestar.Java.LAMA.JavaParameterInfo.class;
 		mcAnnotation = Composestar.Java.LAMA.JavaType.class;
+		mcModel = Composestar.Java.LAMA.PhysicalModel.class;
 		super.createMetaModel();
 	}
 }

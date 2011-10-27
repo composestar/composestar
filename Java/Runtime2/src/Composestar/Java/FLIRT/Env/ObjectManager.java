@@ -36,6 +36,7 @@ import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsObject;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsValueImpl;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Java.FLIRT.ObjectManagerStorage;
 import Composestar.Java.FLIRT.Interpreter.FilterExecutionContext;
@@ -261,5 +262,29 @@ public class ObjectManager extends MessageReceiver implements RTCpsObject
 			context.freeContext();
 		}
 		return result;
+	}
+	
+	public void handleEvent(RTEvent event) throws Throwable
+	{
+		RTMessage msg = new RTMessage();
+		msg.setInner(this.getInnerObject());
+		msg.setSelf(this);
+		msg.setTarget(this);
+		msg.setServer(this);
+		
+		
+		FilterExecutionContext context = new FilterExecutionContext(this, msg, event);
+		InterpreterMain.interpret(context);
+		Object result = msg.getReturnValue();
+		
+		if (result != null && result instanceof Double){
+			event.setResult(new CpsValueImpl((Double) result));
+		}
+		
+		synchronized (context)
+		{
+			// notify a possible waiting interpreter
+			context.freeContext();
+		}
 	}
 }
