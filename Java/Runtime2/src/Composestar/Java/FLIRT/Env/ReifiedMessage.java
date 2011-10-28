@@ -121,7 +121,7 @@ public class ReifiedMessage extends JoinPointContext implements Runnable
 
 	public ReifiedMessage(RTMessage message, Object actTarget, String actSelector, boolean respondAllowed)
 	{
-		super(message);
+		super(message, null);
 		buffer = new SyncBuffer<ReifiedMessageResult>();
 		this.actTarget = actTarget;
 		this.actSelector = actSelector;

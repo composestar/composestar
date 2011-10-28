@@ -31,6 +31,8 @@ import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsValue;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsLiteralImpl;
+import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsValueImpl;
 
 import physdl.runtime.PhysicalModelInstance;
 
@@ -77,6 +79,16 @@ public class RTEvent
 	private final static String MARGIN = "margin";
 
 	private final static String ENFORCE_RESULT = "enforceResult";
+
+	public final static String REQUEST_EVENT_TYPE = "Request";
+
+	public final static String UPDATE_EVENT_TYPE = "Update";
+
+	public final static String CHECK_UPDATE_EVENT_TYPE = "CheckUpdate";
+
+	public final static String CHANGE_EVENT_TYPE = "Change";
+
+	public final static String INCONSISTENCY_EVENT_TYPE = "Inconsistency";
 
 	public RTEvent()
 	{
@@ -125,6 +137,11 @@ public class RTEvent
 	{
 		properties.put(VARIABLE_NAME, variable);
 	}
+	
+	public void setVariable(String variable)
+	{
+		setVariable(new CpsLiteralImpl(variable));
+	}
 
 	public CpsLiteral getEventType()
 	{
@@ -135,6 +152,12 @@ public class RTEvent
 	{
 		properties.put(EVENT_TYPE, eventType);
 	}
+	
+	public void setEventType(String eventType)
+	{
+		CpsLiteral literal = new CpsLiteralImpl(eventType);
+		setEventType(literal);
+	}
 
 	public CpsValue getValue()
 	{
@@ -144,6 +167,11 @@ public class RTEvent
 	public void setValue(CpsValue value)
 	{
 		properties.put(VALUE, value);
+	}
+	
+	public void setValue(double value)
+	{
+		setValue(new CpsValueImpl(value));
 	}
 
 	public CpsValue getResult()
@@ -164,6 +192,10 @@ public class RTEvent
 	public void setResultIdentifier(CpsLiteral resultIdentifier)
 	{
 		properties.put(RESULT_ID, resultIdentifier);
+	}
+	
+	public void setResultIdentifier(String resultIdentifier){
+		setResultIdentifier(new CpsLiteralImpl(resultIdentifier));
 	}
 
 	public Map<String, CpsValue> getValues()

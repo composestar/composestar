@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2008 University of Twente.
+ * Copyright (C) 2011 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,29 +22,31 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.Filters;
+package Composestar.Core.FILTH2;
 
 /**
- * @author Michiel Hendriks
+ *
+ * @author roo
  */
-public final class FilterActionNames
-{
-	public static final String DISPATCH_ACTION = "DispatchAction";
+public final class DefaultEventFilterModuleNames{
+public static final String CONCERN = "CpsDefaultEventFMConcern";
 
-	public static final String SEND_ACTION = "SendAction";
+public static final String FILTER_MODULE = "CpsDefaultEventFilterModule";
 
-	public static final String CONTINUE_ACTION = "ContinueAction";
+public static final String OUTPUT_FILTER = "CpsDefaultEventFilter";
 
-	public static final String ERROR_ACTION = "ErrorAction";
+/**
+ * The fully qualified name of the filtermodule of the default inner
+ * dispatch filter.
+ */
+public static final String FQN_FILTER_MODULE = CONCERN + "." + FILTER_MODULE;
 
-	public static final String SUBSTITUTION_ACTION = "SubstitutionAction";
 
-	public static final String ADVICE_ACTION = "AdviceAction";
+/**
+ * The fully qualified name of the default send output filter
+ */
+public static final String FQN_OUTER_FILTER = FQN_FILTER_MODULE + "." + OUTPUT_FILTER;
 
-	public static final String META_ACTION = "MetaAction";
-	
-	public static final String RESULT_ACTION = "ResultAction";
-
-	private FilterActionNames()
-	{}
+private DefaultEventFilterModuleNames()
+{}
 }

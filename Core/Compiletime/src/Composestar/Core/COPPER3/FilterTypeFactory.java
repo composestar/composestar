@@ -50,7 +50,7 @@ public class FilterTypeFactory
 	public static final String[] DEFAULT_FILTER_TYPES =
 			{ FilterTypeNames.AFTER, FilterTypeNames.BEFORE, FilterTypeNames.DISPATCH, FilterTypeNames.ERROR,
 					FilterTypeNames.SEND, FilterTypeNames.SUBSTITUTION, FilterTypeNames.META,
-					FilterTypeNames.EXCEPTION, FilterTypeNames.VOID, };
+					FilterTypeNames.EXCEPTION, FilterTypeNames.VOID, FilterTypeNames.RESULT};
 
 	/**
 	 * The language repository.
@@ -96,6 +96,8 @@ public class FilterTypeFactory
 	 * The meta action
 	 */
 	protected FilterActionImpl metaAction;
+	
+	protected FilterActionImpl resultAction;
 
 	/**
 	 * Create the filter type factory. Use this constructor
@@ -254,6 +256,21 @@ public class FilterTypeFactory
 		metaAction.setFlowBehavior(FlowBehavior.CONTINUE);
 		return metaAction;
 	}
+	
+	/**
+	 * @return The result action
+	 */
+	public FilterAction getResultAction()
+	{
+		if (resultAction != null)
+		{
+			return resultAction;
+		}
+		resultAction = new FilterActionImpl(FilterActionNames.RESULT_ACTION);
+		repository.add(resultAction);
+		resultAction.setFlowBehavior(FlowBehavior.RETURN);
+		return resultAction;
+	}
 
 	/**
 	 * Create a certain default filter type. Should be called only once per
@@ -332,6 +349,14 @@ public class FilterTypeFactory
 		{
 			flt = new PrimitiveFilterTypeImpl(FilterTypeNames.META);
 			flt.setAcceptCallAction(getMetaAction());
+			flt.setAcceptReturnAction(getContinueAction());
+			flt.setRejectCallAction(getContinueAction());
+			flt.setRejectReturnAction(getContinueAction());
+		}
+		else if (FilterTypeNames.RESULT.equalsIgnoreCase(typeName))
+		{
+			flt = new PrimitiveFilterTypeImpl(FilterTypeNames.RESULT);
+			flt.setAcceptCallAction(getContinueAction());
 			flt.setAcceptReturnAction(getContinueAction());
 			flt.setRejectCallAction(getContinueAction());
 			flt.setRejectReturnAction(getContinueAction());

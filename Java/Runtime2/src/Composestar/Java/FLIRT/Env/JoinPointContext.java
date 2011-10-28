@@ -43,13 +43,24 @@ public class JoinPointContext
 	protected RTMessage message;
 
 	/**
+	 * The event
+	 */
+	private RTEvent event;
+
+	/**
 	 * If true the message is locked in its state
 	 */
 	protected boolean locked;
 
-	public JoinPointContext(RTMessage msg)
+	public JoinPointContext(RTMessage msg, RTEvent event)
 	{
 		message = msg;
+		this.event = event;
+	}
+
+	public RTEvent getEvent()
+	{
+		return event;
 	}
 
 	/**

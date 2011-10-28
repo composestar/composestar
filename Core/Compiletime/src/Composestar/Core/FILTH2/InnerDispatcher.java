@@ -43,6 +43,7 @@ import Composestar.Core.CpsRepository2Impl.CpsConcernImpl;
 import Composestar.Core.CpsRepository2Impl.FilterElements.CanonAssignmentImpl;
 import Composestar.Core.CpsRepository2Impl.FilterElements.CanonPropertyImpl;
 import Composestar.Core.CpsRepository2Impl.FilterElements.FilterElementImpl;
+import Composestar.Core.CpsRepository2Impl.FilterElements.MELiteralImpl;
 import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
 import Composestar.Core.CpsRepository2Impl.FilterModules.FilterImpl;
 import Composestar.Core.CpsRepository2Impl.FilterModules.FilterModuleImpl;
@@ -66,6 +67,18 @@ public final class InnerDispatcher
 				.getFilterType(FilterTypeNames.DISPATCH)));
 		fm.setOutputFilterExpression(createFilter(repository, fm, DefaultInnerDispatchNames.OUTPUT_FILTER, filterTypes
 				.getFilterType(FilterTypeNames.SEND)));
+		return fm;
+	}
+
+	public static FilterModule createDefaultEventHandler(Repository repository, FilterTypeMapping filterTypes)
+	{
+		CpsConcern concern = new CpsConcernImpl(DefaultEventFilterModuleNames.CONCERN, new ArrayList<String>());
+		repository.add(concern);
+		FilterModule fm = new FilterModuleImpl(DefaultEventFilterModuleNames.FILTER_MODULE);
+		concern.addFilterModule(fm);
+		repository.add(fm);
+		fm.setOutputFilterExpression(createEventFilter(repository, fm, DefaultInnerDispatchNames.OUTPUT_FILTER, filterTypes
+				.getFilterType(FilterTypeNames.RESULT)));
 		return fm;
 	}
 
@@ -120,6 +133,41 @@ public final class InnerDispatcher
 			repository.add(asgn);
 		}
 		// no changes to the message for the send filter
+		return filter;
+	}
+
+	protected static Filter createEventFilter(Repository repository, FilterModule fm, String name, FilterType type)
+	{
+		Filter filter = new FilterImpl(name);
+		filter.setOwner(fm);
+		repository.add(filter);
+
+		filter.setType(type);
+
+		FilterElement expr = new FilterElementImpl();
+		filter.setElementExpression(expr);
+		repository.add(expr);
+
+		MELiteralImpl ex = new MELiteralImpl(true);
+		expr.setMatchingExpression(ex);
+		repository.add(ex);
+
+		// Assignment
+		CanonAssignment asgn = new CanonAssignmentImpl();
+
+		CanonProperty prop;
+		
+		prop = new CanonPropertyImpl(PropertyPrefix.EVENT, "Result");
+		asgn.setProperty(prop);
+		repository.add(prop);
+
+		prop = new CanonPropertyImpl(PropertyPrefix.EVENT, "Value");
+		asgn.setValue(prop);
+		repository.add(prop);
+
+		expr.addAssignment(asgn);
+		repository.add(asgn);
+
 		return filter;
 	}
 

@@ -65,6 +65,8 @@ public class FILTH implements CTCommonModule
 	 */
 	protected FilterModule defaultInnerDispatch;
 
+	protected FilterModuleBinding defaultEventFMBinding;
+	
 	protected FilterModuleBinding defaultFMBinding;
 
 	protected CPSTimer timer;
@@ -124,6 +126,11 @@ public class FILTH implements CTCommonModule
 		defaultInnerDispatch = InnerDispatcher.createInnerDispatcher(repository, filterTypes);
 		defaultFMBinding = new FilterModuleBindingImpl();
 		defaultFMBinding.setFilterModuleReference(defaultInnerDispatch);
+		
+		
+		FilterModule defaultEventFilterModule = InnerDispatcher.createDefaultEventHandler(repository, filterTypes);
+		defaultEventFMBinding = new FilterModuleBindingImpl();
+		defaultEventFMBinding.setFilterModuleReference(defaultEventFilterModule);
 
 		constraints = repository.getAllSet(Constraint.class);
 
@@ -163,6 +170,7 @@ public class FILTH implements CTCommonModule
 				OrderGenerator.generate(sinfo.getFilterModules(), constraints, maxOrders);
 		timer.stop();
 
+		ImposedFilterModule event_difm = new ImposedFilterModuleImpl(defaultEventFMBinding);
 		ImposedFilterModule difm = new ImposedFilterModuleImpl(defaultFMBinding);
 		sinfo.addFilterModule(difm);
 		repository.add(difm);
@@ -176,6 +184,9 @@ public class FILTH implements CTCommonModule
 			if (isValidOrder)
 			{
 				// add the default dispatch filter
+				if (concern.getFullyQualifiedName().contains("PhysicalModelInstance")){
+					order.add(event_difm);
+				}
 				order.add(difm);
 				sinfo.addFilterModuleOrder(order);
 			}

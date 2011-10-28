@@ -266,12 +266,7 @@ public class ObjectManager extends MessageReceiver implements RTCpsObject
 	
 	public void handleEvent(RTEvent event) throws Throwable
 	{
-		RTMessage msg = new RTMessage();
-		msg.setInner(this.getInnerObject());
-		msg.setSelf(this);
-		msg.setTarget(this);
-		msg.setServer(this);
-		
+		RTMessage msg = createMessage(event);
 		
 		FilterExecutionContext context = new FilterExecutionContext(this, msg, event);
 		InterpreterMain.interpret(context);
@@ -286,5 +281,31 @@ public class ObjectManager extends MessageReceiver implements RTCpsObject
 			// notify a possible waiting interpreter
 			context.freeContext();
 		}
+	}
+	
+	private RTMessage createMessage(RTEvent event){
+		RTMessage msg = new RTMessage();
+		msg.setInner(this.getInnerObject());
+		msg.setSelf(this);
+		msg.setTarget(this);
+		msg.setServer(this);
+		
+		String eventType = event.getEventType().getLiteralValue();
+		Object[] args;
+		if (eventType.equals(RTEvent.UPDATE_EVENT_TYPE) || eventType.equals(RTEvent.CHANGE_EVENT_TYPE)){
+			args = new Object[1];
+			args[0] = event.getValue().getValue();
+		}
+		else if (eventType.equals(RTEvent.INCONSISTENCY_EVENT_TYPE)){
+			args = new Object[1];
+			args[0] = event.getValues();
+		}
+		else{
+			args = new Object[0];
+		}
+		
+		msg.setArguments(args);
+		
+		return msg;
 	}
 }

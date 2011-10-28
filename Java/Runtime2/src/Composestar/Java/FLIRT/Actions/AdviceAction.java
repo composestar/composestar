@@ -89,7 +89,7 @@ public class AdviceAction extends RTFilterAction
 		}
 
 		Object[] args = new Object[1];
-		args[0] = new JoinPointContext(context.getMessage());
+		args[0] = new JoinPointContext(context.getMessage(), context.getEvent());
 		Invoker.invoke(target.getObject(), selector.getName(), args);
 	}
 }
