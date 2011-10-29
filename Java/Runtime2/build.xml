@@ -62,11 +62,15 @@
 			<zipfileset src="${build.java}/Compiletime/${out.jar.java}">
 				<include name="**/*.class" />
 			</zipfileset>
+			<zipfileset src="${out.lib}/physmodcomp.jar">
+				<include name="**/*.class" />
+			</zipfileset>
 			<keep pattern="Composestar.Java.FLIRT.**" />
 			<keep pattern="Composestar.Core.CpsRepository2.**" />
 			<keep pattern="Composestar.Core.CpsRepository2Impl.**" />
 			<keep pattern="Composestar.Core.LAMA.**" />
 			<keep pattern="Composestar.Java.LAMA.**" />
+			<keep pattern="physdl.**" />
 		</jarjar>
 	</target>
 

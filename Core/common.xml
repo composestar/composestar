@@ -59,6 +59,7 @@
 		<!-- various config items -->
 		<property name="out.build" value="build" />
 		<property name="out.dist" value="dist" />
+		<property name="out.lib" value="lib" />
 		<property name="out.qa" value="qa" />
 
 		<property name="out.jar.core" value="${out.dist}${file.separator}lib${file.separator}ComposestarCORE.jar" />

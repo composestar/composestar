@@ -67,7 +67,7 @@ public final class ObjectManagerHandler
 	 * who call an inner method.
 	 */
 	private static final Set<Object> UNDER_CONSTRUCTION = Collections.synchronizedSet(new HashSet<Object>());
-	
+
 	public static Map<String, Set<String>> fmPmiMapping;
 
 	private ObjectManagerHandler()
@@ -138,7 +138,7 @@ public final class ObjectManagerHandler
 		List<RTFilterModule> fms = new ArrayList<RTFilterModule>();
 		for (ImposedFilterModule ifm : crn.getSuperimposed().getFilterModuleOrder())
 		{
-			if (isPhysicalModelInstanceSI(forObject, ifm))
+			if (isPhysicalModelInstanceSIOK(forObject, ifm))
 			{
 				RTFilterModule rtfm = new RTFilterModule(ifm.getFilterModule(), ifm.getCondition());
 				assignVariables(forObject, rtfm, repos);
@@ -149,25 +149,34 @@ public final class ObjectManagerHandler
 		ObjectManager obj = new ObjectManager(forObject, crn, fms);
 		return obj;
 	}
-	
-	private static boolean isPhysicalModelInstanceSI(Object obj, ImposedFilterModule ifm){
-		if (obj instanceof PhysicalModelInstance){
+
+	private static boolean isPhysicalModelInstanceSIOK(Object obj, ImposedFilterModule ifm)
+	{
+		if (obj instanceof PhysicalModelInstance)
+		{
 			Set<String> modelNames = fmPmiMapping.get(ifm.getFilterModule().getName());
-			
-			if (modelNames == null){
+
+			if (modelNames == null)
+			{
 				return false;
 			}
-			
+
 			PhysicalModelInstance pmi = (PhysicalModelInstance) obj;
 			Model[] models = pmi.getPhysicalModel().getModels();
-			for (int i=0; i<models.length; i++){
-				if (modelNames.contains(models[i].getName())){
+			for (int i = 0; i < models.length; i++)
+			{
+				if (modelNames.contains(models[i].getName()))
+				{
 					return true;
 				}
 			}
+			
+			return false;
 		}
-		
-		return false;
+		else
+		{
+			return true;
+		}
 	}
 
 	/**
