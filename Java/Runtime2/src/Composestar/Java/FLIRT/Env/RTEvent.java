@@ -24,6 +24,7 @@
 
 package Composestar.Java.FLIRT.Env;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import Composestar.Core.CpsRepository2.PropertyNames;
@@ -46,7 +47,7 @@ public class RTEvent
 	/**
 	 * Stores all properties
 	 */
-	protected Map<String, CpsVariable> properties;
+	protected Map<String, CpsVariable> properties = new HashMap<String, CpsVariable>();
 
 	// private CpsLiteral variable;
 	//

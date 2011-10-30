@@ -68,6 +68,7 @@ import Composestar.Core.CpsRepository2Impl.FilterElements.InstanceMatching;
 import Composestar.Core.CpsRepository2Impl.FilterElements.NotMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.OrMEOper;
 import Composestar.Core.CpsRepository2Impl.FilterElements.SignatureMatching;
+import Composestar.Core.CpsRepository2Impl.FilterElements.ValueMatching;
 import Composestar.Core.CpsRepository2Impl.FilterModules.SequentialFilterOper;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
@@ -281,7 +282,7 @@ public class GrooveASTBuilderCN
 
 		graph.addEdge(cmpNode, createLabel(FlowNode.COMPARE_STATEMENT_NODE), cmpNode);
 
-		if (cmp instanceof InstanceMatching)
+		if (cmp instanceof InstanceMatching || cmp instanceof ValueMatching)
 		{
 			graph.addEdge(cmpNode, createLabel(FlowNode.INSTANCE_MATCHING), cmpNode);
 		}
@@ -806,7 +807,14 @@ public class GrooveASTBuilderCN
 		}
 		else if (expr instanceof MECompareStatement)
 		{
-			exprNode = createCompareStatementNode((MECompareStatement) expr);
+			if (PropertyPrefix.MESSAGE == ((MECompareStatement) expr).getLHS().getPrefix()){
+				exprNode = createCompareStatementNode((MECompareStatement) expr);
+			}
+			else{
+				exprNode = graph.addNode();
+				addRepositoryEntity(exprNode, expr);
+				graph.addEdge(exprNode, createLabel(FlowNode.FALSE_NODE), exprNode);
+			}
 		}
 		else if (expr instanceof MECondition)
 		{

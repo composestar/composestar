@@ -118,9 +118,13 @@ public class InstanceMatchingInterp extends CompareOperatorInterpreter<InstanceM
 				}
 			}
 		}
+		else if (lhs instanceof CpsLiteral && rhs instanceof CpsLiteral){
+			return ((CpsLiteral) lhs).getLiteralValue().equals(((CpsLiteral) rhs).getLiteralValue());
+		}
 		else if (lhs instanceof CpsValue && rhs instanceof CpsValue){
 			return ((CpsValue) lhs).getValue() == ((CpsValue) rhs).getValue();
 		}
+		
 		return false;
 	}
 }

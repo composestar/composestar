@@ -289,6 +289,7 @@ public class ObjectManager extends MessageReceiver implements RTCpsObject
 		msg.setSelf(this);
 		msg.setTarget(this);
 		msg.setServer(this);
+		msg.setDirection(MessageDirection.OUTGOING);
 		
 		String eventType = event.getEventType().getLiteralValue();
 		Object[] args;

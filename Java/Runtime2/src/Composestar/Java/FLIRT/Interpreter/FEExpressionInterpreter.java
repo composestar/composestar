@@ -243,7 +243,7 @@ public final class FEExpressionInterpreter
 			{
 				result = msg.getProperty(prop.getBaseName());
 			}
-			else if (prop.getPrefix() == PropertyPrefix.EVENT)
+			else if (prop.getPrefix() == PropertyPrefix.EVENT && event != null)
 			{
 				result = event.getProperty(prop.getBaseName());
 			}

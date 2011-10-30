@@ -26,6 +26,7 @@ package Composestar.Java.FLIRT;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ public final class ObjectManagerHandler
 	 */
 	private static final Set<Object> UNDER_CONSTRUCTION = Collections.synchronizedSet(new HashSet<Object>());
 
-	public static Map<String, Set<String>> fmPmiMapping;
+	public static Map<String, Set<String>> fmPmiMapping = new HashMap<String, Set<String>>();
 
 	private ObjectManagerHandler()
 	{}

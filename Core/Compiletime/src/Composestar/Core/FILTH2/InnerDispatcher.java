@@ -77,7 +77,7 @@ public final class InnerDispatcher
 		FilterModule fm = new FilterModuleImpl(DefaultEventFilterModuleNames.FILTER_MODULE);
 		concern.addFilterModule(fm);
 		repository.add(fm);
-		fm.setOutputFilterExpression(createEventFilter(repository, fm, DefaultInnerDispatchNames.OUTPUT_FILTER, filterTypes
+		fm.setOutputFilterExpression(createEventFilter(repository, fm, DefaultEventFilterModuleNames.OUTPUT_FILTER, filterTypes
 				.getFilterType(FilterTypeNames.RESULT)));
 		return fm;
 	}
@@ -157,11 +157,11 @@ public final class InnerDispatcher
 
 		CanonProperty prop;
 		
-		prop = new CanonPropertyImpl(PropertyPrefix.EVENT, "Result");
+		prop = new CanonPropertyImpl(PropertyPrefix.EVENT, "resultValue");
 		asgn.setProperty(prop);
 		repository.add(prop);
 
-		prop = new CanonPropertyImpl(PropertyPrefix.EVENT, "Value");
+		prop = new CanonPropertyImpl(PropertyPrefix.EVENT, "value");
 		asgn.setValue(prop);
 		repository.add(prop);
 
