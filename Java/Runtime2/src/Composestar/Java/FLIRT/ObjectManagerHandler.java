@@ -155,6 +155,12 @@ public final class ObjectManagerHandler
 	{
 		if (obj instanceof PhysicalModelInstance)
 		{
+			// return true for default filter modules
+			String name = ifm.getFilterModule().getName();
+			if (name.equals("CpsDefaultEventFilterModule") || name.equals("CpsDefaultInnerDispatchFilterModule")){
+				return true;
+			}
+			
 			Set<String> modelNames = fmPmiMapping.get(ifm.getFilterModule().getName());
 
 			if (modelNames == null)

@@ -27,15 +27,12 @@ package Composestar.Java.FLIRT.Env;
 import java.util.HashMap;
 import java.util.Map;
 
-import Composestar.Core.CpsRepository2.PropertyNames;
+import physdl.runtime.PhysicalModelInstance;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsLiteral;
-import Composestar.Core.CpsRepository2.TypeSystem.CpsSelector;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsValue;
 import Composestar.Core.CpsRepository2.TypeSystem.CpsVariable;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsLiteralImpl;
 import Composestar.Core.CpsRepository2Impl.TypeSystem.CpsValueImpl;
-
-import physdl.runtime.PhysicalModelInstance;
 
 /**
  * @author arjan
@@ -59,7 +56,7 @@ public class RTEvent
 	//
 	// private CpsLiteral resultIdentifier;
 
-	private Map<String, CpsValue> values;
+	private Map<String, Double> values;
 
 	// private CpsValue margin;
 	//
@@ -104,13 +101,13 @@ public class RTEvent
 
 	public CpsVariable getProperty(String name, String key)
 	{
-		if (key == null && !VALUES.equals(name))
+		if (!VALUES.equals(name))
 		{
 			return properties.get(name);
 		}
 		else
 		{
-			return values.get(key);
+			return new CpsValueImpl(values.get(key));
 		}
 	}
 
@@ -199,12 +196,12 @@ public class RTEvent
 		setResultIdentifier(new CpsLiteralImpl(resultIdentifier));
 	}
 
-	public Map<String, CpsValue> getValues()
+	public Map<String, Double> getValues()
 	{
 		return values;
 	}
 
-	public void setValues(Map<String, CpsValue> values)
+	public void setValues(Map<String, Double> values)
 	{
 		this.values = values;
 	}
